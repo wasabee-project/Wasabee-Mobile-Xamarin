@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Android", "Rocks.Wasabee.Mobile\Rocks.Wasabee.Mobile.Android\Rocks.Wasabee.Mobile.Android.csproj", "{BEB5F06C-77B0-401F-B4AA-F30975917806}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Android", "Rocks.Wasabee.Mobile.Android\Rocks.Wasabee.Mobile.Android.csproj", "{BEB5F06C-77B0-401F-B4AA-F30975917806}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.iOS", "Rocks.Wasabee.Mobile\Rocks.Wasabee.Mobile.iOS\Rocks.Wasabee.Mobile.iOS.csproj", "{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.iOS", "Rocks.Wasabee.Mobile.iOS\Rocks.Wasabee.Mobile.iOS.csproj", "{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Core", "Rocks.Wasabee.Mobile\Rocks.Wasabee.Mobile\Rocks.Wasabee.Mobile.Core.csproj", "{75F10E66-DB35-4B37-B806-43AA8BEA1E19}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Core", "Rocks.Wasabee.Mobile\Rocks.Wasabee.Mobile.Core.csproj", "{75F10E66-DB35-4B37-B806-43AA8BEA1E19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1_Applications", "1_Applications", "{A0C5FE97-08DD-4C95-BD04-7C1CCB5C3633}"
 EndProject
