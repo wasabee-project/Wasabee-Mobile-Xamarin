@@ -12,6 +12,9 @@
         WasabeeServer Server { get; set; }
         string WasabeeBaseUrl { get; }
         string WasabeeTokenUrl { get; }
+
+        string AndroidAppCenterKey { get; set; }
+        string IosAppCenterKey { get; set; }
     }
 
     public enum WasabeeServer

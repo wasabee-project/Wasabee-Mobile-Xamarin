@@ -29,6 +29,8 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 
         public string WasabeeBaseUrl { get; private set; }
         public string WasabeeTokenUrl { get; private set; }
+        public string AndroidAppCenterKey { get; set; }
+        public string IosAppCenterKey { get; set; }
 
         private void UpdateWasabeeUrls()
         {

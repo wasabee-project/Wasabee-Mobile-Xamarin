@@ -8,6 +8,8 @@
         {
             ClientId = "269534461245-ltpks4ofjh9epvida0ct965829i4cfsi.apps.googleusercontent.com";
             BaseRedirectUrl = "com.googleusercontent.apps.269534461245-ltpks4ofjh9epvida0ct965829i4cfsi";
+            AndroidAppCenterKey = "8f922eeb-7f17-4894-937a-b8b8b5cab085";
+            IosAppCenterKey = string.Empty;
         }
     }
 }
