@@ -5,6 +5,9 @@ using MvvmCross.Platforms.Android;
 using MvvmCross.Platforms.Android.Presenters;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core;
+using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
+using Rocks.Wasabee.Mobile.Core.Ui;
+using Rocks.Wasabee.Mobile.Droid.Infra.Firebase;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
@@ -15,6 +18,7 @@ namespace Rocks.Wasabee.Mobile.Droid
             UserDialogs.Init(() => Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>().Activity);
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
+            Mvx.IoCProvider.RegisterSingleton(typeof(IFirebaseAnalyticsService), () => new FirebaseAnalyticsService(Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>()));
 
             return new CoreApp();
         }

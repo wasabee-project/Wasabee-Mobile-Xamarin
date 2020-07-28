@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Androi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.iOS", "Rocks.Wasabee.Mobile.iOS\Rocks.Wasabee.Mobile.iOS.csproj", "{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Core", "Rocks.Wasabee.Mobile\Rocks.Wasabee.Mobile.Core.csproj", "{75F10E66-DB35-4B37-B806-43AA8BEA1E19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocks.Wasabee.Mobile.Core", "Rocks.Wasabee.Mobile.Core\Rocks.Wasabee.Mobile.Core.csproj", "{75F10E66-DB35-4B37-B806-43AA8BEA1E19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Core.Ui", "Rocks.Wasabee.Mobile.Core.Ui\Rocks.Wasabee.Mobile.Core.Ui.csproj", "{E2CCE709-1C5E-4066-921B-AACA003CF693}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1_Applications", "1_Applications", "{A0C5FE97-08DD-4C95-BD04-7C1CCB5C3633}"
 EndProject
@@ -77,6 +79,18 @@ Global
 		{75F10E66-DB35-4B37-B806-43AA8BEA1E19}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{75F10E66-DB35-4B37-B806-43AA8BEA1E19}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{75F10E66-DB35-4B37-B806-43AA8BEA1E19}.Release|iPhoneSimulator.Deploy.0 = Release|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Release|iPhone.Build.0 = Release|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{E2CCE709-1C5E-4066-921B-AACA003CF693}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +99,7 @@ Global
 		{BEB5F06C-77B0-401F-B4AA-F30975917806} = {A0C5FE97-08DD-4C95-BD04-7C1CCB5C3633}
 		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA} = {A0C5FE97-08DD-4C95-BD04-7C1CCB5C3633}
 		{75F10E66-DB35-4B37-B806-43AA8BEA1E19} = {8F49D342-6961-4B96-A7A7-31433A8AA80B}
+		{E2CCE709-1C5E-4066-921B-AACA003CF693} = {8F49D342-6961-4B96-A7A7-31433A8AA80B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61C77F91-C306-472D-A022-F91696CC55EA}

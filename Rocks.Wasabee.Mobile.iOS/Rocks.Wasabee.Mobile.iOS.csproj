@@ -144,12 +144,16 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility">
       <Version>6.4.2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1142" />
+    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1179" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Rocks.Wasabee.Mobile\Rocks.Wasabee.Mobile.Core.csproj">
+    <ProjectReference Include="..\Rocks.Wasabee.Mobile.Core.Ui\Rocks.Wasabee.Mobile.Core.Ui.csproj">
+      <Project>{E2CCE709-1C5E-4066-921B-AACA003CF693}</Project>
+      <Name>Rocks.Wasabee.Mobile.Core.Ui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rocks.Wasabee.Mobile.Core\Rocks.Wasabee.Mobile.Core.csproj">
       <Project>{75F10E66-DB35-4B37-B806-43AA8BEA1E19}</Project>
       <Name>Rocks.Wasabee.Mobile.Core</Name>
     </ProjectReference>
