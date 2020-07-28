@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseContentPage x:TypeArguments="viewModels:SplashScreenViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                      xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      mc:Ignorable="d"
+                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.SplashScreenPage">
+  <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:EnvironnementToColorConverter x:Key="EnvironnementToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <RelativeLayout>
+            <Image
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title, Property=Y, Factor=1, Constant=-120}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                Source="wasabee.png" />
+
+            <Label
+                x:Name="Title"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.3, Constant=0}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                Text="Wasabee"
+                HorizontalTextAlignment="Center"
+                FontSize="30" />
+
+            <!-- Loader and login step -->
+            <StackLayout
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=60}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                IsVisible="{Binding IsLoading}">
+                <ActivityIndicator
+                    Color="{StaticResource PrimaryGreen}"
+                    IsRunning="True"
+                    HeightRequest="80"/>
+                <Label
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Text="{Binding LoadingStepLabel}"/>
+            </StackLayout>
+            
+            
+            <!-- Login button if user aborted process -->
+            <StackLayout
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=60}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                IsVisible="{Binding IsLoginVisible}">
+
+                <Frame CornerRadius="2"
+                       HorizontalOptions="CenterAndExpand" 
+                       VerticalOptions="EndAndExpand"
+                       BackgroundColor="#4285F4" 
+                       Margin="10"
+                       Padding="1"
+                       HasShadow="false">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+
+                        <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="0"
+                               HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                               BackgroundColor="White" HeightRequest="50" WidthRequest="50">
+                            <Image Source="g_logo.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label Text="Sign in with Google" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
+                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" TextColor="White" FontAttributes="Bold" />
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ConnectUserCommand}" />
+                        </Grid.GestureRecognizers>    
+                    </Grid>
+                </Frame>
+
+                <Label
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding IsAuthInError}"
+                    Text="{Binding ErrorMessage}"
+                    Margin="0, 20, 0, 0"
+                    TextColor="Red" />
+
+                <Label
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding IsConnected, Converter={StaticResource BoolNegateConverter}}"
+                    Text="You must be connected to Internet over Wi-Fi or cellular network to use this application"
+                    Margin="0, 20, 0, 0"
+                    TextColor="Red" />
+            </StackLayout>
+            
+            
+            <!-- Server selection -->
+            <StackLayout
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=100}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                IsVisible="{Binding IsSelectingServer}">
+                <Label
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Text="{Binding LoadingStepLabel}"
+                    FontSize="Large"/>
+
+                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                    <CheckBox Color="{StaticResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
+                    <Label Text="Remember my choice" VerticalOptions="CenterAndExpand" FontSize="Small">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RememberChoiceCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+
+                <ListView x:Name="ServerListView" ItemsSource="{Binding ServersCollection}" SelectionMode="None" ItemTapped="ServerListView_OnItemTapped"
+                          SeparatorVisibility="None" RowHeight="70" VerticalScrollBarVisibility="Never">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame CornerRadius="2"
+                                       HorizontalOptions="CenterAndExpand" 
+                                       VerticalOptions="CenterAndExpand"
+                                       BackgroundColor="White"
+                                       HasShadow="True"
+                                       Margin="0"
+                                       Padding="0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="70" />
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="60" />
+                                        </Grid.RowDefinitions>
+
+                                        <Frame Margin="0" Padding="0" Grid.Column="0" Grid.Row="0" HasShadow="false" HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image Source="{Binding Image}" HeightRequest="30" Margin="10, 0, 0, 0"/>
+                                        </Frame>
+                                        <Label  Text="{Binding Name}" Grid.Column="1" Grid.Row="0" 
+                                                VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" />
+                                    </Grid>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+
+
+            <!-- No team or OPS assigned section -->
+            <StackLayout
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=60}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                IsVisible="{Binding HasNoTeamOrOpsAssigned}">
+
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Margin="0, 20, 0, 0"
+                    TextColor="Red"
+                    FontSize="Medium">
+                    <!-- DO NOT touch Label.Text indentation !-->
+                    <Label.Text>
+Attention please !
+
+You don't have any assigned team or operation, contact your Operator before using Wasabee Mobile !
+                    </Label.Text>
+                </Label>
+
+                <Button Margin="0, 30, 0, 0" Text="Change account" Style="{StaticResource WasabeeStyleAnnulerButton}" Command="{Binding ChangeAccountCommand}" />
+                <Button Text="Change server" Style="{StaticResource WasabeeStyleAnnulerButton}" Command="{Binding ChangeServerCommand}" />
+                <Button Text="Retry" Style="{StaticResource WasabeeStyleValiderButton}" Command="{Binding RetryTeamLoadingCommand}" />
+
+            </StackLayout>
+
+
+            <!-- Version number -->
+            <StackLayout
+                HeightRequest="40"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-40}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                BackgroundColor="{Binding AppEnvironnement, Converter={StaticResource EnvironnementToColorConverter}}">
+                <Label
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center"
+                    VerticalOptions="CenterAndExpand"
+                    Text="{Binding DisplayVersion, Mode=OneWay}"
+                    TextColor="Black" />
+            </StackLayout>
+        </RelativeLayout>
+    </ContentPage.Content>
+</views:BaseContentPage>

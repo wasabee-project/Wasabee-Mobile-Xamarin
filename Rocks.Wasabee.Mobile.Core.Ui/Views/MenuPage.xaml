@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvx:MvxContentPage
+    x:TypeArguments="viewModels:MenuViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+    xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    mc:Ignorable="d"
+    x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.MenuPage"
+    Title="Wasabee"
+    BackgroundColor="{StaticResource DarkGrey}">
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+
+            <StackLayout Orientation="Horizontal">
+                <Image Source="wasabee.png" HeightRequest="50" WidthRequest="50"/>
+                <Label Text="Wasabee" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Style="{StaticResource WasabeeStyleMenuTitre}"/>
+            </StackLayout>
+
+            <ListView
+                x:Name="MenuList"
+                SelectionMode="None"
+                Style="{StaticResource WasabeeMasterDetailMenuStyle}"
+                ItemTapped="MenuList_OnItemTapped"
+                ItemsSource="{Binding MenuItems}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <mvx:MvxTextCell Text="{Binding Title}" TextColor="{StaticResource PrimaryGreen}" Detail="{Binding Subtitle}" DetailColor="{StaticResource PrimaryGrey}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+            <Label Text="{Binding LoggedUser}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+            
+            <Button
+                Text="Log out" 
+                Clicked="Logout_Clicked"
+                VerticalOptions="End" 
+                Margin="10"
+                Style="{StaticResource WasabeeStyleDisconnectionButton}"/>
+
+            <Label Text="{Binding DisplayVersion}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</mvx:MvxContentPage>
