@@ -4,6 +4,7 @@ using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
@@ -32,7 +33,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             MenuItems = new MvxObservableCollection<MenuItem>()
             {
                 new MenuItem() { Title = "Profile", ViewModelType = typeof(MenuViewModel) },
-                new MenuItem() { Title = "OP's", Subtitle = "This is an info subtitle", ViewModelType = typeof(MenuViewModel) },
+                new MenuItem() { Title = "OP's map", ViewModelType = typeof(MapViewModel) },
                 new MenuItem() { Title = "Live Logs", ViewModelType = typeof(LogsViewModel) }
             };
         }

@@ -173,12 +173,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
         public void ClearCookie()
         {
-            throw new NotImplementedException();
+            // TODO
         }
 
         public Task RefreshTokenAsync()
         {
-            throw new NotImplementedException();
+            // TODO
+            return Task.CompletedTask;
         }
     }
 }
