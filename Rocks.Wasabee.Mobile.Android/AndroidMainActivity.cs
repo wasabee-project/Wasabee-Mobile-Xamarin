@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Android;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
@@ -40,6 +41,7 @@ namespace Rocks.Wasabee.Mobile.Droid
             {
                 Xamarin.Forms.Forms.Init(this, bundle);
                 Xamarin.Essentials.Platform.Init(this, bundle);
+                Xamarin.FormsMaps.Init(this, bundle);
 
                 CreateNotificationChannels();
 
@@ -57,6 +59,31 @@ namespace Rocks.Wasabee.Mobile.Droid
                     Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
                 }
 #endif
+            }
+        }
+
+        const int RequestLocationId = 0;
+
+        readonly string[] _locationPermissions =
+        {
+            Manifest.Permission.AccessCoarseLocation,
+            Manifest.Permission.AccessFineLocation
+        };
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            if ((int)Build.VERSION.SdkInt >= 23)
+            {
+                if (CheckSelfPermission(Manifest.Permission.AccessFineLocation) != Permission.Granted)
+                {
+                    RequestPermissions(_locationPermissions, RequestLocationId);
+                }
+                else
+                {
+                    // Permissions already granted - display a message.
+                }
             }
         }
 
