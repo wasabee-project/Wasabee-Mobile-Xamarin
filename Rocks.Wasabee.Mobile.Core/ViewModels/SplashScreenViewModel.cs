@@ -3,15 +3,17 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
-using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.Auth.Google;
 using Rocks.Wasabee.Mobile.Core.Models.Auth.Wasabee;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -28,14 +30,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IMvxNavigationService _navigationService;
         private readonly IAppSettings _appSettings;
         private readonly IUserSettingsService _userSettingsService;
-        private readonly IFirebaseAnalyticsService _firebaseAnalyticsService;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly OperationsDatabase _operationsDatabase;
 
         private bool _working;
-        private GoogleOAuthResponse _googleOAuthResponse;
+        private GoogleToken _googleToken;
 
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
             IAuthentificationService authentificationService, IMvxNavigationService navigationService,
-            IAppSettings appSettings, IUserSettingsService userSettingsService, IFirebaseAnalyticsService firebaseAnalyticsService)
+            IAppSettings appSettings, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service,
+            OperationsDatabase operationsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
@@ -44,7 +48,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _navigationService = navigationService;
             _appSettings = appSettings;
             _userSettingsService = userSettingsService;
-            _firebaseAnalyticsService = firebaseAnalyticsService;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
+            _operationsDatabase = operationsDatabase;
         }
 
         public override void Start()
@@ -138,9 +143,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             LoadingStepLabel = "Logging in...";
 
             await Task.Delay(TimeSpan.FromMilliseconds(300));
-            _googleOAuthResponse = await _authentificationService.GoogleLoginAsync();
+            _googleToken = await _authentificationService.GoogleLoginAsync();
 
-            if (_googleOAuthResponse != null)
+            if (_googleToken != null)
             {
                 LoadingStepLabel = "Google login success...";
                 await Task.Delay(TimeSpan.FromMilliseconds(300));
@@ -230,7 +235,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
             await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-            var wasabeeLoginResponse = await _authentificationService.WasabeeLoginAsync(_googleOAuthResponse);
+            var wasabeeLoginResponse = await _authentificationService.WasabeeLoginAsync(_googleToken);
             if (wasabeeLoginResponse != null)
             {
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new UserLoggedInMessage(this));
@@ -256,9 +261,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task FinishLogin(WasabeeLoginResponse wasabeeLoginResponse)
         {
-            LoadingStepLabel = $"Welcome {wasabeeLoginResponse.IngressName}\r\n" +
-                               "Please wait...";
-
+            LoadingStepLabel = $"Welcome {wasabeeLoginResponse.IngressName}";
             await Task.Delay(TimeSpan.FromSeconds(1));
 
             if ((wasabeeLoginResponse.Teams == null || !wasabeeLoginResponse.Teams.Any()) &&
@@ -271,6 +274,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
             else
             {
+                LoadingStepLabel = "Loading OPs,\r\n" +
+                                   "Please wait...";
+                await Task.Delay(TimeSpan.FromMilliseconds(300));
+
+                var opsIds = wasabeeLoginResponse.Ops?.Select(x => x.Id).ToList().Union(wasabeeLoginResponse.OwnedOps?.Select(x => x.Id).ToList() ?? new List<string>()) ?? new List<string>();
+                foreach (var id in opsIds)
+                {
+                    var op = await _wasabeeApiV1Service.GetOperation(id);
+                    if (op != null)
+                    {
+                        await _operationsDatabase.SaveOperationModel(op);
+                    }
+                }
+
                 //_firebaseAnalyticsService.LogEvent("Login");
 
                 await _navigationService.Navigate<RootViewModel>();

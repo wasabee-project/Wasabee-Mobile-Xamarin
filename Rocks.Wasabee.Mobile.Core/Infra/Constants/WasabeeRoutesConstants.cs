@@ -2,6 +2,8 @@
 {
     public static class WasabeeRoutesConstants
     {
-        public static string Firebase => "/api/v1/me/firebase";
+        public static string BaseRoute => "/api/v1";
+
+        public static string Firebase => $"{BaseRoute}/me/firebase";
     }
 }
