@@ -84,7 +84,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string Color { get; set; }
 
-            [TextBlob("")]
+            [TextBlob("PortalsBlobbed")]
             public List<PortalModel> Portals { get; set; }
             public string PortalsBlobbed { get; set; }
 
