@@ -66,7 +66,17 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             var operationDatabaseModel = OperationDatabaseModel.ToOperationDatabaseModel(operationModel);
 
             var dbLock = databaseConnection.GetConnection().Lock();
-            databaseConnection.GetConnection().InsertOrReplaceWithChildren(operationDatabaseModel);
+
+            try
+            {
+                databaseConnection.GetConnection().InsertOrReplaceWithChildren(operationDatabaseModel, true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 1;
+            }
+
             dbLock.Dispose();
 
             return 0;
@@ -77,33 +87,38 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [PrimaryKey, Unique]
             public string OpId { get; set; }
 
-            [Indexed]
             public string OpName { get; set; }
 
             public string Creator { get; set; }
 
             public string Color { get; set; }
 
+            public string PortalsBlobbed { get; set; }
             [TextBlob("PortalsBlobbed")]
             public List<PortalModel> Portals { get; set; }
-            public string PortalsBlobbed { get; set; }
 
-            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public string AnchorsBlobbed { get; set; }
+            [TextBlob("AnchorsBlobbed")]
             public List<string> Anchors { get; set; }
 
-            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public string LinksBlobbed { get; set; }
+            [TextBlob("LinksBlobbed")]
             public List<LinkModel> Links { get; set; }
 
-            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public string BlockersBlobbed { get; set; }
+            [TextBlob("BlockersBlobbed")]
             public List<BlockerModel> Blockers { get; set; }
 
-            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public string MarkersBlobbed { get; set; }
+            [TextBlob("MarkersBlobbed")]
             public List<MarkerModel> Markers { get; set; }
 
-            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public string TeamListBlobbed { get; set; }
+            [TextBlob("TeamListBlobbed")]
             public List<TeamModel> TeamList { get; set; }
 
-            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public string KeysOnHandBlobbed { get; set; }
+            [TextBlob("KeysOnHandBlobbed")]
             public List<KeysOnHandModel> KeysOnHand { get; set; }
 
             public string Modified { get; set; }
