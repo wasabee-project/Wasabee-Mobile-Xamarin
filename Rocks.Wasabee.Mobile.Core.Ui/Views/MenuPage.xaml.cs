@@ -44,5 +44,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
                 md.IsPresented = !md.IsPresented;
             }
         }
+
+        private void ChangeOp_Clicked(object sender, EventArgs e)
+        {
+            CloseMenu();
+            ViewModel.ChangeSelectedOpCommand.Execute();
+        }
     }
 }

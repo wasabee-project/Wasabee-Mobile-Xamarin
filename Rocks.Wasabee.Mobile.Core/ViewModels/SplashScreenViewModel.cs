@@ -274,7 +274,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
             else
             {
-                LoadingStepLabel = "Loading OPs,\r\n" +
+                LoadingStepLabel = "Harvesting beehive,\r\n" +
                                    "Please wait...";
                 await Task.Delay(TimeSpan.FromMilliseconds(300));
 
@@ -287,6 +287,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         await _operationsDatabase.SaveOperationModel(op);
                     }
                 }
+
+                _preferences.Set(UserSettingsKeys.SelectedOp, opsIds.First());
 
                 //_firebaseAnalyticsService.LogEvent("Login");
 

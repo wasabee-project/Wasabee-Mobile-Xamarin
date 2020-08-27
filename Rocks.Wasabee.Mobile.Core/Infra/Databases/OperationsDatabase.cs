@@ -37,16 +37,14 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<OperationModel> GetOperationModel(string operationId)
         {
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
-            var operationDatabaseModels = await databaseConnection.Table<OperationDatabaseModel>().ToListAsync().ConfigureAwait(false);
 
-            if (operationDatabaseModels != null && operationDatabaseModels.Any())
-            {
-                var operationDatabaseModel = operationDatabaseModels.FirstOrDefault(x => x.OpId.Equals(operationId));
-                if (operationDatabaseModel != null)
-                    return OperationDatabaseModel.ToOperationModel(operationDatabaseModel);
-            }
+            var dbLock = databaseConnection.GetConnection().Lock();
+            var operationDatabaseModel = databaseConnection.GetConnection().GetWithChildren<OperationDatabaseModel>(operationId);
+            dbLock.Dispose();
 
-            return null;
+            return operationDatabaseModel != null ?
+                OperationDatabaseModel.ToOperationModel(operationDatabaseModel) :
+                null;
         }
 
         public async Task<List<OperationModel>> GetOperationModels()
