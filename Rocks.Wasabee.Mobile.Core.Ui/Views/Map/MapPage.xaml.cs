@@ -27,6 +27,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 Map.MapElements.Add(mapElement);
             }
 
+            foreach (var pin in ViewModel.Pins.Where(p => !Map.Pins.Contains(p)))
+            {
+                Map.Pins.Add(pin);
+            }
+
             Map.MoveToRegion(ViewModel.MapRegion);
 
             _hasLoaded = true;

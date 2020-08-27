@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Models.Auth.Google;
 using Rocks.Wasabee.Mobile.Core.Models.Auth.Wasabee;
@@ -33,7 +32,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         ///     - Second step : send the unique OAuth code to Google's token server to get the OAuth token
         /// </summary>
         /// <returns>Returns a GoogleOAuthResponse containing the OAuth token</returns>
-        public async Task<GoogleOAuthResponse> DoGoogleOAuthLoginAsync()
+        public async Task<GoogleToken> DoGoogleOAuthLoginAsync()
         {
             WebAuthenticatorResult authenticatorResult;
 
@@ -76,24 +75,24 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var oauthResponse = JsonConvert.DeserializeObject<GoogleOAuthResponse>(responseContent);
+            var googleToken = JsonConvert.DeserializeObject<GoogleToken>(responseContent);
 
-            return oauthResponse;
+            return googleToken;
         }
 
         /// <summary>
         /// Runs the Wasabee login process to retrieve Wasabeee data
         /// </summary>
-        /// <param name="googleOAuthResponse">Google OAuth response object containing the AccessToken</param>
+        /// <param name="googleToken">Google OAuth response object containing the AccessToken</param>
         /// <returns>Returns a WasabeeLoginResponse with account data</returns>
-        public async Task<WasabeeLoginResponse> DoWasabeeLoginAsync(GoogleOAuthResponse googleOAuthResponse)
+        public async Task<WasabeeLoginResponse> DoWasabeeLoginAsync(GoogleToken googleToken)
         {
             var cookieContainer = new CookieContainer();
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
             using var client = new HttpClient(handler);
 
-            var jsonToken = new JObject() { ["accessToken"] = googleOAuthResponse.AccessToken }.ToString();
-            var postContent = new StringContent(jsonToken, Encoding.UTF8, "application/json");
+            var wasabeeToken = new WasabeeToken(googleToken.AccessToken);
+            var postContent = new StringContent(JsonConvert.SerializeObject(wasabeeToken), Encoding.UTF8, "application/json");
             var response = await client.PostAsync(_appSettings.WasabeeTokenUrl, postContent).ConfigureAwait(false);
 
             try

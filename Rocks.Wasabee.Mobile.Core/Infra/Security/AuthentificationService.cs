@@ -15,7 +15,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _loginProvider = loginProvider;
         }
 
-        public async Task<GoogleOAuthResponse> GoogleLoginAsync()
+        public async Task<GoogleToken> GoogleLoginAsync()
         {
             if (!_isCacheCleared)
             {
@@ -26,9 +26,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             return await _loginProvider.DoGoogleOAuthLoginAsync();
         }
 
-        public async Task<WasabeeLoginResponse> WasabeeLoginAsync(GoogleOAuthResponse googleOAuthResponse)
+        public async Task<WasabeeLoginResponse> WasabeeLoginAsync(GoogleToken googleToken)
         {
-            return await _loginProvider.DoWasabeeLoginAsync(googleOAuthResponse);
+            return await _loginProvider.DoWasabeeLoginAsync(googleToken);
         }
 
         public async Task LogoutAsync()

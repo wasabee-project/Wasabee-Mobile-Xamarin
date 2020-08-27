@@ -2,7 +2,7 @@
 
 namespace Rocks.Wasabee.Mobile.Core.Models.Auth.Google
 {
-    public class GoogleOAuthResponse
+    public class GoogleToken
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }

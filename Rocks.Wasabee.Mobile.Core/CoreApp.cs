@@ -28,6 +28,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Bootstrapper.SetupEnvironment();
             Bootstrapper.SetupAppSettings();
             Bootstrapper.SetupServices();
+            Bootstrapper.SetupDatabases();
 
             AppCenter.Start(
                 $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};"

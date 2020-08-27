@@ -6,8 +6,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 {
     public interface IAuthentificationService
     {
-        Task<GoogleOAuthResponse> GoogleLoginAsync();
-        Task<WasabeeLoginResponse> WasabeeLoginAsync(GoogleOAuthResponse googleOAuthResponse);
+        Task<GoogleToken> GoogleLoginAsync();
+        Task<WasabeeLoginResponse> WasabeeLoginAsync(GoogleToken googleToken);
         Task LogoutAsync();
         Task RefreshTokenAsync();
     }
