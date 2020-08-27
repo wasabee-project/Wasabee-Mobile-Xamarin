@@ -1,6 +1,7 @@
 ﻿using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
@@ -10,7 +11,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
@@ -79,8 +79,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         MapElements.Add(
                             new Polyline()
                             {
-                                StrokeColor = Color.Orange,
-                                StrokeWidth = 2,
+                                StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color),
+                                StrokeWidth = 3,
                                 Geopath =
                                 {
                                     new Position(fromLat, fromLng),
@@ -104,7 +104,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
             MapRegion = MapSpan.FromCenterAndRadius(Pins.FirstOrDefault()?.Position ?? DefaultPosition, Distance.FromKilometers(5));
         }
-
-        #endregion
     }
+
+    #endregion
 }
