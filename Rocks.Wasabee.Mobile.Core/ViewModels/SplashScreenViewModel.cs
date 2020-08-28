@@ -283,7 +283,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                                    "Please wait...";
                 await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-                var opsIds = userModel.Ops?.Select(x => x.Id).ToList().Union(userModel.OwnedOps?.Select(x => x.Id).ToList() ?? new List<string>()) ?? new List<string>();
+                var opsIds =
+                    (userModel.Ops?
+                        .Select(x => x.Id) ?? new List<string>())
+                    .Union(
+                        userModel.OwnedOps?
+                            .Select(x => x.Id) ?? new List<string>()
+                        ).ToList();
+
                 foreach (var id in opsIds)
                 {
                     var op = await _wasabeeApiV1Service.GetOperation(id);
@@ -293,7 +300,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     }
                 }
 
-                _preferences.Set(UserSettingsKeys.SelectedOp, opsIds.First());
+                var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
+                if (selectedOp == string.Empty || opsIds.All(x => !x.Equals(selectedOp)))
+                    _preferences.Set(UserSettingsKeys.SelectedOp, opsIds.First());
 
                 //_firebaseAnalyticsService.LogEvent("Login");
 
