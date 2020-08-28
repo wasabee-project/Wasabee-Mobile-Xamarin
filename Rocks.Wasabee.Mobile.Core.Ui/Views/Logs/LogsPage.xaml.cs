@@ -7,7 +7,7 @@ using Xamarin.Forms.Xaml;
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Logs
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [MvxMasterDetailPagePresentation()]
+    [MvxMasterDetailPagePresentation(NoHistory = true)]
     public partial class LogsPage
     {
         public LogsPage()
