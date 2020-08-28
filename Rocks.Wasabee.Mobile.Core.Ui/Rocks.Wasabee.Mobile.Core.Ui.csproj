@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MapStyle.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MapStyle.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Rocks.Wasabee.Mobile.Core\Rocks.Wasabee.Mobile.Core.csproj" />
   </ItemGroup>
 
@@ -21,6 +29,7 @@
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.5.3.2" />
     <PackageReference Include="Xamarin.Forms" Version="4.7.0.1179" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />  
+    <PackageReference Include="Xamarin.Forms.GoogleMaps" Version="3.3.0" />  
     <PackageReference Include="Xamarin.Forms.Maps" Version="4.7.0.1179" />
   </ItemGroup>
 
