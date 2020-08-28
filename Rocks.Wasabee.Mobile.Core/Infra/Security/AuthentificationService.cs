@@ -1,5 +1,5 @@
-﻿using Rocks.Wasabee.Mobile.Core.Models.Auth.Google;
-using Rocks.Wasabee.Mobile.Core.Models.Auth.Wasabee;
+﻿using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
+using Rocks.Wasabee.Mobile.Core.Models.Users;
 using System.Threading.Tasks;
 
 namespace Rocks.Wasabee.Mobile.Core.Infra.Security
@@ -26,7 +26,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             return await _loginProvider.DoGoogleOAuthLoginAsync();
         }
 
-        public async Task<WasabeeLoginResponse> WasabeeLoginAsync(GoogleToken googleToken)
+        public async Task<UserModel> WasabeeLoginAsync(GoogleToken googleToken)
         {
             return await _loginProvider.DoWasabeeLoginAsync(googleToken);
         }

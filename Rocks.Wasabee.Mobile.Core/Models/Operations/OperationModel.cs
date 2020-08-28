@@ -52,7 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public DateTime DownloadedAt { get; set; } = DateTime.UtcNow;
     }
 
-    public class PortalModel
+    public class PortalModel : BaseModel
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -73,7 +73,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public string Hardness { get; set; }
     }
 
-    public class LinkModel
+    public class LinkModel : BaseModel
     {
         [JsonProperty("ID")]
         public string Id { get; set; }
@@ -103,7 +103,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public string Color { get; set; }
     }
 
-    public class BlockerModel
+    public class BlockerModel : BaseModel
     {
         [JsonProperty("ID")]
         public string Id { get; set; }
@@ -127,7 +127,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public bool Completed { get; set; }
     }
 
-    public class MarkerModel
+    public class MarkerModel : BaseModel
     {
         [JsonProperty("ID")]
         public string Id { get; set; }
@@ -154,7 +154,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public int Order { get; set; }
     }
 
-    public class TeamModel
+    public class TeamModel : BaseModel
     {
         [JsonProperty("teamid")]
         public string TeamId { get; set; }
@@ -163,7 +163,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public string Role { get; set; }
     }
 
-    public class KeysOnHandModel
+    public class KeysOnHandModel : BaseModel
     {
         [JsonProperty("portalId")]
         public string PortalId { get; set; }

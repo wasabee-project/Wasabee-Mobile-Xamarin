@@ -7,8 +7,8 @@ using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models;
-using Rocks.Wasabee.Mobile.Core.Models.Auth.Google;
-using Rocks.Wasabee.Mobile.Core.Models.Auth.Wasabee;
+using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
+using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -31,6 +31,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IAppSettings _appSettings;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly UsersDatabase _usersDatabase;
         private readonly OperationsDatabase _operationsDatabase;
 
         private bool _working;
@@ -39,7 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
             IAuthentificationService authentificationService, IMvxNavigationService navigationService,
             IAppSettings appSettings, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service,
-            OperationsDatabase operationsDatabase)
+            UsersDatabase usersDatabase, OperationsDatabase operationsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
@@ -49,6 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _appSettings = appSettings;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+            _usersDatabase = usersDatabase;
             _operationsDatabase = operationsDatabase;
         }
 
@@ -235,8 +237,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
             await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-            var wasabeeLoginResponse = await _authentificationService.WasabeeLoginAsync(_googleToken);
-            if (wasabeeLoginResponse != null)
+            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken);
+            if (wasabeeUserModel != null)
             {
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new UserLoggedInMessage(this));
 
@@ -246,9 +248,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
                 }
 
-                _userSettingsService.SaveIngressName(wasabeeLoginResponse.IngressName);
+                await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
-                await FinishLogin(wasabeeLoginResponse);
+                _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
+                _userSettingsService.SaveIngressName(wasabeeUserModel.IngressName);
+
+                await FinishLogin(wasabeeUserModel);
             }
             else
             {
@@ -259,15 +264,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
         }
 
-        private async Task FinishLogin(WasabeeLoginResponse wasabeeLoginResponse)
+        private async Task FinishLogin(UserModel userModel)
         {
-            LoadingStepLabel = $"Welcome {wasabeeLoginResponse.IngressName}";
+            LoadingStepLabel = $"Welcome {userModel.IngressName}";
             await Task.Delay(TimeSpan.FromSeconds(1));
 
-            if ((wasabeeLoginResponse.Teams == null || !wasabeeLoginResponse.Teams.Any()) &&
-                (wasabeeLoginResponse.OwnedTeams == null || !wasabeeLoginResponse.OwnedTeams.Any()) &&
-                (wasabeeLoginResponse.Ops == null || !wasabeeLoginResponse.Ops.Any()) &&
-                (wasabeeLoginResponse.OwnedOps == null || !wasabeeLoginResponse.OwnedOps.Any()))
+            if ((userModel.Teams == null || !userModel.Teams.Any()) &&
+                (userModel.OwnedTeams == null || !userModel.OwnedTeams.Any()) &&
+                (userModel.Ops == null || !userModel.Ops.Any()) &&
+                (userModel.OwnedOps == null || !userModel.OwnedOps.Any()))
             {
                 IsLoading = false;
                 HasNoTeamOrOpsAssigned = true;
@@ -278,7 +283,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                                    "Please wait...";
                 await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-                var opsIds = wasabeeLoginResponse.Ops?.Select(x => x.Id).ToList().Union(wasabeeLoginResponse.OwnedOps?.Select(x => x.Id).ToList() ?? new List<string>()) ?? new List<string>();
+                var opsIds = userModel.Ops?.Select(x => x.Id).ToList().Union(userModel.OwnedOps?.Select(x => x.Id).ToList() ?? new List<string>()) ?? new List<string>();
                 foreach (var id in opsIds)
                 {
                     var op = await _wasabeeApiV1Service.GetOperation(id);

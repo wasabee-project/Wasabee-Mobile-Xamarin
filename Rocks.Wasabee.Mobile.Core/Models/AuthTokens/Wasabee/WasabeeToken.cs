@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Rocks.Wasabee.Mobile.Core.Models.Auth.Wasabee
+namespace Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Wasabee
 {
     public class WasabeeToken
     {

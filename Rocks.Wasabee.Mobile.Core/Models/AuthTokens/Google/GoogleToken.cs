@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Rocks.Wasabee.Mobile.Core.Models.Auth.Google
+namespace Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google
 {
     public class GoogleToken
     {

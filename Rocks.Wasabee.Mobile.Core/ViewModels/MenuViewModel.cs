@@ -10,6 +10,7 @@ using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             MenuItems = new MvxObservableCollection<MenuItem>()
             {
-                new MenuItem() { Title = "Profile", ViewModelType = typeof(MenuViewModel) },
+                new MenuItem() { Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
                 new MenuItem() { Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
                 new MenuItem() { Title = "Live Logs", ViewModelType = typeof(LogsViewModel) }
             };
