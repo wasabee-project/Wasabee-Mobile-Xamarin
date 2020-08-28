@@ -14,6 +14,7 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 
@@ -24,6 +25,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IMvxNavigationService _navigationService;
         private readonly IAuthentificationService _authentificationService;
         private readonly IPreferences _preferences;
+        private readonly IPermissions _permissions;
         private readonly IVersionTracking _versionTracking;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IUserDialogs _userDialogs;
@@ -31,12 +33,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly OperationsDatabase _operationsDatabase;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
-            IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
+            IPreferences preferences, IPermissions permissions, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
             IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase)
         {
             _navigationService = navigationService;
             _authentificationService = authentificationService;
             _preferences = preferences;
+            _permissions = permissions;
             _versionTracking = versionTracking;
             _userSettingsService = userSettingsService;
             _userDialogs = userDialogs;
@@ -103,6 +106,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand<bool> ToggleLiveLocationSharingCommand => new MvxCommand<bool>(async value => await ToggleLiveLocationSharingExecuted(value));
         private async Task ToggleLiveLocationSharingExecuted(bool value)
         {
+            var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
+            var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+            if (statusLocationAlways != PermissionStatus.Granted || statusLocationWhenInUse != PermissionStatus.Granted)
+            {
+                var result = await _permissions.RequestAsync<Permissions.LocationAlways>();
+                statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                if (result != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+                {
+                    _userDialogs.Alert("Geolocation permission is required !");
+                    return;
+                }
+            }
+
             if (!_isLiveLocationSharingEnabled && value)
             {
                 var result = await _userDialogs.ConfirmAsync(

@@ -27,7 +27,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
     [Service]
     public class LiveGeolocationService : Service
     {
-        private const string ChannelId = "LIVE_GEOLOCATION_SHARING_CHANNEL";
+        private const string ChannelId = "Live Location Sharing";
 
         private IBinder _binder;
         private WasabeeApiV1Service _wasabeeApiV1Service;
@@ -84,7 +84,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 
                 if (Geolocator.IsGeolocationAvailable && Geolocator.IsGeolocationEnabled)
                 {
-                    Geolocator.DesiredAccuracy = 25;
+                    Geolocator.DesiredAccuracy = 5;
                     Geolocator.PositionChanged += Geolocator_PositionChanged;
 
                     //every 3 second, 5 meters
@@ -108,8 +108,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             if (_isRunning)
             {
                 var result = await _wasabeeApiV1Service.UpdateLocation(e.Position.Latitude.ToString(CultureInfo.GetCultureInfo("en-US")), e.Position.Longitude.ToString(CultureInfo.GetCultureInfo("en-US")));
-
-                Acr.UserDialogs.UserDialogs.Instance.Toast($"Location updated : {e.Position.Latitude}, {e.Position.Longitude} ({result})", TimeSpan.FromSeconds(2));
+                Acr.UserDialogs.UserDialogs.Instance.Toast($"Location updated : {e.Position.Latitude}, {e.Position.Longitude} ({result})");
             }
         }
 

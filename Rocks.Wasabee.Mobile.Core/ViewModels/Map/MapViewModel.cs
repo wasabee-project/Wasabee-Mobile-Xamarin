@@ -1,4 +1,6 @@
-﻿using MvvmCross.Commands;
+﻿using Acr.UserDialogs;
+using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Helpers;
@@ -10,6 +12,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms.GoogleMaps;
 
@@ -21,15 +24,46 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly IPreferences _preferences;
+        private readonly IPermissions _permissions;
+        private readonly IUserDialogs _userDialogs;
+        private readonly IMvxNavigationService _navigationService;
 
         private readonly MvxSubscriptionToken _token;
 
-        public MapViewModel(OperationsDatabase operationsDatabase, IPreferences preferences, IMvxMessenger messenger)
+        public MapViewModel(OperationsDatabase operationsDatabase, IPreferences preferences,
+            IPermissions permissions, IMvxMessenger messenger, IUserDialogs userDialogs, IMvxNavigationService navigationService)
         {
             _operationsDatabase = operationsDatabase;
             _preferences = preferences;
+            _permissions = permissions;
+            _userDialogs = userDialogs;
+            _navigationService = navigationService;
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await LoadOperationCommand.ExecuteAsync());
+        }
+
+        public override async void Prepare()
+        {
+            base.Prepare();
+
+            var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
+            var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+            if (statusLocationAlways != PermissionStatus.Granted || statusLocationWhenInUse != PermissionStatus.Granted)
+            {
+                var result = await _permissions.RequestAsync<Permissions.LocationAlways>();
+                statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                if (result != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+                {
+                    _userDialogs.Alert("Geolocation permission is required to show your position !");
+                }
+                else
+                    GeolocationGranted = true;
+            }
+            else
+            {
+                GeolocationGranted = true;
+            }
         }
 
         public override async Task Initialize()
@@ -45,6 +79,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public MvxObservableCollection<Polyline> Polylines { get; set; } = new MvxObservableCollection<Polyline>();
         public MvxObservableCollection<Pin> Pins { get; set; } = new MvxObservableCollection<Pin>();
         public MapSpan MapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
+
+        public bool GeolocationGranted { get; set; }
 
         #endregion
 

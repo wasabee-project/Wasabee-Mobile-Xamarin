@@ -34,6 +34,9 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 _hasLoaded = false;
                 RefreshMapView();
             }
+
+            if (e.PropertyName == "GeolocationGranted")
+                Map.MyLocationEnabled = ViewModel.GeolocationGranted;
         }
 
         protected override void OnAppearing()
@@ -56,7 +59,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
             Map.IsIndoorEnabled = false;
             Map.IsTrafficEnabled = false;
-            Map.MyLocationEnabled = true;
         }
 
         private void RefreshMapView()
