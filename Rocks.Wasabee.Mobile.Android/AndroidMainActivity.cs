@@ -46,7 +46,7 @@ namespace Rocks.Wasabee.Mobile.Droid
             {
                 Xamarin.Forms.Forms.Init(this, bundle);
                 Xamarin.Essentials.Platform.Init(this, bundle);
-                Xamarin.FormsMaps.Init(this, bundle);
+                Xamarin.FormsGoogleMaps.Init(this, bundle);
 
                 CreateNotificationChannels();
 

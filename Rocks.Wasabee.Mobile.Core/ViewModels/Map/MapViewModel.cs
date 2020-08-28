@@ -11,7 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 {
@@ -42,7 +42,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         public OperationModel Operation { get; set; }
 
-        public MvxObservableCollection<MapElement> MapElements { get; set; } = new MvxObservableCollection<MapElement>();
+        public MvxObservableCollection<Polyline> Polylines { get; set; } = new MvxObservableCollection<Polyline>();
         public MvxObservableCollection<Pin> Pins { get; set; } = new MvxObservableCollection<Pin>();
         public MapSpan MapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
@@ -57,7 +57,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             if (string.IsNullOrWhiteSpace(selectedOpId))
                 return;
 
-            MapElements.Clear();
+            Polylines.Clear();
             Pins.Clear();
 
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
@@ -76,12 +76,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         double.TryParse(toPortal.Lat, NumberStyles.Float, culture, out var toLat);
                         double.TryParse(toPortal.Lng, NumberStyles.Float, culture, out var toLng);
 
-                        MapElements.Add(
+                        Polylines.Add(
                             new Polyline()
                             {
                                 StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color),
-                                StrokeWidth = 3,
-                                Geopath =
+                                StrokeWidth = 2,
+                                Positions =
                                 {
                                     new Position(fromLat, fromLng),
                                     new Position(toLat, toLng)

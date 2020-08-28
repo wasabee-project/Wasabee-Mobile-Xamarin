@@ -1,13 +1,16 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
+using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     [MvxMasterDetailPagePresentation(NoHistory = true)]
-    public partial class MapPage
+    public partial class MapPage : BaseContentPage<MapViewModel>
     {
         private bool _hasLoaded = false;
 
@@ -37,7 +40,23 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
         {
             base.OnAppearing();
 
+            SetMapStyle();
             RefreshMapView();
+
+            Map.UiSettings.ScrollGesturesEnabled = true;
+            Map.UiSettings.ZoomControlsEnabled = true;
+            Map.UiSettings.ZoomGesturesEnabled = true;
+            Map.UiSettings.MyLocationButtonEnabled = true;
+
+            Map.UiSettings.RotateGesturesEnabled = false;
+            Map.UiSettings.TiltGesturesEnabled = false;
+            Map.UiSettings.IndoorLevelPickerEnabled = false;
+            Map.UiSettings.CompassEnabled = false;
+            Map.UiSettings.MapToolbarEnabled = false;
+
+            Map.IsIndoorEnabled = false;
+            Map.IsTrafficEnabled = false;
+            Map.MyLocationEnabled = true;
         }
 
         private void RefreshMapView()
@@ -45,14 +64,14 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             if (_hasLoaded)
                 return;
 
-            Map.MapElements.Clear();
+            Map.Polylines.Clear();
             Map.Pins.Clear();
 
-            if (ViewModel.MapElements.Any())
+            if (ViewModel.Polylines.Any())
             {
-                foreach (var mapElement in ViewModel.MapElements.Where(mapElement => !Map.MapElements.Contains(mapElement)))
+                foreach (var polyline in ViewModel.Polylines.Where(mapElement => !Map.Polylines.Contains(mapElement)))
                 {
-                    Map.MapElements.Add(mapElement);
+                    Map.Polylines.Add(polyline);
                 }
             }
 
@@ -67,6 +86,20 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             Map.MoveToRegion(ViewModel.MapRegion);
 
             _hasLoaded = true;
+        }
+
+        private void SetMapStyle()
+        {
+            var assembly = typeof(MapPage).GetTypeInfo().Assembly;
+            var stream = assembly.GetManifestResourceStream("Rocks.Wasabee.Mobile.Core.Ui.MapStyle.json");
+
+            string styleFile;
+            using (var reader = new System.IO.StreamReader(stream))
+            {
+                styleFile = reader.ReadToEnd();
+            }
+
+            Map.MapStyle = MapStyle.FromJson(styleFile);
         }
     }
 }
