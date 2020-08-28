@@ -66,6 +66,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [Indexed]
             public string IngressName { get; set; }
 
+            public string ProfileImage { get; set; }
+
             public int Level { get; set; }
 
             public string LocationKey { get; set; }
@@ -116,6 +118,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     {
                         GoogleId = userDatabaseModel.GoogleId,
                         IngressName = userDatabaseModel.IngressName,
+                        ProfileImage = userDatabaseModel.ProfileImage,
                         Level = userDatabaseModel.Level,
                         LocationKey = userDatabaseModel.LocationKey,
                         OwnTracksPw = userDatabaseModel.OwnTracksPw,
@@ -147,6 +150,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     GoogleId = userModel.GoogleId,
                     IngressName = userModel.IngressName,
+                    ProfileImage = userModel.ProfileImage,
                     Level = userModel.Level,
                     LocationKey = userModel.LocationKey,
                     OwnTracksPw = userModel.OwnTracksPw,

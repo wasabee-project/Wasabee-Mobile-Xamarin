@@ -6,6 +6,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
     {
         public string GoogleId { get; set; }
         public string IngressName { get; set; }
+        public string ProfileImage { get; set; }
         public int Level { get; set; }
         public string LocationKey { get; set; }
         public string OwnTracksPw { get; set; }
