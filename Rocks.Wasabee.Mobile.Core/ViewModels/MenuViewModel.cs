@@ -90,24 +90,37 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         }
 
         private bool _isLiveLocationSharingEnabled;
-
         public bool IsLiveLocationSharingEnabled
         {
             get => _isLiveLocationSharingEnabled;
-            set
-            {
-                if (SetProperty(ref _isLiveLocationSharingEnabled, value))
-                {
-                    _messenger.Publish(_isLiveLocationSharingEnabled
-                        ? new LiveGeolocationTrackingMessage(this, Action.Start)
-                        : new LiveGeolocationTrackingMessage(this, Action.Stop));
-                }
-            }
+            set => ToggleLiveLocationSharingCommand.Execute(value);
         }
 
         #endregion
 
         #region Commands
+
+        public IMvxCommand<bool> ToggleLiveLocationSharingCommand => new MvxCommand<bool>(async value => await ToggleLiveLocationSharingExecuted(value));
+        private async Task ToggleLiveLocationSharingExecuted(bool value)
+        {
+            if (!_isLiveLocationSharingEnabled && value)
+            {
+                var result = await _userDialogs.ConfirmAsync(
+                    "Your location will be shared with ALL your enabled teams. Start tracking anyway ?", "Warning",
+                    "Yes", "No");
+
+                if (!result)
+                    return;
+
+                SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+            }
+            else
+            {
+                SetProperty(ref _isLiveLocationSharingEnabled, false, nameof(IsLiveLocationSharingEnabled));
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Stop));
+            }
+        }
 
         public IMvxCommand<MenuItem> SelectedMenuItemChangedCommand => new MvxCommand<MenuItem>(SelectedMenuItemChangedExecuted);
         private void SelectedMenuItemChangedExecuted(MenuItem menuItem)
