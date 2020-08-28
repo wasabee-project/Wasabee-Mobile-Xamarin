@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage x:TypeArguments="profile:ProfileViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:profile="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Profile;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Profile.ProfilePage"
+                       Title="Profile">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Margin="10">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Display Name :"/>
+                    <Label Text="{Binding AgentName}" TextColor="{StaticResource PrimaryGreen}" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+                <Label Text="This information comes from V and/or .rocks.
+                       If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."
+                       FontAttributes="Italic" Margin="0, 0, 0, 20"/>
+                
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Level :"/>
+                    <Label Text="{Binding Level}" TextColor="{StaticResource PrimaryGreen}" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <controls:LinkLabel Text="enl.rocks Status :" Clicked="EnlRocksLink_Clicked"/>
+                    <Label Text="{Binding RocksVerified, Converter={StaticResource BoolToString}}" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <controls:LinkLabel Text="V Status :" Clicked="ProjectVLink_Clicked"/>
+                    <Label Text="{Binding VVerified, Converter={StaticResource BoolToString}}" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+
+                <Image Source="{Binding Picture}" WidthRequest="200" HorizontalOptions="Center" Margin="0, 50, 0, 0"/>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</views:BaseContentPage>

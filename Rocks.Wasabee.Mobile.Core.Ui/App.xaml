@@ -10,6 +10,7 @@
     <platform:MvxFormsApplication.Resources>
         <ResourceDictionary Source="Styles.xaml">
             <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+            <converters:BoolToStringConverter x:Key="BoolToString"/>
         </ResourceDictionary>
     </platform:MvxFormsApplication.Resources>
 </platform:MvxFormsApplication>

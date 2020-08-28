@@ -1,6 +1,8 @@
-﻿namespace Rocks.Wasabee.Mobile.Core.Models.Auth.Wasabee
+﻿using System.Collections.Generic;
+
+namespace Rocks.Wasabee.Mobile.Core.Models.Users
 {
-    public class WasabeeLoginResponse
+    public class UserModel : BaseModel
     {
         public string GoogleId { get; set; }
         public string IngressName { get; set; }
@@ -14,15 +16,15 @@
         public bool RocksVerified { get; set; }
         public bool Raid { get; set; }
         public bool Risc { get; set; }
-        public OwnedTeam[] OwnedTeams { get; set; }
-        public Team[] Teams { get; set; }
-        public Op[] Ops { get; set; }
-        public OwnedOp[] OwnedOps { get; set; }
-        public Telegram Telegram { get; set; }
-        public Assignment[] Assignments { get; set; }
+        public List<OwnedTeamModel> OwnedTeams { get; set; }
+        public List<TeamModel> Teams { get; set; }
+        public List<OpModel> Ops { get; set; }
+        public List<OwnedOpModel> OwnedOps { get; set; }
+        public TelegramModel Telegram { get; set; }
+        public List<AssignmentModel> Assignments { get; set; }
     }
 
-    public class Telegram
+    public class TelegramModel : BaseModel
     {
         public string UserName { get; set; }
         public int Id { get; set; }
@@ -30,7 +32,7 @@
         public string Authtoken { get; set; }
     }
 
-    public class OwnedTeam
+    public class OwnedTeamModel : BaseModel
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -38,7 +40,7 @@
         public string RocksKey { get; set; }
     }
 
-    public class Team
+    public class TeamModel : BaseModel
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -46,7 +48,7 @@
         public string RocksComm { get; set; }
     }
 
-    public class Op
+    public class OpModel : BaseModel
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -55,7 +57,7 @@
         public string TeamId { get; set; }
     }
 
-    public class OwnedOp
+    public class OwnedOpModel : BaseModel
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -64,7 +66,7 @@
         public string TeamId { get; set; }
     }
 
-    public class Assignment
+    public class AssignmentModel : BaseModel
     {
         public string OpId { get; set; }
         public string OperationName { get; set; }

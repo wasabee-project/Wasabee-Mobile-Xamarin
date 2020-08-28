@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
-using Rocks.Wasabee.Mobile.Core.Models.Auth.Google;
-using Rocks.Wasabee.Mobile.Core.Models.Auth.Wasabee;
+using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
+using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Wasabee;
+using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Collections.Generic;
@@ -85,7 +86,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// </summary>
         /// <param name="googleToken">Google OAuth response object containing the AccessToken</param>
         /// <returns>Returns a WasabeeLoginResponse with account data</returns>
-        public async Task<WasabeeLoginResponse> DoWasabeeLoginAsync(GoogleToken googleToken)
+        public async Task<UserModel> DoWasabeeLoginAsync(GoogleToken googleToken)
         {
             var cookieContainer = new CookieContainer();
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
@@ -107,7 +108,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var wasabeeLoginResponse = JsonConvert.DeserializeObject<WasabeeLoginResponse>(responseContent);
+            var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(responseContent);
 
             var uri = new Uri(_appSettings.WasabeeBaseUrl);
             var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()
@@ -117,7 +118,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             if (wasabeeCookie != null)
                 await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, JsonConvert.SerializeObject(wasabeeCookie));
 
-            return wasabeeLoginResponse;
+            return wasabeeUserModel;
         }
 
         /// <summary>

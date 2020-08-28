@@ -39,6 +39,7 @@ namespace Rocks.Wasabee.Mobile.Core
 
         public static void SetupDatabases()
         {
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new UsersDatabase(Mvx.IoCProvider.Resolve<IFileSystem>()));
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new OperationsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>()));
         }
 

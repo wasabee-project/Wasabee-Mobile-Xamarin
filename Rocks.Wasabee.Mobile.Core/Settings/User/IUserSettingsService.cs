@@ -2,6 +2,9 @@
 {
     public interface IUserSettingsService
     {
+        void SaveLoggedUserGoogleId(string googleId);
+        string GetLoggedUserGoogleId();
+
         void SaveIngressName(string ingressName);
         string GetIngressName();
     }
