@@ -31,11 +31,20 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <StackLayout Orientation="Horizontal" Margin="10" HorizontalOptions="Center">
+                <Label Text="Location sharing :" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+                <Switch OnColor="{StaticResource PrimaryGreenDark}" Scale="1.5" Margin="10, 0"
+                        ThumbColor="{Binding IsLiveLocationSharingEnabled, Converter={StaticResource BoolToColorConverter}}"
+                        IsToggled="{Binding IsLiveLocationSharingEnabled}"/>
+            </StackLayout>
+
             <BoxView HeightRequest="1" BackgroundColor="{StaticResource PrimaryGrey}" Margin="20"/>
 
             <StackLayout>
-                <Label Text="Selected OP :" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
-                <Label Text="{Binding SelectedOpName}" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="OP :" FontAttributes="Bold" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+                    <Label Text="{Binding SelectedOpName}" FontAttributes="Italic" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+                </StackLayout>
                 
                 <Button
                     Text="Change" 

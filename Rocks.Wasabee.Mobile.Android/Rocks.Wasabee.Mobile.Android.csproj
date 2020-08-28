@@ -75,6 +75,9 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility">
       <Version>6.4.2</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugin.Geolocator">
+      <Version>4.5.0.6</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Collections">
       <Version>28.0.0.3</Version>
     </PackageReference>
@@ -122,6 +125,8 @@
     <Compile Include="AndroidSplashScreenActivity.cs" />
     <Compile Include="Infra\Firebase\FirebaseAnalyticsService.cs" />
     <Compile Include="Infra\Firebase\WasabeeFCMService.cs" />
+    <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
+    <Compile Include="Services\Geolocation\LiveGeolocationService.cs" />
     <Compile Include="WebAuthenticationCallbackActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -183,6 +188,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

@@ -10,7 +10,8 @@
     <platform:MvxFormsApplication.Resources>
         <ResourceDictionary Source="Styles.xaml">
             <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
-            <converters:BoolToStringConverter x:Key="BoolToString"/>
+            <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
         </ResourceDictionary>
     </platform:MvxFormsApplication.Resources>
 </platform:MvxFormsApplication>

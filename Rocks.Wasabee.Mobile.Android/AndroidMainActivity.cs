@@ -5,10 +5,15 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
+using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Ui;
+using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
+using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
@@ -59,6 +64,14 @@ namespace Rocks.Wasabee.Mobile.Droid
                     Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
                 }
 #endif
+
+                Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
+                {
+                    if (msg.Action == Action.Start)
+                        await GeolocationHelper.StartLocationService();
+                    else
+                        GeolocationHelper.StopLocationService();
+                });
             }
         }
 

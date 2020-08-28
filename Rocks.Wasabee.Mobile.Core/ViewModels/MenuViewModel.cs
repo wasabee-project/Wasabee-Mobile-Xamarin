@@ -15,6 +15,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
+using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
@@ -28,8 +29,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IMvxMessenger _messenger;
         private readonly OperationsDatabase _operationsDatabase;
-
-        private MenuItem _selectedMenuItem;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
@@ -78,6 +77,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public string SelectedOpName { get; set; }
         public MvxObservableCollection<OperationModel> AvailableOpsCollection { get; set; }
         public MvxObservableCollection<MenuItem> MenuItems { get; set; }
+
+        private MenuItem _selectedMenuItem;
         public MenuItem SelectedMenuItem
         {
             get => _selectedMenuItem;
@@ -85,6 +86,22 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 if (SetProperty(ref _selectedMenuItem, value))
                     SelectedMenuItemChangedCommand.Execute(value);
+            }
+        }
+
+        private bool _isLiveLocationSharingEnabled;
+
+        public bool IsLiveLocationSharingEnabled
+        {
+            get => _isLiveLocationSharingEnabled;
+            set
+            {
+                if (SetProperty(ref _isLiveLocationSharingEnabled, value))
+                {
+                    _messenger.Publish(_isLiveLocationSharingEnabled
+                        ? new LiveGeolocationTrackingMessage(this, Action.Start)
+                        : new LiveGeolocationTrackingMessage(this, Action.Stop));
+                }
             }
         }
 
