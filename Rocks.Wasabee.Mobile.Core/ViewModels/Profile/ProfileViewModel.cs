@@ -52,7 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
                 Level = userModel.Level;
                 RocksVerified = userModel.RocksVerified;
                 VVerified = userModel.VVerified;
-                Picture = "wasabee.png";
+                Picture = userModel.ProfileImage;
             }
             else
             {
