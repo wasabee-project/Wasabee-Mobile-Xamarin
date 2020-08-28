@@ -35,6 +35,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<IVersionTracking>(() => new VersionTrackingImplementation());
             Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
             Mvx.IoCProvider.RegisterSingleton<IFileSystem>(() => new FileSystemImplementation());
+            Mvx.IoCProvider.RegisterSingleton<IGeolocation>(() => new GeolocationImplementation());
         }
 
         public static void SetupDatabases()

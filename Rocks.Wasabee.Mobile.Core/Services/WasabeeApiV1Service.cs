@@ -11,6 +11,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
     [Headers("Accept: application/json")]
     public interface IWasabeeApiV1
     {
+        [Get("/me?lat={lat}&lon={lon}")]
+        Task<string> UpdateLocation(string lat, string lon);
+
         [Get("/draw/{opId}")]
         Task<OperationModel> GetOperation(string opId);
 
@@ -29,12 +32,16 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             _appSettings = appSettings;
         }
 
+        public async Task<string> UpdateLocation(string lat, string lon)
+        {
+            return await AttemptAndRetry(() => WasabeeApiClient.UpdateLocation(lat, lon), new CancellationToken()).ConfigureAwait(false);
+        }
+
         public async Task<OperationModel> GetOperation(string opId)
         {
             var operationModel = await AttemptAndRetry(() => WasabeeApiClient.GetOperation(opId), new CancellationToken()).ConfigureAwait(false);
 
             return operationModel;
         }
-
     }
 }

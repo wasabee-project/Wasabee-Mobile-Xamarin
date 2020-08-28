@@ -23,11 +23,11 @@
                 </StackLayout>
                 <StackLayout Orientation="Horizontal">
                     <controls:LinkLabel Text="enl.rocks Status :" Clicked="EnlRocksLink_Clicked"/>
-                    <Label Text="{Binding RocksVerified, Converter={StaticResource BoolToString}}" HorizontalOptions="EndAndExpand"/>
+                    <Label Text="{Binding RocksVerified, Converter={StaticResource BoolToStringConverter}}" HorizontalOptions="EndAndExpand"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal">
                     <controls:LinkLabel Text="V Status :" Clicked="ProjectVLink_Clicked"/>
-                    <Label Text="{Binding VVerified, Converter={StaticResource BoolToString}}" HorizontalOptions="EndAndExpand"/>
+                    <Label Text="{Binding VVerified, Converter={StaticResource BoolToStringConverter}}" HorizontalOptions="EndAndExpand"/>
                 </StackLayout>
 
                 <Image Source="{Binding Picture}" WidthRequest="200" HorizontalOptions="Center" Margin="0, 50, 0, 0"/>
