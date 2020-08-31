@@ -23679,6 +23679,12 @@ namespace Rocks.Wasabee.Mobile.Droid
 			// aapt resource value: 0x7F070176
 			public const int wasabee = 2131165558;
 			
+			// aapt resource value: 0x7F070177
+			public const int wasabee_markers_destroy_pending = 2131165559;
+			
+			// aapt resource value: 0x7F070178
+			public const int wasabee_markers_virus_pending = 2131165560;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

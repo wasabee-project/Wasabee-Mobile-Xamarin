@@ -99,12 +99,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
             try
             {
+                var culture = CultureInfo.GetCultureInfo("en-US");
                 foreach (var link in Operation.Links)
                 {
                     var fromPortal = Operation.Portals.First(x => x.Id.Equals(link.FromPortalId));
                     var toPortal = Operation.Portals.First(x => x.Id.Equals(link.ToPortalId));
 
-                    var culture = CultureInfo.GetCultureInfo("en-US");
                     try
                     {
                         double.TryParse(fromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
@@ -126,6 +126,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
                         Pins.Add(new Pin() { Position = new Position(fromLat, fromLng), Label = fromPortal.Name, Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") });
                         Pins.Add(new Pin() { Position = new Position(toLat, toLng), Label = toPortal.Name, Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") });
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+
+                foreach (var marker in Operation.Markers)
+                {
+                    try
+                    {
+                        var portal = Operation.Portals.First(x => x.Id.Equals(marker.PortalId));
+                        double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
+                        double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
+
+                        Pins.Add(new Pin()
+                        {
+                            Position = new Position(portalLat, portalLng),
+                            Label = $"{portal.Name}\r\n\"{portal.Comment}\"",
+                            Icon = BitmapDescriptorFactory.FromBundle(marker.Type)
+                        });
                     }
                     catch (Exception e)
                     {

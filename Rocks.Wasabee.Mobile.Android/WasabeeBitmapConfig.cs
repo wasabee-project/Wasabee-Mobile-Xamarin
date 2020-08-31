@@ -1,7 +1,12 @@
-﻿using Xamarin.Forms.GoogleMaps;
+﻿using Android.App;
+using SkiaSharp;
+using SkiaSharp.Views.Android;
+using System;
+using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.Android.Factories;
 using AndroidBitmapDescriptor = Android.Gms.Maps.Model.BitmapDescriptor;
 using AndroidBitmapDescriptorFactory = Android.Gms.Maps.Model.BitmapDescriptorFactory;
+using SKSvg = SkiaSharp.Extended.Svg.SKSvg;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
@@ -33,8 +38,37 @@ namespace Rocks.Wasabee.Mobile.Droid
                 case "marker_layer_main":
                     iconId = Resource.Drawable.marker_layer_main;
                     break;
+                default:
+                    iconId = -999;
+                    break;
             }
-            return AndroidBitmapDescriptorFactory.FromResource(iconId);
+
+            if (iconId == -999)
+            {
+                switch (descriptor.Id)
+                {
+                    case "DestroyPortalAlert":
+                        iconId = Resource.Drawable.wasabee_markers_destroy_pending;
+                        break;
+                    case "UseVirusPortalAlert":
+                        iconId = Resource.Drawable.wasabee_markers_virus_pending;
+                        break;
+                    default:
+                        throw new ArgumentException();
+                }
+
+                var svgStream = Application.Context.Resources?.OpenRawResource(iconId);
+                var svg = new SKSvg();
+                var picture = svg.Load(svgStream);
+
+                return AndroidBitmapDescriptorFactory.FromBitmap(
+                    SKBitmap.FromImage(
+                            SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)))
+                    .Resize(new SKSizeI(75, 123), SKFilterQuality.None)
+                    .ToBitmap());
+            }
+            else
+                return AndroidBitmapDescriptorFactory.FromResource(iconId);
         }
     }
 }
