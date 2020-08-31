@@ -5,10 +5,10 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Map;assembly=Rocks.Wasabee.Mobile.Core"
-                       xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+                       xmlns:googleMaps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
                        mc:Ignorable="d"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Map.MapPage">
     <ContentPage.Content>
-        <maps:Map x:Name="Map" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" MapType="Street"/>
+        <googleMaps:Map x:Name="Map" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" MapType="Street"/>
     </ContentPage.Content>
 </views:BaseContentPage>

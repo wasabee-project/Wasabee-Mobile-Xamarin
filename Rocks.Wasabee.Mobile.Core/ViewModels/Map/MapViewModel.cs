@@ -124,8 +124,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                                 }
                             });
 
-                        Pins.Add(new Pin() { Position = new Position(fromLat, fromLng), Label = fromPortal.Name });
-                        Pins.Add(new Pin() { Position = new Position(toLat, toLng), Label = toPortal.Name });
+                        Pins.Add(new Pin() { Position = new Position(fromLat, fromLng), Label = fromPortal.Name, Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") });
+                        Pins.Add(new Pin() { Position = new Position(toLat, toLng), Label = toPortal.Name, Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") });
                     }
                     catch (Exception e)
                     {
