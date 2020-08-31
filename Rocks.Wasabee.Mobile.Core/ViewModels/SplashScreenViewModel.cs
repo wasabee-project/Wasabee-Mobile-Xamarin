@@ -33,6 +33,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly UsersDatabase _usersDatabase;
         private readonly OperationsDatabase _operationsDatabase;
+        private readonly TeamsDatabase _teamsDatabase;
 
         private bool _working;
         private GoogleToken _googleToken;
@@ -40,7 +41,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
             IAuthentificationService authentificationService, IMvxNavigationService navigationService,
             IAppSettings appSettings, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service,
-            UsersDatabase usersDatabase, OperationsDatabase operationsDatabase)
+            UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
@@ -52,6 +53,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _usersDatabase = usersDatabase;
             _operationsDatabase = operationsDatabase;
+            _teamsDatabase = teamsDatabase;
         }
 
         public override void Start()
@@ -270,9 +272,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             await Task.Delay(TimeSpan.FromSeconds(1));
 
             if ((userModel.Teams == null || !userModel.Teams.Any()) &&
-                (userModel.OwnedTeams == null || !userModel.OwnedTeams.Any()) &&
-                (userModel.Ops == null || !userModel.Ops.Any()) &&
-                (userModel.OwnedOps == null || !userModel.OwnedOps.Any()))
+                (userModel.Ops == null || !userModel.Ops.Any()))
             {
                 IsLoading = false;
                 HasNoTeamOrOpsAssigned = true;
@@ -283,21 +283,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                                    "Please wait...";
                 await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-                var opsIds =
-                    (userModel.Ops?
-                        .Select(x => x.Id) ?? new List<string>())
-                    .Union(
-                        userModel.OwnedOps?
-                            .Select(x => x.Id) ?? new List<string>()
-                        ).ToList();
+                var teamIds = (userModel.Teams?.Where(x => x.State == "On").Select(x => x.Id) ?? new List<string>()).ToList();
+                foreach (var id in teamIds)
+                {
+                    var team = await _wasabeeApiV1Service.GetTeam(id);
+                    if (team != null)
+                        await _teamsDatabase.SaveTeamModel(team);
+                }
 
+                var opsIds = (userModel.Ops?.Select(x => x.Id) ?? new List<string>()).ToList();
                 foreach (var id in opsIds)
                 {
                     var op = await _wasabeeApiV1Service.GetOperation(id);
                     if (op != null)
-                    {
                         await _operationsDatabase.SaveOperationModel(op);
-                    }
                 }
 
                 var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);

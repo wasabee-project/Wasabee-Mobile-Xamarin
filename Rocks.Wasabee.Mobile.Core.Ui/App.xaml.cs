@@ -1,4 +1,4 @@
-﻿using MvvmCross.Forms.Core;
+using MvvmCross.Forms.Core;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui
 {
@@ -10,6 +10,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui
         {
             Instance = this;
             InitializeComponent();
+
+            Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.MaterialDesignIconsModule());
         }
 
         protected override void OnStart()
