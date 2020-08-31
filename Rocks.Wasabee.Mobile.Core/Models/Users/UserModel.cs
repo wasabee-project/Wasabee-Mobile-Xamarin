@@ -17,53 +17,36 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
         public bool RocksVerified { get; set; }
         public bool Raid { get; set; }
         public bool Risc { get; set; }
-        public List<OwnedTeamModel> OwnedTeams { get; set; }
-        public List<TeamModel> Teams { get; set; }
+        public List<UserTeamModel> OwnedTeams { get; set; }
+        public List<UserTeamModel> Teams { get; set; }
         public List<OpModel> Ops { get; set; }
-        public List<OwnedOpModel> OwnedOps { get; set; }
         public TelegramModel Telegram { get; set; }
         public List<AssignmentModel> Assignments { get; set; }
     }
 
     public class TelegramModel : BaseModel
     {
-        public string UserName { get; set; }
         public int Id { get; set; }
         public bool Verified { get; set; }
         public string Authtoken { get; set; }
     }
 
-    public class OwnedTeamModel : BaseModel
+    public class UserTeamModel : BaseModel
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public string RocksComm { get; set; }
         public string RocksKey { get; set; }
-    }
-
-    public class TeamModel : BaseModel
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
         public string State { get; set; }
-        public string RocksComm { get; set; }
+        public string Owner { get; set; }
     }
 
     public class OpModel : BaseModel
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public bool IsOwner { get; set; }
         public string Color { get; set; }
-        public string TeamName { get; set; }
-        public string TeamId { get; set; }
-    }
-
-    public class OwnedOpModel : BaseModel
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Color { get; set; }
-        public string TeamName { get; set; }
         public string TeamId { get; set; }
     }
 

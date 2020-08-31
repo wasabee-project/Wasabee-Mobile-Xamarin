@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,6 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             MenuItems = new MvxObservableCollection<MenuItem>()
             {
                 new MenuItem() { Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
+                new MenuItem() { Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
                 new MenuItem() { Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
                 new MenuItem() { Title = "Live Logs", ViewModelType = typeof(LogsViewModel) }
             };
@@ -106,31 +108,35 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand<bool> ToggleLiveLocationSharingCommand => new MvxCommand<bool>(async value => await ToggleLiveLocationSharingExecuted(value));
         private async Task ToggleLiveLocationSharingExecuted(bool value)
         {
-            var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
-            var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-
-            if (statusLocationAlways != PermissionStatus.Granted || statusLocationWhenInUse != PermissionStatus.Granted)
-            {
-                var result = await _permissions.RequestAsync<Permissions.LocationAlways>();
-                statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                if (result != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
-                {
-                    _userDialogs.Alert("Geolocation permission is required !");
-                    return;
-                }
-            }
-
             if (!_isLiveLocationSharingEnabled && value)
             {
-                var result = await _userDialogs.ConfirmAsync(
-                    "Your location will be shared with ALL your enabled teams. Start tracking anyway ?", "Warning",
-                    "Yes", "No");
+                var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
+                var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
 
-                if (!result)
-                    return;
+                if (statusLocationAlways == PermissionStatus.Granted || statusLocationWhenInUse == PermissionStatus.Granted)
+                {
+                    var result = await _userDialogs.ConfirmAsync(
+                        "Your location will be shared with all your enabled teams. Start tracking anyway ?\r\n\r\nYou can disable sharing for specific team by disabling it in the Teams menu.", "Warning",
+                        "Yes", "No");
 
-                SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
-                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+                    if (!result)
+                        return;
+
+                    SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                    _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+                }
+                else
+                {
+                    var requestResult = await _permissions.RequestAsync<Permissions.LocationAlways>();
+                    statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                    if (requestResult != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+                    {
+                        _userDialogs.Alert("Geolocation permission is required !");
+                        return;
+                    }
+
+                    await ToggleLiveLocationSharingExecuted(true);
+                }
             }
             else
             {

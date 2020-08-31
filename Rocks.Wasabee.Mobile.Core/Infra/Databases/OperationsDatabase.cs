@@ -27,10 +27,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
 
-            var referringSites = await databaseConnection.Table<OperationDatabaseModel>().ToListAsync();
-            var expiredReferringSites = referringSites.Where(x => IsExpired(x.DownloadedAt)).ToList();
+            var operationDatabaseModels = await databaseConnection.Table<OperationDatabaseModel>().ToListAsync();
+            var expiredDatabaseModels = operationDatabaseModels.Where(x => IsExpired(x.DownloadedAt)).ToList();
 
-            foreach (var expiredReferringSite in expiredReferringSites)
+            foreach (var expiredReferringSite in expiredDatabaseModels)
                 await databaseConnection.DeleteAsync(expiredReferringSite).ConfigureAwait(false);
         }
 

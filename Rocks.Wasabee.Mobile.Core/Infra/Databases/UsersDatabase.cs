@@ -92,19 +92,15 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string OwnedTeamsBlobbed { get; set; }
             [TextBlob("OwnedTeamsBlobbed")]
-            public List<OwnedTeamModel> OwnedTeams { get; set; }
+            public List<UserTeamModel> OwnedTeams { get; set; }
 
             public string TeamsBlobbed { get; set; }
             [TextBlob("TeamsBlobbed")]
-            public List<TeamModel> Teams { get; set; }
+            public List<UserTeamModel> Teams { get; set; }
 
             public string OpsBlobbed { get; set; }
             [TextBlob("OpsBlobbed")]
             public List<OpModel> Ops { get; set; }
-
-            public string OwnedOpsBlobbed { get; set; }
-            [TextBlob("OwnedOpsBlobbed")]
-            public List<OwnedOpModel> OwnedOps { get; set; }
 
             public string AssignmentsBlobbed { get; set; }
             [TextBlob("AssignmentsBlobbed")]
@@ -133,7 +129,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         OwnedTeams = userDatabaseModel.OwnedTeams,
                         Teams = userDatabaseModel.Teams,
                         Ops = userDatabaseModel.Ops,
-                        OwnedOps = userDatabaseModel.OwnedOps,
                         Assignments = userDatabaseModel.Assignments
 
                     };
@@ -165,7 +160,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     OwnedTeams = userModel.OwnedTeams,
                     Teams = userModel.Teams,
                     Ops = userModel.Ops,
-                    OwnedOps = userModel.OwnedOps,
                     Assignments = userModel.Assignments
 
                 };

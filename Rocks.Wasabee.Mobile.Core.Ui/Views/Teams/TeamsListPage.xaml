@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage x:TypeArguments="teams:TeamsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:teams="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Teams;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamsListPage"
+                       Title="Teams">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView
+                SelectionMode="None"
+                ItemsSource="{Binding TeamsCollection}"
+                HasUnevenRows="True"
+                IsPullToRefreshEnabled="True"
+                RefreshCommand="{Binding RefreshCommand}"
+                IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+                RefreshControlColor="{StaticResource PrimaryGreenDark}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <mvx:MvxViewCell>
+                            <StackLayout Margin="10" Spacing="0" Orientation="Horizontal">
+                                <StackLayout Spacing="0" Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                    <Label Text="{Binding Name}"/>
+                                </StackLayout>
+
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="Center">
+                                    <iconize:IconButton Text="{Binding IsEnabled, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
+                                                        TextColor="{Binding IsEnabled, Converter={StaticResource BoolToColorConverter}}"
+                                                        BackgroundColor="Transparent"
+                                                        Command="{Binding Parent.SwitchTeamStateCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
+                                                        BorderColor="{StaticResource PrimaryGrey}" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                    <iconize:IconButton Text="mdi-arrow-right" TextColor="{StaticResource PrimaryGrey}"
+                                                        Command="{Binding Parent.ShowTeamDetailCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        BackgroundColor="Transparent"
+                                                        FontSize="20" WidthRequest="40"  />
+                                </StackLayout>
+                            </StackLayout>
+                        </mvx:MvxViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</views:BaseContentPage>

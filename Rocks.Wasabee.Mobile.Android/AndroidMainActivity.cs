@@ -48,6 +48,8 @@ namespace Rocks.Wasabee.Mobile.Droid
                 Xamarin.Essentials.Platform.Init(this, bundle);
                 Xamarin.FormsGoogleMaps.Init(this, bundle);
 
+                Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
+
                 CreateNotificationChannels();
 
                 base.OnCreate(bundle);
