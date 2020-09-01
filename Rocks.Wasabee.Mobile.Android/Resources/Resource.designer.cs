@@ -23680,10 +23680,112 @@ namespace Rocks.Wasabee.Mobile.Droid
 			public const int wasabee = 2131165558;
 			
 			// aapt resource value: 0x7F070177
-			public const int wasabee_markers_destroy_pending = 2131165559;
+			public const int wasabee_markers_capture_acknowledge = 2131165559;
 			
 			// aapt resource value: 0x7F070178
-			public const int wasabee_markers_virus_pending = 2131165560;
+			public const int wasabee_markers_capture_assigned = 2131165560;
+			
+			// aapt resource value: 0x7F070179
+			public const int wasabee_markers_capture_done = 2131165561;
+			
+			// aapt resource value: 0x7F07017A
+			public const int wasabee_markers_capture_pending = 2131165562;
+			
+			// aapt resource value: 0x7F07017B
+			public const int wasabee_markers_decay_acknowledge = 2131165563;
+			
+			// aapt resource value: 0x7F07017C
+			public const int wasabee_markers_decay_assigned = 2131165564;
+			
+			// aapt resource value: 0x7F07017D
+			public const int wasabee_markers_decay_done = 2131165565;
+			
+			// aapt resource value: 0x7F07017E
+			public const int wasabee_markers_decay_pending = 2131165566;
+			
+			// aapt resource value: 0x7F07017F
+			public const int wasabee_markers_destroy_acknowledge = 2131165567;
+			
+			// aapt resource value: 0x7F070180
+			public const int wasabee_markers_destroy_assigned = 2131165568;
+			
+			// aapt resource value: 0x7F070181
+			public const int wasabee_markers_destroy_done = 2131165569;
+			
+			// aapt resource value: 0x7F070182
+			public const int wasabee_markers_destroy_pending = 2131165570;
+			
+			// aapt resource value: 0x7F070183
+			public const int wasabee_markers_farm_acknowledge = 2131165571;
+			
+			// aapt resource value: 0x7F070184
+			public const int wasabee_markers_farm_assigned = 2131165572;
+			
+			// aapt resource value: 0x7F070185
+			public const int wasabee_markers_farm_done = 2131165573;
+			
+			// aapt resource value: 0x7F070186
+			public const int wasabee_markers_farm_pending = 2131165574;
+			
+			// aapt resource value: 0x7F070187
+			public const int wasabee_markers_meetagent_acknowledge = 2131165575;
+			
+			// aapt resource value: 0x7F070188
+			public const int wasabee_markers_meetagent_assigned = 2131165576;
+			
+			// aapt resource value: 0x7F070189
+			public const int wasabee_markers_meetagent_done = 2131165577;
+			
+			// aapt resource value: 0x7F07018A
+			public const int wasabee_markers_meetagent_pending = 2131165578;
+			
+			// aapt resource value: 0x7F07018B
+			public const int wasabee_markers_other_acknowledge = 2131165579;
+			
+			// aapt resource value: 0x7F07018C
+			public const int wasabee_markers_other_assigned = 2131165580;
+			
+			// aapt resource value: 0x7F07018D
+			public const int wasabee_markers_other_done = 2131165581;
+			
+			// aapt resource value: 0x7F07018E
+			public const int wasabee_markers_other_pending = 2131165582;
+			
+			// aapt resource value: 0x7F07018F
+			public const int wasabee_markers_recharge_acknowledge = 2131165583;
+			
+			// aapt resource value: 0x7F070190
+			public const int wasabee_markers_recharge_assigned = 2131165584;
+			
+			// aapt resource value: 0x7F070191
+			public const int wasabee_markers_recharge_done = 2131165585;
+			
+			// aapt resource value: 0x7F070192
+			public const int wasabee_markers_recharge_pending = 2131165586;
+			
+			// aapt resource value: 0x7F070193
+			public const int wasabee_markers_upgrade_acknowledge = 2131165587;
+			
+			// aapt resource value: 0x7F070194
+			public const int wasabee_markers_upgrade_assigned = 2131165588;
+			
+			// aapt resource value: 0x7F070195
+			public const int wasabee_markers_upgrade_done = 2131165589;
+			
+			// aapt resource value: 0x7F070196
+			public const int wasabee_markers_upgrade_pending = 2131165590;
+			
+			// aapt resource value: 0x7F070197
+			public const int wasabee_markers_virus_acknowledge = 2131165591;
+			
+			// aapt resource value: 0x7F070198
+			public const int wasabee_markers_virus_assigned = 2131165592;
+			
+			// aapt resource value: 0x7F070199
+			public const int wasabee_markers_virus_done = 2131165593;
+			
+			// aapt resource value: 0x7F07019A
+			public const int wasabee_markers_virus_pending = 2131165594;
 			
 			static Drawable()
 			{

@@ -145,7 +145,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         {
                             Position = new Position(portalLat, portalLng),
                             Label = $"{portal.Name}\r\n\"{portal.Comment}\"",
-                            Icon = BitmapDescriptorFactory.FromBundle(marker.Type)
+                            Icon = BitmapDescriptorFactory.FromBundle($"{marker.Type}|{marker.State}")
                         });
                     }
                     catch (Exception e)
