@@ -3,6 +3,7 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 
@@ -13,6 +14,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
     public partial class MapPage : BaseContentPage<MapViewModel>
     {
         private bool _hasLoaded = false;
+        private bool _isDetailPanelVisible = false;
 
         public MapPage()
         {
@@ -34,9 +36,12 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 _hasLoaded = false;
                 RefreshMapView();
             }
-
-            if (e.PropertyName == "GeolocationGranted")
+            else if (e.PropertyName == "GeolocationGranted")
                 Map.MyLocationEnabled = ViewModel.GeolocationGranted;
+            else if (e.PropertyName == "SelectedWasabeePin")
+            {
+                AnimateDetailPanel();
+            }
         }
 
         protected override void OnAppearing()
@@ -59,6 +64,24 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
             Map.IsIndoorEnabled = false;
             Map.IsTrafficEnabled = false;
+
+            AnimateDetailPanel();
+        }
+
+        private async void AnimateDetailPanel()
+        {
+            if (ViewModel.SelectedWasabeePin != null)
+            {
+                if (_isDetailPanelVisible) return;
+
+                _isDetailPanelVisible = true;
+                await DetailPanel.TranslateTo(0, 0, 150); // Show
+            }
+            else
+            {
+                _isDetailPanelVisible = false;
+                await DetailPanel.TranslateTo(0, 180, 150); // Hide
+            }
         }
 
         private void RefreshMapView()
@@ -79,9 +102,12 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
             if (ViewModel.Pins.Any())
             {
-                foreach (var pin in ViewModel.Pins.Where(p => !Map.Pins.Contains(p)))
+                foreach (var wasabeePin in ViewModel.Pins.Where(wp => !Map.Pins.Contains(wp.Pin)))
                 {
-                    Map.Pins.Add(pin);
+                    if (string.IsNullOrEmpty(wasabeePin.Pin.Label))
+                        wasabeePin.Pin.Label = string.Empty;
+
+                    Map.Pins.Add(wasabeePin.Pin);
                 }
             }
 
