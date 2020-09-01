@@ -5,10 +5,48 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Map;assembly=Rocks.Wasabee.Mobile.Core"
-                       xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+                       xmlns:googleMaps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                        mc:Ignorable="d"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Map.MapPage">
     <ContentPage.Content>
-        <maps:Map x:Name="Map" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" MapType="Street"/>
+        <RelativeLayout>
+            <googleMaps:Map x:Name="Map" MapType="Street"
+                            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
+                            SelectedPin="{Binding SelectedPin}"/>
+
+            <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{StaticResource DarkGrey}" CornerRadius="10, 10, 0, 0" Padding="10"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-180}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=180}">
+
+                <StackLayout Orientation="Horizontal" Spacing="0">
+                    <StackLayout HorizontalOptions="FillAndExpand" Spacing="0">
+
+                        <Label Text="{Binding SelectedWasabeePin.Portal.Name}" FontSize="18" TextColor="White"/>
+
+                        <pancake:PancakeView IsVisible="{Binding SelectedWasabeePin.Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
+                                             BackgroundColor="{StaticResource LightGrey}" Padding="5" Margin="5, 5, 0, 0"
+                                             CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
+
+                            <StackLayout Orientation="Horizontal" Padding="0" Margin="0" HorizontalOptions="Start" Spacing="3">
+                                <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
+                                <Label Text="{Binding SelectedWasabeePin.Marker.Comment}" FontAttributes="Italic" FontSize="14"/>
+                            </StackLayout>
+                        </pancake:PancakeView>
+                    
+                        <Label Text="{Binding SelectedWasabeePin.Marker.AssignedTo}"/>
+
+                    </StackLayout>
+                
+                    <iconize:IconButton Text="mdi-close" TextColor="White" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
+                                        FontSize="20" HorizontalOptions="End" VerticalOptions="Start" Command="{Binding CloseDetailPanelCommand}"/>
+
+                </StackLayout>
+            </pancake:PancakeView>
+
+        </RelativeLayout>
     </ContentPage.Content>
 </views:BaseContentPage>

@@ -13,6 +13,7 @@
             <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
             <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
             <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+            <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
         </ResourceDictionary>
     </platform:MvxFormsApplication.Resources>
 </platform:MvxFormsApplication>

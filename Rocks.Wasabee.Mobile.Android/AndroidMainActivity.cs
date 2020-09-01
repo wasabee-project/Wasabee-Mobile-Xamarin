@@ -13,6 +13,7 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
+using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 
 namespace Rocks.Wasabee.Mobile.Droid
@@ -46,7 +47,12 @@ namespace Rocks.Wasabee.Mobile.Droid
             {
                 Xamarin.Forms.Forms.Init(this, bundle);
                 Xamarin.Essentials.Platform.Init(this, bundle);
-                Xamarin.FormsGoogleMaps.Init(this, bundle);
+
+                var platformConfig = new PlatformConfig
+                {
+                    BitmapDescriptorFactory = new WasabeeBitmapConfig()
+                };
+                Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig);
 
                 Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
 

@@ -74,17 +74,30 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         #region Properties
 
+        public bool GeolocationGranted { get; set; }
+        public Pin SelectedPin
+        {
+            get => SelectedWasabeePin?.Pin;
+            set
+            {
+                SelectedWasabeePin = value != null ? Pins.FirstOrDefault(x => x.Pin == value) : null;
+                RaisePropertyChanged(() => SelectedPin);
+            }
+        }
+
         public OperationModel Operation { get; set; }
+        public WasabeePin SelectedWasabeePin { get; set; } = null;
 
         public MvxObservableCollection<Polyline> Polylines { get; set; } = new MvxObservableCollection<Polyline>();
-        public MvxObservableCollection<Pin> Pins { get; set; } = new MvxObservableCollection<Pin>();
+        public MvxObservableCollection<WasabeePin> Pins { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MapSpan MapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
-        public bool GeolocationGranted { get; set; }
 
         #endregion
 
         #region Commands
+
+        public IMvxCommand CloseDetailPanelCommand => new MvxCommand(() => SelectedPin = null);
 
         public IMvxAsyncCommand LoadOperationCommand => new MvxAsyncCommand(LoadOperationExecuted);
         private async Task LoadOperationExecuted()
@@ -99,12 +112,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
             try
             {
+                var culture = CultureInfo.GetCultureInfo("en-US");
                 foreach (var link in Operation.Links)
                 {
                     var fromPortal = Operation.Portals.First(x => x.Id.Equals(link.FromPortalId));
                     var toPortal = Operation.Portals.First(x => x.Id.Equals(link.ToPortalId));
 
-                    var culture = CultureInfo.GetCultureInfo("en-US");
                     try
                     {
                         double.TryParse(fromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
@@ -124,8 +137,39 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                                 }
                             });
 
-                        Pins.Add(new Pin() { Position = new Position(fromLat, fromLng), Label = fromPortal.Name });
-                        Pins.Add(new Pin() { Position = new Position(toLat, toLng), Label = toPortal.Name });
+                        Pins.Add(new WasabeePin(new Pin() { Position = new Position(fromLat, fromLng), Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") })
+                        {
+                            Portal = fromPortal
+                        });
+                        Pins.Add(new WasabeePin(new Pin() { Position = new Position(toLat, toLng), Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") })
+                        {
+                            Portal = toPortal
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+
+                foreach (var marker in Operation.Markers)
+                {
+                    try
+                    {
+                        var portal = Operation.Portals.First(x => x.Id.Equals(marker.PortalId));
+                        double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
+                        double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
+
+                        Pins.Add(new WasabeePin(
+                            new Pin()
+                            {
+                                Position = new Position(portalLat, portalLng),
+                                Icon = BitmapDescriptorFactory.FromBundle($"{marker.Type}|{marker.State}")
+                            })
+                        {
+                            Portal = portal,
+                            Marker = marker
+                        });
                     }
                     catch (Exception e)
                     {
@@ -138,7 +182,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 Console.WriteLine(e);
             }
 
-            MapRegion = MapSpan.FromCenterAndRadius(Pins.FirstOrDefault()?.Position ?? DefaultPosition, Distance.FromKilometers(5));
+            MapRegion = MapSpan.FromCenterAndRadius(Pins.FirstOrDefault()?.Pin.Position ?? DefaultPosition, Distance.FromKilometers(5));
         }
     }
 
