@@ -1,5 +1,6 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -118,16 +119,23 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
         private void SetMapStyle()
         {
-            var assembly = typeof(MapPage).GetTypeInfo().Assembly;
-            var stream = assembly.GetManifestResourceStream("Rocks.Wasabee.Mobile.Core.Ui.MapStyle.json");
-
-            string styleFile;
-            using (var reader = new System.IO.StreamReader(stream))
+            try
             {
-                styleFile = reader.ReadToEnd();
-            }
+                var assembly = typeof(MapPage).GetTypeInfo().Assembly;
+                var stream = assembly.GetManifestResourceStream("Rocks.Wasabee.Mobile.Core.Ui.MapStyle.json");
 
-            Map.MapStyle = MapStyle.FromJson(styleFile);
+                string styleFile;
+                using (var reader = new System.IO.StreamReader(stream))
+                {
+                    styleFile = reader.ReadToEnd();
+                }
+
+                Map.MapStyle = MapStyle.FromJson(styleFile);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void Map_OnMapClicked(object sender, MapClickedEventArgs e)

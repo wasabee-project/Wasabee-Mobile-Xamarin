@@ -1,5 +1,4 @@
-﻿using Android;
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
@@ -12,7 +11,7 @@ using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
-using System;
+using System.Collections.Generic;
 using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 
@@ -33,11 +32,12 @@ namespace Rocks.Wasabee.Mobile.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            if (Intent.Extras != null && Intent.Extras.ContainsKey("FCMMessage"))
+            if (Intent?.Extras != null && Intent.Extras.ContainsKey("FCMMessage"))
             {
-                foreach (var key in Intent.Extras.KeySet())
+                var keySet = Intent.Extras.KeySet() ?? new List<string>();
+                foreach (var key in keySet)
                 {
-                    var value = Intent.Extras.GetString(key);
+                    var value = Intent.Extras.GetString(key) ?? "empty 'value'";
                     Log.Debug("AndroidMainActivity", "Key: {0} Value: {1}", key, value);
                 }
 
@@ -48,10 +48,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                 Xamarin.Forms.Forms.Init(this, bundle);
                 Xamarin.Essentials.Platform.Init(this, bundle);
 
-                var platformConfig = new PlatformConfig
-                {
-                    BitmapDescriptorFactory = new WasabeeBitmapConfig()
-                };
+                var platformConfig = new PlatformConfig() { BitmapDescriptorFactory = new WasabeeBitmapConfig() };
                 Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig);
 
                 Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
@@ -60,19 +57,6 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 base.OnCreate(bundle);
 
-#if DEBUG
-                if (System.Diagnostics.Debugger.IsAttached)
-                {
-                    Console.WriteLine("[DEBUG] Activated WindowManagerFlags.KeepScreenOn while Debugger is connected");
-                    Window.AddFlags(WindowManagerFlags.KeepScreenOn);
-                }
-                else
-                {
-                    Console.WriteLine("[DEBUG] Removed WindowManagerFlags.KeepScreenOn");
-                    Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
-                }
-#endif
-
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
                 {
                     if (msg.Action == Action.Start)
@@ -80,31 +64,6 @@ namespace Rocks.Wasabee.Mobile.Droid
                     else
                         GeolocationHelper.StopLocationService();
                 });
-            }
-        }
-
-        const int RequestLocationId = 0;
-
-        readonly string[] _locationPermissions =
-        {
-            Manifest.Permission.AccessCoarseLocation,
-            Manifest.Permission.AccessFineLocation
-        };
-
-        protected override void OnStart()
-        {
-            base.OnStart();
-
-            if ((int)Build.VERSION.SdkInt >= 23)
-            {
-                if (CheckSelfPermission(Manifest.Permission.AccessFineLocation) != Permission.Granted)
-                {
-                    RequestPermissions(_locationPermissions, RequestLocationId);
-                }
-                else
-                {
-                    // Permissions already granted - display a message.
-                }
             }
         }
 

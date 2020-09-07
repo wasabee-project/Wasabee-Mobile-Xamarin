@@ -20,7 +20,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 {
     public class MapViewModel : BaseViewModel
     {
-        private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon
+        private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon, France
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
