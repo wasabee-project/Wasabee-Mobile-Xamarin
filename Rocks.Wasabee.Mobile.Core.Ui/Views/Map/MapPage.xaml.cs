@@ -39,9 +39,9 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             else if (e.PropertyName == "GeolocationGranted")
                 Map.MyLocationEnabled = ViewModel.GeolocationGranted;
             else if (e.PropertyName == "SelectedWasabeePin")
-            {
                 AnimateDetailPanel();
-            }
+            else if (e.PropertyName == "VisibleRegion")
+                Map.MoveToRegion(ViewModel.VisibleRegion);
         }
 
         protected override void OnAppearing()
@@ -128,6 +128,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             }
 
             Map.MapStyle = MapStyle.FromJson(styleFile);
+        }
+
+        private void Map_OnMapClicked(object sender, MapClickedEventArgs e)
+        {
+            ViewModel.CloseDetailPanelCommand.Execute();
         }
     }
 }

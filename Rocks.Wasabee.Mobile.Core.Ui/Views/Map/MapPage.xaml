@@ -15,7 +15,7 @@
             <googleMaps:Map x:Name="Map" MapType="Street"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
-                            SelectedPin="{Binding SelectedPin}"/>
+                            SelectedPin="{Binding SelectedPin}" MapClicked="Map_OnMapClicked"/>
 
             <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{StaticResource DarkGrey}" CornerRadius="10, 10, 0, 0" Padding="10"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-180}"
@@ -23,9 +23,19 @@
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=180}">
 
                 <StackLayout Orientation="Horizontal" Spacing="0">
-                    <StackLayout HorizontalOptions="FillAndExpand" Spacing="0">
+                    <StackLayout HorizontalOptions="FillAndExpand">
 
-                        <Label Text="{Binding SelectedWasabeePin.Portal.Name}" FontSize="18" TextColor="White"/>
+                        <StackLayout Orientation="Horizontal">
+                            <iconize:IconButton Text="mdi-map-marker" TextColor="White" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
+                                                FontSize="24" HorizontalOptions="Start" VerticalOptions="Start" Command="{Binding MoveToPortalCommand}"/>
+                            <Label Text="{Binding SelectedWasabeePin.Portal.Name}" FontSize="18" TextColor="White" VerticalOptions="CenterAndExpand"/>
+                        </StackLayout>
+                    
+                        <StackLayout Orientation="Horizontal" Margin="2, 0, 0, 0"
+                                     IsVisible="{Binding SelectedWasabeePin.AssignedTo, Converter={StaticResource StringToBoolNegateConverter}}">
+                            <iconize:IconLabel Text="mdi-account-arrow-right" TextColor="White" FontSize="24"/>
+                            <Label Text="{Binding SelectedWasabeePin.AssignedTo}" TextColor="White" VerticalOptions="CenterAndExpand"/>
+                        </StackLayout>
 
                         <pancake:PancakeView IsVisible="{Binding SelectedWasabeePin.Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
                                              BackgroundColor="{StaticResource LightGrey}" Padding="5" Margin="5, 5, 0, 0"
@@ -36,8 +46,6 @@
                                 <Label Text="{Binding SelectedWasabeePin.Marker.Comment}" FontAttributes="Italic" FontSize="14"/>
                             </StackLayout>
                         </pancake:PancakeView>
-                    
-                        <Label Text="{Binding SelectedWasabeePin.Marker.AssignedTo}"/>
 
                     </StackLayout>
                 
