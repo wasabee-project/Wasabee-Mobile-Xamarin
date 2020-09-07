@@ -23,21 +23,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon
 
         private readonly OperationsDatabase _operationsDatabase;
+        private readonly TeamsDatabase _teamsDatabase;
         private readonly IPreferences _preferences;
         private readonly IPermissions _permissions;
         private readonly IUserDialogs _userDialogs;
         private readonly IMvxNavigationService _navigationService;
+        private readonly IUserSettingsService _userSettingsService;
 
         private readonly MvxSubscriptionToken _token;
 
-        public MapViewModel(OperationsDatabase operationsDatabase, IPreferences preferences,
-            IPermissions permissions, IMvxMessenger messenger, IUserDialogs userDialogs, IMvxNavigationService navigationService)
+        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, IPreferences preferences,
+            IPermissions permissions, IMvxMessenger messenger, IUserDialogs userDialogs, IMvxNavigationService navigationService,
+            IUserSettingsService userSettingsService)
         {
             _operationsDatabase = operationsDatabase;
+            _teamsDatabase = teamsDatabase;
             _preferences = preferences;
             _permissions = permissions;
             _userDialogs = userDialogs;
             _navigationService = navigationService;
+            _userSettingsService = userSettingsService;
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await LoadOperationCommand.ExecuteAsync());
         }
@@ -91,13 +96,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public MvxObservableCollection<Polyline> Polylines { get; set; } = new MvxObservableCollection<Polyline>();
         public MvxObservableCollection<WasabeePin> Pins { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MapSpan MapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
-
+        public MapSpan VisibleRegion { get; set; }
 
         #endregion
 
         #region Commands
 
         public IMvxCommand CloseDetailPanelCommand => new MvxCommand(() => SelectedPin = null);
+
+        public IMvxCommand MoveToPortalCommand => new MvxCommand(MoveToPortalExecuted);
+        private void MoveToPortalExecuted()
+        {
+            if (SelectedWasabeePin == null)
+                return;
+
+            var region = MapSpan.FromCenterAndRadius(SelectedWasabeePin.Pin.Position, Distance.FromMeters(200));
+            if (VisibleRegion == region)
+                RaisePropertyChanged(() => VisibleRegion);
+            else
+                VisibleRegion = region;
+        }
 
         public IMvxAsyncCommand LoadOperationCommand => new MvxAsyncCommand(LoadOperationExecuted);
         private async Task LoadOperationExecuted()
@@ -110,6 +128,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             Pins.Clear();
 
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
+            var teamsAgentsLists = (await _teamsDatabase.GetTeams(_userSettingsService.GetLoggedUserGoogleId()))
+                ?.SelectMany(t => t.Agents).Select(a => new { a.Id, a.Name }).Distinct().ToList();
             try
             {
                 var culture = CultureInfo.GetCultureInfo("en-US");
@@ -160,7 +180,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
                         double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
 
-                        Pins.Add(new WasabeePin(
+                        var pin = new WasabeePin(
                             new Pin()
                             {
                                 Position = new Position(portalLat, portalLng),
@@ -169,7 +189,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         {
                             Portal = portal,
                             Marker = marker
-                        });
+                        };
+
+                        if (!teamsAgentsLists.IsNullOrEmpty())
+                            pin.AssignedTo = teamsAgentsLists!.FirstOrDefault(a => a.Id.Equals(marker.AssignedTo))?.Name;
+
+                        Pins.Add(pin);
                     }
                     catch (Exception e)
                     {
@@ -184,7 +209,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
             MapRegion = MapSpan.FromCenterAndRadius(Pins.FirstOrDefault()?.Pin.Position ?? DefaultPosition, Distance.FromKilometers(5));
         }
-    }
 
-    #endregion
+        #endregion
+    }
 }

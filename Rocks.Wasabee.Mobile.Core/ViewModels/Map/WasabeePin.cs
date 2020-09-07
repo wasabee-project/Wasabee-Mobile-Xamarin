@@ -14,5 +14,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         public PortalModel Portal { get; set; }
         public MarkerModel Marker { get; set; }
+        public string AssignedTo { get; set; }
     }
 }
