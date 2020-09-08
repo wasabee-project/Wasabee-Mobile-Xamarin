@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
+using System;
 using System.Collections.Generic;
 using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
@@ -64,6 +65,20 @@ namespace Rocks.Wasabee.Mobile.Droid
                     else
                         GeolocationHelper.StopLocationService();
                 });
+
+#if DEBUG
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    Console.WriteLine("[DEBUG] Activated WindowManagerFlags.KeepScreenOn while Debugger is connected");
+                    Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+                }
+                else
+                {
+                    Console.WriteLine("[DEBUG] Removed WindowManagerFlags.KeepScreenOn");
+                    Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+                }
+#endif
+
             }
         }
 

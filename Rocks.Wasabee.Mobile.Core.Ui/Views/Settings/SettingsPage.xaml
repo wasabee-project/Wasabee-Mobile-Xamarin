@@ -3,12 +3,31 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:settings="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Settings;assembly=Rocks.Wasabee.Mobile.Core"
-                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Settings.SettingsPage">
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Settings.SettingsPage"
+                       Title="Settings">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <TableView Intent="Settings" HasUnevenRows="True">
+            <TableRoot>
+                <TableSection Title="Permissions">
+                    <TextCell Text="Open app system settings" TextColor="Black" Command="{Binding OpenApplicationSettingsCommand}"/>
+                </TableSection>
+                <TableSection Title="Application's logs">
+                    <TextCell Text="Send logs" TextColor="Black" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="Gray"/>
+                </TableSection>
+                <TableSection Title="About">
+                    <ViewCell>
+                        <Label TextColor="Gray" FontSize="Small" Padding="15, 5" LineBreakMode="WordWrap">
+                            <Label.Text>
+Wasabee mobile application is still under huge development process. Bugs and crashes are possible.
+If you're a C# / Xamarin.Forms developper and interested in helping us, reach us through Telegram.
+                            </Label.Text>
+                        </Label>
+                    </ViewCell>
+                    <TextCell Text="Wasabee webpage" TextColor="Black" Command="{Binding OpenWasabeeWebpageCommand}" />
+                    <TextCell Text="Wasabee Client General Chat" TextColor="Black" Command="{Binding OpenWasabeeTelegramChatCommand}" />
+                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Black"/>
+                </TableSection>
+            </TableRoot>
+        </TableView>
     </ContentPage.Content>
 </views:BaseContentPage>

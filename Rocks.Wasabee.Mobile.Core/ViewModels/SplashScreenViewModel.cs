@@ -3,6 +3,8 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -28,6 +30,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IVersionTracking _versionTracking;
         private readonly IAuthentificationService _authentificationService;
         private readonly IMvxNavigationService _navigationService;
+        private readonly ISecureStorage _secureStorage;
         private readonly IAppSettings _appSettings;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
@@ -37,9 +40,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private bool _working;
         private GoogleToken _googleToken;
+        private bool _isBypassingGoogleAndWasabeeLogin = false;
 
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
-            IAuthentificationService authentificationService, IMvxNavigationService navigationService,
+            IAuthentificationService authentificationService, IMvxNavigationService navigationService, ISecureStorage secureStorage,
             IAppSettings appSettings, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service,
             UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase)
         {
@@ -48,6 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _versionTracking = versionTracking;
             _authentificationService = authentificationService;
             _navigationService = navigationService;
+            _secureStorage = secureStorage;
             _appSettings = appSettings;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
@@ -153,8 +158,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             LoadingStepLabel = "Logging in...";
 
             await Task.Delay(TimeSpan.FromMilliseconds(300));
-            _googleToken = await _authentificationService.GoogleLoginAsync();
 
+            var wasabeeCookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
+            if (!string.IsNullOrWhiteSpace(wasabeeCookie))
+            {
+                await BypassGoogleAndWasabeeLogin();
+                return;
+            }
+
+            _googleToken = await _authentificationService.GoogleLoginAsync();
             if (_googleToken != null)
             {
                 LoadingStepLabel = "Google login success...";
@@ -187,7 +199,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsSelectingServer = false;
             SelectedServerItem = serverItem;
 
-            await ConnectWasabee();
+            if (!_isBypassingGoogleAndWasabeeLogin)
+                await ConnectWasabee();
+            else
+                await BypassGoogleAndWasabeeLogin();
         }
 
         public IMvxCommand ChangeServerCommand => new MvxCommand(ChangeServer);
@@ -282,6 +297,37 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsAuthInError = true;
                 IsLoading = false;
                 IsLoginVisible = true;
+            }
+        }
+
+        private async Task BypassGoogleAndWasabeeLogin()
+        {
+            _isBypassingGoogleAndWasabeeLogin = true;
+
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
+            if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
+                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
+
+            if (SelectedServerItem.Server == WasabeeServer.Undefined || !RememberServerChoice)
+                ChangeServerCommand.Execute();
+            else
+            {
+                IsLoading = true;
+                LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
+                await Task.Delay(TimeSpan.FromMilliseconds(300));
+
+                if (RememberServerChoice)
+                {
+                    _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
+                    _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
+                }
+
+                var result = await _wasabeeApiV1Service.User_GetUserInformations();
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(result);
+                    await FinishLogin(wasabeeUserModel);
+                }
             }
         }
 

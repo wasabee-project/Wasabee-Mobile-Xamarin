@@ -22,12 +22,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         {
             _loggingService.Trace("Executing AuthentificationService.GoogleLoginAsync");
 
-            if (!_isCacheCleared)
-            {
-                await ClearUserTokenAndCookie(_loginProvider);
-                _isCacheCleared = true;
-            }
-
             return await _loginProvider.DoGoogleOAuthLoginAsync();
         }
 

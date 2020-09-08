@@ -72,10 +72,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
                 };
 
+            HttpResponseMessage response;
             var encodedContent = new FormUrlEncodedContent(parameters);
-            var response = await client.PostAsync(_appSettings.GoogleTokenUrl, encodedContent).ConfigureAwait(false);
             try
             {
+                response = await client.PostAsync(_appSettings.GoogleTokenUrl, encodedContent).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception e)
@@ -100,16 +101,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         {
             _loggingService.Trace("Executing LoginProvider.DoWasabeeLoginAsync");
 
+            HttpResponseMessage response;
             var cookieContainer = new CookieContainer();
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
             using var client = new HttpClient(handler);
 
-            var wasabeeToken = new WasabeeToken(googleToken.AccessToken);
-            var postContent = new StringContent(JsonConvert.SerializeObject(wasabeeToken), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(_appSettings.WasabeeTokenUrl, postContent).ConfigureAwait(false);
-
             try
             {
+                var wasabeeToken = new WasabeeToken(googleToken.AccessToken);
+                var postContent = new StringContent(JsonConvert.SerializeObject(wasabeeToken), Encoding.UTF8, "application/json");
+                response = await client.PostAsync(_appSettings.WasabeeTokenUrl, postContent).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception e)
@@ -188,15 +189,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         {
             _loggingService.Trace("Executing LoginProvider.RemoveTokenFromSecureStore");
 
-            return Task.FromResult(_secureStorage.Remove(SecureStorageConstants.WasabeeCookie));
+            return Task.CompletedTask;
         }
 
         public void ClearCookie()
         {
             _loggingService.Trace("Executing LoginProvider.ClearCookie");
-
-            // TODO
-
+            _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
         }
 
         public Task RefreshTokenAsync()
