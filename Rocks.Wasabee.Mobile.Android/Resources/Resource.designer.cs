@@ -23716,76 +23716,124 @@ namespace Rocks.Wasabee.Mobile.Droid
 			public const int wasabee_markers_destroy_pending = 2131165570;
 			
 			// aapt resource value: 0x7F070183
-			public const int wasabee_markers_farm_acknowledge = 2131165571;
+			public const int wasabee_markers_exclude_acknowledge = 2131165571;
 			
 			// aapt resource value: 0x7F070184
-			public const int wasabee_markers_farm_assigned = 2131165572;
+			public const int wasabee_markers_exclude_assigned = 2131165572;
 			
 			// aapt resource value: 0x7F070185
-			public const int wasabee_markers_farm_done = 2131165573;
+			public const int wasabee_markers_exclude_done = 2131165573;
 			
 			// aapt resource value: 0x7F070186
-			public const int wasabee_markers_farm_pending = 2131165574;
+			public const int wasabee_markers_exclude_pending = 2131165574;
 			
 			// aapt resource value: 0x7F070187
-			public const int wasabee_markers_meetagent_acknowledge = 2131165575;
+			public const int wasabee_markers_farm_acknowledge = 2131165575;
 			
 			// aapt resource value: 0x7F070188
-			public const int wasabee_markers_meetagent_assigned = 2131165576;
+			public const int wasabee_markers_farm_assigned = 2131165576;
 			
 			// aapt resource value: 0x7F070189
-			public const int wasabee_markers_meetagent_done = 2131165577;
+			public const int wasabee_markers_farm_done = 2131165577;
 			
 			// aapt resource value: 0x7F07018A
-			public const int wasabee_markers_meetagent_pending = 2131165578;
+			public const int wasabee_markers_farm_pending = 2131165578;
 			
 			// aapt resource value: 0x7F07018B
-			public const int wasabee_markers_other_acknowledge = 2131165579;
+			public const int wasabee_markers_goto_acknowledge = 2131165579;
 			
 			// aapt resource value: 0x7F07018C
-			public const int wasabee_markers_other_assigned = 2131165580;
+			public const int wasabee_markers_goto_assigned = 2131165580;
 			
 			// aapt resource value: 0x7F07018D
-			public const int wasabee_markers_other_done = 2131165581;
+			public const int wasabee_markers_goto_done = 2131165581;
 			
 			// aapt resource value: 0x7F07018E
-			public const int wasabee_markers_other_pending = 2131165582;
+			public const int wasabee_markers_goto_pending = 2131165582;
 			
 			// aapt resource value: 0x7F07018F
-			public const int wasabee_markers_recharge_acknowledge = 2131165583;
+			public const int wasabee_markers_key_acknowledge = 2131165583;
 			
 			// aapt resource value: 0x7F070190
-			public const int wasabee_markers_recharge_assigned = 2131165584;
+			public const int wasabee_markers_key_assigned = 2131165584;
 			
 			// aapt resource value: 0x7F070191
-			public const int wasabee_markers_recharge_done = 2131165585;
+			public const int wasabee_markers_key_done = 2131165585;
 			
 			// aapt resource value: 0x7F070192
-			public const int wasabee_markers_recharge_pending = 2131165586;
+			public const int wasabee_markers_key_pending = 2131165586;
 			
 			// aapt resource value: 0x7F070193
-			public const int wasabee_markers_upgrade_acknowledge = 2131165587;
+			public const int wasabee_markers_link_acknowledge = 2131165587;
 			
 			// aapt resource value: 0x7F070194
-			public const int wasabee_markers_upgrade_assigned = 2131165588;
+			public const int wasabee_markers_link_assigned = 2131165588;
 			
 			// aapt resource value: 0x7F070195
-			public const int wasabee_markers_upgrade_done = 2131165589;
+			public const int wasabee_markers_link_done = 2131165589;
 			
 			// aapt resource value: 0x7F070196
-			public const int wasabee_markers_upgrade_pending = 2131165590;
+			public const int wasabee_markers_link_pending = 2131165590;
 			
 			// aapt resource value: 0x7F070197
-			public const int wasabee_markers_virus_acknowledge = 2131165591;
+			public const int wasabee_markers_meetagent_acknowledge = 2131165591;
 			
 			// aapt resource value: 0x7F070198
-			public const int wasabee_markers_virus_assigned = 2131165592;
+			public const int wasabee_markers_meetagent_assigned = 2131165592;
 			
 			// aapt resource value: 0x7F070199
-			public const int wasabee_markers_virus_done = 2131165593;
+			public const int wasabee_markers_meetagent_done = 2131165593;
 			
 			// aapt resource value: 0x7F07019A
-			public const int wasabee_markers_virus_pending = 2131165594;
+			public const int wasabee_markers_meetagent_pending = 2131165594;
+			
+			// aapt resource value: 0x7F07019B
+			public const int wasabee_markers_other_acknowledge = 2131165595;
+			
+			// aapt resource value: 0x7F07019C
+			public const int wasabee_markers_other_assigned = 2131165596;
+			
+			// aapt resource value: 0x7F07019D
+			public const int wasabee_markers_other_done = 2131165597;
+			
+			// aapt resource value: 0x7F07019E
+			public const int wasabee_markers_other_pending = 2131165598;
+			
+			// aapt resource value: 0x7F07019F
+			public const int wasabee_markers_recharge_acknowledge = 2131165599;
+			
+			// aapt resource value: 0x7F0701A0
+			public const int wasabee_markers_recharge_assigned = 2131165600;
+			
+			// aapt resource value: 0x7F0701A1
+			public const int wasabee_markers_recharge_done = 2131165601;
+			
+			// aapt resource value: 0x7F0701A2
+			public const int wasabee_markers_recharge_pending = 2131165602;
+			
+			// aapt resource value: 0x7F0701A3
+			public const int wasabee_markers_upgrade_acknowledge = 2131165603;
+			
+			// aapt resource value: 0x7F0701A4
+			public const int wasabee_markers_upgrade_assigned = 2131165604;
+			
+			// aapt resource value: 0x7F0701A5
+			public const int wasabee_markers_upgrade_done = 2131165605;
+			
+			// aapt resource value: 0x7F0701A6
+			public const int wasabee_markers_upgrade_pending = 2131165606;
+			
+			// aapt resource value: 0x7F0701A7
+			public const int wasabee_markers_virus_acknowledge = 2131165607;
+			
+			// aapt resource value: 0x7F0701A8
+			public const int wasabee_markers_virus_assigned = 2131165608;
+			
+			// aapt resource value: 0x7F0701A9
+			public const int wasabee_markers_virus_done = 2131165609;
+			
+			// aapt resource value: 0x7F0701AA
+			public const int wasabee_markers_virus_pending = 2131165610;
 			
 			static Drawable()
 			{
