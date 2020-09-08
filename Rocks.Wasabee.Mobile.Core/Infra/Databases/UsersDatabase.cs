@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
@@ -12,19 +13,23 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 {
     public class UsersDatabase : BaseDatabase
     {
-        public UsersDatabase(IFileSystem fileSystem) : base(fileSystem, TimeSpan.FromDays(7))
+        public UsersDatabase(IFileSystem fileSystem, ILoggingService loggingService) : base(fileSystem, loggingService, TimeSpan.FromDays(7))
         {
 
         }
 
         public override async Task<int> DeleteAllData()
         {
+            LoggingService.Trace("Querying UsersDatabase.DeleteAllData");
+
             var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
             return await databaseConnection.DeleteAllAsync<UserDatabaseModel>().ConfigureAwait(false);
         }
 
         public async Task<UserModel> GetUserModel(string googleId)
         {
+            LoggingService.Trace("Querying UsersDatabase.GetUserModel");
+
             var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
 
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -38,6 +43,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<int> SaveUserModel(UserModel userModel)
         {
+            LoggingService.Trace("Querying UsersDatabase.SaveUserModel");
+
             var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
             var userDatabaseModel = UserDatabaseModel.ToUserDatabaseModel(userModel);
 
@@ -49,7 +56,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LoggingService.Error("Error Querying UsersDatabase.SaveUserModel", e);
                 return 1;
             }
 

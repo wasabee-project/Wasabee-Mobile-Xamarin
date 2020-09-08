@@ -52,7 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 new MenuItem() { Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
                 new MenuItem() { Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
                 new MenuItem() { Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
-                new MenuItem() { Title = "Live Logs", ViewModelType = typeof(LogsViewModel) }
+                new MenuItem() { Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }
             };
         }
 
@@ -108,6 +108,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand<bool> ToggleLiveLocationSharingCommand => new MvxCommand<bool>(async value => await ToggleLiveLocationSharingExecuted(value));
         private async Task ToggleLiveLocationSharingExecuted(bool value)
         {
+            LoggingService.Trace($"Executing MenuViewModel.ToggleLiveLocationSharingCommand({value})");
+
             if (!_isLiveLocationSharingEnabled && value)
             {
                 var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
@@ -135,6 +137,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         return;
                     }
 
+                    LoggingService.Info("User has granted geolocation permissions");
                     await ToggleLiveLocationSharingExecuted(true);
                 }
             }
@@ -148,6 +151,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand<MenuItem> SelectedMenuItemChangedCommand => new MvxCommand<MenuItem>(SelectedMenuItemChangedExecuted);
         private void SelectedMenuItemChangedExecuted(MenuItem menuItem)
         {
+            LoggingService.Trace($"Executing MenuViewModel.SelectedMenuItemChangedCommand({menuItem})");
+
             if (menuItem?.ViewModelType == null) return;
 
             _navigationService.Navigate(menuItem.ViewModelType);
@@ -165,6 +170,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand ChangeSelectedOpCommand => new MvxAsyncCommand(ChangeSelectedOpExecuted);
         private async Task ChangeSelectedOpExecuted()
         {
+            LoggingService.Trace("Executing MenuViewModel.ChangeSelectedOpCommand");
+
             var result = await _userDialogs.ActionSheetAsync("Available OP's :", "Cancel", null, null, AvailableOpsCollection.Select(x => x.Name).ToArray());
             if (string.IsNullOrWhiteSpace(result) || result.Equals("Cancel"))
                 return;

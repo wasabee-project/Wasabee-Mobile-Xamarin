@@ -1,4 +1,4 @@
-﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross;
 using MvvmCross.IoC;
@@ -12,11 +12,6 @@ namespace Rocks.Wasabee.Mobile.Core
     {
         public override void Initialize()
         {
-            CreatableTypes()
-                .EndingWith("Service")
-                .AsInterfaces()
-                .RegisterAsLazySingleton();
-
             CreatableTypes()
                 .EndingWith("ViewModel")
                 .Except(typeof(BaseViewModel))

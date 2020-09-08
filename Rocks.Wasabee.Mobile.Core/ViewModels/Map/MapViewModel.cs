@@ -63,7 +63,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                     _userDialogs.Alert("Geolocation permission is required to show your position !");
                 }
                 else
+                {
+                    LoggingService.Info("User has granted geolocation permissions");
                     GeolocationGranted = true;
+                }
             }
             else
             {
@@ -73,6 +76,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         public override async Task Initialize()
         {
+            LoggingService.Trace("Navigated to MapViewModel");
+
             await base.Initialize();
             await LoadOperationCommand.ExecuteAsync();
         }
@@ -107,6 +112,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public IMvxCommand MoveToPortalCommand => new MvxCommand(MoveToPortalExecuted);
         private void MoveToPortalExecuted()
         {
+            LoggingService.Trace("Executing MapViewModel.MoveToPortalCommand");
+
             if (SelectedWasabeePin == null)
                 return;
 
@@ -120,6 +127,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public IMvxAsyncCommand LoadOperationCommand => new MvxAsyncCommand(LoadOperationExecuted);
         private async Task LoadOperationExecuted()
         {
+            LoggingService.Trace("Executing MapViewModel.LoadOperationCommand");
+
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
             if (string.IsNullOrWhiteSpace(selectedOpId))
                 return;
@@ -168,7 +177,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        LoggingService.Error("Error Executing MapViewModel.LoadOperationCommand", e);
                     }
                 }
 
@@ -198,13 +207,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        LoggingService.Error("Error Executing MapViewModel.LoadOperationCommand", e);
                     }
                 }
             }
             catch (NullReferenceException e)
             {
-                Console.WriteLine(e);
+                LoggingService.Error("Error Executing MapViewModel.LoadOperationCommand", e);
             }
 
             MapRegion = MapSpan.FromCenterAndRadius(Pins.FirstOrDefault()?.Pin.Position ?? DefaultPosition, Distance.FromKilometers(5));
