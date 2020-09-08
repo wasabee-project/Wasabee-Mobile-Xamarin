@@ -74,7 +74,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 SelectedOpName = op.Name;
             }
 
-            AvailableOpsCollection = new MvxObservableCollection<OperationModel>((await _operationsDatabase.GetOperationModels()).Where(x => !string.IsNullOrWhiteSpace(x.Name)));
+            AvailableOpsCollection = new MvxObservableCollection<OperationModel>((await _operationsDatabase.GetOperationModels()).Where(x => !string.IsNullOrWhiteSpace(x.Name)).OrderBy(x => x.Name));
         }
 
         #region Properties

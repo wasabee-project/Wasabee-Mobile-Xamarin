@@ -26,6 +26,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_destroy_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_destroy_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_destroy_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_destroy_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[0])
                     },
                     "UseVirusPortalAlert" => descriptors[1] switch
@@ -33,6 +34,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_virus_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_virus_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_virus_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_virus_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "CapturePortalMarker" => descriptors[1] switch
@@ -40,6 +42,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_capture_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_capture_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_capture_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_capture_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "FarmPortalMarker" => descriptors[1] switch
@@ -47,6 +50,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_farm_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_farm_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_farm_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_farm_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "LetDecayPortalAlert" => descriptors[1] switch
@@ -54,6 +58,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_decay_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_decay_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_decay_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_decay_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "MeetAgentPortalMarker" => descriptors[1] switch
@@ -61,6 +66,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_meetagent_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_meetagent_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_meetagent_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_meetagent_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "OtherPortalAlert" => descriptors[1] switch
@@ -68,6 +74,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_other_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_other_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_other_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_other_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "RechargePortalAlert" => descriptors[1] switch
@@ -75,6 +82,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_recharge_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_recharge_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_recharge_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_recharge_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "UpgradePortalAlert" => descriptors[1] switch
@@ -82,38 +90,43 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "pending" => Resource.Drawable.wasabee_markers_upgrade_pending,
                         "acknowledged" => Resource.Drawable.wasabee_markers_upgrade_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_upgrade_done,
+                        "assigned" => Resource.Drawable.wasabee_markers_upgrade_assigned,
                         _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
-                    "CreateLinkAlert" => // TODO Images
+                    "CreateLinkAlert" =>
                         descriptors[1] switch
                         {
-                            "pending" => Resource.Drawable.wasabee_markers_other_pending,
-                            "acknowledged" => Resource.Drawable.wasabee_markers_other_acknowledge,
-                            "completed" => Resource.Drawable.wasabee_markers_other_done,
+                            "pending" => Resource.Drawable.wasabee_markers_link_pending,
+                            "acknowledged" => Resource.Drawable.wasabee_markers_link_acknowledge,
+                            "completed" => Resource.Drawable.wasabee_markers_link_done,
+                            "assigned" => Resource.Drawable.wasabee_markers_link_assigned,
                             _ => throw new ArgumentOutOfRangeException(descriptors[1])
                         },
-                    "ExcludeMarker" => // TODO Images
+                    "ExcludeMarker" =>
                         descriptors[1] switch
                         {
-                            "pending" => Resource.Drawable.wasabee_markers_other_pending,
-                            "acknowledged" => Resource.Drawable.wasabee_markers_other_acknowledge,
-                            "completed" => Resource.Drawable.wasabee_markers_other_done,
+                            "pending" => Resource.Drawable.wasabee_markers_exclude_pending,
+                            "acknowledged" => Resource.Drawable.wasabee_markers_exclude_acknowledge,
+                            "completed" => Resource.Drawable.wasabee_markers_exclude_done,
+                            "assigned" => Resource.Drawable.wasabee_markers_exclude_assigned,
                             _ => throw new ArgumentOutOfRangeException(descriptors[1])
                         },
-                    "GetKeyPortalMarker" => // TODO Images
+                    "GetKeyPortalMarker" =>
                         descriptors[1] switch
                         {
-                            "pending" => Resource.Drawable.wasabee_markers_other_pending,
-                            "acknowledged" => Resource.Drawable.wasabee_markers_other_acknowledge,
-                            "completed" => Resource.Drawable.wasabee_markers_other_done,
+                            "pending" => Resource.Drawable.wasabee_markers_key_pending,
+                            "acknowledged" => Resource.Drawable.wasabee_markers_key_acknowledge,
+                            "completed" => Resource.Drawable.wasabee_markers_key_done,
+                            "assigned" => Resource.Drawable.wasabee_markers_key_assigned,
                             _ => throw new ArgumentOutOfRangeException(descriptors[1])
                         },
-                    "GotoPortalMarker" => // TODO Images
+                    "GotoPortalMarker" =>
                         descriptors[1] switch
                         {
-                            "pending" => Resource.Drawable.wasabee_markers_other_pending,
-                            "acknowledged" => Resource.Drawable.wasabee_markers_other_acknowledge,
-                            "completed" => Resource.Drawable.wasabee_markers_other_done,
+                            "pending" => Resource.Drawable.wasabee_markers_goto_pending,
+                            "acknowledged" => Resource.Drawable.wasabee_markers_goto_acknowledge,
+                            "completed" => Resource.Drawable.wasabee_markers_goto_done,
+                            "assigned" => Resource.Drawable.wasabee_markers_goto_assigned,
                             _ => throw new ArgumentOutOfRangeException(descriptors[1])
                         },
                     _ => throw new ArgumentOutOfRangeException(descriptors[0])

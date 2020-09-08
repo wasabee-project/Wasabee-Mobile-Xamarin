@@ -159,6 +159,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await Task.Delay(TimeSpan.FromMilliseconds(300));
 
+            await _usersDatabase.DeleteAllData();
+
             var wasabeeCookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
             if (!string.IsNullOrWhiteSpace(wasabeeCookie) && RememberServerChoice)
             {
@@ -327,6 +329,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 if (!string.IsNullOrWhiteSpace(result))
                 {
                     var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(result);
+                    await _usersDatabase.SaveUserModel(wasabeeUserModel);
                     await FinishLogin(wasabeeUserModel);
                 }
             }
@@ -351,7 +354,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 await _teamsDatabase.DeleteAllData();
                 await _operationsDatabase.DeleteAllData();
-                await _usersDatabase.DeleteAllData();
 
                 var teamIds = (userModel.Teams?.Where(x => x.State == "On").Select(x => x.Id) ?? new List<string>()).ToList();
                 foreach (var id in teamIds)

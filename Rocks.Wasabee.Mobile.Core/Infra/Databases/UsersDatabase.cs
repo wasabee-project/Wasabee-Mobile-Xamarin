@@ -70,7 +70,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [PrimaryKey, Unique]
             public string GoogleId { get; set; }
 
-            [Indexed]
             public string IngressName { get; set; }
 
             public string ProfileImage { get; set; }
@@ -168,7 +167,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Teams = userModel.Teams,
                     Ops = userModel.Ops,
                     Assignments = userModel.Assignments
-
                 };
             }
         }
