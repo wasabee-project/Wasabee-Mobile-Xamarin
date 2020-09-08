@@ -37,8 +37,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         {
             LoggingService.Trace("Navigated to ProfileViewModel");
 
-            await base.Initialize();
-
             if (_parameter != null)
             {
                 // TODO
@@ -61,6 +59,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
                 // TODO : API call
                 AgentName = "ERROR";
             }
+
+            await base.Initialize();
         }
 
         public string AgentName { get; set; }

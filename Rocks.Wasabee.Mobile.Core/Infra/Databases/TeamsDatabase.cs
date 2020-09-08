@@ -70,7 +70,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [PrimaryKey, Unique]
             public string Id { get; set; }
 
-            [Indexed]
             public string Name { get; set; }
 
             public string AgentsBlobbed { get; set; }
