@@ -1,4 +1,5 @@
 ﻿using Polly;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using SQLite;
 using System;
 using System.IO;
@@ -13,8 +14,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
     /// </summary>
     public abstract class BaseDatabase
     {
-        protected BaseDatabase(IFileSystem fileSystem, TimeSpan expiresAt)
+        protected readonly ILoggingService LoggingService;
+
+        protected BaseDatabase(IFileSystem fileSystem, ILoggingService loggingService, TimeSpan expiresAt)
         {
+            LoggingService = loggingService;
             ExpiresAt = expiresAt;
 
             var databasePath = Path.Combine(fileSystem.AppDataDirectory, $"{nameof(Wasabee)}.db3");

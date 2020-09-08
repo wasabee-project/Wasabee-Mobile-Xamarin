@@ -31,6 +31,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
         public override async Task Initialize()
         {
+            LoggingService.Trace("Navigated to ProfileViewModel");
+
             await base.Initialize();
 
             RefreshCommand.Execute();
@@ -48,6 +50,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxCommand RefreshCommand => new MvxCommand(async () => await RefreshExecuted());
         private async Task RefreshExecuted()
         {
+            LoggingService.Trace("Executing TeamsListViewModel.RefreshCommand");
+
             if (IsRefreshing)
                 return;
 
@@ -80,6 +84,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxAsyncCommand<Team> SwitchTeamStateCommand => new MvxAsyncCommand<Team>(SwitchTeamStateExecuted);
         private async Task SwitchTeamStateExecuted(Team team)
         {
+            LoggingService.Trace($"Executing TeamsListViewModel.SwitchTeamStateCommand({team})");
+
             if (IsBusy)
                 return;
 
@@ -107,7 +113,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxAsyncCommand<Team> ShowTeamDetailCommand => new MvxAsyncCommand<Team>(ShowTeamDetailExecuted);
         private async Task ShowTeamDetailExecuted(Team team)
         {
+            LoggingService.Trace($"Executing TeamsListViewModel.ShowTeamDetailCommand({team})");
+
             _userDialogs.Toast("Not implemented yet");
+
+            await Task.CompletedTask;
         }
 
         #endregion

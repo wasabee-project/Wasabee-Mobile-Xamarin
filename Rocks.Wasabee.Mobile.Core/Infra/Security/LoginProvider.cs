@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Wasabee;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
@@ -20,11 +21,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
     {
         private readonly IAppSettings _appSettings;
         private readonly ISecureStorage _secureStorage;
+        private readonly ILoggingService _loggingService;
 
-        public LoginProvider(IAppSettings appSettings, ISecureStorage secureStorage)
+        public LoginProvider(IAppSettings appSettings, ISecureStorage secureStorage, ILoggingService loggingService)
         {
             _appSettings = appSettings;
             _secureStorage = secureStorage;
+            _loggingService = loggingService;
         }
 
         /// <summary>
@@ -35,6 +38,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// <returns>Returns a GoogleOAuthResponse containing the OAuth token</returns>
         public async Task<GoogleToken> DoGoogleOAuthLoginAsync()
         {
+            _loggingService.Trace("Executing LoginProvider.DoGoogleOAuthLoginAsync");
+
             WebAuthenticatorResult authenticatorResult;
 
             try
@@ -43,15 +48,20 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
                     new Uri(_appSettings.GoogleAuthUrl),
                     new Uri(_appSettings.RedirectUrl));
             }
-            catch (TaskCanceledException e)
+            catch (TaskCanceledException)
             {
-                Console.WriteLine(e);
+                _loggingService.Trace("Task Canceled : DoGoogleOAuthLoginAsync");
+
                 return null;
             }
 
             var code = authenticatorResult.Properties.FirstOrDefault(x => x.Key.Equals("code")).Value;
             if (string.IsNullOrWhiteSpace(code))
+            {
+                _loggingService.Trace("No 'code' property found in authResult. Returning.");
+
                 return null;
+            }
 
             using var client = new HttpClient();
             var parameters = new Dictionary<string, string> {
@@ -64,14 +74,14 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             var encodedContent = new FormUrlEncodedContent(parameters);
             var response = await client.PostAsync(_appSettings.GoogleTokenUrl, encodedContent).ConfigureAwait(false);
-
             try
             {
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _loggingService.Error("Error Executing LoginProvider.DoGoogleOAuthLoginAsync", e);
+
                 return null;
             }
 
@@ -88,6 +98,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// <returns>Returns a WasabeeLoginResponse with account data</returns>
         public async Task<UserModel> DoWasabeeLoginAsync(GoogleToken googleToken)
         {
+            _loggingService.Trace("Executing LoginProvider.DoWasabeeLoginAsync");
+
             var cookieContainer = new CookieContainer();
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
             using var client = new HttpClient(handler);
@@ -102,7 +114,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _loggingService.Error("Error Executing LoginProvider.DoWasabeeLoginAsync", e);
 
                 return null;
             }
@@ -128,8 +140,14 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// <returns></returns>
         public async Task SendFirebaseTokenAsync(string token)
         {
+            _loggingService.Trace("Executing LoginProvider.SendFirebaseTokenAsync");
+
             if (string.IsNullOrWhiteSpace(token))
+            {
+                _loggingService.Info("Token is null, returning");
+
                 return;
+            }
 
             var cookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
             if (string.IsNullOrWhiteSpace(cookie))
@@ -154,7 +172,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _loggingService.Error("Error Executing LoginProvider.SendFirebaseTokenAsync", e);
 
                 return;
             }
@@ -168,16 +186,23 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
         public Task RemoveTokenFromSecureStore()
         {
+            _loggingService.Trace("Executing LoginProvider.RemoveTokenFromSecureStore");
+
             return Task.FromResult(_secureStorage.Remove(SecureStorageConstants.WasabeeCookie));
         }
 
         public void ClearCookie()
         {
+            _loggingService.Trace("Executing LoginProvider.ClearCookie");
+
             // TODO
+
         }
 
         public Task RefreshTokenAsync()
         {
+            _loggingService.Trace("Executing LoginProvider.RefreshTokenAsync");
+
             // TODO
             return Task.CompletedTask;
         }

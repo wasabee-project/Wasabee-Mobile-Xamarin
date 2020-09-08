@@ -35,6 +35,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
         public override async Task Initialize()
         {
+            LoggingService.Trace("Navigated to ProfileViewModel");
+
             await base.Initialize();
 
             if (_parameter != null)

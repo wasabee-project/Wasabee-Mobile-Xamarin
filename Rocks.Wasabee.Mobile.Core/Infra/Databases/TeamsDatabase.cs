@@ -1,4 +1,5 @@
-﻿using Rocks.Wasabee.Mobile.Core.Models.Teams;
+﻿using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using SQLiteNetExtensions.Extensions;
@@ -12,18 +13,22 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 {
     public class TeamsDatabase : BaseDatabase
     {
-        public TeamsDatabase(IFileSystem fileSystem) : base(fileSystem, TimeSpan.FromDays(7))
+        public TeamsDatabase(IFileSystem fileSystem, ILoggingService loggingService) : base(fileSystem, loggingService, TimeSpan.FromDays(7))
         {
         }
 
         public override async Task<int> DeleteAllData()
         {
+            LoggingService.Trace("Querying TeamsDatabase.DeleteAllData");
+
             var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
             return await databaseConnection.DeleteAllAsync<TeamDatabaseModel>().ConfigureAwait(false);
         }
 
         public async Task<int> SaveTeamModel(TeamModel teamModel)
         {
+            LoggingService.Trace("Querying TeamsDatabase.SaveTeamModel");
+
             var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
             var teamDatabaseModel = TeamDatabaseModel.ToTeamDatabaseModel(teamModel);
 
@@ -35,7 +40,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LoggingService.Error("Error Querying TeamsDatabase.SaveTeamModel", e);
+
                 return 1;
             }
 
@@ -46,6 +52,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<List<TeamModel>> GetTeams(string userId)
         {
+            LoggingService.Trace("Querying TeamsDatabase.GetTeams");
+
             var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
             var teamDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<TeamDatabaseModel>();

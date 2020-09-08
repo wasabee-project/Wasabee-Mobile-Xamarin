@@ -60,6 +60,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             base.Start();
 
+            LoggingService.Trace("Starting SplashScreenViewModel");
+
             AppEnvironnement = _preferences.Get("appEnvironnement", "unknown_env");
             var appVersion = _versionTracking.CurrentVersion;
             DisplayVersion = AppEnvironnement != "prod" ? $"{AppEnvironnement} - v{appVersion}" : $"v{appVersion}";
@@ -67,6 +69,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         public override Task Initialize()
         {
+            LoggingService.Trace("Initializing SplashScreenViewModel");
+
             // TODO Handle app opening from notification
 
 
@@ -131,6 +135,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxAsyncCommand ConnectUserCommand => new MvxAsyncCommand(ConnectUser);
         private async Task ConnectUser()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.ConnectUserCommand");
+
             if (!IsConnected)
             {
                 IsLoading = false;
@@ -176,6 +182,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxAsyncCommand<ServerItem> ChooseServerCommand => new MvxAsyncCommand<ServerItem>(ChooseServer);
         private async Task ChooseServer(ServerItem serverItem)
         {
+            LoggingService.Trace($"Executing SplashScreenViewModel.ChooseServerCommand({serverItem})");
+
             IsSelectingServer = false;
             SelectedServerItem = serverItem;
 
@@ -185,6 +193,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand ChangeServerCommand => new MvxCommand(ChangeServer);
         private void ChangeServer()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.ChangeServerCommand");
+
             HasNoTeamOrOpsAssigned = false;
 
             LoadingStepLabel = "Choose your server :";
@@ -195,6 +205,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxAsyncCommand RetryTeamLoadingCommand => new MvxAsyncCommand(RetryTeamLoading);
         private async Task RetryTeamLoading()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.RetryTeamLoadingCommand");
+
             if (IsLoading) return;
 
             HasNoTeamOrOpsAssigned = false;
@@ -204,10 +216,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxAsyncCommand ChangeAccountCommand => new MvxAsyncCommand(ChangeAccount);
         private async Task ChangeAccount()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.ChangeAccountCommand");
+
             IsLoading = false;
             HasNoTeamOrOpsAssigned = false;
             IsLoginVisible = true;
-            SelectedServerItem = null;
+            SelectedServerItem = ServerItem.Undefined;
 
             _preferences.Remove(UserSettingsKeys.RememberServerChoice);
             _preferences.Remove(UserSettingsKeys.SavedServerChoice);
@@ -215,7 +229,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             await ConnectUserCommand.ExecuteAsync();
         }
 
-        public IMvxCommand RememberChoiceCommand => new MvxCommand(() => RememberServerChoice = !RememberServerChoice);
+        public IMvxCommand RememberChoiceCommand => new MvxCommand(() =>
+        {
+            LoggingService.Trace("Executing SplashScreenViewModel.RememberChoiceCommand");
+
+            RememberServerChoice = !RememberServerChoice;
+        });
 
         #endregion
 
@@ -282,6 +301,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 LoadingStepLabel = "Harvesting beehive,\r\n" +
                                    "Please wait...";
                 await Task.Delay(TimeSpan.FromMilliseconds(300));
+
+                await _teamsDatabase.DeleteAllData();
+                await _operationsDatabase.DeleteAllData();
+                await _usersDatabase.DeleteAllData();
 
                 var teamIds = (userModel.Teams?.Where(x => x.State == "On").Select(x => x.Id) ?? new List<string>()).ToList();
                 foreach (var id in teamIds)

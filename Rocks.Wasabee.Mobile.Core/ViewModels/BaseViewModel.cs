@@ -1,12 +1,15 @@
-﻿using MvvmCross.ViewModels;
+﻿using MvvmCross;
+using MvvmCross.ViewModels;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
     public partial class BaseViewModel : MvxViewModel, IMvxViewModel
     {
         protected static IGeolocator Geolocator => CrossGeolocator.Current;
+        protected static ILoggingService LoggingService => Mvx.IoCProvider.Resolve<ILoggingService>();
 
         protected BaseViewModel()
         {

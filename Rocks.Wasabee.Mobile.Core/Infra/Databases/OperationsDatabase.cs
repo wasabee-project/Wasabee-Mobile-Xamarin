@@ -1,4 +1,5 @@
-﻿using Rocks.Wasabee.Mobile.Core.Models.Operations;
+﻿using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using SQLiteNetExtensions.Extensions;
@@ -12,19 +13,22 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 {
     public class OperationsDatabase : BaseDatabase
     {
-        public OperationsDatabase(IFileSystem fileSystem) : base(fileSystem, TimeSpan.FromDays(7))
+        public OperationsDatabase(IFileSystem fileSystem, ILoggingService loggingService) : base(fileSystem, loggingService, TimeSpan.FromDays(7))
         {
-
         }
 
         public override async Task<int> DeleteAllData()
         {
+            LoggingService.Trace("Querying OperationsDatabase.DeleteAllData");
+
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
             return await databaseConnection.DeleteAllAsync<OperationDatabaseModel>().ConfigureAwait(false);
         }
 
         public async Task DeleteExpiredData()
         {
+            LoggingService.Trace("Querying OperationsDatabase.DeleteExpiredData");
+
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
 
             var operationDatabaseModels = await databaseConnection.Table<OperationDatabaseModel>().ToListAsync();
@@ -36,6 +40,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<OperationModel> GetOperationModel(string operationId)
         {
+            LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
+
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
 
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -49,6 +55,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<List<OperationModel>> GetOperationModels()
         {
+            LoggingService.Trace("Querying OperationsDatabase.GetOperationModels");
+
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
 
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -60,6 +68,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<int> SaveOperationModel(OperationModel operationModel)
         {
+            LoggingService.Trace("Querying OperationsDatabase.SaveOperationModel");
+
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
             var operationDatabaseModel = OperationDatabaseModel.ToOperationDatabaseModel(operationModel);
 
@@ -71,7 +81,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LoggingService.Error("Error Querying OperationsDatabase.SaveOperationModel", e);
+
                 return 1;
             }
 
