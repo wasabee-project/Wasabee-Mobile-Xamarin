@@ -17,7 +17,7 @@
     <ContentPage.Content>
         <RelativeLayout>
             <Image
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title, Property=Y, Factor=1, Constant=-120}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel, Property=Y, Factor=1, Constant=-120}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
                 HeightRequest="100"
@@ -25,7 +25,7 @@
                 Source="wasabee.png" />
 
             <Label
-                x:Name="Title"
+                x:Name="TitleLabel"
                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.3, Constant=0}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
@@ -35,7 +35,7 @@
 
             <!-- Loader and login step -->
             <StackLayout
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=60}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
                 IsVisible="{Binding IsLoading}">
@@ -54,7 +54,7 @@
             <!-- Login button if user aborted process -->
             <StackLayout
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=60}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                 IsVisible="{Binding IsLoginVisible}">
 
@@ -107,7 +107,7 @@
             <!-- Server selection -->
             <StackLayout
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=100}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=100}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                 IsVisible="{Binding IsSelectingServer}">
                 <Label
@@ -164,7 +164,7 @@
             <!-- No team or OPS assigned section -->
             <StackLayout
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Title , Property=Y, Factor=1, Constant=60}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                 IsVisible="{Binding HasNoTeamOrOpsAssigned}">
 
