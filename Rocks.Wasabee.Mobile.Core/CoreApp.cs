@@ -1,4 +1,5 @@
-using Microsoft.AppCenter;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross;
 using MvvmCross.IoC;
@@ -28,7 +29,7 @@ namespace Rocks.Wasabee.Mobile.Core
             AppCenter.Start(
                 $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};"
                 // TODO + "ios={Your iOS App secret here}"
-                , typeof(Crashes));
+                , typeof(Crashes), typeof(Analytics));
 
             RegisterAppStart<SplashScreenViewModel>();
         }
