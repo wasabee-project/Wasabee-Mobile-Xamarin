@@ -37,8 +37,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 _hasLoaded = false;
                 RefreshMapView();
             }
-            else if (e.PropertyName == "GeolocationGranted")
-                Map.MyLocationEnabled = ViewModel.GeolocationGranted;
             else if (e.PropertyName == "SelectedWasabeePin")
                 AnimateDetailPanel();
             else if (e.PropertyName == "VisibleRegion")

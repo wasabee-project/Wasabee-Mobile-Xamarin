@@ -65,12 +65,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 else
                 {
                     LoggingService.Info("User has granted geolocation permissions");
-                    GeolocationGranted = true;
                 }
-            }
-            else
-            {
-                GeolocationGranted = true;
             }
         }
 
@@ -84,7 +79,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         #region Properties
 
-        public bool GeolocationGranted { get; set; }
         public Pin SelectedPin
         {
             get => SelectedWasabeePin?.Pin;

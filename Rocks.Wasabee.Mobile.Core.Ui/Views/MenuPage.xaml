@@ -6,27 +6,40 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
     xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
     mc:Ignorable="d"
     x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.MenuPage"
     Title="Wasabee"
     BackgroundColor="{StaticResource DarkGrey}">
     <ContentPage.Content>
         <StackLayout Margin="10">
-
-            <StackLayout Orientation="Horizontal">
-                <Image Source="wasabee.png" HeightRequest="50" WidthRequest="50"/>
-                <Label Text="Wasabee" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Style="{StaticResource WasabeeStyleMenuTitre}"/>
-            </StackLayout>
-
             <ListView
                 x:Name="MenuList"
                 SelectionMode="None"
                 Style="{StaticResource WasabeeMasterDetailMenuStyle}"
                 ItemTapped="MenuList_OnItemTapped"
-                ItemsSource="{Binding MenuItems}">
+                ItemsSource="{Binding MenuItems}"
+                Margin="10"
+                HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <mvx:MvxTextCell Text="{Binding Title}" TextColor="{StaticResource PrimaryGreen}" Detail="{Binding Subtitle}" DetailColor="{StaticResource PrimaryGrey}" />
+                        <mvx:MvxViewCell>
+                            <Grid Margin="10" RowSpacing="0" ColumnSpacing="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="{Binding Subtitle, Mode=OneWay, Converter={StaticResource TextToGridVisibilityConverter}}"/>
+                                </Grid.RowDefinitions>
+                                
+                                <iconize:IconLabel Grid.Column="0" Grid.RowSpan="2" Text="{Binding Icon}" TextColor="White" FontSize="24" VerticalOptions="CenterAndExpand"/>
+                                
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Title}" FontSize="18" TextColor="White" />
+                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding Subtitle}" FontSize="14" TextColor="{StaticResource PrimaryGrey}"/>
+                            </Grid>
+                        </mvx:MvxViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

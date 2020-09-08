@@ -14,6 +14,7 @@
             <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
             <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
             <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
+            <converters:TextToGridVisibilityConverter x:Key="TextToGridVisibilityConverter"/>
         </ResourceDictionary>
     </platform:MvxFormsApplication.Resources>
 </platform:MvxFormsApplication>

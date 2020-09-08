@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Settings;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
@@ -49,10 +50,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             MenuItems = new MvxObservableCollection<MenuItem>()
             {
-                new MenuItem() { Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
-                new MenuItem() { Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
-                new MenuItem() { Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
-                new MenuItem() { Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }
+                new MenuItem() { Icon = "mdi-account", Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
+                new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
+                new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
+                new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) },
+                new MenuItem() { Icon = "", Title = "", ViewModelType = null },
+                new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }
             };
         }
 
@@ -190,6 +193,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
     public class MenuItem
     {
+        public string Icon { get; set; }
         public string Title { get; set; }
         public string Subtitle { get; set; }
         public Type ViewModelType { get; set; }

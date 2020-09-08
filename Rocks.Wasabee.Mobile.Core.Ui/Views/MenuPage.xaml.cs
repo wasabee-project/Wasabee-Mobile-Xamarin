@@ -26,12 +26,12 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 
         private void MenuList_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
-            CloseMenu();
-
             if (!(e.Item is MenuItem menuItem)) return;
 
             if (menuItem.ViewModelType == null)
                 return;
+
+            CloseMenu();
 
             ViewModel.SelectedMenuItem = menuItem;
         }

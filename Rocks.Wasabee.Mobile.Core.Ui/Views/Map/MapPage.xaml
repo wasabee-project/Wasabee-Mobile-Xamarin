@@ -15,7 +15,7 @@
             <googleMaps:Map x:Name="Map" MapType="Street"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
-                            SelectedPin="{Binding SelectedPin}" MapClicked="Map_OnMapClicked"/>
+                            SelectedPin="{Binding SelectedPin}" MapClicked="Map_OnMapClicked" MyLocationEnabled="True"/>
 
             <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{StaticResource DarkGrey}" CornerRadius="10, 10, 0, 0" Padding="10"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-180}"
