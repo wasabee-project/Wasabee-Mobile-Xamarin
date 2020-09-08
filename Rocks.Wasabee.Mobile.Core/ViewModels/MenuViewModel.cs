@@ -8,7 +8,6 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
-using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Settings;
@@ -54,8 +53,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
                 new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
                 new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) },
-                new MenuItem() { Icon = "", Title = "", ViewModelType = null },
-                new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }
+                /*new MenuItem() { Icon = "", Title = "", ViewModelType = null },
+                new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }*/
             };
         }
 

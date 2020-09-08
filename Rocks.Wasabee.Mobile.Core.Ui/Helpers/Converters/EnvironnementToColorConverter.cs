@@ -14,7 +14,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
             {
                 case "dev":
                     return (Color)Application.Current.Resources["PrimaryBlue"];
-                case "prod":
+                case "release":
                     return (Color)Application.Current.Resources["PrimaryGreen"];
                 default:
                     return (Color)Application.Current.Resources["PrimaryRed"];

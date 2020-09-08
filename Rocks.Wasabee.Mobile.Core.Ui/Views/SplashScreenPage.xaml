@@ -119,7 +119,7 @@
 
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                     <CheckBox Color="{StaticResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
-                    <Label Text="Remember my choice" VerticalOptions="CenterAndExpand" FontSize="Small">
+                    <Label Text="Remember my choice (quick login if enabled)" VerticalOptions="CenterAndExpand" FontSize="Small">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding RememberChoiceCommand}"/>
                         </Label.GestureRecognizers>

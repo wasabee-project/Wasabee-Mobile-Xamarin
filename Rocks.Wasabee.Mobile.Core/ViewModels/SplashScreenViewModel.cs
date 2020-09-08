@@ -160,7 +160,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             await Task.Delay(TimeSpan.FromMilliseconds(300));
 
             var wasabeeCookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
-            if (!string.IsNullOrWhiteSpace(wasabeeCookie))
+            if (!string.IsNullOrWhiteSpace(wasabeeCookie) && RememberServerChoice)
             {
                 await BypassGoogleAndWasabeeLogin();
                 return;
@@ -213,6 +213,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             HasNoTeamOrOpsAssigned = false;
 
             LoadingStepLabel = "Choose your server :";
+            IsLoading = false;
             IsLoginVisible = false;
             IsSelectingServer = true;
         }
@@ -308,7 +309,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
                 SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
 
-            if (SelectedServerItem.Server == WasabeeServer.Undefined || !RememberServerChoice)
+            if (SelectedServerItem.Server == WasabeeServer.Undefined)
                 ChangeServerCommand.Execute();
             else
             {
