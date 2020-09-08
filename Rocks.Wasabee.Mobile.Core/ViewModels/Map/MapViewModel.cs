@@ -52,20 +52,29 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             base.Prepare();
 
             var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
-            var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-
-            if (statusLocationAlways != PermissionStatus.Granted || statusLocationWhenInUse != PermissionStatus.Granted)
+            if (statusLocationAlways != PermissionStatus.Granted)
             {
                 var result = await _permissions.RequestAsync<Permissions.LocationAlways>();
-                statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                if (result != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+                if (result != PermissionStatus.Granted)
                 {
-                    _userDialogs.Alert("Geolocation permission is required to show your position !");
+                    var ifInUsePermission = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                    if (ifInUsePermission != PermissionStatus.Granted)
+                        _userDialogs.Alert("Geolocation permission is required to show your position !");
+                    else
+                    {
+                        LoggingService.Info("User has granted WhenInUse geolocation permissions");
+                        IsLocationAvailable = true;
+                    }
                 }
                 else
                 {
-                    LoggingService.Info("User has granted geolocation permissions");
+                    LoggingService.Info("User has granted full geolocation permissions");
+                    IsLocationAvailable = true;
                 }
+            }
+            else
+            {
+                IsLocationAvailable = true;
             }
         }
 
@@ -96,6 +105,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public MvxObservableCollection<WasabeePin> Pins { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MapSpan MapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
         public MapSpan VisibleRegion { get; set; }
+
+        public bool IsLocationAvailable { get; set; } = false;
 
         #endregion
 

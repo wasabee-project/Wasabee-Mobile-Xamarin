@@ -39,6 +39,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             }
             else if (e.PropertyName == "SelectedWasabeePin")
                 AnimateDetailPanel();
+            else if (e.PropertyName == "IsLocationAvailable")
+                Map.MyLocationEnabled = ViewModel.IsLocationAvailable;
             else if (e.PropertyName == "VisibleRegion")
                 Map.MoveToRegion(ViewModel.VisibleRegion);
         }
@@ -63,6 +65,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
             Map.IsIndoorEnabled = false;
             Map.IsTrafficEnabled = false;
+            Map.MyLocationEnabled = ViewModel.IsLocationAvailable;
 
             AnimateDetailPanel();
         }
