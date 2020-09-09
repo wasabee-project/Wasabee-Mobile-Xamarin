@@ -1,6 +1,10 @@
 ﻿using Acr.UserDialogs;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using MvvmCross.Commands;
+using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -13,17 +17,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         private readonly IVersionTracking _versionTracking;
         private readonly IPermissions _permissions;
         private readonly IUserDialogs _userDialogs;
+        private readonly IPreferences _preferences;
 
-        public SettingsViewModel(IVersionTracking versionTracking, IPermissions permissions, IUserDialogs userDialogs)
+        public SettingsViewModel(IVersionTracking versionTracking, IPermissions permissions, IUserDialogs userDialogs,
+            IPreferences preferences)
         {
             _versionTracking = versionTracking;
             _permissions = permissions;
             _userDialogs = userDialogs;
+            _preferences = preferences;
         }
 
         public override Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
+
             Version = _versionTracking.CurrentVersion;
+
+            var analyticsSetting = _preferences.Get(UserSettingsKeys.AnalyticsEnabled, false);
+            SetProperty(ref _isAnonymousAnalyticsEnabled, analyticsSetting);
 
             return base.Initialize();
         }
@@ -31,6 +43,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         #region Properties
 
         public string Version { get; set; }
+
+        private bool _isAnonymousAnalyticsEnabled;
+        public bool IsAnonymousAnalyticsEnabled
+        {
+            get => _isAnonymousAnalyticsEnabled;
+            set => ToggleAnalyticsCommand.Execute(value);
+        }
 
         #endregion
 
@@ -53,7 +72,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             if (IsBusy) return;
             IsBusy = true;
 
-            await Launcher.OpenAsync("https://enl.rocks/-dEHQ");
+            await Launcher.OpenAsync("https://enl.rocks/-pb0U");
 
             IsBusy = false;
         }
@@ -86,18 +105,57 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     IsBusy = false;
                     return;
                 }
-                else
-                {
-                    LoggingService.Info("User has granted storage permissions");
-                }
+
+                LoggingService.Info("User has granted storage permissions");
             }
 
             var zip = CreateZipFile();
 
             IsBusy = false;
 
-            await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
-            await Share.RequestAsync(new ShareFileRequest(new ShareFile(zip)));
+            var hasSent = false;
+            if (IsAnonymousAnalyticsEnabled)
+            {
+                var report = await Crashes.GetLastSessionCrashReportAsync();
+                if (report != null)
+                {
+                    Crashes.TrackError(new Exception(report.StackTrace), null, ErrorAttachmentLog.AttachmentWithBinary(File.ReadAllBytes(zip), "WasabeeLogs.zip", "application/zip"));
+                    _userDialogs.Toast("Data is beeing sent automatically");
+
+                    hasSent = true;
+                }
+            }
+
+            if (!hasSent)
+            {
+                await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
+                await Share.RequestAsync(new ShareFileRequest(new ShareFile(zip)));
+            }
+        }
+
+        public IMvxAsyncCommand<bool> ToggleAnalyticsCommand => new MvxAsyncCommand<bool>(ToggleAnalyticsExecuted);
+        private async Task ToggleAnalyticsExecuted(bool value)
+        {
+            if (value)
+            {
+                SetProperty(ref _isAnonymousAnalyticsEnabled, true);
+                _preferences.Set(UserSettingsKeys.AnalyticsEnabled, true);
+
+                await Crashes.SetEnabledAsync(true);
+                await Analytics.SetEnabledAsync(true);
+
+                LoggingService.Info("User activated analytics");
+            }
+            else
+            {
+                LoggingService.Info("User disabled analytics");
+
+                SetProperty(ref _isAnonymousAnalyticsEnabled, false);
+                _preferences.Remove(UserSettingsKeys.AnalyticsEnabled);
+
+                await Crashes.SetEnabledAsync(false);
+                await Analytics.SetEnabledAsync(false);
+            }
         }
 
         #endregion
@@ -109,14 +167,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             try
             {
                 // Delete existing zip file if exists
-                if (System.IO.File.Exists(destinationZipFullPath))
-                    System.IO.File.Delete(destinationZipFullPath);
-                if (!System.IO.Directory.Exists(directoryToZip))
+                if (File.Exists(destinationZipFullPath))
+                    File.Delete(destinationZipFullPath);
+                if (!Directory.Exists(directoryToZip))
                     return false;
                 else
                 {
                     System.IO.Compression.ZipFile.CreateFromDirectory(directoryToZip, destinationZipFullPath, System.IO.Compression.CompressionLevel.Optimal, true);
-                    return System.IO.File.Exists(destinationZipFullPath);
+                    return File.Exists(destinationZipFullPath);
                 }
             }
             catch (Exception e)
@@ -133,17 +191,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             {
                 string folder = Device.RuntimePlatform switch
                 {
-                    Device.iOS => System.IO.Path.Combine(FileSystem.AppDataDirectory, "..", "Library"),
-                    Device.Android => System.IO.Path.Combine(FileSystem.AppDataDirectory),
+                    Device.iOS => Path.Combine(FileSystem.AppDataDirectory, "..", "Library"),
+                    Device.Android => Path.Combine(FileSystem.AppDataDirectory),
                     _ => throw new Exception("Could not show log: Platform undefined.")
                 };
 
                 //Delete old zipfiles (housekeeping)
                 try
                 {
-                    foreach (string fileName in System.IO.Directory.GetFiles(folder, "*.zip"))
+                    foreach (string fileName in Directory.GetFiles(folder, "*.zip"))
                     {
-                        System.IO.File.Delete(fileName);
+                        File.Delete(fileName);
                     }
                 }
                 catch (Exception ex)
@@ -151,11 +209,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     LoggingService.Error("Error deleting old zip files", ex);
                 }
 
-                string logFolder = System.IO.Path.Combine(folder, "logs");
-                if (System.IO.Directory.Exists(logFolder))
+                string logFolder = Path.Combine(folder, "logs");
+                if (Directory.Exists(logFolder))
                 {
                     zipFilename = $"{folder}/{DateTime.Now:yyyyMMdd-HHmmss}.zip";
-                    int filesCount = System.IO.Directory.GetFiles(logFolder, "*.csv").Length;
+                    int filesCount = Directory.GetFiles(logFolder, "*.csv").Length;
                     if (filesCount > 0)
                     {
                         if (!QuickZip(logFolder, zipFilename))

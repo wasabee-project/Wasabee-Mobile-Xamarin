@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -80,6 +81,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
             LoggingService.Trace("Navigated to MapViewModel");
 
             await base.Initialize();
