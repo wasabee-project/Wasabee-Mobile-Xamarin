@@ -88,7 +88,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             IsBusy = false;
         }
 
-        public IMvxAsyncCommand SendLogsCommand => new MvxAsyncCommand(SendLogsExecuted);
+        public IMvxCommand SendLogsCommand => new MvxCommand(async () => await SendLogsExecuted());
         private async Task SendLogsExecuted()
         {
             if (IsBusy) return;
@@ -133,7 +133,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             }
         }
 
-        public IMvxAsyncCommand<bool> ToggleAnalyticsCommand => new MvxAsyncCommand<bool>(ToggleAnalyticsExecuted);
+        public IMvxCommand<bool> ToggleAnalyticsCommand => new MvxCommand<bool>(async value => await ToggleAnalyticsExecuted(value));
         private async Task ToggleAnalyticsExecuted(bool value)
         {
             if (value)
