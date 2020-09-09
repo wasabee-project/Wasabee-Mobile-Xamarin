@@ -1,4 +1,5 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using Acr.UserDialogs;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -31,9 +32,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IVersionTracking _versionTracking;
         private readonly IAuthentificationService _authentificationService;
         private readonly IMvxNavigationService _navigationService;
+        private readonly IMvxMessenger _messenger;
         private readonly ISecureStorage _secureStorage;
         private readonly IAppSettings _appSettings;
         private readonly IUserSettingsService _userSettingsService;
+        private readonly IUserDialogs _userDialogs;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly UsersDatabase _usersDatabase;
         private readonly OperationsDatabase _operationsDatabase;
@@ -44,18 +47,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private bool _isBypassingGoogleAndWasabeeLogin = false;
 
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
-            IAuthentificationService authentificationService, IMvxNavigationService navigationService, ISecureStorage secureStorage,
-            IAppSettings appSettings, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service,
-            UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase)
+            IAuthentificationService authentificationService, IMvxNavigationService navigationService, IMvxMessenger messenger,
+            ISecureStorage secureStorage, IAppSettings appSettings, IUserSettingsService userSettingsService, IUserDialogs userDialogs,
+            WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
             _versionTracking = versionTracking;
             _authentificationService = authentificationService;
             _navigationService = navigationService;
+            _messenger = messenger;
             _secureStorage = secureStorage;
             _appSettings = appSettings;
             _userSettingsService = userSettingsService;
+            _userDialogs = userDialogs;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _usersDatabase = usersDatabase;
             _operationsDatabase = operationsDatabase;
@@ -331,6 +336,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 if (!string.IsNullOrWhiteSpace(result))
                 {
                     var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(result);
+                    if (wasabeeUserModel == null)
+                    {
+                        ErrorMessage = "Wasabee login failed !";
+                        IsAuthInError = true;
+                        IsLoginVisible = true;
+                        IsLoading = false;
+
+                        return;
+                    }
+
                     await _usersDatabase.SaveUserModel(wasabeeUserModel);
                     await FinishLogin(wasabeeUserModel);
                 }
@@ -342,45 +357,75 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             LoadingStepLabel = $"Welcome {userModel.IngressName}";
             await Task.Delay(TimeSpan.FromSeconds(1));
 
-            if ((userModel.Teams == null || !userModel.Teams.Any()) &&
-                (userModel.Ops == null || !userModel.Ops.Any()))
+            try
             {
-                IsLoading = false;
-                HasNoTeamOrOpsAssigned = true;
-            }
-            else
-            {
-                LoadingStepLabel = "Harvesting beehive,\r\n" +
-                                   "Please wait...";
-                await Task.Delay(TimeSpan.FromMilliseconds(300));
-
-                await _teamsDatabase.DeleteAllData();
-                await _operationsDatabase.DeleteAllData();
-
-                var teamIds = (userModel.Teams?.Where(x => x.State == "On").Select(x => x.Id) ?? new List<string>()).ToList();
-                foreach (var id in teamIds)
+                if ((userModel.Teams == null || !userModel.Teams.Any()) &&
+                    (userModel.Ops == null || !userModel.Ops.Any()))
                 {
-                    var team = await _wasabeeApiV1Service.GetTeam(id);
-                    if (team != null)
-                        await _teamsDatabase.SaveTeamModel(team);
+                    IsLoading = false;
+                    HasNoTeamOrOpsAssigned = true;
                 }
-
-                var opsIds = (userModel.Ops?.Select(x => x.Id) ?? new List<string>()).ToList();
-                foreach (var id in opsIds)
+                else
                 {
-                    var op = await _wasabeeApiV1Service.GetOperation(id);
+                    LoadingStepLabel = "Harvesting beehive,\r\n" +
+                                       "Please wait...";
+                    await Task.Delay(TimeSpan.FromMilliseconds(300));
+
+                    await _teamsDatabase.DeleteAllData();
+                    await _operationsDatabase.DeleteAllData();
+
+                    var teamIds = (userModel.Teams?.Where(x => x.State == "On").Select(x => x.Id) ?? new List<string>()).ToList();
+                    foreach (var id in teamIds)
+                    {
+                        var team = await _wasabeeApiV1Service.GetTeam(id);
+                        if (team != null)
+                            await _teamsDatabase.SaveTeamModel(team);
+                    }
+
+                    var opsIds = (userModel.Ops?.Select(x => x.Id) ?? new List<string>()).ToList();
+                    var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
+                    if (selectedOp == string.Empty || opsIds.All(x => !x.Equals(selectedOp)))
+                    {
+                        var id = opsIds.First();
+                        _preferences.Set(UserSettingsKeys.SelectedOp, id);
+                        selectedOp = id;
+                    }
+
+                    var op = await _wasabeeApiV1Service.GetOperation(selectedOp);
                     if (op != null)
                         await _operationsDatabase.SaveOperationModel(op);
+
+                    _ = Task.Factory.StartNew(async () =>
+                    {
+                        _userDialogs.Toast("Your OPs are loading in background");
+
+                        foreach (var id in opsIds.Except(new[] { selectedOp }))
+                        {
+                            op = await _wasabeeApiV1Service.GetOperation(id);
+                            if (op != null)
+                            {
+                                await _operationsDatabase.SaveOperationModel(op);
+                                _messenger.Publish(new NewOpAvailableMessage(this));
+                            }
+                        }
+
+                        _userDialogs.Toast("OPs loaded succesfully");
+                    }).ConfigureAwait(false);
+
+                    //_firebaseAnalyticsService.LogEvent("Login");
+
+                    await _navigationService.Navigate<RootViewModel>();
+                    await _navigationService.Close(this);
                 }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error("Error Executing SplashScreenViewModel.FinishLogin", e);
 
-                var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
-                if (selectedOp == string.Empty || opsIds.All(x => !x.Equals(selectedOp)))
-                    _preferences.Set(UserSettingsKeys.SelectedOp, opsIds.First());
-
-                //_firebaseAnalyticsService.LogEvent("Login");
-
-                await _navigationService.Navigate<RootViewModel>();
-                await _navigationService.Close(this);
+                IsAuthInError = true;
+                IsLoginVisible = true;
+                IsLoading = false;
+                ErrorMessage = "Error loading Wasabee OPs data";
             }
         }
 
