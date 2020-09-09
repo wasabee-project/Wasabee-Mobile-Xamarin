@@ -12,7 +12,7 @@ namespace Rocks.Wasabee.Mobile.Core
 {
     public class CoreApp : MvxApplication
     {
-        public override async void Initialize()
+        public override void Initialize()
         {
             CreatableTypes()
                 .EndingWith("ViewModel")
