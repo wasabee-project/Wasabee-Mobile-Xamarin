@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
-using MvvmCross.Navigation;
+﻿using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
+using System.Threading.Tasks;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
@@ -22,7 +23,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 MvxNotifyTask.Create(async () =>
                 {
                     await ShowMenuViewModel();
-                    await ShowHomeViewModel();
+                    await ShowMapViewModel();
                 });
             }
         }
@@ -32,15 +33,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _alreadyLoaded = true;
             base.ViewDisappeared();
         }
-        
+
         private async Task ShowMenuViewModel()
         {
             await _navigationService.Navigate<MenuViewModel>();
         }
 
-        private async Task ShowHomeViewModel()
+        private async Task ShowMapViewModel()
         {
-            await _navigationService.Navigate<HomeViewModel>();
+            await _navigationService.Navigate<MapViewModel>();
         }
     }
 }
