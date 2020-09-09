@@ -363,3 +363,6 @@ FodyWeavers.xsd
 
 # Google - Firebase auth file
 google-services.json
+
+# Generated files
+lp/
