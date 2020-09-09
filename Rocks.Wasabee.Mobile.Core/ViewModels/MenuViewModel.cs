@@ -33,6 +33,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IMvxMessenger _messenger;
         private readonly OperationsDatabase _operationsDatabase;
 
+        private readonly MvxSubscriptionToken _token;
+
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IPermissions permissions, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
             IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase)
@@ -56,6 +58,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 /*new MenuItem() { Icon = "", Title = "", ViewModelType = null },
                 new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }*/
             };
+
+            _token = messenger.Subscribe<NewOpAvailableMessage>(async msg => await RefreshAvailableOpsCommand.ExecuteAsync());
         }
 
         public override async void Prepare()
@@ -73,8 +77,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var op = await _operationsDatabase.GetOperationModel(selectedOpId);
                 SelectedOpName = op.Name;
             }
+        }
 
-            AvailableOpsCollection = new MvxObservableCollection<OperationModel>((await _operationsDatabase.GetOperationModels()).Where(x => !string.IsNullOrWhiteSpace(x.Name)).OrderBy(x => x.Name));
+        public override async Task Initialize()
+        {
+            await RefreshAvailableOpsCommand.ExecuteAsync();
+
+            await base.Initialize();
         }
 
         #region Properties
@@ -106,6 +115,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         #endregion
 
         #region Commands
+
+        public IMvxAsyncCommand RefreshAvailableOpsCommand => new MvxAsyncCommand(RefreshAvailableOpsExecuted);
+        private async Task RefreshAvailableOpsExecuted()
+        {
+            LoggingService.Trace($"Executing MenuViewModel.RefreshAvailableOpsCommand");
+
+            var ops = await _operationsDatabase.GetOperationModels();
+            AvailableOpsCollection = new MvxObservableCollection<OperationModel>(
+                ops.Where(x => !string.IsNullOrWhiteSpace(x.Name))
+                .OrderBy(x => x.Name));
+        }
 
         public IMvxCommand<bool> ToggleLiveLocationSharingCommand => new MvxCommand<bool>(async value => await ToggleLiveLocationSharingExecuted(value));
         private async Task ToggleLiveLocationSharingExecuted(bool value)
