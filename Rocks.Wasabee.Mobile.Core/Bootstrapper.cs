@@ -44,7 +44,7 @@ namespace Rocks.Wasabee.Mobile.Core
 
         public static void SetupAppSettings()
         {
-#if !PROD
+#if DEBUG
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAppSettings, DevAppSettings>();
 #else
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAppSettings, ProdAppSettings>();

@@ -1,4 +1,5 @@
-﻿using MvvmCross.ViewModels;
+﻿using Microsoft.AppCenter.Analytics;
+using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System.Threading.Tasks;
@@ -35,6 +36,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
             LoggingService.Trace("Navigated to ProfileViewModel");
 
             if (_parameter != null)

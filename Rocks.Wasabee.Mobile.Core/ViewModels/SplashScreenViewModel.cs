@@ -1,4 +1,5 @@
-﻿using MvvmCross;
+﻿using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -66,6 +67,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             base.Start();
 
             LoggingService.Trace("Starting SplashScreenViewModel");
+            Analytics.TrackEvent(GetType().Name);
 
             AppEnvironnement = _preferences.Get("appEnvironnement", "unknown_env");
             var appVersion = _versionTracking.CurrentVersion;

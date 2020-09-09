@@ -4,6 +4,7 @@ using Microsoft.AppCenter.Crashes;
 using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
 
@@ -11,7 +12,7 @@ namespace Rocks.Wasabee.Mobile.Core
 {
     public class CoreApp : MvxApplication
     {
-        public override void Initialize()
+        public override async void Initialize()
         {
             CreatableTypes()
                 .EndingWith("ViewModel")
@@ -30,6 +31,8 @@ namespace Rocks.Wasabee.Mobile.Core
                 $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};"
                 // TODO + "ios={Your iOS App secret here}"
                 , typeof(Crashes), typeof(Analytics));
+
+            Analytics.TrackEvent(AnalyticsConstants.AppStart);
 
             RegisterAppStart<SplashScreenViewModel>();
         }

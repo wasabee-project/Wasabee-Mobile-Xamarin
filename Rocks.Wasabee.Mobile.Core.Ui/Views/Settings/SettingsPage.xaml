@@ -8,24 +8,45 @@
     <ContentPage.Content>
         <TableView Intent="Settings" HasUnevenRows="True">
             <TableRoot>
-                <TableSection Title="Permissions">
+                <TableSection Title="Permissions" TextColor="{StaticResource PrimaryGreen}">
                     <TextCell Text="Open app system settings" TextColor="Black" Command="{Binding OpenApplicationSettingsCommand}"/>
                 </TableSection>
-                <TableSection Title="Application's logs">
+                <TableSection Title="Application" TextColor="{StaticResource PrimaryGreen}">
+                    <ViewCell Tapped="AnalyticsCell_OnTapped">
+                        <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Label Grid.Row="0" Grid.Column="0" Text="Enable Anonymous Analytics" TextColor="Black" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
+                            <Switch Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" OnColor="{StaticResource PrimaryGreenDark}"
+                                    ThumbColor="{Binding IsAnonymousAnalyticsEnabled, Converter={StaticResource BoolToColorConverter}}"
+                                    IsToggled="{Binding IsAnonymousAnalyticsEnabled}"
+                                    HorizontalOptions="EndAndExpand" Margin="0, 0, 10, 0"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" Text="(this helps the developers improve Wasabee)" TextColor="Gray" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
+
+                        </Grid>
+                    </ViewCell>
                     <TextCell Text="Send logs" TextColor="Black" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="Gray"/>
                 </TableSection>
-                <TableSection Title="About">
+                <TableSection Title="About" TextColor="{StaticResource PrimaryGreen}">
                     <ViewCell>
-                        <Label TextColor="Gray" FontSize="Small" Padding="15, 5" LineBreakMode="WordWrap">
+                        <Label TextColor="Gray" FontSize="Small" Padding="15, 10" LineBreakMode="WordWrap">
                             <Label.Text>
 Wasabee mobile application is still under huge development process. Bugs and crashes are possible.
-If you're a C# / Xamarin.Forms developper and interested in helping us, reach us through Telegram.
+If you're a C# / Xamarin.Forms developer and interested in helping us, reach us through Telegram.
                             </Label.Text>
                         </Label>
                     </ViewCell>
-                    <TextCell Text="Wasabee webpage" TextColor="Black" Command="{Binding OpenWasabeeWebpageCommand}" />
-                    <TextCell Text="Wasabee Client General Chat" TextColor="Black" Command="{Binding OpenWasabeeTelegramChatCommand}" />
-                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Black"/>
+                    <TextCell Text="Wasabee Webpage" TextColor="Black" Command="{Binding OpenWasabeeWebpageCommand}" />
+                    <TextCell Text="Telegram Chat" TextColor="Black" Command="{Binding OpenWasabeeTelegramChatCommand}" />
+                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Gray"/>
                 </TableSection>
             </TableRoot>
         </TableView>
