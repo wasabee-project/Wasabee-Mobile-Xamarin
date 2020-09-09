@@ -105,7 +105,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         public MvxObservableCollection<Polyline> Polylines { get; set; } = new MvxObservableCollection<Polyline>();
         public MvxObservableCollection<WasabeePin> Pins { get; set; } = new MvxObservableCollection<WasabeePin>();
-        public MapSpan MapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
+        public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
+
         public MapSpan VisibleRegion { get; set; }
 
         public bool IsLocationAvailable { get; set; } = false;
@@ -134,6 +135,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public IMvxAsyncCommand LoadOperationCommand => new MvxAsyncCommand(LoadOperationExecuted);
         private async Task LoadOperationExecuted()
         {
+            if (IsBusy) return;
+            IsBusy = true;
+
             LoggingService.Trace("Executing MapViewModel.LoadOperationCommand");
 
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
@@ -173,11 +177,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                                 }
                             });
 
-                        Pins.Add(new WasabeePin(new Pin() { Position = new Position(fromLat, fromLng), Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") })
+                        Pins.Add(new WasabeePin(new Pin()
+                        {
+                            Position = new Position(fromLat, fromLng),
+                            Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}")
+                        })
                         {
                             Portal = fromPortal
                         });
-                        Pins.Add(new WasabeePin(new Pin() { Position = new Position(toLat, toLng), Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}") })
+                        Pins.Add(new WasabeePin(new Pin()
+                        {
+                            Position = new Position(toLat, toLng),
+                            Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}")
+                        })
                         {
                             Portal = toPortal
                         });
@@ -208,7 +220,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         };
 
                         if (!teamsAgentsLists.IsNullOrEmpty())
-                            pin.AssignedTo = teamsAgentsLists!.FirstOrDefault(a => a.Id.Equals(marker.AssignedTo))?.Name;
+                            pin.AssignedTo = teamsAgentsLists!.FirstOrDefault(a => a.Id.Equals(marker.AssignedTo))
+                                ?.Name;
 
                         Pins.Add(pin);
                     }
@@ -222,10 +235,61 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             {
                 LoggingService.Error("Error Executing MapViewModel.LoadOperationCommand", e);
             }
+            finally
+            {
+                if (Pins.Any())
+                {
+                    var lowestLat = Pins.Min(p => p.Pin.Position.Latitude);
+                    var highestLat = Pins.Max(p => p.Pin.Position.Latitude);
+                    var lowestLong = Pins.Min(p => p.Pin.Position.Longitude);
+                    var highestLong = Pins.Max(p => p.Pin.Position.Longitude);
+                    var finalLat = (lowestLat + highestLat) / 2;
+                    var finalLong = (lowestLong + highestLong) / 2;
+                    var distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                        highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
 
-            MapRegion = MapSpan.FromCenterAndRadius(Pins.FirstOrDefault()?.Pin.Position ?? DefaultPosition, Distance.FromKilometers(5));
+                    OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
+                }
+
+                IsBusy = false;
+            }
         }
 
         #endregion
+    }
+
+    internal class DistanceCalculation
+    {
+        public static class GeoCodeCalc
+        {
+            private const double EarthRadiusInMiles = 3956.0;
+            private const double EarthRadiusInKilometers = 6367.0;
+
+            public static double ToRadian(double val) { return val * (Math.PI / 180); }
+            public static double DiffRadian(double val1, double val2) { return ToRadian(val2) - ToRadian(val1); }
+
+            public static double CalcDistance(double lat1, double lng1, double lat2, double lng2)
+            {
+                return CalcDistance(lat1, lng1, lat2, lng2, GeoCodeCalcMeasurement.Miles);
+            }
+
+            public static double CalcDistance(double lat1, double lng1, double lat2, double lng2, GeoCodeCalcMeasurement m)
+            {
+                var radius = m switch
+                {
+                    GeoCodeCalcMeasurement.Miles => EarthRadiusInMiles,
+                    GeoCodeCalcMeasurement.Kilometers => EarthRadiusInKilometers,
+                    _ => EarthRadiusInKilometers
+                };
+
+                return radius * Math.Asin(Math.Min(1, Math.Sqrt((Math.Pow(Math.Sin((DiffRadian(lat1, lat2)) / 2.0), 2.0) + Math.Cos(ToRadian(lat1)) * Math.Cos(ToRadian(lat2)) * Math.Pow(Math.Sin((DiffRadian(lng1, lng2)) / 2.0), 2.0)))));
+            }
+        }
+
+        public enum GeoCodeCalcMeasurement : int
+        {
+            Miles = 0,
+            Kilometers = 1
+        }
     }
 }

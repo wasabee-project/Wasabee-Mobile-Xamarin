@@ -32,7 +32,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "MapRegion")
+            if (e.PropertyName == "OperationMapRegion")
             {
                 _hasLoaded = false;
                 RefreshMapView();
@@ -113,7 +113,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 }
             }
 
-            Map.MoveToRegion(ViewModel.MapRegion);
+            Map.MoveToRegion(ViewModel.OperationMapRegion);
 
             _hasLoaded = true;
         }
