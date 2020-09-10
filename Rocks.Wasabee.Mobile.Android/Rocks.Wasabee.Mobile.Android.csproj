@@ -167,6 +167,7 @@
   <ItemGroup>
     <GoogleServicesJson Include="google-services.json" />
     <AndroidAsset Include="Assets\NLog.config" />
+    <ProguardConfiguration Include="proguard.cfg" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
