@@ -3,6 +3,8 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -66,9 +68,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             base.Prepare();
 
-            var appEnvironnement = _preferences.Get("appEnvironnement", "unknown_env");
+            var appEnvironnement = _preferences.Get(ApplicationSettingsConstants.AppEnvironnement, "unknown_env");
             var appVersion = _versionTracking.CurrentVersion;
-            DisplayVersion = appEnvironnement != "prod" ? $"{appEnvironnement} - v{appVersion}" : $"v{appVersion}";
+            DisplayVersion = appEnvironnement != "release" ? $"{appEnvironnement} - v{appVersion}" : $"v{appVersion}";
             LoggedUser = _userSettingsService.GetIngressName();
 
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
@@ -93,6 +95,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public string SelectedOpName { get; set; }
         public MvxObservableCollection<OperationModel> AvailableOpsCollection { get; set; }
         public MvxObservableCollection<MenuItem> MenuItems { get; set; }
+        public bool HasLocalOps { get; set; } = true;
 
         private MenuItem _selectedMenuItem;
         public MenuItem SelectedMenuItem
@@ -119,9 +122,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxAsyncCommand RefreshAvailableOpsCommand => new MvxAsyncCommand(RefreshAvailableOpsExecuted);
         private async Task RefreshAvailableOpsExecuted()
         {
-            LoggingService.Trace($"Executing MenuViewModel.RefreshAvailableOpsCommand");
+            LoggingService.Trace("Executing MenuViewModel.RefreshAvailableOpsCommand");
 
             var ops = await _operationsDatabase.GetOperationModels();
+            if (ops.IsNullOrEmpty())
+            {
+                HasLocalOps = false;
+                return;
+            }
+
             AvailableOpsCollection = new MvxObservableCollection<OperationModel>(
                 ops.Where(x => !string.IsNullOrWhiteSpace(x.Name))
                 .OrderBy(x => x.Name));
@@ -184,9 +193,28 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxAsyncCommand LogoutCommand => new MvxAsyncCommand(Logout);
         private async Task Logout()
         {
-            await _authentificationService.LogoutAsync();
+            LoggingService.Trace("Executing MenuViewModel.LogoutCommand");
 
+            if (IsBusy) return;
+            IsBusy = true;
+
+            await _authentificationService.LogoutAsync();
             await _navigationService.Navigate<SplashScreenViewModel>();
+
+            IsBusy = false;
+        }
+
+        public IMvxAsyncCommand PullOpsFromServerCommand => new MvxAsyncCommand(PullOpsFromServerExecuted);
+        private async Task PullOpsFromServerExecuted()
+        {
+            LoggingService.Trace("Executing MenuViewModel.PullOpsFromServerCommand");
+
+            if (IsBusy) return;
+            IsBusy = true;
+
+            await _navigationService.Navigate<SplashScreenViewModel, SplashScreenNavigationParameter>(new SplashScreenNavigationParameter(doDataRefreshOnly: true));
+
+            IsBusy = false;
         }
 
         public IMvxCommand ChangeSelectedOpCommand => new MvxAsyncCommand(ChangeSelectedOpExecuted);
@@ -194,7 +222,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoggingService.Trace("Executing MenuViewModel.ChangeSelectedOpCommand");
 
-            var result = await _userDialogs.ActionSheetAsync("Available OP's :", "Cancel", null, null, AvailableOpsCollection.Select(x => x.Name).ToArray());
+            if (!HasLocalOps)
+            {
+                await _userDialogs.AlertAsync("No OP's available");
+                return;
+            }
+
+            var opNames = AvailableOpsCollection.Select(x => x.Name).Except(new[] { SelectedOpName }).ToArray();
+            var result = await _userDialogs.ActionSheetAsync("Available OP's :", "Cancel", null, null, opNames);
             if (string.IsNullOrWhiteSpace(result) || result.Equals("Cancel"))
                 return;
 

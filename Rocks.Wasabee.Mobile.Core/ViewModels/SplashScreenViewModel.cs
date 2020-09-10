@@ -17,7 +17,6 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -25,7 +24,17 @@ using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
-    public class SplashScreenViewModel : BaseViewModel
+    public class SplashScreenNavigationParameter
+    {
+        public bool DoDataRefreshOnly { get; }
+
+        public SplashScreenNavigationParameter(bool doDataRefreshOnly)
+        {
+            DoDataRefreshOnly = doDataRefreshOnly;
+        }
+    }
+
+    public class SplashScreenViewModel : BaseViewModel, IMvxViewModel<SplashScreenNavigationParameter>
     {
         private readonly IConnectivity _connectivity;
         private readonly IPreferences _preferences;
@@ -45,6 +54,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private bool _working;
         private GoogleToken _googleToken;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
+
+        private SplashScreenNavigationParameter _parameter;
 
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
             IAuthentificationService authentificationService, IMvxNavigationService navigationService, IMvxMessenger messenger,
@@ -67,6 +78,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _teamsDatabase = teamsDatabase;
         }
 
+        public void Prepare(SplashScreenNavigationParameter parameter)
+        {
+            _parameter = parameter;
+        }
+
         public override void Start()
         {
             base.Start();
@@ -74,9 +90,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             LoggingService.Trace("Starting SplashScreenViewModel");
             Analytics.TrackEvent(GetType().Name);
 
-            AppEnvironnement = _preferences.Get("appEnvironnement", "unknown_env");
+            AppEnvironnement = _preferences.Get(ApplicationSettingsConstants.AppEnvironnement, "unknown_env");
             var appVersion = _versionTracking.CurrentVersion;
-            DisplayVersion = AppEnvironnement != "prod" ? $"{AppEnvironnement} - v{appVersion}" : $"v{appVersion}";
+            DisplayVersion = AppEnvironnement != "release" ? $"{AppEnvironnement} - v{appVersion}" : $"v{appVersion}";
         }
 
         public override Task Initialize()
@@ -208,6 +224,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsSelectingServer = false;
             SelectedServerItem = serverItem;
 
+            _preferences.Set(UserSettingsKeys.CurrentServer, SelectedServerItem.Server.ToString());
+
             if (!_isBypassingGoogleAndWasabeeLogin)
                 await ConnectWasabee();
             else
@@ -274,6 +292,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             IsConnected = _connectivity.ConnectionProfiles.Any() && _connectivity.NetworkAccess == NetworkAccess.Internet;
 
+            if (_parameter != null && _parameter.DoDataRefreshOnly)
+            {
+                await BypassGoogleAndWasabeeLogin();
+
+                return;
+            }
+
             await ConnectUserCommand.ExecuteAsync();
         }
 
@@ -315,8 +340,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _isBypassingGoogleAndWasabeeLogin = true;
 
             var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
+            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
+
             if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
                 SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
+            else if (ServersCollection.Any(x => x.Server.ToString().Equals(currentServer)))
+                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(currentServer));
 
             if (SelectedServerItem.Server == WasabeeServer.Undefined)
                 ChangeServerCommand.Execute();
@@ -331,6 +360,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
                     _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
                 }
+
 
                 var result = await _wasabeeApiV1Service.User_GetUserInformations();
                 if (!string.IsNullOrWhiteSpace(result))
@@ -367,52 +397,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 else
                 {
-                    LoadingStepLabel = "Harvesting beehive,\r\n" +
-                                       "Please wait...";
-                    await Task.Delay(TimeSpan.FromMilliseconds(300));
-
-                    await _teamsDatabase.DeleteAllData();
-                    await _operationsDatabase.DeleteAllData();
-
-                    var teamIds = (userModel.Teams?.Where(x => x.State == "On").Select(x => x.Id) ?? new List<string>()).ToList();
-                    foreach (var id in teamIds)
-                    {
-                        var team = await _wasabeeApiV1Service.GetTeam(id);
-                        if (team != null)
-                            await _teamsDatabase.SaveTeamModel(team);
-                    }
-
-                    var opsIds = (userModel.Ops?.Select(x => x.Id) ?? new List<string>()).ToList();
-                    var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
-                    if (selectedOp == string.Empty || opsIds.All(x => !x.Equals(selectedOp)))
-                    {
-                        var id = opsIds.First();
-                        _preferences.Set(UserSettingsKeys.SelectedOp, id);
-                        selectedOp = id;
-                    }
-
-                    var op = await _wasabeeApiV1Service.GetOperation(selectedOp);
-                    if (op != null)
-                        await _operationsDatabase.SaveOperationModel(op);
-
-                    _ = Task.Factory.StartNew(async () =>
-                    {
-                        _userDialogs.Toast("Your OPs are loading in background");
-
-                        foreach (var id in opsIds.Except(new[] { selectedOp }))
-                        {
-                            op = await _wasabeeApiV1Service.GetOperation(id);
-                            if (op != null)
-                            {
-                                await _operationsDatabase.SaveOperationModel(op);
-                                _messenger.Publish(new NewOpAvailableMessage(this));
-                            }
-                        }
-
-                        _userDialogs.Toast("OPs loaded succesfully");
-                    }).ConfigureAwait(false);
-
-                    //_firebaseAnalyticsService.LogEvent("Login");
+                    await PullDataFromServer(userModel);
 
                     await _navigationService.Navigate<RootViewModel>();
                     await _navigationService.Close(this);
@@ -426,6 +411,71 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsLoginVisible = true;
                 IsLoading = false;
                 ErrorMessage = "Error loading Wasabee OPs data";
+            }
+        }
+
+        private async Task PullDataFromServer(UserModel userModel)
+        {
+            LoadingStepLabel = "Harvesting beehive,\r\n" +
+                               "Please wait...";
+            await Task.Delay(TimeSpan.FromMilliseconds(300));
+
+            await _teamsDatabase.DeleteAllData();
+            await _operationsDatabase.DeleteAllData();
+
+            if (userModel.Teams != null && userModel.Teams.Any())
+            {
+                var teamIds = userModel.Teams
+                    .Where(t => t.State == "On")
+                    .Select(t => t.Id)
+                    .ToList();
+
+                foreach (var id in teamIds)
+                {
+                    var team = await _wasabeeApiV1Service.GetTeam(id);
+                    if (team != null)
+                        await _teamsDatabase.SaveTeamModel(team);
+                }
+            }
+
+            if (userModel.Ops != null && userModel.Ops.Any())
+            {
+                var opsIds = userModel.Ops
+                    .Select(x => x.Id)
+                    .ToList();
+
+                var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
+                if (selectedOp == string.Empty || opsIds.All(id => !id.Equals(selectedOp)))
+                {
+                    var id = opsIds.First();
+                    _preferences.Set(UserSettingsKeys.SelectedOp, id);
+                    selectedOp = id;
+                }
+
+                var op = await _wasabeeApiV1Service.GetOperation(selectedOp);
+                if (op != null)
+                    await _operationsDatabase.SaveOperationModel(op);
+
+                _ = Task.Factory.StartNew(async () =>
+                {
+                    _userDialogs.Toast("Your OPs are loading in background");
+
+                    foreach (var id in opsIds.Except(new[] { selectedOp }))
+                    {
+                        op = await _wasabeeApiV1Service.GetOperation(id);
+                        if (op != null)
+                        {
+                            await _operationsDatabase.SaveOperationModel(op);
+                            _messenger.Publish(new NewOpAvailableMessage(this));
+                        }
+                    }
+
+                    _userDialogs.Toast("OPs loaded succesfully");
+                }).ConfigureAwait(false);
+            }
+            else
+            {
+                _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
             }
         }
 
