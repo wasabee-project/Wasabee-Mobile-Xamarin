@@ -8,8 +8,10 @@ using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,27 +27,33 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
+        private readonly UsersDatabase _usersDatabase;
         private readonly IPreferences _preferences;
         private readonly IPermissions _permissions;
         private readonly IUserDialogs _userDialogs;
         private readonly IMvxNavigationService _navigationService;
         private readonly IUserSettingsService _userSettingsService;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
         private readonly MvxSubscriptionToken _token;
+        private readonly MvxSubscriptionToken _tokenLiveLocation;
 
-        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, IPreferences preferences,
+        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, UsersDatabase usersDatabase, IPreferences preferences,
             IPermissions permissions, IMvxMessenger messenger, IUserDialogs userDialogs, IMvxNavigationService navigationService,
-            IUserSettingsService userSettingsService)
+            IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _operationsDatabase = operationsDatabase;
             _teamsDatabase = teamsDatabase;
+            _usersDatabase = usersDatabase;
             _preferences = preferences;
             _permissions = permissions;
             _userDialogs = userDialogs;
             _navigationService = navigationService;
             _userSettingsService = userSettingsService;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await LoadOperationCommand.ExecuteAsync());
+            _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync());
         }
 
         public override async void Prepare()
@@ -85,7 +93,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             LoggingService.Trace("Navigated to MapViewModel");
 
             await base.Initialize();
+
             await LoadOperationCommand.ExecuteAsync();
+            await RefreshTeamsMembersPositionsCommand.ExecuteAsync();
         }
 
         #region Properties
@@ -105,6 +115,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         public MvxObservableCollection<Polyline> Polylines { get; set; } = new MvxObservableCollection<Polyline>();
         public MvxObservableCollection<WasabeePin> Pins { get; set; } = new MvxObservableCollection<WasabeePin>();
+        public MvxObservableCollection<WasabeePlayerPin> AgentsPins { get; set; } = new MvxObservableCollection<WasabeePlayerPin>();
+
         public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
         public MapSpan VisibleRegion { get; set; }
@@ -252,6 +264,78 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 }
 
                 IsBusy = false;
+            }
+        }
+
+        public IMvxAsyncCommand RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand(RefreshTeamsMembersPositionsExecuted);
+        private async Task RefreshTeamsMembersPositionsExecuted()
+        {
+            LoggingService.Trace("Executing MapViewModel.RefreshTeamsMembersPositionsCommand");
+
+            var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
+            if (string.IsNullOrWhiteSpace(selectedOpId))
+                return;
+
+            try
+            {
+                var updatedAgents = new List<WasabeePlayerPin>();
+                var op = await _operationsDatabase.GetOperationModel(selectedOpId);
+                if (op == null || op.TeamList.IsNullOrEmpty())
+                    return;
+
+                foreach (var opTeam in op.TeamList)
+                {
+                    var userTeams = await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId());
+                    var currentTeam = userTeams.FirstOrDefault(t => t.Id.Equals(opTeam.TeamId));
+                    if (currentTeam == null || currentTeam.State.Equals("Off"))
+                        continue;
+
+                    var updatedData = await _wasabeeApiV1Service.GetTeam(currentTeam.Id);
+                    if (updatedData == null)
+                        continue;
+
+                    await _teamsDatabase.SaveTeamModel(updatedData);
+                    foreach (var agent in updatedData.Agents.Where(a => a.Lat != 0 && a.Lng != 0))
+                    {
+                        var pin = new Pin()
+                        {
+                            Label = agent.Name,
+                            Position = new Position(agent.Lat, agent.Lng),
+                            Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
+                        };
+                        var playerPin = new WasabeePlayerPin(pin) { AgentName = agent.Name };
+
+                        if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
+                        {
+                            var timeAgo = (DateTime.UtcNow - agentDate);
+                            if (timeAgo.TotalMinutes > 1.0)
+                            {
+                                playerPin.TimeAgo = timeAgo.Minutes.ToString();
+                                playerPin.Pin.Label += $" - {playerPin.TimeAgo}min ago";
+                            }
+                        }
+                        updatedAgents.Add(playerPin);
+                    }
+                }
+
+                foreach (var updatedAgent in updatedAgents)
+                {
+                    if (AgentsPins.Any(a => a.AgentName.Equals(updatedAgent.AgentName)))
+                    {
+                        var toRemove = AgentsPins.First(a => a.AgentName.Equals(updatedAgent.AgentName));
+                        AgentsPins.Remove(toRemove);
+                    }
+                }
+
+                AgentsPins.AddRange(updatedAgents);
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error("Executing MapViewModel.RefreshTeamsMembersPositionsCommand", e);
+            }
+            finally
+            {
+                await RaisePropertyChanged(() => AgentsPins);
             }
         }
 

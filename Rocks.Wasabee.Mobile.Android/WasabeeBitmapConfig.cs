@@ -15,7 +15,11 @@ namespace Rocks.Wasabee.Mobile.Droid
         public AndroidBitmapDescriptor ToNative(BitmapDescriptor descriptor)
         {
             int iconId;
-            if (descriptor.Id.Contains('|'))
+            if (descriptor.Id.Equals("wasabee_player_marker"))
+            {
+                return CreateBitmapFromSvgStream(Resource.Drawable.wasabee_player_marker);
+            }
+            else if (descriptor.Id.Contains('|'))
             {
                 var descriptors = descriptor.Id.Split('|');
 
@@ -132,15 +136,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                     _ => throw new ArgumentOutOfRangeException(descriptors[0])
                 };
 
-                var svgStream = Application.Context.Resources?.OpenRawResource(iconId);
-                var svg = new SKSvg();
-                var picture = svg.Load(svgStream);
-
-                return AndroidBitmapDescriptorFactory.FromBitmap(
-                    SKBitmap.FromImage(
-                            SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)))
-                        .Resize(new SKSizeI(70, 120), SKFilterQuality.None)
-                        .ToBitmap());
+                return CreateBitmapFromSvgStream(iconId);
             }
             else
             {
@@ -158,6 +154,19 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 return AndroidBitmapDescriptorFactory.FromResource(iconId);
             }
+        }
+
+        private AndroidBitmapDescriptor CreateBitmapFromSvgStream(int iconId)
+        {
+            var svgStream = Application.Context.Resources?.OpenRawResource(iconId);
+            var svg = new SKSvg();
+            var picture = svg.Load(svgStream);
+
+            return AndroidBitmapDescriptorFactory.FromBitmap(
+                SKBitmap.FromImage(
+                        SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)))
+                    .Resize(new SKSizeI(70, 120), SKFilterQuality.None)
+                    .ToBitmap());
         }
     }
 }

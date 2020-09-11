@@ -26,6 +26,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return await databaseConnection.DeleteAllAsync<UserDatabaseModel>().ConfigureAwait(false);
         }
 
+        public async Task<List<UserTeamModel>> GetUserTeams(string googleId)
+        {
+            LoggingService.Trace("Querying UsersDatabase.GetUserTeams");
+
+            return (await GetUserModel(googleId)).Teams;
+        }
+
         public async Task<UserModel> GetUserModel(string googleId)
         {
             LoggingService.Trace("Querying UsersDatabase.GetUserModel");

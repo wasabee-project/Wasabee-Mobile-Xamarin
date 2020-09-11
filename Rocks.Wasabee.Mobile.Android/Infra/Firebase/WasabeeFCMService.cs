@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
-    [Service(Name = "rocks.wasabee.mobile.WasabeeFcmService", DirectBootAware = false, Exported = false)]
+    [Service(DirectBootAware = false, Exported = false)]
     [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
     [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
     public class WasabeeFcmService : FirebaseMessagingService
@@ -64,6 +64,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
                 Log.Debug(TAG + " : ", messageBody);
                 _mvxMessenger.Publish(new NotificationMessage(this, messageBody));
+
+                if (messageBody.Contains("Agent Location Change"))
+                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this));
             }
         }
 
