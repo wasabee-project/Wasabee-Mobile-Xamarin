@@ -50,5 +50,10 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
             CloseMenu();
             ViewModel.ChangeSelectedOpCommand.Execute();
         }
+
+        private void Refresh_Clicked(object sender, EventArgs e)
+        {
+            ViewModel.PullOpsFromServerCommand.Execute();
+        }
     }
 }

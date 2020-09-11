@@ -53,16 +53,21 @@
 
             <BoxView HeightRequest="1" BackgroundColor="{StaticResource PrimaryGrey}" Margin="20"/>
 
-            <StackLayout>
+            <StackLayout IsVisible="{Binding HasLocalOps}">
                 <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                     <Label Text="OP :" FontAttributes="Bold" Style="{StaticResource WasabeeStyleInfoDivers}"/>
                     <Label Text="{Binding SelectedOpName}" FontAttributes="Italic" Style="{StaticResource WasabeeStyleInfoDivers}"/>
                 </StackLayout>
                 
-                <Button
-                    Text="Change" 
-                    Clicked="ChangeOp_Clicked"
-                    Margin="10"
+                <Button Text="Change" Clicked="ChangeOp_Clicked" Margin="10"
+                        Style="{StaticResource WasabeeStyleMenuButton}"/>
+            </StackLayout>
+            <StackLayout IsVisible="{Binding HasLocalOps, Converter={StaticResource BoolNegateConverter}}">
+                
+                <Label Text="You don't have any local OP's stored" HorizontalOptions="Center"
+                       Style="{StaticResource WasabeeStyleAlertText}"/>
+                
+                <Button Text="Refresh" Clicked="Refresh_Clicked" Margin="10"
                     Style="{StaticResource WasabeeStyleMenuButton}"/>
             </StackLayout>
 
@@ -70,12 +75,8 @@
 
             <Label Text="{Binding LoggedUser}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
             
-            <Button
-                Text="Log out" 
-                Clicked="Logout_Clicked"
-                VerticalOptions="End" 
-                Margin="10"
-                Style="{StaticResource WasabeeStyleMenuButton}"/>
+            <Button Text="Log out" Clicked="Logout_Clicked" VerticalOptions="End" Margin="10"
+                    Style="{StaticResource WasabeeStyleMenuButton}"/>
 
             <Label Text="{Binding DisplayVersion}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
         </StackLayout>

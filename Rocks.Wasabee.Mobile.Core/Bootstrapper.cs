@@ -1,6 +1,7 @@
 ﻿using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.Plugin.Messenger;
+using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
@@ -39,7 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core
             environnement = "release";
 #endif
 
-            Mvx.IoCProvider.Resolve<IPreferences>().Set("appEnvironnement", environnement);
+            Mvx.IoCProvider.Resolve<IPreferences>().Set(ApplicationSettingsConstants.AppEnvironnement, environnement);
         }
 
         public static void SetupAppSettings()
