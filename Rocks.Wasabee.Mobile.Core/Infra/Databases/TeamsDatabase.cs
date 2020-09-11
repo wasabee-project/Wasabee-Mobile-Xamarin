@@ -50,6 +50,18 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return 0;
         }
 
+        public async Task<TeamModel> GetTeam(string teamId)
+        {
+            LoggingService.Trace("Querying TeamsDatabase.GetTeam");
+
+            var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+            var teamDatabaseModel = databaseConnection.GetConnection().GetWithChildren<TeamDatabaseModel>(teamId);
+            dbLock.Dispose();
+
+            return TeamDatabaseModel.ToTeamModel(teamDatabaseModel);
+        }
+
         public async Task<List<TeamModel>> GetTeams(string userId)
         {
             LoggingService.Trace("Querying TeamsDatabase.GetTeams");

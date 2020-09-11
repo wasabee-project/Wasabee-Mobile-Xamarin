@@ -21,6 +21,10 @@ using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 
+#if DEBUG
+using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
+#endif
+
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
     public class MenuViewModel : BaseViewModel
@@ -57,8 +61,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
                 new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
                 new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) },
-                /*new MenuItem() { Icon = "", Title = "", ViewModelType = null },
-                new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }*/
+#if DEBUG
+                new MenuItem() { Icon = "", Title = "", ViewModelType = null },
+                new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }
+#endif
             };
 
             _token = messenger.Subscribe<NewOpAvailableMessage>(async msg => await RefreshAvailableOpsCommand.ExecuteAsync());

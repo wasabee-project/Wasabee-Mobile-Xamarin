@@ -43,13 +43,14 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 Map.MyLocationEnabled = ViewModel.IsLocationAvailable;
             else if (e.PropertyName == "VisibleRegion")
                 Map.MoveToRegion(ViewModel.VisibleRegion);
+            else if (e.PropertyName == "AgentsPins")
+                RefreshAgentsPins();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
 
-            SetMapStyle();
             RefreshMapView();
 
             Map.UiSettings.ScrollGesturesEnabled = true;
@@ -118,6 +119,20 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             _hasLoaded = true;
         }
 
+        private void RefreshAgentsPins()
+        {
+            foreach (var agentPin in ViewModel.AgentsPins)
+            {
+                if (Map.Pins.Any(x => x.Label.Contains(agentPin.AgentName)))
+                {
+                    var toRemove = Map.Pins.First(x => x.Label.Contains(agentPin.AgentName));
+                    Map.Pins.Remove(toRemove);
+                }
+
+                Map.Pins.Add(agentPin.Pin);
+            }
+        }
+
         private void SetMapStyle()
         {
             try
@@ -142,6 +157,22 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
         private void Map_OnMapClicked(object sender, MapClickedEventArgs e)
         {
             ViewModel.CloseDetailPanelCommand.Execute();
+        }
+
+        private bool _isDarkMode = false;
+        private void StyleButton_OnClicked(object sender, EventArgs e)
+        {
+            if (!_isDarkMode)
+            {
+
+                _isDarkMode = true;
+                SetMapStyle();
+
+                return;
+            }
+
+            _isDarkMode = false;
+            Map.MapStyle = MapStyle.FromJson("[]");
         }
     }
 }

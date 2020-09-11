@@ -17,6 +17,8 @@
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
                             SelectedPin="{Binding SelectedPin}" MapClicked="Map_OnMapClicked" />
 
+            <Button x:Name="StyleButton" Clicked="StyleButton_OnClicked" Text="Switch theme" />
+
             <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{StaticResource DarkGrey}" CornerRadius="10, 10, 0, 0" Padding="10"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-180}"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
