@@ -162,6 +162,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         return;
 
                     SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                    _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
                     _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
                 }
                 else
@@ -181,6 +182,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             else
             {
                 SetProperty(ref _isLiveLocationSharingEnabled, false, nameof(IsLiveLocationSharingEnabled));
+                _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
                 _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Stop));
             }
         }
