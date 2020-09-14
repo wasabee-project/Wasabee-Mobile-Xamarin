@@ -28,6 +28,8 @@ namespace Rocks.Wasabee.Mobile.Droid
     {
         public const string CHANNEL_ID = "WASABEE_FCM_CHANNEL";
 
+        private MvxSubscriptionToken _token;
+
         protected override void OnCreate(Bundle bundle)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -44,6 +46,10 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 base.OnCreate(bundle);
             }
+            else if (Intent?.Extras != null && Intent.Extras.ContainsKey("LiveGeolocationTrackingExtra"))
+            {
+                base.OnCreate(bundle);
+            }
             else
             {
                 Xamarin.Forms.Forms.Init(this, bundle);
@@ -58,7 +64,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 base.OnCreate(bundle);
 
-                Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
+                _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
                 {
                     if (msg.Action == Action.Start)
                         await GeolocationHelper.StartLocationService();
@@ -125,7 +131,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                     Description = $"Firebase Cloud Messages '{name}' in this channel"
                 };
 
-                notificationManager.CreateNotificationChannel(channel);
+                notificationManager?.CreateNotificationChannel(channel);
             }
         }
     }

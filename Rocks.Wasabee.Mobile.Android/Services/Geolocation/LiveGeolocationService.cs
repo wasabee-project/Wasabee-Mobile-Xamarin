@@ -1,14 +1,19 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Support.V4.App;
 using MvvmCross;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 {
@@ -24,9 +29,10 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
         public bool IsBound { get; set; }
     }
 
-    [Service]
+    [Service(DirectBootAware = false, Enabled = true, Exported = false, ForegroundServiceType = ForegroundService.TypeLocation)]
     public class LiveGeolocationService : Service
     {
+        private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
         private const string ChannelId = "Live Location Sharing";
 
         private IBinder _binder;
@@ -41,6 +47,18 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             return _binder;
         }
 
+        public override bool OnUnbind(Intent? intent)
+        {
+            StopLocationUpdates().ConfigureAwait(false);
+            return base.OnUnbind(intent);
+        }
+
+        public override bool StopService(Intent? name)
+        {
+            StopLocationUpdates().ConfigureAwait(false);
+            return base.StopService(name);
+        }
+
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             CreateNotificationChannel();
@@ -48,11 +66,10 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             var builder = new NotificationCompat.Builder(this, ChannelId);
 
             var newIntent = new Intent(this, typeof(AndroidMainActivity));
-            newIntent.PutExtra("tracking", true);
-            newIntent.AddFlags(ActivityFlags.ClearTop);
-            newIntent.AddFlags(ActivityFlags.SingleTop);
+            newIntent.PutExtra("LiveGeolocationTrackingExtra", true);
+            newIntent.AddFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
 
-            var pendingIntent = PendingIntent.GetActivity(this, 0, newIntent, 0);
+            var pendingIntent = PendingIntent.GetActivity(this, 0, newIntent, PendingIntentFlags.UpdateCurrent);
             var notification = builder.SetContentIntent(pendingIntent)
                 .SetSmallIcon(Resource.Drawable.wasabee)
                 .SetAutoCancel(false)
@@ -92,24 +109,30 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 }
                 else
                 {
-                    Acr.UserDialogs.UserDialogs.Instance.Alert(
+                    Mvx.IoCProvider.Resolve<IUserDialogs>().Alert(
                         "Please ensure that geolocation is enabled and permissions are allowed for Wasabee to start sharing your location.",
                         "Geolocation Disabled", "OK");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Mvx.IoCProvider.Resolve<ILoggingService>().Error(e, e.Message);
                 _isRunning = false;
             }
         }
 
         private async void Geolocator_PositionChanged(object sender, PositionEventArgs e)
         {
-            if (_isRunning)
-            {
-                var result = await _wasabeeApiV1Service.UpdateLocation(e.Position.Latitude.ToString(CultureInfo.GetCultureInfo("en-US")), e.Position.Longitude.ToString(CultureInfo.GetCultureInfo("en-US")));
-                Acr.UserDialogs.UserDialogs.Instance.Toast($"Location updated : {e.Position.Latitude}, {e.Position.Longitude} ({result})");
-            }
+            if (!_isRunning)
+                return;
+
+            if (Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
+                GeolocationHelper.StopLocationService();
+
+            var result = await _wasabeeApiV1Service.UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
+#if DEBUG
+            Mvx.IoCProvider.Resolve<IUserDialogs>().Toast($"Location updated : {e.Position.Latitude}, {e.Position.Longitude} ({result})");
+#endif
         }
 
         public async Task StopLocationUpdates()
@@ -120,6 +143,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 {
                     Geolocator.PositionChanged -= Geolocator_PositionChanged;
                     _isRunning = false;
+
+                    Mvx.IoCProvider.Resolve<IPreferences>().Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
                 }
             }
         }
@@ -174,8 +199,12 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 
         public async void OnServiceDisconnected(ComponentName name)
         {
+            if (Binder == null) return;
+
             Binder.IsBound = false;
             await Binder.Service.StopLocationUpdates();
+
+            Binder = null;
         }
 
         public event EventHandler<ServiceConnectedEventArgs> ServiceConnected;

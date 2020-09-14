@@ -8,5 +8,6 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.User
         public static string CurrentServer => "CURRENT_SERVER";
         public static string SelectedOp => "SELECTED_OP";
         public static string AnalyticsEnabled => "ANALYTICS_ENABLED";
+        public static string LiveLocationSharingEnabled => "LIVE_LOCATION_SHARING_ENABLED";
     }
 }

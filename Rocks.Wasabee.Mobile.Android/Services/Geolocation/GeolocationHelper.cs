@@ -20,7 +20,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 
         public bool IsRunning => _isRunning;
 
-        public LiveGeolocationService LocationService
+        public LiveGeolocationService LiveGeolocationService
         {
             get
             {
@@ -64,20 +64,19 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             // Starting a service like this is blocking, so we want to do it on a background thread
             return Task.Run(() =>
             {
-                // Start our main service
-                Log.Debug("App", "Calling StartService");
-                Android.App.Application.Context.StartService(new Intent(Android.App.Application.Context,
-                    typeof(LiveGeolocationService)));
-
                 // bind our service (Android goes and finds the running service by type, and puts a reference
                 // on the binder to that service)
                 // The Intent tells the OS where to find our Service (the Context) and the Type of Service
-                // we're looking for (LocationService)
+                // we're looking for (LiveGeolocationService)
                 var locationServiceIntent = new Intent(Android.App.Application.Context, typeof(LiveGeolocationService));
-                Log.Debug("App", "Calling service binding");
+
+                // Start our main service
+                Log.Debug("App", "Calling StartService");
+                Android.App.Application.Context.StartService(locationServiceIntent);
 
                 // Finally, we can bind to the Service using our Intent and the ServiceConnection we
                 // created in a previous step.
+                Log.Debug("App", "Calling service binding");
                 Android.App.Application.Context.BindService(locationServiceIntent, LocationServiceConnection,
                     Bind.AutoCreate);
             });
@@ -94,18 +93,18 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 // Check for nulls in case StartLocationService task has not yet completed.
                 Log.Debug("App", "StopLocationService");
 
-                // Unbind from the LocationService; otherwise, StopSelf (below) will not work:
+                // Unbind from the LiveGeolocationService; otherwise, StopSelf (below) will not work:
                 if (LocationServiceConnection != null)
                 {
-                    Log.Debug("App", "Unbinding from LocationService");
+                    Log.Debug("App", "Unbinding from LiveGeolocationService");
                     Android.App.Application.Context.UnbindService(LocationServiceConnection);
                 }
 
-                // Stop the LocationService:
-                if (Current.LocationService != null)
+                // Stop the LiveGeolocationService:
+                if (Current.LiveGeolocationService != null)
                 {
-                    Log.Debug("App", "Stopping the LocationService");
-                    Current.LocationService.StopSelf();
+                    Log.Debug("App", "Stopping the LiveGeolocationService");
+                    Current.LiveGeolocationService.StopSelf();
                 }
             }
             catch
