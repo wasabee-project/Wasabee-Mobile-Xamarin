@@ -1,4 +1,7 @@
-﻿using MvvmCross.Forms.Presenters.Attributes;
+﻿using MvvmCross;
+using MvvmCross.Forms.Presenters.Attributes;
+using MvvmCross.Plugin.Messenger;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using System;
 using System.ComponentModel;
@@ -16,11 +19,19 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
     {
         private bool _hasLoaded = false;
         private bool _isDetailPanelVisible = false;
+        private bool _isDarkMode = false;
+        private MvxSubscriptionToken _token;
 
         public MapPage()
         {
             InitializeComponent();
             Title = "Operation Map";
+
+            _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<MessageFrom<MapViewModel>>((msg) =>
+            {
+                _hasLoaded = false;
+                RefreshMapView();
+            });
         }
 
         protected override void OnViewModelSet()
@@ -92,29 +103,22 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             if (_hasLoaded)
                 return;
 
+            Map.BatchBegin();
+
             Map.Polylines.Clear();
             Map.Pins.Clear();
 
             if (ViewModel.Polylines.Any())
-            {
                 foreach (var polyline in ViewModel.Polylines.Where(mapElement => !Map.Polylines.Contains(mapElement)))
-                {
                     Map.Polylines.Add(polyline);
-                }
-            }
 
             if (ViewModel.Pins.Any())
-            {
                 foreach (var wasabeePin in ViewModel.Pins.Where(wp => !Map.Pins.Contains(wp.Pin)))
-                {
-                    if (string.IsNullOrEmpty(wasabeePin.Pin.Label))
-                        wasabeePin.Pin.Label = string.Empty;
-
                     Map.Pins.Add(wasabeePin.Pin);
-                }
-            }
 
             Map.MoveToRegion(ViewModel.OperationMapRegion);
+
+            Map.BatchCommit();
 
             _hasLoaded = true;
         }
@@ -159,7 +163,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             ViewModel.CloseDetailPanelCommand.Execute();
         }
 
-        private bool _isDarkMode = false;
         private void StyleButton_OnClicked(object sender, EventArgs e)
         {
             if (!_isDarkMode)

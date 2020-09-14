@@ -10,6 +10,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public WasabeePin(Pin pin)
         {
             Pin = pin;
+
+            if (Pin.Label == null)
+                Pin.Label = string.Empty;
         }
 
         public PortalModel Portal { get; set; }
@@ -24,6 +27,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public WasabeePlayerPin(Pin pin)
         {
             Pin = pin;
+
+            if (Pin.Label == null)
+                Pin.Label = "Unknown player";
         }
 
         public string AgentName { get; set; }

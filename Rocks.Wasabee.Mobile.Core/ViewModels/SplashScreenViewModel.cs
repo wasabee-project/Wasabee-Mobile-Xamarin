@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross;
 using MvvmCross.Commands;
@@ -452,7 +452,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     selectedOp = id;
                 }
 
-                var op = await _wasabeeApiV1Service.GetOperation(selectedOp);
+                var op = await _wasabeeApiV1Service.Operations_GetOperation(selectedOp);
                 if (op != null)
                     await _operationsDatabase.SaveOperationModel(op);
 
@@ -462,7 +462,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                     foreach (var id in opsIds.Except(new[] { selectedOp }))
                     {
-                        op = await _wasabeeApiV1Service.GetOperation(id);
+                        op = await _wasabeeApiV1Service.Operations_GetOperation(id);
                         if (op != null)
                         {
                             await _operationsDatabase.SaveOperationModel(op);

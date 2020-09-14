@@ -10,6 +10,11 @@
                        xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                        mc:Ignorable="d"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Map.MapPage">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Refresh" Command="{Binding RefreshOperationCommand}" />
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
         <RelativeLayout>
             <googleMaps:Map x:Name="Map" MapType="Street"
