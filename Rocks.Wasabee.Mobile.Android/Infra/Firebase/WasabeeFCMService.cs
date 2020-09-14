@@ -1,6 +1,5 @@
 ﻿using Android.App;
 using Android.Content;
-using Android.Util;
 using AndroidX.Core.App;
 using Firebase.Messaging;
 using MvvmCross;
@@ -9,6 +8,10 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using System.Linq;
 using System.Threading.Tasks;
+
+#if DEBUG
+using Android.Util;
+#endif
 
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
@@ -37,7 +40,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
         public override void OnNewToken(string token)
         {
+#if DEBUG
             Log.Debug(TAG, "FCM token: " + token);
+#endif
             _fcmToken = token;
         }
 
@@ -48,11 +53,15 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
         public override void OnMessageReceived(RemoteMessage message)
         {
+#if DEBUG
             Log.Debug(TAG + " : ", message.ToString());
+#endif
             if (message.GetNotification() != null)
             {
                 //These is how most messages will be received
+#if DEBUG
                 Log.Debug(TAG + " : ", message.GetNotification().Body);
+#endif
                 SendNotification(message.GetNotification().Body);
             }
             else
@@ -62,7 +71,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
                 var messageBody = $"{cmd.Value} : {msg.Value}";
 
+#if DEBUG
                 Log.Debug(TAG + " : ", messageBody);
+#endif
                 _mvxMessenger.Publish(new NotificationMessage(this, messageBody));
 
                 if (messageBody.Contains("Agent Location Change"))
@@ -101,8 +112,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                 .SetChannelId(channel);
 
             var notificationManager = NotificationManager.FromContext(this);
-
-            notificationManager.Notify(_lastId, notificationBuilder.Build());
+            notificationManager?.Notify(_lastId, notificationBuilder.Build());
             _lastId++;
         }
     }

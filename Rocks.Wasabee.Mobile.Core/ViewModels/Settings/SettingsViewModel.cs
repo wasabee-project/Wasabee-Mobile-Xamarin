@@ -72,7 +72,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             if (IsBusy) return;
             IsBusy = true;
 
-            await Launcher.OpenAsync("https://enl.rocks/-pb0U");
+            await Launcher.OpenAsync("tg://join?invite=FSaGrFWGdrf87xdKQXWsPw");
 
             IsBusy = false;
         }
