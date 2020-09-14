@@ -6,13 +6,15 @@ using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
+using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
+using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core
 {
     public class CoreApp : MvxApplication
     {
-        public override void Initialize()
+        public override async void Initialize()
         {
             CreatableTypes()
                 .EndingWith("ViewModel")
@@ -31,6 +33,13 @@ namespace Rocks.Wasabee.Mobile.Core
                 $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};"
                 // TODO + "ios={Your iOS App secret here}"
                 , typeof(Crashes), typeof(Analytics));
+
+            var analyticsEnabled = Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.AnalyticsEnabled, false);
+            if (!analyticsEnabled)
+            {
+                await Crashes.SetEnabledAsync(false);
+                await Analytics.SetEnabledAsync(false);
+            }
 
             Analytics.TrackEvent(AnalyticsConstants.AppStart);
 
