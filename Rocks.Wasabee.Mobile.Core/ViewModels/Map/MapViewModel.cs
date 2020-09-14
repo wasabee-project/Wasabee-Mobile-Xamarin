@@ -210,7 +210,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                     }
                     catch (Exception e)
                     {
-                        LoggingService.Error("Error Executing MapViewModel.LoadOperationCommand", e);
+                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand");
                     }
                 }
 
@@ -241,13 +241,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                     }
                     catch (Exception e)
                     {
-                        LoggingService.Error("Error Executing MapViewModel.LoadOperationCommand", e);
+                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand");
                     }
                 }
             }
             catch (NullReferenceException e)
             {
-                LoggingService.Error("Error Executing MapViewModel.LoadOperationCommand", e);
+                LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand");
             }
             finally
             {
@@ -333,7 +333,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             }
             catch (Exception e)
             {
-                LoggingService.Error("Executing MapViewModel.RefreshTeamsMembersPositionsCommand", e);
+                LoggingService.Error(e, "Error Executing MapViewModel.RefreshTeamsMembersPositionsCommand");
             }
             finally
             {

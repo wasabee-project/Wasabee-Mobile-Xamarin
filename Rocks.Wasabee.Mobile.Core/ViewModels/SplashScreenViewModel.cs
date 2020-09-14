@@ -1,4 +1,4 @@
-using Acr.UserDialogs;
+﻿using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross;
 using MvvmCross.Commands;
@@ -405,7 +405,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
             catch (Exception e)
             {
-                LoggingService.Error("Error Executing SplashScreenViewModel.FinishLogin", e);
+                LoggingService.Error(e, "Error Executing SplashScreenViewModel.FinishLogin");
 
                 IsAuthInError = true;
                 IsLoginVisible = true;
