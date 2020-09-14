@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="6" android:versionName="0.2.4" package="rocks.wasabee.mobile" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="6" android:versionName="0.2.4" package="rocks.wasabee.mobile.droid" android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="23" android:targetSdkVersion="30" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -20,7 +20,7 @@
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
 				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-				<category android:name="1:269534461245:android:cfcb8856ae5501346a5954" />
+				<category android:name="1:269534461245:android:fe143fcf337662a96a5954" />
 			</intent-filter>
 		</receiver>
 	</application>
