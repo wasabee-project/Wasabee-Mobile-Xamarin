@@ -1,0 +1,51 @@
+[
+  {
+    "stylers": [
+      {
+        "hue": "#589e58"
+      },
+      {
+        "saturation": "-50"
+      },
+      {
+        "invert_lightness": true
+      },
+      {
+        "visibility": "on"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "hue": "#589e58"
+      },
+      {
+        "visibility": "on"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "stylers": [
+      {
+        "hue": "#589e58"
+      },
+      {
+        "invert_lightness": true
+      },
+      {
+        "visibility": "on"
+      }
+    ]
+  }
+]

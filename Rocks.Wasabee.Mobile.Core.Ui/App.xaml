@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<platform:MvxFormsApplication xmlns="http://xamarin.com/schemas/2014/forms"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                              xmlns:platform="clr-namespace:MvvmCross.Forms.Core;assembly=MvvmCross.Forms"
+                              xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                              mc:Ignorable="d"
+                              x:Class="Rocks.Wasabee.Mobile.Core.Ui.App">
+    <platform:MvxFormsApplication.Resources>
+        <ResourceDictionary Source="Styles.xaml">
+            <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+            <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+            <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
+            <converters:TextToGridVisibilityConverter x:Key="TextToGridVisibilityConverter"/>
+        </ResourceDictionary>
+    </platform:MvxFormsApplication.Resources>
+</platform:MvxFormsApplication>

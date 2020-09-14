@@ -2,10 +2,16 @@
 
 # Wasabee Mobile Xamarin
 
-> This is the *new* version of the Wasabee mobile app. Under development.
-> Not affiliated with Niantic.
+This is the *new* version of the Wasabee mobile app. Under development.
+Not affiliated with Niantic.
 
 > Tags : Wasabee, Ingress, Xamarin, Xamarin.Forms, Android, iOS, Mobile Application
+
+---
+
+## Build status
+
+[![Build Status](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_apis/build/status/wasabee-project.Wasabee-Mobile-Xamarin?branchName=master)](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_build/latest?definitionId=1&branchName=master)
 
 ---
 

@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvx:MvxContentPage
+    x:TypeArguments="viewModels:MenuViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+    xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+    mc:Ignorable="d"
+    x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.MenuPage"
+    Title="Wasabee"
+    BackgroundColor="{StaticResource DarkGrey}">
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+            <ListView
+                x:Name="MenuList"
+                SelectionMode="None"
+                Style="{StaticResource WasabeeMasterDetailMenuStyle}"
+                ItemTapped="MenuList_OnItemTapped"
+                ItemsSource="{Binding MenuItems}"
+                Margin="10"
+                HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <mvx:MvxViewCell>
+                            <Grid Margin="10" RowSpacing="0" ColumnSpacing="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="{Binding Subtitle, Mode=OneWay, Converter={StaticResource TextToGridVisibilityConverter}}"/>
+                                </Grid.RowDefinitions>
+                                
+                                <iconize:IconLabel Grid.Column="0" Grid.RowSpan="2" Text="{Binding Icon}" TextColor="White" FontSize="24" VerticalOptions="CenterAndExpand"/>
+                                
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Title}" FontSize="18" TextColor="White" />
+                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding Subtitle}" FontSize="14" TextColor="{StaticResource PrimaryGrey}"/>
+                            </Grid>
+                        </mvx:MvxViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <StackLayout Orientation="Horizontal" Margin="10" HorizontalOptions="Center">
+                <Label Text="Location sharing :" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+                <Switch OnColor="{StaticResource PrimaryGreenDark}" Scale="1.5" Margin="10, 0"
+                        ThumbColor="{Binding IsLiveLocationSharingEnabled, Converter={StaticResource BoolToColorConverter}}"
+                        IsToggled="{Binding IsLiveLocationSharingEnabled}"/>
+            </StackLayout>
+
+            <BoxView HeightRequest="1" BackgroundColor="{StaticResource PrimaryGrey}" Margin="20"/>
+
+            <StackLayout IsVisible="{Binding HasLocalOps}">
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="OP :" FontAttributes="Bold" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+                    <Label Text="{Binding SelectedOpName}" FontAttributes="Italic" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+                </StackLayout>
+                
+                <Button Text="Change" Clicked="ChangeOp_Clicked" Margin="10"
+                        Style="{StaticResource WasabeeStyleMenuButton}"/>
+            </StackLayout>
+            <StackLayout IsVisible="{Binding HasLocalOps, Converter={StaticResource BoolNegateConverter}}">
+                
+                <Label Text="You don't have any local OP's stored" HorizontalOptions="Center"
+                       Style="{StaticResource WasabeeStyleAlertText}"/>
+                
+                <Button Text="Refresh" Clicked="Refresh_Clicked" Margin="10"
+                    Style="{StaticResource WasabeeStyleMenuButton}"/>
+            </StackLayout>
+
+            <BoxView HeightRequest="1" BackgroundColor="{StaticResource PrimaryGrey}" Margin="20"/>
+
+            <Label Text="{Binding LoggedUser}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+            
+            <Button Text="Log out" Clicked="Logout_Clicked" VerticalOptions="End" Margin="10"
+                    Style="{StaticResource WasabeeStyleMenuButton}"/>
+
+            <Label Text="{Binding DisplayVersion}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{StaticResource WasabeeStyleInfoDivers}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</mvx:MvxContentPage>
