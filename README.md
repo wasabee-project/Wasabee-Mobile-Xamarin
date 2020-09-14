@@ -11,7 +11,7 @@ Not affiliated with Niantic.
 
 ## Build status
 
-[![Build status](https://build.appcenter.ms/v0.1/apps/bef5c870-7800-4214-a389-9ab74a46f6e9/branches/develop/badge)](https://appcenter.ms)
+[![Build Status](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_apis/build/status/wasabee-project.Wasabee-Mobile-Xamarin?branchName=master)](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_build/latest?definitionId=1&branchName=master)
 
 ---
 
