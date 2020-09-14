@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -180,7 +180,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         Polylines.Add(
                             new Polyline()
                             {
-                                StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color),
+                                StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color),
                                 StrokeWidth = 2,
                                 Positions =
                                 {
