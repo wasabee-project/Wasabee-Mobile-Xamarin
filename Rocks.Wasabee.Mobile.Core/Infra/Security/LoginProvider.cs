@@ -81,7 +81,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
             catch (Exception e)
             {
-                _loggingService.Error("Error Executing LoginProvider.DoGoogleOAuthLoginAsync", e);
+                _loggingService.Error(e, "Error Executing LoginProvider.DoGoogleOAuthLoginAsync");
 
                 return null;
             }
@@ -115,7 +115,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
             catch (Exception e)
             {
-                _loggingService.Error("Error Executing LoginProvider.DoWasabeeLoginAsync", e);
+                _loggingService.Error(e, "Error Executing LoginProvider.DoWasabeeLoginAsync");
 
                 return null;
             }
@@ -173,7 +173,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
             catch (Exception e)
             {
-                _loggingService.Error("Error Executing LoginProvider.SendFirebaseTokenAsync", e);
+                _loggingService.Error(e, "Error Executing LoginProvider.SendFirebaseTokenAsync");
 
                 return;
             }

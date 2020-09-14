@@ -63,7 +63,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                LoggingService.Error("Error Querying UsersDatabase.SaveUserModel", e);
+                LoggingService.Error(e, "Error Querying UsersDatabase.SaveUserModel");
                 return 1;
             }
 

@@ -179,7 +179,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             }
             catch (Exception e)
             {
-                LoggingService.Error("Error when zipping logs", e);
+                LoggingService.Error(e, "Error when zipping logs");
                 return false;
             }
         }
@@ -204,9 +204,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                         File.Delete(fileName);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    LoggingService.Error("Error deleting old zip files", ex);
+                    LoggingService.Error(e, "Error deleting old zip files");
                 }
 
                 string logFolder = Path.Combine(folder, "logs");

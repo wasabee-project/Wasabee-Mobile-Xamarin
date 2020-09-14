@@ -40,7 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                LoggingService.Error("Error Querying TeamsDatabase.SaveTeamModel", e);
+                LoggingService.Error(e, "Error Querying TeamsDatabase.SaveTeamModel");
 
                 return 1;
             }

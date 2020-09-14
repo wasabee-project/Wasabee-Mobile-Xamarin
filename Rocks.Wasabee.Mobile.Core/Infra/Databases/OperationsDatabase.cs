@@ -81,7 +81,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                LoggingService.Error("Error Querying OperationsDatabase.SaveOperationModel", e);
+                LoggingService.Error(e, "Error Querying OperationsDatabase.SaveOperationModel");
 
                 return 1;
             }
