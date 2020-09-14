@@ -15,9 +15,8 @@ using Android.Util;
 
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
-    [Service(DirectBootAware = false, Exported = false)]
-    [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
-    [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
+    [Service]
+    [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT", "com.google.firebase.INSTANCE_ID_EVENT" })]
     public class WasabeeFcmService : FirebaseMessagingService
     {
         const string TAG = "[WASABEE_FCM_SERVICE]";
