@@ -5,7 +5,7 @@
 
 name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
 trigger:
-- develop
+- master
 
 pool:
   vmImage: 'macos-latest'
