@@ -18,11 +18,11 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Get("/me/{teamId}?state={state}")]
         Task<string> User_ChangeTeamState(string teamId, string state);
 
+        [Get("/draw/{opId}")]
+        Task<OperationModel> Operations_GetOperation(string opId);
+
         [Get("/me?lat={lat}&lon={lon}")]
         Task<string> UpdateLocation(string lat, string lon);
-
-        [Get("/draw/{opId}")]
-        Task<OperationModel> GetOperation(string opId);
 
         [Get("/team/{teamId}")]
         Task<TeamModel> GetTeam(string teamId);
@@ -59,11 +59,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             return await AttemptAndRetry(() => WasabeeApiClient.UpdateLocation(lat, lon), new CancellationToken()).ConfigureAwait(false);
         }
 
-        public async Task<OperationModel> GetOperation(string opId)
+        public async Task<OperationModel> Operations_GetOperation(string opId)
         {
-            var operationModel = await AttemptAndRetry(() => WasabeeApiClient.GetOperation(opId), new CancellationToken()).ConfigureAwait(false);
-
-            return operationModel;
+            return await AttemptAndRetry(() => WasabeeApiClient.Operations_GetOperation(opId), new CancellationToken()).ConfigureAwait(false);
         }
 
         public async Task<TeamModel> GetTeam(string teamId)

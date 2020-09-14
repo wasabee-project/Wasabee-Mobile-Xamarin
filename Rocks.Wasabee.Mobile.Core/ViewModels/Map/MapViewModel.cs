@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -30,6 +30,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         private readonly UsersDatabase _usersDatabase;
         private readonly IPreferences _preferences;
         private readonly IPermissions _permissions;
+        private readonly IMvxMessenger _messenger;
         private readonly IUserDialogs _userDialogs;
         private readonly IMvxNavigationService _navigationService;
         private readonly IUserSettingsService _userSettingsService;
@@ -47,6 +48,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             _usersDatabase = usersDatabase;
             _preferences = preferences;
             _permissions = permissions;
+            _messenger = messenger;
             _userDialogs = userDialogs;
             _navigationService = navigationService;
             _userSettingsService = userSettingsService;
@@ -180,7 +182,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                         Polylines.Add(
                             new Polyline()
                             {
-                                StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color),
+                                StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color),
                                 StrokeWidth = 2,
                                 Positions =
                                 {
@@ -337,6 +339,49 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             {
                 await RaisePropertyChanged(() => AgentsPins);
             }
+        }
+
+
+        public IMvxCommand RefreshOperationCommand => new MvxCommand(async () => await RefreshOperationExecuted());
+        private async Task RefreshOperationExecuted()
+        {
+            if (IsBusy) return;
+            LoggingService.Trace("Executing MapViewModel.RefreshOperationCommand");
+
+            IsBusy = true;
+            var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
+            if (string.IsNullOrWhiteSpace(selectedOpId))
+                return;
+
+            var hasUpdated = false;
+            try
+            {
+                var localData = await _operationsDatabase.GetOperationModel(selectedOpId);
+                var updatedData = await _wasabeeApiV1Service.Operations_GetOperation(selectedOpId);
+
+                if (!OperationModel.OperationModelComparer.GetHashCode(localData)
+                    .Equals(OperationModel.OperationModelComparer.GetHashCode(updatedData)))
+                {
+                    await _operationsDatabase.SaveOperationModel(updatedData);
+                    hasUpdated = true;
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing MapViewModel.RefreshOperationCommand");
+            }
+            finally
+            {
+                IsBusy = false;
+                _userDialogs.Toast(hasUpdated ? "Operation data updated" : "You already have latest OP version");
+
+                if (hasUpdated)
+                {
+                    await LoadOperationCommand.ExecuteAsync();
+                    _messenger.Publish(new MessageFrom<MapViewModel>(this));
+                }
+            }
+
         }
 
         #endregion
