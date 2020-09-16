@@ -15,8 +15,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 Pin.Label = string.Empty;
         }
 
-        public PortalModel Portal { get; set; }
-        public MarkerModel Marker { get; set; }
+        public PortalModel Portal { get; set; } = new PortalModel();
+        public MarkerModel Marker { get; set; } = new MarkerModel();
         public string AssignedTo { get; set; }
     }
 
