@@ -62,6 +62,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
         {
             base.OnAppearing();
 
+            RefreshMapTheme();
             RefreshMapView();
 
             Map.UiSettings.ScrollGesturesEnabled = true;
@@ -137,27 +138,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             }
         }
 
-        private void SetMapStyle()
-        {
-            try
-            {
-                var assembly = typeof(MapPage).GetTypeInfo().Assembly;
-                var stream = assembly.GetManifestResourceStream("Rocks.Wasabee.Mobile.Core.Ui.MapStyle.json");
-
-                string styleFile;
-                using (var reader = new System.IO.StreamReader(stream))
-                {
-                    styleFile = reader.ReadToEnd();
-                }
-
-                Map.MapStyle = MapStyle.FromJson(styleFile);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
         private void Map_OnMapClicked(object sender, MapClickedEventArgs e)
         {
             ViewModel.CloseDetailPanelCommand.Execute();
@@ -165,17 +145,37 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
         private void StyleButton_OnClicked(object sender, EventArgs e)
         {
-            if (!_isDarkMode)
+            ViewModel.SwitchThemeCommand.Execute(ViewModel.MapTheme == MapThemeEnum.Light ? MapThemeEnum.Dark : MapThemeEnum.Light);
+            RefreshMapTheme();
+        }
+
+        private void RefreshMapTheme()
+        {
+            if (ViewModel.MapTheme == MapThemeEnum.Light)
             {
-
-                _isDarkMode = true;
-                SetMapStyle();
-
+                Map.MapStyle = MapStyle.FromJson("[]");
                 return;
             }
+            else if (ViewModel.MapTheme == MapThemeEnum.Dark)
+            {
+                try
+                {
+                    var assembly = typeof(MapPage).GetTypeInfo().Assembly;
+                    var stream = assembly.GetManifestResourceStream("Rocks.Wasabee.Mobile.Core.Ui.MapStyle.json");
 
-            _isDarkMode = false;
-            Map.MapStyle = MapStyle.FromJson("[]");
+                    string styleFile;
+                    using (var reader = new System.IO.StreamReader(stream))
+                    {
+                        styleFile = reader.ReadToEnd();
+                    }
+
+                    Map.MapStyle = MapStyle.FromJson(styleFile);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
     }
 }

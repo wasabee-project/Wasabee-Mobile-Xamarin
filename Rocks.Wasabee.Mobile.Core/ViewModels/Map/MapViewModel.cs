@@ -94,6 +94,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             Analytics.TrackEvent(GetType().Name);
             LoggingService.Trace("Navigated to MapViewModel");
 
+            MapTheme = _preferences.Get(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.Light)) switch
+            {
+                nameof(MapThemeEnum.Dark) => MapThemeEnum.Dark,
+                _ => MapThemeEnum.Light
+            };
+
             await base.Initialize();
 
             await LoadOperationCommand.ExecuteAsync();
@@ -124,6 +130,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public MapSpan VisibleRegion { get; set; }
 
         public bool IsLocationAvailable { get; set; } = false;
+
+        public MapThemeEnum MapTheme { get; set; }
 
         #endregion
 
@@ -384,7 +392,32 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         }
 
+        public IMvxCommand<MapThemeEnum> SwitchThemeCommand => new MvxCommand<MapThemeEnum>(SwitchThemeExecuted);
+        private void SwitchThemeExecuted(MapThemeEnum mapTheme)
+        {
+            LoggingService.Trace("Executing MapViewModel.RefreshOperationCommand");
+
+            MapTheme = mapTheme;
+            switch (mapTheme)
+            {
+                case MapThemeEnum.Light:
+                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.Light));
+                    break;
+                case MapThemeEnum.Dark:
+                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.Dark));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mapTheme), mapTheme, null);
+            }
+        }
+
         #endregion
+    }
+
+    public enum MapThemeEnum
+    {
+        Light,
+        Dark
     }
 
     internal class DistanceCalculation
