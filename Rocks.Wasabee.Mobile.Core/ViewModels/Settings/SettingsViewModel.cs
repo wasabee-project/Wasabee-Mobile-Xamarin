@@ -58,6 +58,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand OpenApplicationSettingsCommand => new MvxCommand(OpenApplicationSettingsExecuted);
         private void OpenApplicationSettingsExecuted()
         {
+            LoggingService.Trace($"Executing SettingsViewModel.OpenApplicationSettingsCommand");
+
             if (IsBusy) return;
             IsBusy = true;
 
@@ -69,6 +71,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand OpenWasabeeTelegramChatCommand => new MvxCommand(OpenWasabeeTelegramChatExecuted);
         private async void OpenWasabeeTelegramChatExecuted()
         {
+            LoggingService.Trace($"Executing SettingsViewModel.OpenWasabeeTelegramChatCommand");
+
             if (IsBusy) return;
             IsBusy = true;
 
@@ -80,6 +84,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand OpenWasabeeWebpageCommand => new MvxCommand(OpenWasabeeWebpageExecuted);
         private async void OpenWasabeeWebpageExecuted()
         {
+            LoggingService.Trace($"Executing SettingsViewModel.OpenWasabeeWebpageCommand");
+
             if (IsBusy) return;
             IsBusy = true;
 
@@ -91,6 +97,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand SendLogsCommand => new MvxCommand(async () => await SendLogsExecuted());
         private async Task SendLogsExecuted()
         {
+            LoggingService.Trace("Executing SettingsViewModel.SendLogsCommand");
+
             if (IsBusy) return;
             IsBusy = true;
 
@@ -106,36 +114,65 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     return;
                 }
 
-                LoggingService.Info("User has granted storage permissions");
+                LoggingService.Info("User has granted write storage permissions");
             }
 
-            var zip = CreateZipFile();
-
-            IsBusy = false;
-
-            var hasSent = false;
-            if (IsAnonymousAnalyticsEnabled)
+            statusStorage = await _permissions.CheckStatusAsync<Permissions.StorageRead>();
+            if (statusStorage != PermissionStatus.Granted)
             {
-                var report = await Crashes.GetLastSessionCrashReportAsync();
-                if (report != null)
+                statusStorage = await _permissions.RequestAsync<Permissions.StorageRead>();
+                if (statusStorage != PermissionStatus.Granted)
                 {
-                    Crashes.TrackError(new Exception(report.StackTrace), null, ErrorAttachmentLog.AttachmentWithBinary(File.ReadAllBytes(zip), "WasabeeLogs.zip", "application/zip"));
-                    _userDialogs.Toast("Data is beeing sent automatically");
+                    _userDialogs.Alert("Storage permissions are required !");
+                    IsBusy = false;
+                    return;
+                }
 
-                    hasSent = true;
+                LoggingService.Info("User has granted read storage permissions");
+            }
+
+            try
+            {
+                var zip = CreateZipFile();
+
+                IsBusy = false;
+
+                if (string.IsNullOrWhiteSpace(zip))
+                {
+                    _userDialogs.Alert("Can't find any log files");
+                    return;
+                }
+
+                var hasSent = false;
+                if (IsAnonymousAnalyticsEnabled)
+                {
+                    var report = await Crashes.GetLastSessionCrashReportAsync();
+                    if (report != null)
+                    {
+                        Crashes.TrackError(new Exception(report.StackTrace), null, ErrorAttachmentLog.AttachmentWithBinary(File.ReadAllBytes(zip), "WasabeeLogs.zip", "application/zip"));
+                        _userDialogs.Toast("Data is beeing sent automatically");
+
+                        hasSent = true;
+                    }
+                }
+
+                if (!hasSent)
+                {
+                    await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
+                    await Share.RequestAsync(new ShareFileRequest(new ShareFile(zip)));
                 }
             }
-
-            if (!hasSent)
+            catch (Exception e)
             {
-                await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
-                await Share.RequestAsync(new ShareFileRequest(new ShareFile(zip)));
+                LoggingService.Error(e, "Error Executing SettingsViewModel.SendLogsCommand");
             }
         }
 
         public IMvxCommand<bool> ToggleAnalyticsCommand => new MvxCommand<bool>(async value => await ToggleAnalyticsExecuted(value));
         private async Task ToggleAnalyticsExecuted(bool value)
         {
+            LoggingService.Trace($"Executing SettingsViewModel.ToggleAnalyticsCommand({value}");
+
             if (value)
             {
                 SetProperty(ref _isAnonymousAnalyticsEnabled, true);
@@ -186,20 +223,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
         private string CreateZipFile()
         {
-            string zipFilename;
+            var zipFilename = string.Empty;
             if (NLog.LogManager.IsLoggingEnabled())
             {
-                string folder = Device.RuntimePlatform switch
+                var folder = Device.RuntimePlatform switch
                 {
-                    Device.iOS => Path.Combine(FileSystem.AppDataDirectory, "..", "Library"),
-                    Device.Android => Path.Combine(FileSystem.AppDataDirectory),
+                    Device.iOS => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library"),
+                    Device.Android => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)),
                     _ => throw new Exception("Could not show log: Platform undefined.")
                 };
 
                 //Delete old zipfiles (housekeeping)
                 try
                 {
-                    foreach (string fileName in Directory.GetFiles(folder, "*.zip"))
+                    foreach (var fileName in Directory.GetFiles(folder, "*.zip"))
                     {
                         File.Delete(fileName);
                     }
@@ -209,24 +246,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     LoggingService.Error(e, "Error deleting old zip files");
                 }
 
-                string logFolder = Path.Combine(folder, "logs");
+                var logFolder = Path.Combine(folder, "logs");
                 if (Directory.Exists(logFolder))
                 {
-                    zipFilename = $"{folder}/{DateTime.Now:yyyyMMdd-HHmmss}.zip";
-                    int filesCount = Directory.GetFiles(logFolder, "*.csv").Length;
+                    var filesCount = Directory.GetFiles(logFolder, "*.csv").Length;
                     if (filesCount > 0)
                     {
+                        zipFilename = $"{folder}/{DateTime.Now:yyyyMMdd-HHmmss}.zip";
                         if (!QuickZip(logFolder, zipFilename))
                             zipFilename = string.Empty;
                     }
-                    else
-                        zipFilename = string.Empty;
                 }
-                else
-                    zipFilename = string.Empty;
             }
-            else
-                zipFilename = string.Empty;
 
             return zipFilename;
         }
