@@ -19,7 +19,7 @@ namespace Rocks.Wasabee.Mobile.Droid
         MainLauncher = true,
         WindowSoftInputMode = SoftInput.AdjustPan,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class AndroidSplashScreenActivity : MvxFormsSplashScreenAppCompatActivity<Setup, CoreApp, App>
+    public class AndroidSplashScreenActivity : MvxFormsSplashScreenActivity<Setup, CoreApp, App>
     {
         protected override async Task RunAppStartAsync(Bundle bundle)
         {
