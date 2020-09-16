@@ -44,6 +44,16 @@
                             <Label Text="{Binding SelectedWasabeePin.AssignedTo}" TextColor="White" VerticalOptions="CenterAndExpand"/>
                         </StackLayout>
 
+                        <pancake:PancakeView IsVisible="{Binding SelectedWasabeePin.Portal.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
+                                             BackgroundColor="{StaticResource LightGrey}" Padding="5" Margin="5, 5, 0, 0"
+                                             CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
+
+                            <StackLayout Orientation="Horizontal" Padding="0" Margin="0" HorizontalOptions="Start" Spacing="3">
+                                <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
+                                <Label Text="{Binding SelectedWasabeePin.Portal.Comment}" FontAttributes="Italic" FontSize="14"/>
+                            </StackLayout>
+                        </pancake:PancakeView>
+
                         <pancake:PancakeView IsVisible="{Binding SelectedWasabeePin.Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
                                              BackgroundColor="{StaticResource LightGrey}" Padding="5" Margin="5, 5, 0, 0"
                                              CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
