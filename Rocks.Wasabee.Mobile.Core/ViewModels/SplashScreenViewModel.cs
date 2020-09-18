@@ -229,7 +229,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             if (!_isBypassingGoogleAndWasabeeLogin)
                 await ConnectWasabee();
             else
+            {
+                _isBypassingGoogleAndWasabeeLogin = false;
                 await BypassGoogleAndWasabeeLogin();
+            }
         }
 
         public IMvxCommand ChangeServerCommand => new MvxCommand(ChangeServer);
@@ -362,22 +365,34 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
 
 
-                var result = await _wasabeeApiV1Service.User_GetUserInformations();
-                if (!string.IsNullOrWhiteSpace(result))
+                try
                 {
-                    var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(result);
-                    if (wasabeeUserModel == null)
+                    var result = await _wasabeeApiV1Service.User_GetUserInformations();
+                    if (!string.IsNullOrWhiteSpace(result))
                     {
-                        ErrorMessage = "Wasabee login failed !";
-                        IsAuthInError = true;
-                        IsLoginVisible = true;
-                        IsLoading = false;
+                        var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(result);
+                        if (wasabeeUserModel == null)
+                            throw new NullReferenceException("SplashScreenViewModel.BypassGoogleAndWasabeeLogin() => Can't deserialize UserModel from API result");
 
-                        return;
+                        await _usersDatabase.SaveUserModel(wasabeeUserModel);
+                        await FinishLogin(wasabeeUserModel);
                     }
+                    else
+                        throw new NullReferenceException("SplashScreenViewModel.BypassGoogleAndWasabeeLogin() => _wasabeeApiV1Service.User_GetUserInformations() result is null");
+                }
+                catch (Exception e)
+                {
+                    LoggingService.Error(e, "Error Executing SplashScreenViewModel.BypassGoogleAndWasabeeLogin");
 
-                    await _usersDatabase.SaveUserModel(wasabeeUserModel);
-                    await FinishLogin(wasabeeUserModel);
+                    ErrorMessage = "Wasabee login failed !";
+                    IsAuthInError = true;
+                    IsLoading = false;
+
+                    RememberServerChoice = false;
+
+                    await Task.Delay(TimeSpan.FromMilliseconds(300));
+
+                    await ChangeAccountCommand.ExecuteAsync();
                 }
             }
         }
