@@ -6,6 +6,9 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
     {
         public static Color GetColorFromWasabeeName(string wasabeeColorName, string defaultColorName)
         {
+            if (wasabeeColorName.StartsWith("#"))
+                return Color.FromHex(wasabeeColorName);
+
             return wasabeeColorName switch
             {
                 "main" => GetColorFromWasabeeName(defaultColorName, string.Empty),
