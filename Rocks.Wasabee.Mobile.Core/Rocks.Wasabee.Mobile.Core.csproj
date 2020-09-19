@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.AppCenter" Version="3.4.1" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.1" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.1" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="MvvmCross" Version="7.0.0" />
     <PackageReference Include="MvvmCross.Forms" Version="7.0.0" />
     <PackageReference Include="MvvmCross.Plugin.Messenger" Version="7.0.0" />

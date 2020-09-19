@@ -6,53 +6,6 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
 {
     public class OperationModel : BaseModel
     {
-        private sealed class OperationModelEqualityComparer : IEqualityComparer<OperationModel>
-        {
-            public bool Equals(OperationModel x, OperationModel y)
-            {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null)) return false;
-                if (ReferenceEquals(y, null)) return false;
-                if (x.GetType() != y.GetType()) return false;
-                return string.Equals(x.Id, y.Id, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(x.Name, y.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(x.Creator, y.Creator, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(x.Color, y.Color, StringComparison.InvariantCultureIgnoreCase) &&
-                       Equals(x.Portals, y.Portals) && Equals(x.Anchors, y.Anchors) && Equals(x.Links, y.Links) &&
-                       Equals(x.Blockers, y.Blockers) && Equals(x.Markers, y.Markers) && Equals(x.TeamList, y.TeamList)
-                       && Equals(x.KeysOnHand, y.KeysOnHand) && Equals(x.Zones, y.Zones) &&
-                       string.Equals(x.Modified, y.Modified, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(x.Comment, y.Comment, StringComparison.InvariantCultureIgnoreCase) &&
-                       x.DownloadedAt.Equals(y.DownloadedAt);
-            }
-
-            public int GetHashCode(OperationModel obj)
-            {
-                unchecked
-                {
-                    var hashCode = (obj.Id != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Id) : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Name != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Name) : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Creator != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Creator) : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Color != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Color) : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Portals != null ? obj.Portals.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Anchors != null ? obj.Anchors.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Links != null ? obj.Links.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Blockers != null ? obj.Blockers.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Markers != null ? obj.Markers.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.TeamList != null ? obj.TeamList.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.KeysOnHand != null ? obj.KeysOnHand.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Zones != null ? obj.Zones.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Modified != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Modified) : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Comment != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Comment) : 0);
-                    hashCode = (hashCode * 397) ^ obj.DownloadedAt.GetHashCode();
-                    return hashCode;
-                }
-            }
-        }
-
-        [JsonIgnore]
-        public static IEqualityComparer<OperationModel> OperationModelComparer { get; } = new OperationModelEqualityComparer();
-
         [JsonProperty("ID")]
         public string Id { get; set; }
 

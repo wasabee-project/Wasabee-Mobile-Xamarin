@@ -1,5 +1,6 @@
 using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
+using MoreLinq;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -38,6 +39,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
 
         private readonly MvxSubscriptionToken _token;
         private readonly MvxSubscriptionToken _tokenLiveLocation;
+
+        private bool _loadingAgentsLocations;
 
         public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, UsersDatabase usersDatabase, IPreferences preferences,
             IPermissions permissions, IMvxMessenger messenger, IUserDialogs userDialogs, IMvxNavigationService navigationService,
@@ -103,12 +106,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             await base.Initialize();
 
             await LoadOperationCommand.ExecuteAsync();
-        }
-
-        public override async void ViewAppearing()
-        {
-            base.ViewAppearing();
-
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync();
         }
 
@@ -300,6 +297,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public IMvxAsyncCommand RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand(RefreshTeamsMembersPositionsExecuted);
         private async Task RefreshTeamsMembersPositionsExecuted()
         {
+            if (_loadingAgentsLocations)
+                return;
+
+            _loadingAgentsLocations = true;
+
             LoggingService.Trace("Executing MapViewModel.RefreshTeamsMembersPositionsCommand");
 
             try
@@ -317,8 +319,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 }
 
                 var updatedAgents = new List<WasabeePlayerPin>();
-                foreach (var agent in updatedTeams.SelectMany(t => t.Agents).Where(a => a.Lat != 0 && a.Lng != 0))
+                var agents = updatedTeams.SelectMany(t => t.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Name);
+                foreach (var agent in agents)
                 {
+                    if (updatedAgents.Any(a => a.AgentName.Equals(agent.Name)))
+                        continue;
+
                     var pin = new Pin()
                     {
                         Label = agent.Name,
@@ -355,6 +361,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             finally
             {
                 await RaisePropertyChanged(() => AgentsPins);
+                _loadingAgentsLocations = false;
             }
         }
 
@@ -376,8 +383,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 var localData = await _operationsDatabase.GetOperationModel(selectedOpId);
                 var updatedData = await _wasabeeApiV1Service.Operations_GetOperation(selectedOpId);
 
-                if (!OperationModel.OperationModelComparer.GetHashCode(localData)
-                    .Equals(OperationModel.OperationModelComparer.GetHashCode(updatedData)))
+                if (!localData.Modified.Equals(updatedData.Modified))
                 {
                     await _operationsDatabase.SaveOperationModel(updatedData);
                     hasUpdated = true;
