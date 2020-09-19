@@ -130,6 +130,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [TextBlob("KeysOnHandBlobbed")]
             public List<KeysOnHandModel> KeysOnHand { get; set; }
 
+            public string ZonesBlobbed { get; set; }
+            [TextBlob("ZonesBlobbed")]
+            public List<ZoneModel> Zones { get; set; }
+
             public string Modified { get; set; }
 
             public string Comment { get; set; }
@@ -155,6 +159,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         Modified = operationDatabaseModel.Modified,
                         Comment = operationDatabaseModel.Comment,
                         KeysOnHand = operationDatabaseModel.KeysOnHand,
+                        Zones = operationDatabaseModel.Zones,
                         DownloadedAt = operationDatabaseModel.DownloadedAt
                     };
                 }
@@ -181,6 +186,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Modified = operationModel.Modified,
                     Comment = operationModel.Comment,
                     KeysOnHand = operationModel.KeysOnHand,
+                    Zones = operationModel.Zones,
                     DownloadedAt = operationModel.DownloadedAt,
                 };
             }

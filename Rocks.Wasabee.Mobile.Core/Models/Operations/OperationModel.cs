@@ -14,7 +14,16 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
                 if (x.GetType() != y.GetType()) return false;
-                return string.Equals(x.Id, y.Id, StringComparison.InvariantCultureIgnoreCase) && string.Equals(x.Name, y.Name, StringComparison.InvariantCultureIgnoreCase) && string.Equals(x.Creator, y.Creator, StringComparison.InvariantCultureIgnoreCase) && string.Equals(x.Color, y.Color, StringComparison.InvariantCultureIgnoreCase) && Equals(x.Portals, y.Portals) && Equals(x.Anchors, y.Anchors) && Equals(x.Links, y.Links) && Equals(x.Blockers, y.Blockers) && Equals(x.Markers, y.Markers) && Equals(x.TeamList, y.TeamList) && Equals(x.KeysOnHand, y.KeysOnHand) && string.Equals(x.Modified, y.Modified, StringComparison.InvariantCultureIgnoreCase) && string.Equals(x.Comment, y.Comment, StringComparison.InvariantCultureIgnoreCase) && string.Equals(x.Fetched, y.Fetched, StringComparison.InvariantCultureIgnoreCase) && x.DownloadedAt.Equals(y.DownloadedAt);
+                return string.Equals(x.Id, y.Id, StringComparison.InvariantCultureIgnoreCase) &&
+                       string.Equals(x.Name, y.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                       string.Equals(x.Creator, y.Creator, StringComparison.InvariantCultureIgnoreCase) &&
+                       string.Equals(x.Color, y.Color, StringComparison.InvariantCultureIgnoreCase) &&
+                       Equals(x.Portals, y.Portals) && Equals(x.Anchors, y.Anchors) && Equals(x.Links, y.Links) &&
+                       Equals(x.Blockers, y.Blockers) && Equals(x.Markers, y.Markers) && Equals(x.TeamList, y.TeamList)
+                       && Equals(x.KeysOnHand, y.KeysOnHand) && Equals(x.Zones, y.Zones) &&
+                       string.Equals(x.Modified, y.Modified, StringComparison.InvariantCultureIgnoreCase) &&
+                       string.Equals(x.Comment, y.Comment, StringComparison.InvariantCultureIgnoreCase) &&
+                       x.DownloadedAt.Equals(y.DownloadedAt);
             }
 
             public int GetHashCode(OperationModel obj)
@@ -32,9 +41,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
                     hashCode = (hashCode * 397) ^ (obj.Markers != null ? obj.Markers.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (obj.TeamList != null ? obj.TeamList.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (obj.KeysOnHand != null ? obj.KeysOnHand.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (obj.Zones != null ? obj.Zones.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (obj.Modified != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Modified) : 0);
                     hashCode = (hashCode * 397) ^ (obj.Comment != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Comment) : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Fetched != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(obj.Fetched) : 0);
                     hashCode = (hashCode * 397) ^ obj.DownloadedAt.GetHashCode();
                     return hashCode;
                 }
@@ -77,19 +86,17 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         [JsonProperty("keysonhand")]
         public List<KeysOnHandModel> KeysOnHand { get; set; }
 
-        [JsonProperty("modified")]
-        public string Modified { get; set; }
+        [JsonProperty("zones")]
+        public List<ZoneModel> Zones { get; set; }
 
         [JsonProperty("comment")]
         public string Comment { get; set; }
 
-        [JsonProperty("fetched")]
-        public string Fetched { get; set; }
+        [JsonProperty("modified")]
+        public string Modified { get; set; }
 
         [JsonIgnore]
         public DateTime DownloadedAt { get; set; } = DateTime.UtcNow;
-
-
     }
 
     public class PortalModel : BaseModel
@@ -141,6 +148,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
 
         [JsonProperty("color")]
         public string Color { get; set; }
+
+        [JsonProperty("zone")]
+        public int Zone { get; set; }
     }
 
     public class BlockerModel : BaseModel
@@ -181,26 +191,44 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         [JsonProperty("comment")]
         public string Comment { get; set; }
 
-        [JsonProperty("state")]
-        public string State { get; set; }
+        [JsonProperty("assignedTo")]
+        public string AssignedTo { get; set; }
+
+        [JsonProperty("assignedTeam")]
+        public string AssignedTeam { get; set; }
+
+        [JsonProperty("assignedNickname")]
+        public string AssignedNickname { get; set; }
 
         [JsonProperty("completedBy")]
         public string CompletedBy { get; set; }
 
-        [JsonProperty("assignedTo")]
-        public string AssignedTo { get; set; }
+        [JsonProperty("completedID")]
+        public string CompletedId { get; set; }
+
+        [JsonProperty("state")]
+        public string State { get; set; }
 
         [JsonProperty("order")]
         public int Order { get; set; }
+
+        [JsonProperty("zone")]
+        public int Zone { get; set; }
     }
 
     public class TeamModel : BaseModel
     {
+        [JsonProperty("opid")]
+        public string OperationId { get; set; }
+
         [JsonProperty("teamid")]
         public string TeamId { get; set; }
 
         [JsonProperty("role")]
         public string Role { get; set; }
+
+        [JsonProperty("zone")]
+        public int Zone { get; set; }
     }
 
     public class KeysOnHandModel : BaseModel
@@ -216,6 +244,15 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
 
         [JsonProperty("capsule")]
         public string Capsule { get; set; }
+    }
+
+    public class ZoneModel : BaseModel
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 
 }
