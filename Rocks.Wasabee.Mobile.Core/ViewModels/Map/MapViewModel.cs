@@ -103,6 +103,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
             await base.Initialize();
 
             await LoadOperationCommand.ExecuteAsync();
+        }
+
+        public override async void ViewAppearing()
+        {
+            base.ViewAppearing();
+
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync();
         }
 
@@ -177,11 +183,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 var culture = CultureInfo.GetCultureInfo("en-US");
                 foreach (var link in Operation.Links)
                 {
-                    var fromPortal = Operation.Portals.First(x => x.Id.Equals(link.FromPortalId));
-                    var toPortal = Operation.Portals.First(x => x.Id.Equals(link.ToPortalId));
 
                     try
                     {
+                        var fromPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(link.FromPortalId));
+                        var toPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(link.ToPortalId));
+
+                        if (fromPortal == null || toPortal == null)
+                            continue;
+
                         double.TryParse(fromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
                         double.TryParse(fromPortal.Lng, NumberStyles.Float, culture, out var fromLng);
                         double.TryParse(toPortal.Lat, NumberStyles.Float, culture, out var toLat);
@@ -199,26 +209,36 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                                 }
                             });
 
+                    }
+                    catch (Exception e)
+                    {
+                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Step Polylines");
+                    }
+                }
+
+                foreach (var anchorId in Operation.Anchors)
+                {
+                    try
+                    {
+                        var portal = Operation.Portals.FirstOrDefault(p => p.Id.Equals(anchorId));
+                        if (portal == null)
+                            continue;
+
+                        double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
+                        double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
+
                         Pins.Add(new WasabeePin(new Pin()
                         {
-                            Position = new Position(fromLat, fromLng),
+                            Position = new Position(portalLat, portalLng),
                             Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}")
                         })
                         {
-                            Portal = fromPortal
-                        });
-                        Pins.Add(new WasabeePin(new Pin()
-                        {
-                            Position = new Position(toLat, toLng),
-                            Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}")
-                        })
-                        {
-                            Portal = toPortal
+                            Portal = portal
                         });
                     }
                     catch (Exception e)
                     {
-                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand");
+                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Step Anchors");
                     }
                 }
 
@@ -249,13 +269,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                     }
                     catch (Exception e)
                     {
-                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand");
+                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Step Markers");
                     }
                 }
             }
             catch (NullReferenceException e)
             {
-                LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand");
+                LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Global");
             }
             finally
             {
@@ -282,59 +302,48 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         {
             LoggingService.Trace("Executing MapViewModel.RefreshTeamsMembersPositionsCommand");
 
-            var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
-            if (string.IsNullOrWhiteSpace(selectedOpId))
-                return;
-
             try
             {
-                var updatedAgents = new List<WasabeePlayerPin>();
-                var op = await _operationsDatabase.GetOperationModel(selectedOpId);
-                if (op == null || op.TeamList.IsNullOrEmpty())
-                    return;
-
-                foreach (var opTeam in op.TeamList)
+                var updatedTeams = new List<Models.Teams.TeamModel>();
+                var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id);
+                foreach (var teamId in userTeamsIds)
                 {
-                    var userTeams = await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId());
-                    var currentTeam = userTeams.FirstOrDefault(t => t.Id.Equals(opTeam.TeamId));
-                    if (currentTeam == null || currentTeam.State.Equals("Off"))
-                        continue;
-
-                    var updatedData = await _wasabeeApiV1Service.GetTeam(currentTeam.Id);
+                    var updatedData = await _wasabeeApiV1Service.GetTeam(teamId);
                     if (updatedData == null)
                         continue;
 
                     await _teamsDatabase.SaveTeamModel(updatedData);
-                    foreach (var agent in updatedData.Agents.Where(a => a.Lat != 0 && a.Lng != 0))
-                    {
-                        var pin = new Pin()
-                        {
-                            Label = agent.Name,
-                            Position = new Position(agent.Lat, agent.Lng),
-                            Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
-                        };
-                        var playerPin = new WasabeePlayerPin(pin) { AgentName = agent.Name };
-
-                        if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
-                        {
-                            var timeAgo = (DateTime.UtcNow - agentDate);
-                            if (timeAgo.TotalMinutes > 1.0)
-                            {
-                                playerPin.TimeAgo = timeAgo.Minutes.ToString();
-                                playerPin.Pin.Label += $" - {playerPin.TimeAgo}min ago";
-                            }
-                        }
-                        updatedAgents.Add(playerPin);
-                    }
+                    updatedTeams.Add(updatedData);
                 }
 
-                foreach (var updatedAgent in updatedAgents)
+                var updatedAgents = new List<WasabeePlayerPin>();
+                foreach (var agent in updatedTeams.SelectMany(t => t.Agents).Where(a => a.Lat != 0 && a.Lng != 0))
                 {
-                    if (AgentsPins.Any(a => a.AgentName.Equals(updatedAgent.AgentName)))
+                    var pin = new Pin()
                     {
-                        var toRemove = AgentsPins.First(a => a.AgentName.Equals(updatedAgent.AgentName));
-                        AgentsPins.Remove(toRemove);
+                        Label = agent.Name,
+                        Position = new Position(agent.Lat, agent.Lng),
+                        Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
+                    };
+                    var playerPin = new WasabeePlayerPin(pin) { AgentName = agent.Name };
+
+                    if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
+                    {
+                        var timeAgo = (DateTime.UtcNow - agentDate);
+                        if (timeAgo.TotalMinutes > 1.0)
+                        {
+                            playerPin.TimeAgo = timeAgo.Minutes.ToString();
+                            playerPin.Pin.Label += $" - {playerPin.TimeAgo}min ago";
+                        }
                     }
+                    updatedAgents.Add(playerPin);
+                }
+
+                foreach (var toRemove in from agent in updatedAgents
+                                         where AgentsPins.Any(a => a.AgentName.Equals(agent.AgentName))
+                                         select AgentsPins.First(a => a.AgentName.Equals(agent.AgentName)))
+                {
+                    AgentsPins.Remove(toRemove);
                 }
 
                 AgentsPins.AddRange(updatedAgents);
