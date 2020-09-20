@@ -1,7 +1,7 @@
 ﻿using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Xamarin.Forms.GoogleMaps;
 
-namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
+namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
     public class WasabeePin
     {

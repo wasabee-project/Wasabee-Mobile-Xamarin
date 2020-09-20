@@ -31,7 +31,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                         "acknowledged" => Resource.Drawable.wasabee_markers_destroy_acknowledge,
                         "completed" => Resource.Drawable.wasabee_markers_destroy_done,
                         "assigned" => Resource.Drawable.wasabee_markers_destroy_assigned,
-                        _ => throw new ArgumentOutOfRangeException(descriptors[0])
+                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
                     },
                     "UseVirusPortalAlert" => descriptors[1] switch
                     {

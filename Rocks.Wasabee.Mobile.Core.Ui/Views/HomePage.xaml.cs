@@ -5,7 +5,7 @@ using Xamarin.Forms.Xaml;
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [MvxMasterDetailPagePresentation()]
+    [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true)]
     public partial class HomePage : BaseContentPage<HomeViewModel>
     {
         public HomePage()
