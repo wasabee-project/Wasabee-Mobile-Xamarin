@@ -140,17 +140,20 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             else
             {
-                iconId = descriptor.Id switch
-                {
-                    "marker_layer_groupa" => Resource.Drawable.marker_layer_groupa,
-                    "marker_layer_groupb" => Resource.Drawable.marker_layer_groupb,
-                    "marker_layer_groupc" => Resource.Drawable.marker_layer_groupc,
-                    "marker_layer_groupd" => Resource.Drawable.marker_layer_groupd,
-                    "marker_layer_groupe" => Resource.Drawable.marker_layer_groupe,
-                    "marker_layer_groupf" => Resource.Drawable.marker_layer_groupf,
-                    "marker_layer_main" => Resource.Drawable.marker_layer_main,
-                    _ => throw new ArgumentOutOfRangeException(descriptor.Id)
-                };
+                if (descriptor.Id.Contains("#"))
+                    iconId = Resource.Drawable.marker_layer_main;
+                else
+                    iconId = descriptor.Id switch
+                    {
+                        "marker_layer_groupa" => Resource.Drawable.marker_layer_groupa,
+                        "marker_layer_groupb" => Resource.Drawable.marker_layer_groupb,
+                        "marker_layer_groupc" => Resource.Drawable.marker_layer_groupc,
+                        "marker_layer_groupd" => Resource.Drawable.marker_layer_groupd,
+                        "marker_layer_groupe" => Resource.Drawable.marker_layer_groupe,
+                        "marker_layer_groupf" => Resource.Drawable.marker_layer_groupf,
+                        "marker_layer_main" => Resource.Drawable.marker_layer_main,
+                        _ => throw new ArgumentOutOfRangeException(descriptor.Id)
+                    };
 
                 return AndroidBitmapDescriptorFactory.FromResource(iconId);
             }

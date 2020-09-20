@@ -138,11 +138,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         RocksVerified = userDatabaseModel.RocksVerified,
                         Raid = userDatabaseModel.Raid,
                         Risc = userDatabaseModel.Risc,
-                        Telegram = JsonConvert.DeserializeObject<TelegramModel>(userDatabaseModel.Telegram),
-                        OwnedTeams = userDatabaseModel.OwnedTeams,
-                        Teams = userDatabaseModel.Teams,
-                        Ops = userDatabaseModel.Ops,
-                        Assignments = userDatabaseModel.Assignments
+                        Telegram = string.IsNullOrWhiteSpace(userDatabaseModel.Telegram) ? new TelegramModel() : JsonConvert.DeserializeObject<TelegramModel>(userDatabaseModel.Telegram),
+                        OwnedTeams = userDatabaseModel.OwnedTeams ?? new List<UserTeamModel>(),
+                        Teams = userDatabaseModel.Teams ?? new List<UserTeamModel>(),
+                        Ops = userDatabaseModel.Ops ?? new List<OpModel>(),
+                        Assignments = userDatabaseModel.Assignments ?? new List<AssignmentModel>()
 
                     };
                 }
@@ -169,11 +169,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     RocksVerified = userModel.RocksVerified,
                     Raid = userModel.Raid,
                     Risc = userModel.Risc,
-                    Telegram = JsonConvert.SerializeObject(userModel.Telegram),
-                    OwnedTeams = userModel.OwnedTeams,
-                    Teams = userModel.Teams,
-                    Ops = userModel.Ops,
-                    Assignments = userModel.Assignments
+                    Telegram = userModel.Telegram != null ? JsonConvert.SerializeObject(userModel.Telegram) : string.Empty,
+                    OwnedTeams = userModel.OwnedTeams ?? new List<UserTeamModel>(),
+                    Teams = userModel.Teams ?? new List<UserTeamModel>(),
+                    Ops = userModel.Ops ?? new List<OpModel>(),
+                    Assignments = userModel.Assignments ?? new List<AssignmentModel>()
                 };
             }
         }

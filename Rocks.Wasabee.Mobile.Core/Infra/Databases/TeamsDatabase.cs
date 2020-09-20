@@ -96,7 +96,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     Id = teamDatabaseModel.Id,
                     Name = teamDatabaseModel.Name,
-                    Agents = teamDatabaseModel.Agents,
+                    Agents = teamDatabaseModel.Agents ?? new List<TeamAgentModel>(),
                     DownloadedAt = teamDatabaseModel.DownloadedAt
                 };
             }
@@ -107,7 +107,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     Id = teamModel.Id,
                     Name = teamModel.Name,
-                    Agents = teamModel.Agents,
+                    Agents = teamModel.Agents ?? new List<TeamAgentModel>(),
                     DownloadedAt = teamModel.DownloadedAt
                 };
             }
