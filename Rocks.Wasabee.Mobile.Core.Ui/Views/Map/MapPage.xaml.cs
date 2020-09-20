@@ -4,6 +4,7 @@ using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -17,10 +18,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
     [MvxMasterDetailPagePresentation(NoHistory = true)]
     public partial class MapPage : BaseContentPage<MapViewModel>
     {
+        private readonly MvxSubscriptionToken _token;
+
+        private List<Pin> _agentPins = new List<Pin>();
         private bool _hasLoaded = false;
         private bool _isDetailPanelVisible = false;
-        private bool _isDarkMode = false;
-        private MvxSubscriptionToken _token;
 
         public MapPage()
         {
@@ -32,6 +34,20 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 _hasLoaded = false;
                 RefreshMapView();
             });
+
+            Map.UiSettings.ScrollGesturesEnabled = true;
+            Map.UiSettings.ZoomControlsEnabled = true;
+            Map.UiSettings.ZoomGesturesEnabled = true;
+            Map.UiSettings.MyLocationButtonEnabled = true;
+
+            Map.UiSettings.RotateGesturesEnabled = false;
+            Map.UiSettings.TiltGesturesEnabled = false;
+            Map.UiSettings.IndoorLevelPickerEnabled = false;
+            Map.UiSettings.CompassEnabled = false;
+            Map.UiSettings.MapToolbarEnabled = false;
+
+            Map.IsIndoorEnabled = false;
+            Map.IsTrafficEnabled = false;
         }
 
         protected override void OnViewModelSet()
@@ -65,21 +81,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             RefreshMapTheme();
             RefreshMapView();
 
-            Map.UiSettings.ScrollGesturesEnabled = true;
-            Map.UiSettings.ZoomControlsEnabled = true;
-            Map.UiSettings.ZoomGesturesEnabled = true;
-            Map.UiSettings.MyLocationButtonEnabled = true;
-
-            Map.UiSettings.RotateGesturesEnabled = false;
-            Map.UiSettings.TiltGesturesEnabled = false;
-            Map.UiSettings.IndoorLevelPickerEnabled = false;
-            Map.UiSettings.CompassEnabled = false;
-            Map.UiSettings.MapToolbarEnabled = false;
-
-            Map.IsIndoorEnabled = false;
-            Map.IsTrafficEnabled = false;
-            Map.MyLocationEnabled = ViewModel.IsLocationAvailable;
-
             AnimateDetailPanel();
         }
 
@@ -108,6 +109,13 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
 
             Map.Polylines.Clear();
             Map.Pins.Clear();
+            foreach (var agentPin in _agentPins)
+                Map.Pins.Add(agentPin);
+
+            Map.BatchCommit();
+
+
+            Map.BatchBegin();
 
             if (ViewModel.Polylines.Any())
                 foreach (var polyline in ViewModel.Polylines.Where(mapElement => !Map.Polylines.Contains(mapElement)))
@@ -132,9 +140,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
                 {
                     var toRemove = Map.Pins.First(x => x.Label.Contains(agentPin.AgentName));
                     Map.Pins.Remove(toRemove);
+                    _agentPins.Remove(toRemove);
                 }
 
                 Map.Pins.Add(agentPin.Pin);
+                _agentPins.Add(agentPin.Pin);
             }
         }
 
@@ -154,7 +164,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
             if (ViewModel.MapTheme == MapThemeEnum.Light)
             {
                 Map.MapStyle = MapStyle.FromJson("[]");
-                return;
             }
             else if (ViewModel.MapTheme == MapThemeEnum.Dark)
             {

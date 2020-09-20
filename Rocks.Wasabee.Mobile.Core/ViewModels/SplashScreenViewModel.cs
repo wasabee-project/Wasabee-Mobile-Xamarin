@@ -226,13 +226,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             _preferences.Set(UserSettingsKeys.CurrentServer, SelectedServerItem.Server.ToString());
 
-            if (!_isBypassingGoogleAndWasabeeLogin)
-                await ConnectWasabee();
-            else
+            if (_isBypassingGoogleAndWasabeeLogin)
             {
                 _isBypassingGoogleAndWasabeeLogin = false;
                 await BypassGoogleAndWasabeeLogin();
             }
+            else
+                await ConnectWasabee();
         }
 
         public IMvxCommand ChangeServerCommand => new MvxCommand(ChangeServer);
@@ -391,6 +391,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     RememberServerChoice = false;
 
                     await Task.Delay(TimeSpan.FromMilliseconds(300));
+
+                    _isBypassingGoogleAndWasabeeLogin = false;
+                    _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
 
                     await ChangeAccountCommand.ExecuteAsync();
                 }
