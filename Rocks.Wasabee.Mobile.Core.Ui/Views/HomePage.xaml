@@ -6,7 +6,8 @@
                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
                       mc:Ignorable="d"
-                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.HomePage">
+                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.HomePage"
+                      Title="Something else ?">
   <ContentPage.Content>
       <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
           <Label Text="Home"/>

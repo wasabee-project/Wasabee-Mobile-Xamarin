@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage x:TypeArguments="viewModels:AssignmentsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                       xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+                       xmlns:local="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views.Operation;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.AssignmentsListPage"
+                       Title="Assignments">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="linkTemplate">
+                <ViewCell>
+                    <StackLayout Padding="10" Spacing="0" HorizontalOptions="Center">
+                        <Label Grid.Row="0" Text="{Binding FromPortalName}" FontSize="16" HorizontalOptions="Center"/>
+                        <iconize:IconLabel Text="mdi-arrow-down-bold" FontSize="23" HorizontalOptions="Center"/>
+                        <Label Grid.Row="1" Text="{Binding ToPortalName}" FontSize="16" HorizontalOptions="Center"/>
+
+                        <pancakeView:PancakeView IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}"
+                                                 BackgroundColor="{StaticResource LightGrey}" Padding="5" Margin="5, 5, 0, 0"
+                                                 CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
+                                <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
+                                    <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
+                                    <Label Text="{Binding Link.Description}" FontAttributes="Italic" FontSize="14"/>
+                                </StackLayout>
+                            </pancakeView:PancakeView>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+
+            <DataTemplate x:Key="markerTemplate">
+                <ViewCell>
+                    <Grid Padding="10" RowSpacing="0" ColumnSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ffimageloadingsvg:SvgCachedImage Grid.Column="0" Grid.Row="0"
+                                                          HeightRequest="50"
+                                                          Source="{Binding Marker, Converter={StaticResource MarkerDataToSvgFilenameConverter}}"/>
+
+                        <StackLayout Grid.Column="1" Grid.Row="0" Spacing="0" Margin="10, 0, 0, 0" Padding="0">
+                            <Label Text="{Binding PortalName}" FontSize="16" />
+                            <Label Text="{Binding Marker.State}" FontSize="14" />
+                        </StackLayout>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+            <local:AssignmentsListDataTemplateSelector x:Key="AssignmentsListDataTemplateSelector"
+                                                       LinkTemplate="{StaticResource linkTemplate}" MarkerTemplate="{StaticResource markerTemplate}" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem Text="Refresh" Command="{Binding RefreshCommand}" />
+    </ContentPage.ToolbarItems>-->
+
+    <ContentPage.Content>
+
+            <ListView ItemsSource="{Binding Assignments}" ItemTemplate="{StaticResource AssignmentsListDataTemplateSelector}"
+                      HasUnevenRows="True" Margin="0" CachingStrategy="RecycleElement" SelectionMode="None" />
+
+    </ContentPage.Content>
+</views:BaseContentPage>
