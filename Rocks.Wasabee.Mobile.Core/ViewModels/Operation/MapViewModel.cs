@@ -21,7 +21,7 @@ using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 
-namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
+namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
     public class MapViewModel : BaseViewModel
     {

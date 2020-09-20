@@ -2,7 +2,7 @@
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Messages;
-using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,10 +12,10 @@ using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 
-namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
+namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [MvxMasterDetailPagePresentation(NoHistory = true)]
+    [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true)]
     public partial class MapPage : BaseContentPage<MapViewModel>
     {
         private readonly MvxSubscriptionToken _token;
@@ -27,7 +27,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Map
         public MapPage()
         {
             InitializeComponent();
-            Title = "Operation Map";
+            Title = "Map";
 
             _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<MessageFrom<MapViewModel>>((msg) =>
             {

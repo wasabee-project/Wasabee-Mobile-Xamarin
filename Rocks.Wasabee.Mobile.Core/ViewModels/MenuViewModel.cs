@@ -10,13 +10,13 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
-using Rocks.Wasabee.Mobile.Core.ViewModels.Map;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Settings;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
@@ -59,7 +59,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 new MenuItem() { Icon = "mdi-account", Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
                 new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
-                new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(MapViewModel) },
+                new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(OperationRootTabbedViewModel) },
                 new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) },
 #if DEBUG
                 new MenuItem() { Icon = "", Title = "", ViewModelType = null },

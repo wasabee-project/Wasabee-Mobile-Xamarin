@@ -15,6 +15,7 @@
             <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
             <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
             <converters:TextToGridVisibilityConverter x:Key="TextToGridVisibilityConverter"/>
+            <converters:MarkerDataToSvgFilenameConverter x:Key="MarkerDataToSvgFilenameConverter"/>
         </ResourceDictionary>
     </platform:MvxFormsApplication.Resources>
 </platform:MvxFormsApplication>

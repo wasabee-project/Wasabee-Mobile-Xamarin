@@ -4,6 +4,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using FFImageLoading.Forms.Platform;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Plugin.Messenger;
@@ -59,6 +60,9 @@ namespace Rocks.Wasabee.Mobile.Droid
                 Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig);
 
                 Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
+
+                CachedImageRenderer.Init(true);
+                CachedImageRenderer.InitImageViewHandler();
 
                 CreateNotificationChannels();
 
