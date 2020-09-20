@@ -1,6 +1,7 @@
 ﻿using Foundation;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using UIKit;
+using Xamarin.Forms.GoogleMaps.iOS;
 
 namespace Rocks.Wasabee.Mobile.iOS
 {
@@ -17,7 +18,7 @@ namespace Rocks.Wasabee.Mobile.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Xamarin.Forms.Forms.Init();
-            Xamarin.FormsMaps.Init();
+            Xamarin.FormsGoogleMaps.Init("", new PlatformConfig() { });
 
             LoadApplication(new App());
 
