@@ -431,19 +431,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         {
             try
             {
-                if (Device.RuntimePlatform == Device.iOS)
+                var cultureInfo = CultureInfo.GetCultureInfo("en-US");
+                var uri = Device.RuntimePlatform switch
                 {
-                    await Launcher.OpenAsync($"https://maps.apple.com/?ll={SelectedWasabeePin.Portal.Lat},{SelectedWasabeePin.Portal.Lng}");
-                }
-                else if (Device.RuntimePlatform == Device.Android)
-                {
-                    var uri = "https://www.google.com/maps/search/?api=1&query=" +
-                              $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
-                              $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(CultureInfo.GetCultureInfo("en-US"))}";
+                    Device.Android => "https://www.google.com/maps/search/?api=1&query=" +
+                                      $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(cultureInfo)}," +
+                                      $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(cultureInfo)}",
+                    Device.iOS => "https://maps.apple.com/?ll=" +
+                                  $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(cultureInfo)}," +
+                                  $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(cultureInfo)}",
+                    _ => throw new ArgumentOutOfRangeException(Device.RuntimePlatform)
+                };
 
-                    if (await Launcher.CanOpenAsync(uri))
-                        await Launcher.OpenAsync(uri);
-                }
+                if (await Launcher.CanOpenAsync(uri))
+                    await Launcher.OpenAsync(uri);
             }
             catch (Exception e)
             {
