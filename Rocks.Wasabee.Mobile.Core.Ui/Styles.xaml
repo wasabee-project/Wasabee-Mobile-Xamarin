@@ -16,6 +16,8 @@
     <Color x:Key="DarkGrey">#4E5B59</Color>
     <Color x:Key="GoogleSignInGrey">#757575</Color>
 
+    <Color x:Key="PortalCommentColor">#0078A8</Color>
+
     <!-- Main colors palette : https://coolors.co/24752c-3ba345-f6f9f1-d6300a-090c02 -->
     <Color x:Key="PrimaryGreen">#3BA345</Color>
     <Color x:Key="PrimaryGreenDark">#24752C</Color>
