@@ -18,6 +18,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
         public PortalModel Portal { get; set; } = new PortalModel();
         public MarkerModel Marker { get; set; } = new MarkerModel();
         public string AssignedTo { get; set; }
+        public bool HasComment => !string.IsNullOrWhiteSpace(Portal?.Comment) ||
+                                  !string.IsNullOrWhiteSpace(Portal?.Hardness) ||
+                                  !string.IsNullOrWhiteSpace(Marker?.Comment);
     }
 
     public class WasabeePlayerPin

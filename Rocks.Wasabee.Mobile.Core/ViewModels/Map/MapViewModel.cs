@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
+using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
@@ -25,6 +26,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
     public class MapViewModel : BaseViewModel
     {
         private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon, France
+        private static readonly double PositionOffset = 0.0000005f;
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
@@ -251,16 +253,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                             new Pin()
                             {
                                 Position = new Position(portalLat, portalLng),
-                                Icon = BitmapDescriptorFactory.FromBundle($"{marker.Type}|{marker.State}")
+                                Icon = BitmapDescriptorFactory.FromBundle($"{marker.Type}|{marker.State}"),
+                                Label = GetMarkerNameFromTypeAndState(marker.Type, marker.State)
                             })
                         {
                             Portal = portal,
-                            Marker = marker
+                            Marker = marker,
+                            AssignedTo = marker.AssignedNickname
                         };
-
-                        if (!teamsAgentsLists.IsNullOrEmpty())
-                            pin.AssignedTo = teamsAgentsLists!.FirstOrDefault(a => a.Id.Equals(marker.AssignedTo))
-                                ?.Name;
 
                         Pins.Add(pin);
                     }
@@ -424,6 +424,56 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Map
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapTheme), mapTheme, null);
             }
+        }
+
+        public IMvxAsyncCommand OpenInNavigationAppCommand => new MvxAsyncCommand(OpenInNavigationAppExecuted);
+        private async Task OpenInNavigationAppExecuted()
+        {
+            try
+            {
+                if (Device.RuntimePlatform == Device.iOS)
+                {
+                    await Launcher.OpenAsync($"https://maps.apple.com/?ll={SelectedWasabeePin.Portal.Lat},{SelectedWasabeePin.Portal.Lng}");
+                }
+                else if (Device.RuntimePlatform == Device.Android)
+                {
+                    var uri = "https://www.google.com/maps/search/?api=1&query=" +
+                              $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
+                              $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(CultureInfo.GetCultureInfo("en-US"))}";
+
+                    if (await Launcher.CanOpenAsync(uri))
+                        await Launcher.OpenAsync(uri);
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing MapViewModel.OpenInNavigationAppCommand");
+            }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private string GetMarkerNameFromTypeAndState(string markerType, string markerState)
+        {
+            return markerType switch
+            {
+                "DestroyPortalAlert" => $"Destroy portal - {markerState}",
+                "UseVirusPortalAlert" => $"Use virus - {markerState}",
+                "CapturePortalMarker" => $"Capture portal - {markerState}",
+                "FarmPortalMarker" => $"Farm keys - {markerState}",
+                "LetDecayPortalAlert" => $"Let decay - {markerState}",
+                "MeetAgentPortalMarker" => $"Meet Agent - {markerState}",
+                "OtherPortalAlert" => $"Other - {markerState}",
+                "RechargePortalAlert" => $"Recharge portal - {markerState}",
+                "UpgradePortalAlert" => $"Upgrade portal - {markerState}",
+                "CreateLinkAlert" => $"Create link - {markerState}",
+                "ExcludeMarker" => "Exclude Marker",
+                "GetKeyPortalMarker" => $"Get Key - {markerState}",
+                "GotoPortalMarker" => $"Go to portal - {markerState}",
+                _ => throw new ArgumentOutOfRangeException(markerType)
+            };
         }
 
         #endregion
