@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Intel.MapStyle.json" />
     <None Remove="MapStyle.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Intel.MapStyle.json" />
     <EmbeddedResource Include="MapStyle.json" />
   </ItemGroup>
 
