@@ -99,10 +99,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             Analytics.TrackEvent(GetType().Name);
             LoggingService.Trace("Navigated to MapViewModel");
 
-            MapTheme = _preferences.Get(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.Light)) switch
+            MapTheme = _preferences.Get(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.GoogleLight)) switch
             {
-                nameof(MapThemeEnum.Dark) => MapThemeEnum.Dark,
-                _ => MapThemeEnum.Light
+                nameof(MapThemeEnum.Enlightened) => MapThemeEnum.Enlightened,
+                nameof(MapThemeEnum.IntelDefault) => MapThemeEnum.IntelDefault,
+                _ => MapThemeEnum.GoogleLight
             };
 
             await base.Initialize();
@@ -118,7 +119,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             get => SelectedWasabeePin?.Pin;
             set
             {
-                SelectedWasabeePin = value != null ? Pins.FirstOrDefault(x => x.Pin == value) : null;
+                SelectedWasabeePin = value != null
+                    ? Anchors.FirstOrDefault(x => x.Pin == value) ?? Markers.FirstOrDefault(x => x.Pin == value)
+                    : null;
                 RaisePropertyChanged(() => SelectedPin);
             }
         }
@@ -126,8 +129,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public OperationModel Operation { get; set; }
         public WasabeePin SelectedWasabeePin { get; set; } = null;
 
-        public MvxObservableCollection<Polyline> Polylines { get; set; } = new MvxObservableCollection<Polyline>();
-        public MvxObservableCollection<WasabeePin> Pins { get; set; } = new MvxObservableCollection<WasabeePin>();
+        public MvxObservableCollection<Polyline> Links { get; set; } = new MvxObservableCollection<Polyline>();
+        public MvxObservableCollection<WasabeePin> Anchors { get; set; } = new MvxObservableCollection<WasabeePin>();
+        public MvxObservableCollection<WasabeePin> Markers { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeePlayerPin> AgentsPins { get; set; } = new MvxObservableCollection<WasabeePlayerPin>();
 
         public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
@@ -137,6 +141,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLocationAvailable { get; set; } = false;
 
         public MapThemeEnum MapTheme { get; set; }
+
+        public bool IsLayerChooserVisible { get; set; } = false;
+        public bool IsLayerLinksActivated { get; set; } = true;
+        public bool IsLayerMarkersActivated { get; set; } = true;
+        public bool IsLayerAnchorsActivated { get; set; } = true;
+        public bool IsLayerAgentsActivated { get; set; } = true;
 
         #endregion
 
@@ -171,8 +181,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             if (string.IsNullOrWhiteSpace(selectedOpId))
                 return;
 
-            Polylines.Clear();
-            Pins.Clear();
+            Links.Clear();
+            Anchors.Clear();
 
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
             var teamsAgentsLists = (await _teamsDatabase.GetTeams(_userSettingsService.GetLoggedUserGoogleId()))
@@ -196,7 +206,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         double.TryParse(toPortal.Lat, NumberStyles.Float, culture, out var toLat);
                         double.TryParse(toPortal.Lng, NumberStyles.Float, culture, out var toLng);
 
-                        Polylines.Add(
+                        Links.Add(
                             new Polyline()
                             {
                                 StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color),
@@ -226,7 +236,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
                         double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
 
-                        Pins.Add(new WasabeePin(new Pin()
+                        Anchors.Add(new WasabeePin(new Pin()
                         {
                             Position = new Position(portalLat, portalLng),
                             Icon = BitmapDescriptorFactory.FromBundle($"marker_layer_{Operation.Color}")
@@ -262,7 +272,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                             AssignedTo = marker.AssignedNickname
                         };
 
-                        Pins.Add(pin);
+                        Markers.Add(pin);
                     }
                     catch (Exception e)
                     {
@@ -276,18 +286,22 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             finally
             {
-                if (Pins.Any())
+                if (Anchors.Any())
                 {
-                    var lowestLat = Pins.Min(p => p.Pin.Position.Latitude);
-                    var highestLat = Pins.Max(p => p.Pin.Position.Latitude);
-                    var lowestLong = Pins.Min(p => p.Pin.Position.Longitude);
-                    var highestLong = Pins.Max(p => p.Pin.Position.Longitude);
+                    var lowestLat = Anchors.Min(p => p.Pin.Position.Latitude);
+                    var highestLat = Anchors.Max(p => p.Pin.Position.Latitude);
+                    var lowestLong = Anchors.Min(p => p.Pin.Position.Longitude);
+                    var highestLong = Anchors.Max(p => p.Pin.Position.Longitude);
                     var finalLat = (lowestLat + highestLat) / 2;
                     var finalLong = (lowestLong + highestLong) / 2;
                     var distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
                         highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
 
                     OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
+                }
+                else
+                {
+                    OperationMapRegion = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
                 }
 
                 IsBusy = false;
@@ -415,11 +429,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             MapTheme = mapTheme;
             switch (mapTheme)
             {
-                case MapThemeEnum.Light:
-                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.Light));
+                case MapThemeEnum.GoogleLight:
+                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.GoogleLight));
                     break;
-                case MapThemeEnum.Dark:
-                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.Dark));
+                case MapThemeEnum.Enlightened:
+                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.Enlightened));
+                    break;
+                case MapThemeEnum.IntelDefault:
+                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.IntelDefault));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapTheme), mapTheme, null);
@@ -482,8 +499,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
     public enum MapThemeEnum
     {
-        Light,
-        Dark
+        GoogleLight,
+        Enlightened,
+        IntelDefault
     }
 
     internal class DistanceCalculation
