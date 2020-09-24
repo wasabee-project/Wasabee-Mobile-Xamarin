@@ -10,7 +10,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
         {
             return (bool)value ?
                 (Color)Application.Current.Resources["PrimaryGreen"] :
-                (Color)Application.Current.Resources["PrimaryGrey"];
+                (Color)Application.Current.Resources["PrimaryGray"];
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

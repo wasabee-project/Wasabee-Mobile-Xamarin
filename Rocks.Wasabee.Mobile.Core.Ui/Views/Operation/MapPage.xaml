@@ -22,9 +22,50 @@
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
                             SelectedPin="{Binding SelectedPin}" MapClicked="Map_OnMapClicked" />
 
-            <Button x:Name="StyleButton" Clicked="StyleButton_OnClicked" Text="Switch theme" />
+            <StackLayout x:Name="LeftToolbar" Orientation="Vertical" Spacing="10"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=10}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=10}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=35}">
 
-            <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{StaticResource DarkGrey}" CornerRadius="10, 10, 0, 0" Padding="10"
+                <iconize:IconButton Text="mdi-texture" BackgroundColor="#DFFF" TextColor="Gray" Padding="0" FontSize="24" WidthRequest="35" HeightRequest="35"
+                                    Clicked="StyleButton_OnClicked" BorderColor="Black" />
+
+                <iconize:IconButton Text="mdi-layers" BackgroundColor="#DFFF" TextColor="Gray" Padding="0" FontSize="24" WidthRequest="35" HeightRequest="35"
+                                    Clicked="LayerChooserButton_OnClicked" BorderColor="Black" />
+            </StackLayout>
+
+            <pancake:PancakeView BackgroundColor="#DFFF" CornerRadius="0, 5, 5, 5" Padding="10"
+                                 IsVisible="{Binding IsLayerChooserVisible}"
+                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=Width, Factor=1, Constant=15}"
+                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=Height, Factor=1, Constant=-5}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <CheckBox Grid.Row="0" Grid.Column="0" Color="{Binding IsLayerLinksActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerLinksActivated}"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="Links" VerticalTextAlignment="Center"/>
+
+                    <CheckBox Grid.Row="1" Grid.Column="0" Color="{Binding IsLayerAnchorsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAnchorsActivated}"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="Anchors" VerticalTextAlignment="Center"/>
+
+                    <CheckBox Grid.Row="2" Grid.Column="0" Color="{Binding IsLayerMarkersActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerMarkersActivated}"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="Markers" VerticalTextAlignment="Center"/>
+
+                    <CheckBox Grid.Row="3" Grid.Column="0" Color="{Binding IsLayerAgentsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAgentsActivated}"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="Agents" VerticalTextAlignment="Center"/>
+                </Grid>
+            </pancake:PancakeView>
+
+
+            <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{StaticResource DarkGray}" CornerRadius="10, 10, 0, 0" Padding="10"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-180}"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=180}">
@@ -46,7 +87,7 @@
                             </StackLayout>
                             
                             <pancake:PancakeView IsVisible="{Binding SelectedWasabeePin.HasComment}"
-                                                 BackgroundColor="{StaticResource LightGrey}" Padding="5" Margin="5, 5, 0, 0"
+                                                 BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="5, 5, 0, 0"
                                                  CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
                                 <StackLayout Orientation="Vertical" Padding="0" Margin="0" Spacing="0">
 
