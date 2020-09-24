@@ -1,6 +1,7 @@
 ﻿using MvvmCross;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Plugin.Messenger;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
@@ -20,7 +21,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
     {
         private readonly MvxSubscriptionToken _token;
 
+        private List<Polyline> _links = new List<Polyline>();
+        private List<Pin> _anchorsPins = new List<Pin>();
+        private List<Pin> _markersPins = new List<Pin>();
         private List<Pin> _agentPins = new List<Pin>();
+
         private bool _hasLoaded = false;
         private bool _isDetailPanelVisible = false;
 
@@ -71,7 +76,15 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             else if (e.PropertyName == "VisibleRegion")
                 Map.MoveToRegion(ViewModel.VisibleRegion);
             else if (e.PropertyName == "AgentsPins")
-                RefreshAgentsPins();
+                RefreshAgentsLayer();
+            else if (e.PropertyName == "IsLayerLinksActivated")
+                RefreshLinksLayer();
+            else if (e.PropertyName == "IsLayerAnchorsActivated")
+                RefreshAnchorsLayer();
+            else if (e.PropertyName == "IsLayerMarkersActivated")
+                RefreshMarkersLayer();
+            else if (e.PropertyName == "IsLayerAgentsActivated")
+                RefreshAgentsLayer();
         }
 
         protected override void OnAppearing()
@@ -105,36 +118,102 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             if (_hasLoaded)
                 return;
 
-            Map.BatchBegin();
-
             Map.Polylines.Clear();
             Map.Pins.Clear();
-            foreach (var agentPin in _agentPins)
-                Map.Pins.Add(agentPin);
 
-            Map.BatchCommit();
-
-
-            Map.BatchBegin();
-
-            if (ViewModel.Polylines.Any())
-                foreach (var polyline in ViewModel.Polylines.Where(mapElement => !Map.Polylines.Contains(mapElement)))
-                    Map.Polylines.Add(polyline);
-
-            if (ViewModel.Pins.Any())
-                foreach (var wasabeePin in ViewModel.Pins.Where(wp => !Map.Pins.Contains(wp.Pin)))
-                    Map.Pins.Add(wasabeePin.Pin);
+            RefreshLinksLayer();
+            RefreshAnchorsLayer();
+            RefreshMarkersLayer();
+            RefreshAgentsLayer();
 
             Map.MoveToRegion(ViewModel.OperationMapRegion);
-
-            Map.BatchCommit();
 
             _hasLoaded = true;
         }
 
-        private void RefreshAgentsPins()
+        private void RefreshLinksLayer()
         {
-            foreach (var agentPin in ViewModel.AgentsPins)
+            if (!ViewModel.IsLayerLinksActivated)
+            {
+                Map.Polylines.Clear();
+                return;
+            }
+
+            foreach (var link in ViewModel.Links)
+            {
+                if (Map.Polylines.Any(x => x.Equals(link)))
+                    continue;
+
+                Map.Polylines.Add(link);
+            }
+        }
+
+        private void RefreshAnchorsLayer()
+        {
+            foreach (var anchor in ViewModel.Anchors)
+            {
+                if (Map.Pins.Any(x => x.Equals(anchor.Pin)))
+                {
+                    if (ViewModel.IsLayerAnchorsActivated)
+                        continue;
+
+                    var toRemove = Map.Pins.First(x => x.Equals(anchor.Pin));
+                    Map.Pins.Remove(toRemove);
+                }
+                else
+                {
+                    if (ViewModel.IsLayerAnchorsActivated)
+                    {
+                        Map.Pins.Add(anchor.Pin);
+                    }
+                }
+            }
+        }
+
+        private void RefreshMarkersLayer()
+        {
+            foreach (var marker in ViewModel.Markers)
+            {
+                if (Map.Pins.Any(x => x.Equals(marker.Pin)))
+                {
+                    if (ViewModel.IsLayerMarkersActivated)
+                        continue;
+
+                    var toRemove = Map.Pins.First(x => x.Equals(marker.Pin));
+                    Map.Pins.Remove(toRemove);
+                }
+                else
+                {
+                    if (ViewModel.IsLayerMarkersActivated)
+                    {
+                        Map.Pins.Add(marker.Pin);
+                    }
+                }
+            }
+        }
+
+        private void RefreshAgentsLayer()
+        {
+            foreach (var agent in ViewModel.AgentsPins)
+            {
+                if (Map.Pins.Any(x => x.Label.Contains(agent.AgentName)))
+                {
+                    if (ViewModel.IsLayerAgentsActivated)
+                        continue;
+
+                    var toRemove = Map.Pins.First(x => x.Label.Contains(agent.AgentName));
+                    Map.Pins.Remove(toRemove);
+                }
+                else
+                {
+                    if (ViewModel.IsLayerAgentsActivated)
+                    {
+                        Map.Pins.Add(agent.Pin);
+                    }
+                }
+            }
+
+            /*foreach (var agentPin in ViewModel.AgentsPins)
             {
                 if (Map.Pins.Any(x => x.Label.Contains(agentPin.AgentName)))
                 {
@@ -143,9 +222,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                     _agentPins.Remove(toRemove);
                 }
 
-                Map.Pins.Add(agentPin.Pin);
                 _agentPins.Add(agentPin.Pin);
-            }
+
+                if (ViewModel.IsLayerAgentsActivated)
+                    Map.Pins.Add(agentPin.Pin);
+            }*/
         }
 
         private void Map_OnMapClicked(object sender, MapClickedEventArgs e)
@@ -155,22 +236,40 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void StyleButton_OnClicked(object sender, EventArgs e)
         {
-            ViewModel.SwitchThemeCommand.Execute(ViewModel.MapTheme == MapThemeEnum.Light ? MapThemeEnum.Dark : MapThemeEnum.Light);
+            ViewModel.SwitchThemeCommand.Execute(
+                ViewModel.MapTheme switch
+                {
+                    MapThemeEnum.GoogleLight => MapThemeEnum.Enlightened,
+                    MapThemeEnum.Enlightened => MapThemeEnum.IntelDefault,
+                    MapThemeEnum.IntelDefault => MapThemeEnum.GoogleLight,
+                    _ => MapThemeEnum.GoogleLight
+                });
             RefreshMapTheme();
+        }
+
+        private void LayerChooserButton_OnClicked(object sender, EventArgs e)
+        {
+            ViewModel.IsLayerChooserVisible = !ViewModel.IsLayerChooserVisible;
         }
 
         private void RefreshMapTheme()
         {
-            if (ViewModel.MapTheme == MapThemeEnum.Light)
+            if (ViewModel.MapTheme == MapThemeEnum.GoogleLight)
             {
                 Map.MapStyle = MapStyle.FromJson("[]");
             }
-            else if (ViewModel.MapTheme == MapThemeEnum.Dark)
+            else
             {
                 try
                 {
+                    var resourceName = ViewModel.MapTheme switch
+                    {
+                        MapThemeEnum.Enlightened => "Rocks.Wasabee.Mobile.Core.Ui.Greenlightened.MapStyle.json",
+                        MapThemeEnum.IntelDefault => "Rocks.Wasabee.Mobile.Core.Ui.Intel.MapStyle.json",
+                        _ => throw new ArgumentOutOfRangeException(ViewModel.MapTheme.ToString())
+                    };
                     var assembly = typeof(MapPage).GetTypeInfo().Assembly;
-                    var stream = assembly.GetManifestResourceStream("Rocks.Wasabee.Mobile.Core.Ui.MapStyle.json");
+                    var stream = assembly.GetManifestResourceStream(resourceName);
 
                     string styleFile;
                     using (var reader = new System.IO.StreamReader(stream))
@@ -182,7 +281,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Mvx.IoCProvider.Resolve<ILoggingService>().Error(e, $"Error Executing MapPage.RefreshMapTheme({ViewModel.MapTheme})");
                 }
             }
         }

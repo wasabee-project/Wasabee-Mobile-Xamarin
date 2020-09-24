@@ -21,7 +21,7 @@
                         <Label Grid.Row="1" Text="{Binding ToPortalName}" FontSize="16" HorizontalOptions="Center"/>
 
                         <pancakeView:PancakeView IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}"
-                                                 BackgroundColor="{StaticResource LightGrey}" Padding="5" Margin="5, 5, 0, 0"
+                                                 BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="5, 5, 0, 0"
                                                  CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
                                 <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
                                     <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>

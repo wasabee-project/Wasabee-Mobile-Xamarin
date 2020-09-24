@@ -32,9 +32,9 @@
                                                         Command="{Binding Parent.SwitchTeamStateCommand}"
                                                         CommandParameter="{Binding .}"
                                                         FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
-                                                        BorderColor="{StaticResource PrimaryGrey}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                                        BorderColor="{StaticResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
 
-                                    <iconize:IconButton Text="mdi-arrow-right" TextColor="{StaticResource PrimaryGrey}"
+                                    <iconize:IconButton Text="mdi-arrow-right" TextColor="{StaticResource PrimaryGray}"
                                                         Command="{Binding Parent.ShowTeamDetailCommand}"
                                                         CommandParameter="{Binding .}"
                                                         BackgroundColor="Transparent"
