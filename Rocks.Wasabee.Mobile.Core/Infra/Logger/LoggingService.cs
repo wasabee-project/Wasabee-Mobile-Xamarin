@@ -18,7 +18,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Logger
             _preferences = preferences;
         }
 
-        private LogFactory _logFactory;
+        private LogFactory? _logFactory;
         private LogFactory LogFactory
         {
             get
@@ -39,7 +39,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Logger
             }
         }
 
-        private ILogger _logger;
+        private ILogger? _logger;
         private ILogger Logger => _logger ?? (_logger = LogFactory.GetLogger("WasabeeLogger"));
 
         private bool IsAnalyticsEnabled => _preferences.Get(UserSettingsKeys.AnalyticsEnabled, false);

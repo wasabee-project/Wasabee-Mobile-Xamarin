@@ -20,14 +20,14 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _loggingService = loggingService;
         }
 
-        public async Task<GoogleToken> GoogleLoginAsync()
+        public async Task<GoogleToken?> GoogleLoginAsync()
         {
             _loggingService.Trace("Executing AuthentificationService.GoogleLoginAsync");
 
             return await _loginProvider.DoGoogleOAuthLoginAsync();
         }
 
-        public async Task<UserModel> WasabeeLoginAsync(GoogleToken googleToken)
+        public async Task<UserModel?> WasabeeLoginAsync(GoogleToken googleToken)
         {
             _loggingService.Trace("Executing AuthentificationService.WasabeeLoginAsync");
 

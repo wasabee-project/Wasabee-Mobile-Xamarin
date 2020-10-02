@@ -2,6 +2,7 @@
 
 namespace Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google
 {
+#nullable disable
     public class GoogleToken
     {
         [JsonProperty("access_token")]
@@ -22,4 +23,5 @@ namespace Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google
         [JsonProperty("id_token")]
         public string Idtoken { get; set; }
     }
+#nullable enable
 }

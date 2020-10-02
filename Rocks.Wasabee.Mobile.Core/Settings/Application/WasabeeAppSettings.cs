@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 {
@@ -10,8 +9,8 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
         public string GoogleAuthUrl => "https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&" +
                                        $"redirect_uri={RedirectUrl}&client_id={ClientId}";
         public string GoogleTokenUrl { get; } = "https://oauth2.googleapis.com/token";
-        public string ClientId { get; set; }
-        public string BaseRedirectUrl { get; set; }
+        public string ClientId { get; set; } = string.Empty;
+        public string BaseRedirectUrl { get; set; } = string.Empty;
         public string RedirectUrl => $"{BaseRedirectUrl}:wasabee";
 
         private WasabeeServer _server = WasabeeServer.Undefined;
@@ -21,16 +20,16 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
             set
             {
                 if (_server == value) return;
-                
+
                 _server = value;
                 UpdateWasabeeUrls();
             }
         }
 
-        public string WasabeeBaseUrl { get; private set; }
-        public string WasabeeTokenUrl { get; private set; }
-        public string AndroidAppCenterKey { get; set; }
-        public string IosAppCenterKey { get; set; }
+        public string WasabeeBaseUrl { get; private set; } = string.Empty;
+        public string WasabeeTokenUrl { get; private set; } = string.Empty;
+        public string AndroidAppCenterKey { get; set; } = string.Empty;
+        public string IosAppCenterKey { get; set; } = string.Empty;
 
         private void UpdateWasabeeUrls()
         {

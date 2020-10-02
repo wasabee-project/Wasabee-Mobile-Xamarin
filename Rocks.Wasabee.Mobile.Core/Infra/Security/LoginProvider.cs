@@ -36,7 +36,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         ///     - Second step : send the unique OAuth code to Google's token server to get the OAuth token
         /// </summary>
         /// <returns>Returns a GoogleOAuthResponse containing the OAuth token</returns>
-        public async Task<GoogleToken> DoGoogleOAuthLoginAsync()
+        public async Task<GoogleToken?> DoGoogleOAuthLoginAsync()
         {
             _loggingService.Trace("Executing LoginProvider.DoGoogleOAuthLoginAsync");
 
@@ -97,7 +97,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// </summary>
         /// <param name="googleToken">Google OAuth response object containing the AccessToken</param>
         /// <returns>Returns a WasabeeLoginResponse with account data</returns>
-        public async Task<UserModel> DoWasabeeLoginAsync(GoogleToken googleToken)
+        public async Task<UserModel?> DoWasabeeLoginAsync(GoogleToken googleToken)
         {
             _loggingService.Trace("Executing LoginProvider.DoWasabeeLoginAsync");
 
@@ -121,7 +121,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             }
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(responseContent);
+            var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(responseContent);
 
             var uri = new Uri(_appSettings.WasabeeBaseUrl);
             var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()

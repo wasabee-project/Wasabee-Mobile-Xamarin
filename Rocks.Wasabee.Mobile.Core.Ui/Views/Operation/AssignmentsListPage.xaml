@@ -3,7 +3,6 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
-                       xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                        xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
                        xmlns:local="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views.Operation;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
@@ -13,46 +12,83 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="linkTemplate">
-                <ViewCell>
-                    <StackLayout Padding="10" Spacing="0" HorizontalOptions="Center">
-                        <Label Grid.Row="0" Text="{Binding FromPortalName}" FontSize="16" HorizontalOptions="Center"/>
-                        <iconize:IconLabel Text="mdi-arrow-down-bold" FontSize="23" HorizontalOptions="Center"/>
-                        <Label Grid.Row="1" Text="{Binding ToPortalName}" FontSize="16" HorizontalOptions="Center"/>
-
-                        <pancakeView:PancakeView IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}"
-                                                 BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="5, 5, 0, 0"
-                                                 CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
-                                <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
-                                    <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
-                                    <Label Text="{Binding Link.Description}" FontAttributes="Italic" FontSize="14"/>
-                                </StackLayout>
-                            </pancakeView:PancakeView>
-                    </StackLayout>
-                </ViewCell>
-            </DataTemplate>
-
-            <DataTemplate x:Key="markerTemplate">
+            <DataTemplate x:Key="LinkTemplate"> 
                 <ViewCell>
                     <Grid Padding="10" RowSpacing="0" ColumnSpacing="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                        <ffimageloadingsvg:SvgCachedImage Grid.Column="0" Grid.Row="0"
-                                                          HeightRequest="50"
+                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Padding="15, 0, 20, 0" VerticalTextAlignment="Center"
+                               Text="{Binding Link.ThrowOrderPos, StringFormat='{0}.'}" FontSize="16" />
+
+                        <Label Grid.Column="1" Grid.Row="0" Text="{Binding FromPortalName}" FontSize="16" />
+                        <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Spacing="0">
+                            <iconize:IconLabel Text="mdi-arrow-right-bold" TextColor="{Binding Color}" FontSize="23" Margin="5, 0" />
+                            <Label Text="{Binding ToPortalName}" FontSize="16" />
+                        </StackLayout>
+                       
+                        <!--IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}"-->
+                        <pancakeView:PancakeView
+                            Grid.Column="1" Grid.Row="2"
+                            BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="5"
+                            CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
+                            <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
+                                <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
+                                <Label Text="{Binding Link.Description}" FontAttributes="Italic" FontSize="14" TextColor="Black" />
+                            </StackLayout>
+                        </pancakeView:PancakeView>
+
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+
+            <DataTemplate x:Key="MarkerTemplate">
+                <ViewCell>
+                    <Grid Padding="10" RowSpacing="0" ColumnSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Padding="15, 0, 20, 0"
+                               VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                               Text="{Binding Marker.Order, StringFormat='{0}.'}" FontSize="16" />
+
+                        <ffimageloadingsvg:SvgCachedImage Grid.Column="1"
+                                                          HeightRequest="50" Margin="0, 0, 10, 0"
                                                           Source="{Binding Marker, Converter={StaticResource MarkerDataToSvgFilenameConverter}}"/>
 
-                        <StackLayout Grid.Column="1" Grid.Row="0" Spacing="0" Margin="10, 0, 0, 0" Padding="0">
-                            <Label Text="{Binding PortalName}" FontSize="16" />
+                        <StackLayout Grid.Column="2" Spacing="0" Margin="10, 0, 0, 0" Padding="0">
+                            <Label Text="{Binding PortalName}" FontSize="16" LineBreakMode="TailTruncation" />
                             <Label Text="{Binding Marker.State}" FontSize="14" />
+
+                            <pancakeView:PancakeView IsVisible="{Binding Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
+                                                     BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="0, 5, 0, 0"
+                                                     CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
+                                <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
+                                    <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
+                                    <Label Text="{Binding Marker.Comment}" FontAttributes="Italic" FontSize="14" TextColor="Black" />
+                                </StackLayout>
+                            </pancakeView:PancakeView>
                         </StackLayout>
+
+                        <iconize:IconButton Grid.Column="3" Text="mdi-map-marker" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
+                                            FontSize="24" HorizontalOptions="Start" VerticalOptions="Start" Command="{Binding ShowMarkerCommand}"/>
+
                     </Grid>
                 </ViewCell>
             </DataTemplate>
             <local:AssignmentsListDataTemplateSelector x:Key="AssignmentsListDataTemplateSelector"
-                                                       LinkTemplate="{StaticResource linkTemplate}" MarkerTemplate="{StaticResource markerTemplate}" />
+                                                       LinkTemplate="{StaticResource LinkTemplate}" MarkerTemplate="{StaticResource MarkerTemplate}" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -62,8 +98,13 @@
 
     <ContentPage.Content>
 
-            <ListView ItemsSource="{Binding Assignments}" ItemTemplate="{StaticResource AssignmentsListDataTemplateSelector}"
-                      HasUnevenRows="True" Margin="0" CachingStrategy="RecycleElement" SelectionMode="None" />
+            <ListView x:Name="AssignmentListView" HasUnevenRows="True" Margin="0" CachingStrategy="RecycleElement"
+                      IsPullToRefreshEnabled="True"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                      ItemsSource="{Binding Assignments}"
+                      ItemTemplate="{StaticResource AssignmentsListDataTemplateSelector}"
+                      ItemSelected="AssignmentListView_OnItemSelected" />
 
     </ContentPage.Content>
 </views:BaseContentPage>

@@ -30,10 +30,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             LoggingService.Trace("Querying UsersDatabase.GetUserTeams");
 
-            return (await GetUserModel(googleId)).Teams;
+            var userModel = await GetUserModel(googleId);
+            return userModel?.Teams ?? new List<UserTeamModel>();
         }
 
-        public async Task<UserModel> GetUserModel(string googleId)
+        public async Task<UserModel?> GetUserModel(string googleId)
         {
             LoggingService.Trace("Querying UsersDatabase.GetUserModel");
 
@@ -45,7 +46,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             return userDatabaseModel != null ?
                 UserDatabaseModel.ToUserModel(userDatabaseModel) :
-                null;
+                new UserModel();
         }
 
         public async Task<int> SaveUserModel(UserModel userModel)
@@ -72,6 +73,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return 0;
         }
 
+#nullable disable
         class UserDatabaseModel
         {
             [PrimaryKey, Unique]
@@ -177,5 +179,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 };
             }
         }
+#nullable enable
     }
 }

@@ -51,11 +51,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
 
-        private bool _working;
-        private GoogleToken _googleToken;
+        private bool _working = false;
+        private GoogleToken? _googleToken;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
 
-        private SplashScreenNavigationParameter _parameter;
+        private SplashScreenNavigationParameter? _parameter;
 
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
             IAuthentificationService authentificationService, IMvxNavigationService navigationService, IMvxMessenger messenger,
@@ -130,10 +130,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public bool IsSelectingServer { get; set; }
         public bool RememberServerChoice { get; set; }
         public bool HasNoTeamOrOpsAssigned { get; set; }
-        public string LoadingStepLabel { get; set; }
-        public string AppEnvironnement { get; set; }
-        public string DisplayVersion { get; set; }
-        public string ErrorMessage { get; set; }
+        public string LoadingStepLabel { get; set; } = string.Empty;
+        public string AppEnvironnement { get; set; } = string.Empty;
+        public string DisplayVersion { get; set; } = string.Empty;
+        public string ErrorMessage { get; set; } = string.Empty;
 
         private ServerItem _selectedServerItem = ServerItem.Undefined;
         public ServerItem SelectedServerItem
@@ -311,7 +311,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
             await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken);
+            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken!);
             if (wasabeeUserModel != null)
             {
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new UserLoggedInMessage(this));
@@ -324,8 +324,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
-                _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
-                _userSettingsService.SaveIngressName(wasabeeUserModel.IngressName);
+                _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel!.GoogleId);
+                _userSettingsService.SaveIngressName(wasabeeUserModel!.IngressName);
 
                 await FinishLogin(wasabeeUserModel);
             }
@@ -370,7 +370,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     var result = await _wasabeeApiV1Service.User_GetUserInformations();
                     if (!string.IsNullOrWhiteSpace(result))
                     {
-                        var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel>(result);
+                        var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(result);
                         if (wasabeeUserModel == null)
                             throw new NullReferenceException("SplashScreenViewModel.BypassGoogleAndWasabeeLogin() => Can't deserialize UserModel from API result");
 
@@ -444,7 +444,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             if (userModel.Teams != null && userModel.Teams.Any())
             {
                 var teamIds = userModel.Teams
-                    .Where(t => t.State == "On")
                     .Select(t => t.Id)
                     .ToList();
 
@@ -463,7 +462,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     .ToList();
 
                 var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
-                if (selectedOp == string.Empty || opsIds.All(id => !id.Equals(selectedOp)))
+                if (selectedOp == string.Empty || opsIds.All(id => id != null && !id.Equals(selectedOp)))
                 {
                     var id = opsIds.First();
                     _preferences.Set(UserSettingsKeys.SelectedOp, id);

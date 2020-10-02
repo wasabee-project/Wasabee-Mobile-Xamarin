@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseDialogPage x:TypeArguments="viewModels:LinkAssignmentDialogViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                      xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                      xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                      xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;assembly=Rocks.Wasabee.Mobile.Core"
+                      xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.LinkAssignmentDialog"
+                      BackgroundColor="#B000">
+
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation 
+            PositionIn="Bottom"
+            PositionOut="Top"/>
+    </pages:PopupPage.Animation>
+
+    <ContentPage.Content>
+
+        <RelativeLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="0" Margin="30, 0, 0, 0">
+
+            <pancakeView:PancakeView x:Name="Popup" CornerRadius="5" BackgroundColor="{StaticResource PrimaryGreen}" Margin="0, 15">
+                <StackLayout Padding="0" Margin="0">
+
+                    <Label Text="Link informations" TextColor="White" FontSize="Large" FontAttributes="Bold" Margin="8, 8, 0, 4" />
+
+                    <StackLayout BackgroundColor="White" Padding="10, 5, 10, 10">
+                        <StackLayout Orientation="Horizontal" Spacing="10">
+                            <StackLayout VerticalOptions="Center" Spacing="0">
+                                <Label Text="Source" />
+                                <Label Text="{Binding LinkAssignment.FromPortalName}" MaxLines="5" WidthRequest="250" />
+                            </StackLayout>
+                            <StackLayout HorizontalOptions="EndAndExpand">
+                                <iconize:IconButton Text="mdi-map-marker" TextColor="{StaticResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
+                                                    BackgroundColor="Transparent" FontSize="24" HorizontalOptions="Start"
+                                                    Command="{Binding ShowOnMapCommand}"
+                                                    CommandParameter="From" />
+                                <iconize:IconButton Text="mdi-map-search" TextColor="{StaticResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
+                                                    BackgroundColor="Transparent" FontSize="24" HorizontalOptions="Start"
+                                                    Command="{Binding OpenInNavigationAppCommand}"
+                                                    CommandParameter="From" />
+                            </StackLayout>
+                        </StackLayout>
+
+                        <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
+
+                        <StackLayout Orientation="Horizontal" Spacing="10">
+                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Center" Spacing="0">
+                                <Label Text="Destination" />
+                                <Label Text="{Binding LinkAssignment.ToPortalName}" MaxLines="5" WidthRequest="250" />
+                            </StackLayout>
+                            <StackLayout HorizontalOptions="EndAndExpand">
+                                <iconize:IconButton Text="mdi-map-marker" TextColor="{StaticResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
+                                                    BackgroundColor="Transparent" FontSize="24" HorizontalOptions="Start"
+                                                    Command="{Binding ShowOnMapCommand}"
+                                                    CommandParameter="To" />
+                                <iconize:IconButton Text="mdi-map-search" TextColor="{StaticResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
+                                                    BackgroundColor="Transparent" FontSize="24" HorizontalOptions="Start"
+                                                    Command="{Binding OpenInNavigationAppCommand}"
+                                                    CommandParameter="To" />
+                            </StackLayout>
+                        </StackLayout>
+
+                        <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
+
+                        <StackLayout>
+                            <Button Text="Completed"/>
+                        </StackLayout>
+                    </StackLayout>
+
+                </StackLayout>
+
+            </pancakeView:PancakeView>
+
+            <pancakeView:PancakeView BackgroundColor="{StaticResource PrimaryRed}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
+                                     RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Popup, Property=Width, Factor=1, Constant=-15}" 
+                                     RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Popup, Property=Y, Factor=1, Constant=-15}" >
+
+                <iconize:IconButton Text="mdi-close" TextColor="White" FontAttributes="Bold" FontSize="25"
+                                    HeightRequest="30" WidthRequest="30" Padding="0" Margin="0"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding CloseCommand}"/>
+            </pancakeView:PancakeView>
+
+        </RelativeLayout>
+
+    </ContentPage.Content>
+
+</views:BaseDialogPage>

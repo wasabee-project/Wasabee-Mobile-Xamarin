@@ -86,6 +86,9 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility">
       <Version>7.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>2.0.0.5</Version>
+    </PackageReference>
     <PackageReference Include="SkiaSharp">
       <Version>2.80.2</Version>
     </PackageReference>
@@ -138,10 +141,10 @@
       <Version>1.2.0.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData">
-      <Version>2.2.0.2</Version>
+      <Version>2.2.0.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.MediaRouter">
-      <Version>1.1.0.4</Version>
+      <Version>1.1.0.5</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Firebase.Analytics">
       <Version>71.1630.4</Version>

@@ -2,7 +2,6 @@
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using System;
-using System.Threading.Tasks;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Logs
 {
@@ -19,13 +18,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Logs
             });
         }
 
-        public override Task Initialize()
-        {
-            LogsCollection = new MvxObservableCollection<string>();
-
-            return base.Initialize();
-        }
-
-        public MvxObservableCollection<string> LogsCollection { get; set; }
+        public MvxObservableCollection<string> LogsCollection { get; set; } = new MvxObservableCollection<string>();
     }
 }

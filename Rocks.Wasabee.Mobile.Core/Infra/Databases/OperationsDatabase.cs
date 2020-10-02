@@ -50,7 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             return operationDatabaseModel != null ?
                 OperationDatabaseModel.ToOperationModel(operationDatabaseModel) :
-                null;
+                new OperationModel();
         }
 
         public async Task<List<OperationModel>> GetOperationModels()
@@ -91,6 +91,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return 0;
         }
 
+#nullable disable
         class OperationDatabaseModel
         {
             [PrimaryKey, Unique]
@@ -191,5 +192,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 };
             }
         }
+#nullable enable
     }
 }
