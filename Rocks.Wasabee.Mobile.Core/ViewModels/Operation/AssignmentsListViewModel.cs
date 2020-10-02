@@ -1,12 +1,17 @@
-﻿using MvvmCross.Commands;
+﻿using MvvmCross;
+using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
@@ -19,16 +24,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly IPreferences _preferences;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IMvxMessenger _messenger;
+        private readonly IDialogNavigationService _dialogNavigationService;
+        private readonly IMvxNavigationService _navigationService;
 
         private readonly MvxSubscriptionToken _token;
 
         public AssignmentsListViewModel(OperationsDatabase operationsDatabase, IPreferences preferences, IUserSettingsService userSettingsService,
-            IMvxMessenger messenger)
+            IMvxMessenger messenger, IDialogNavigationService dialogNavigationService, IMvxNavigationService navigationService)
         {
             _operationsDatabase = operationsDatabase;
             _preferences = preferences;
             _userSettingsService = userSettingsService;
             _messenger = messenger;
+            _dialogNavigationService = dialogNavigationService;
+            _navigationService = navigationService;
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await RefreshCommand.ExecuteAsync());
         }
@@ -42,7 +51,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         #region Properties
 
-        public OperationModel Operation { get; set; }
+        public OperationModel? Operation { get; set; }
 
         public MvxObservableCollection<AssignmentData> Assignments { get; set; } = new MvxObservableCollection<AssignmentData>();
 
@@ -82,9 +91,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         .Select(l => new LinkAssignmentData()
                         {
                             Link = l,
-                            FromPortalName = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.FromPortalId))?.Name ?? l.FromPortalId,
-                            ToPortalName = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.ToPortalId))?.Name ?? l.ToPortalId
-                        }).ToList();
+                            FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.FromPortalId)),
+                            ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.ToPortalId)),
+                            Color = WasabeeColorsHelper.GetColorFromWasabeeName(l.Color, Operation.Color)
+                        }).OrderBy(x => x.Link!.ThrowOrderPos).ToList();
 
                     if (!links.IsNullOrEmpty())
                         Assignments.AddRange(links);
@@ -96,8 +106,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         .Select(m => new MarkerAssignmentData()
                         {
                             Marker = m,
-                            PortalName = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(m.PortalId))?.Name ?? m.PortalId
-                        }).ToList();
+                            Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(m.PortalId))
+                        }).OrderBy(x => x.Marker!.Order).ToList();
 
 
                     if (!markers.IsNullOrEmpty())
@@ -116,23 +126,44 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
+        public IMvxAsyncCommand<AssignmentData> SelectAssignmentCommand => new MvxAsyncCommand<AssignmentData>(SelectAssignmentExecuted);
+        private async Task SelectAssignmentExecuted(AssignmentData data)
+        {
+            if (data is LinkAssignmentData linkAssignmentData)
+                await _dialogNavigationService.Navigate<LinkAssignmentDialogViewModel, LinkAssignmentData>(linkAssignmentData);
+        }
+
         #endregion
     }
 
     public class AssignmentData
     {
-        public LinkModel Link { get; set; }
-        public MarkerModel Marker { get; set; }
+        public LinkModel? Link { get; set; }
+        public MarkerModel? Marker { get; set; }
     }
 
     public class LinkAssignmentData : AssignmentData
     {
-        public string FromPortalName { get; set; }
-        public string ToPortalName { get; set; }
+        public PortalModel? FromPortal { get; set; }
+        public PortalModel? ToPortal { get; set; }
+
+        public string FromPortalName => FromPortal?.Name ?? FromPortal?.Id ?? string.Empty;
+        public string ToPortalName => ToPortal?.Name ?? ToPortal?.Id ?? string.Empty;
+
+        public Color Color { get; set; }
     }
 
     public class MarkerAssignmentData : AssignmentData
     {
-        public string PortalName { get; set; }
+        public PortalModel? Portal { get; set; }
+
+        public string PortalName => Portal?.Name ?? Portal?.Id ?? string.Empty;
+
+        public IMvxCommand ShowMarkerCommand => new MvxCommand(ShowMarkerExecuted);
+        private void ShowMarkerExecuted()
+        {
+            if (Marker != null)
+                Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowMarkerOnMapMessage(this, Marker));
+        }
     }
 }

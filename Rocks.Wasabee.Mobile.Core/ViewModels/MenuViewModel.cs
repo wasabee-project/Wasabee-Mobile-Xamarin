@@ -83,7 +83,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             if (!string.IsNullOrWhiteSpace(selectedOpId))
             {
                 var op = await _operationsDatabase.GetOperationModel(selectedOpId);
-                SelectedOpName = op.Name;
+                SelectedOpName = op == null ? "ERROR loading OP" : op.Name;
             }
         }
 
@@ -96,20 +96,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         #region Properties
 
-        public string LoggedUser { get; set; }
-        public string DisplayVersion { get; set; }
-        public string SelectedOpName { get; set; }
-        public MvxObservableCollection<OperationModel> AvailableOpsCollection { get; set; }
+        public string LoggedUser { get; set; } = string.Empty;
+        public string DisplayVersion { get; set; } = string.Empty;
+        public string SelectedOpName { get; set; } = string.Empty;
+        public MvxObservableCollection<OperationModel> AvailableOpsCollection { get; set; } = new MvxObservableCollection<OperationModel>();
         public MvxObservableCollection<MenuItem> MenuItems { get; set; }
         public bool HasLocalOps { get; set; } = true;
 
-        private MenuItem _selectedMenuItem;
-        public MenuItem SelectedMenuItem
+        private MenuItem? _selectedMenuItem;
+        public MenuItem? SelectedMenuItem
         {
             get => _selectedMenuItem;
             set
             {
-                if (SetProperty(ref _selectedMenuItem, value))
+                if (SetProperty(ref _selectedMenuItem, value) && value != null)
                     SelectedMenuItemChangedCommand.Execute(value);
             }
         }
@@ -255,9 +255,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
     public class MenuItem
     {
-        public string Icon { get; set; }
-        public string Title { get; set; }
-        public string Subtitle { get; set; }
-        public Type ViewModelType { get; set; }
+        public string Icon { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public string Subtitle { get; set; } = string.Empty;
+        public Type? ViewModelType { get; set; }
     }
 }

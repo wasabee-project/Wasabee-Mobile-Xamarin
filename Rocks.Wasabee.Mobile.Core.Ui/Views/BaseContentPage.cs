@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 {
-    public partial class BaseContentPage<TViewModel> : MvxContentPage<TViewModel> where TViewModel : BaseViewModel
+    public abstract class BaseContentPage<TViewModel> : MvxContentPage<TViewModel> where TViewModel : BaseViewModel
     {
         protected override void OnViewModelSet()
         {

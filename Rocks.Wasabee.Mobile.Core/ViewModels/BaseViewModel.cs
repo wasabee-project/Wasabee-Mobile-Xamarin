@@ -6,7 +6,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
-    public partial class BaseViewModel : MvxViewModel, IMvxViewModel
+    public abstract class BaseViewModel : MvxViewModel, IMvxViewModel
     {
         protected static IGeolocator Geolocator => CrossGeolocator.Current;
         protected static ILoggingService LoggingService => Mvx.IoCProvider.Resolve<ILoggingService>();
@@ -18,8 +18,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         #region Properties
 
-        public string Title { get; set; }
-        public bool IsBusy { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public bool IsBusy { get; set; } = false;
 
         #endregion
 
@@ -28,5 +28,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
 
         #endregion
+    }
+
+    public abstract class BaseDialogViewModel : BaseViewModel, IMvxViewModel
+    {
+
     }
 }

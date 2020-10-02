@@ -13,6 +13,14 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             InitializeComponent();
         }
+
+        private void AssignmentListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem is LinkAssignmentData data)
+                ViewModel.SelectAssignmentCommand.ExecuteAsync(data);
+
+            AssignmentListView.SelectedItem = null;
+        }
     }
 
     public class AssignmentsListDataTemplateSelector : DataTemplateSelector

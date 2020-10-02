@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Rocks.Wasabee.Mobile.Core.Models.Operations
 {
+#nullable disable
     public class OperationModel : BaseModel
     {
         [JsonProperty("ID")]
@@ -207,5 +208,5 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         [JsonProperty("name")]
         public string Name { get; set; }
     }
-
+#nullable enable
 }

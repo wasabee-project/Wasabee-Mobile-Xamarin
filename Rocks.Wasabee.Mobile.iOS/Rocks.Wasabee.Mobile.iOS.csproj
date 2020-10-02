@@ -140,6 +140,9 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility">
       <Version>7.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>2.0.0.5</Version>
+    </PackageReference>
     <PackageReference Include="Xam.Plugin.Iconize">
       <Version>3.5.0.129</Version>
     </PackageReference>
