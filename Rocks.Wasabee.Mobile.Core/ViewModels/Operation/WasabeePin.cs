@@ -17,7 +17,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         public PortalModel Portal { get; set; } = new PortalModel();
         public MarkerModel Marker { get; set; } = new MarkerModel();
-        public string AssignedTo { get; set; }
+        public string AssignedTo { get; set; } = string.Empty;
         public bool HasComment => !string.IsNullOrWhiteSpace(Portal?.Comment) ||
                                   !string.IsNullOrWhiteSpace(Portal?.Hardness) ||
                                   !string.IsNullOrWhiteSpace(Marker?.Comment);
@@ -35,7 +35,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Pin.Label = "Unknown player";
         }
 
-        public string AgentName { get; set; }
-        public string TimeAgo { get; set; }
+        public string AgentName { get; set; } = string.Empty;
+        public string TimeAgo { get; set; } = string.Empty;
     }
 }

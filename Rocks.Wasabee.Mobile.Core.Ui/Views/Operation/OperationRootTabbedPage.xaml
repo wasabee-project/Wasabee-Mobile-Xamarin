@@ -4,7 +4,7 @@
                      xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                      xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.OperationRootTabbedPage"
-                     BarBackgroundColor="{StaticResource PrimaryGreen}"
+                     BarBackgroundColor="{StaticResource PrimaryGreenDark}"
                      BarTextColor="White"
                      SelectedTabColor="White"
                      Title="Operation">

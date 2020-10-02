@@ -6,8 +6,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 {
     public interface ILoginProvider
     {
-        Task<GoogleToken> DoGoogleOAuthLoginAsync();
-        Task<UserModel> DoWasabeeLoginAsync(GoogleToken googleToken);
+        Task<GoogleToken?> DoGoogleOAuthLoginAsync();
+        Task<UserModel?> DoWasabeeLoginAsync(GoogleToken googleToken);
         Task RemoveTokenFromSecureStore();
         void ClearCookie();
         Task RefreshTokenAsync();

@@ -59,7 +59,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             var teamDatabaseModel = databaseConnection.GetConnection().GetWithChildren<TeamDatabaseModel>(teamId);
             dbLock.Dispose();
 
-            return TeamDatabaseModel.ToTeamModel(teamDatabaseModel);
+            return teamDatabaseModel != null ?
+                TeamDatabaseModel.ToTeamModel(teamDatabaseModel) :
+                new TeamModel();
         }
 
         public async Task<List<TeamModel>> GetTeams(string userId)
@@ -72,11 +74,12 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             dbLock.Dispose();
 
             return teamDatabaseModels
-                .Where(x => x.Agents.Any(a => a.Id.Equals(userId)))
+                .Where(x => x.Agents.Any(a => a.Id != null && a.Id.Equals(userId)))
                 .Select(x => TeamDatabaseModel.ToTeamModel(x))
                 .ToList();
         }
 
+#nullable disable
         class TeamDatabaseModel
         {
             [PrimaryKey, Unique]
@@ -112,5 +115,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 };
             }
         }
+#nullable enable
     }
 }

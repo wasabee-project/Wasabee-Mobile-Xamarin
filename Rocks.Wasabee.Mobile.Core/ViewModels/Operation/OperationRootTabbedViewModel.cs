@@ -14,8 +14,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _navigationService = navigationService;
         }
 
-        private IMvxAsyncCommand _showInitialViewModelsCommand;
-        public IMvxAsyncCommand ShowInitialViewModelsCommand => _showInitialViewModelsCommand ??= new MvxAsyncCommand(ShowInitialViewModels);
+        public IMvxAsyncCommand ShowInitialViewModelsCommand => new MvxAsyncCommand(ShowInitialViewModels);
 
         private async Task ShowInitialViewModels()
         {

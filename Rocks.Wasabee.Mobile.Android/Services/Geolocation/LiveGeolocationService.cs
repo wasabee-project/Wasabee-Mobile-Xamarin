@@ -1,4 +1,5 @@
-﻿using Acr.UserDialogs;
+﻿#nullable enable
+using Acr.UserDialogs;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -35,13 +36,13 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
         private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
         private const string ChannelId = "Live Location Sharing";
 
-        private IBinder _binder;
-        private WasabeeApiV1Service _wasabeeApiV1Service;
+        private IBinder? _binder;
+        private WasabeeApiV1Service? _wasabeeApiV1Service;
         private bool _isRunning;
 
         private static IGeolocator Geolocator => CrossGeolocator.Current;
 
-        public override IBinder OnBind(Intent intent)
+        public override IBinder OnBind(Intent? intent)
         {
             _binder = new LiveGeolocationServiceBinder(this);
             return _binder;
@@ -59,7 +60,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             return base.StopService(name);
         }
 
-        public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
+        public override StartCommandResult OnStartCommand(Intent? intent, StartCommandFlags flags, int startId)
         {
             CreateNotificationChannel();
 
@@ -129,7 +130,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             if (Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
                 GeolocationHelper.StopLocationService();
 
-            var result = await _wasabeeApiV1Service.UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
+            var result = await _wasabeeApiV1Service!.UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
 #if DEBUG
             Mvx.IoCProvider.Resolve<IUserDialogs>().Toast($"Location updated : {e.Position.Latitude}, {e.Position.Longitude} ({result})");
 #endif
@@ -159,7 +160,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 return;
             }
 
-            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+            var notificationManager = (NotificationManager)GetSystemService(NotificationService)!;
 
             var channel = new NotificationChannel(ChannelId, ChannelId, NotificationImportance.Default)
             {
@@ -172,7 +173,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 
     public class LiveGeolocationServiceConnection : Java.Lang.Object, IServiceConnection
     {
-        public LiveGeolocationServiceConnection(LiveGeolocationServiceBinder binder)
+        public LiveGeolocationServiceConnection(LiveGeolocationServiceBinder? binder)
         {
             if (binder != null)
             {
@@ -180,9 +181,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             }
         }
 
-        public LiveGeolocationServiceBinder Binder { get; private set; }
+        public LiveGeolocationServiceBinder? Binder { get; private set; }
 
-        public async void OnServiceConnected(ComponentName name, IBinder service)
+        public async void OnServiceConnected(ComponentName? name, IBinder? service)
         {
             if (!(service is LiveGeolocationServiceBinder serviceBinder))
                 return;
@@ -197,7 +198,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             await serviceBinder.Service.StartLocationUpdates();
         }
 
-        public async void OnServiceDisconnected(ComponentName name)
+        public async void OnServiceDisconnected(ComponentName? name)
         {
             if (Binder == null) return;
 
@@ -207,11 +208,11 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             Binder = null;
         }
 
-        public event EventHandler<ServiceConnectedEventArgs> ServiceConnected;
+        public event EventHandler<ServiceConnectedEventArgs>? ServiceConnected;
     }
 
     public class ServiceConnectedEventArgs : EventArgs
     {
-        public IBinder Binder { get; set; }
+        public IBinder? Binder { get; set; }
     }
 }

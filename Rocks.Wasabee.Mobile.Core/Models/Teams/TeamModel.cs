@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Rocks.Wasabee.Mobile.Core.Models.Teams
 {
+#nullable disable
     public class TeamModel : BaseModel
     {
         [JsonProperty("id")]
@@ -57,4 +58,5 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Teams
         [JsonProperty("date")]
         public string Date { get; set; }
     }
+#nullable enable
 }

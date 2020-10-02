@@ -21,7 +21,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         private readonly UsersDatabase _usersDatabase;
         private readonly IUserSettingsService _userSettingsService;
 
-        private ProfileViewModelNavigationParameter _parameter = null;
+        private ProfileViewModelNavigationParameter? _parameter;
 
         public ProfileViewModel(UsersDatabase usersDatabase, IUserSettingsService userSettingsService)
         {
@@ -65,10 +65,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             await base.Initialize();
         }
 
-        public string AgentName { get; set; }
-        public int Level { get; set; }
-        public bool RocksVerified { get; set; }
-        public bool VVerified { get; set; }
-        public string Picture { get; set; }
+        public string AgentName { get; set; } = string.Empty;
+        public int Level { get; set; } = -1;
+        public bool RocksVerified { get; set; } = false;
+        public bool VVerified { get; set; } = false;
+        public string Picture { get; set; } = string.Empty;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Rocks.Wasabee.Mobile.Core.Models.Users
 {
+#nullable disable
     public class UserModel : BaseModel
     {
         public string GoogleId { get; set; }
@@ -56,4 +57,5 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
         public string OperationName { get; set; }
         public string Type { get; set; }
     }
+#nullable enable
 }

@@ -26,7 +26,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
     public class MapViewModel : BaseViewModel
     {
         private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon, France
-        private static readonly double PositionOffset = 0.0000005f;
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
@@ -114,7 +113,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         #region Properties
 
-        public Pin SelectedPin
+        public Pin? SelectedPin
         {
             get => SelectedWasabeePin?.Pin;
             set
@@ -126,8 +125,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-        public OperationModel Operation { get; set; }
-        public WasabeePin SelectedWasabeePin { get; set; } = null;
+        public OperationModel? Operation { get; set; }
+        public WasabeePin? SelectedWasabeePin { get; set; }
 
         public MvxObservableCollection<Polyline> Links { get; set; } = new MvxObservableCollection<Polyline>();
         public MvxObservableCollection<WasabeePin> Anchors { get; set; } = new MvxObservableCollection<WasabeePin>();
@@ -136,11 +135,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
-        public MapSpan VisibleRegion { get; set; }
+        public MapSpan? VisibleRegion { get; set; }
 
         public bool IsLocationAvailable { get; set; } = false;
 
-        public MapThemeEnum MapTheme { get; set; }
+        public MapThemeEnum MapTheme { get; set; } = MapThemeEnum.GoogleLight;
 
         public bool IsLayerChooserVisible { get; set; } = false;
         public bool IsLayerLinksActivated { get; set; } = true;
@@ -162,7 +161,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             if (SelectedWasabeePin == null)
                 return;
 
-            var region = MapSpan.FromCenterAndRadius(SelectedWasabeePin.Pin.Position, Distance.FromMeters(200));
+            var region = MapSpan.FromCenterAndRadius(SelectedWasabeePin.Pin.Position, Distance.FromMeters(100));
             if (VisibleRegion == region)
                 RaisePropertyChanged(() => VisibleRegion);
             else
@@ -185,14 +184,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             Anchors.Clear();
 
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
-            var teamsAgentsLists = (await _teamsDatabase.GetTeams(_userSettingsService.GetLoggedUserGoogleId()))
-                ?.SelectMany(t => t.Agents).Select(a => new { a.Id, a.Name }).Distinct().ToList();
             try
             {
                 var culture = CultureInfo.GetCultureInfo("en-US");
                 foreach (var link in Operation.Links)
                 {
-
                     try
                     {
                         var fromPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(link.FromPortalId));
@@ -397,7 +393,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var localData = await _operationsDatabase.GetOperationModel(selectedOpId);
                 var updatedData = await _wasabeeApiV1Service.Operations_GetOperation(selectedOpId);
 
-                if (!localData.Modified.Equals(updatedData.Modified))
+                if (localData != null && !localData.Modified.Equals(updatedData.Modified))
                 {
                     await _operationsDatabase.SaveOperationModel(updatedData);
                     hasUpdated = true;
@@ -446,6 +442,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand OpenInNavigationAppCommand => new MvxAsyncCommand(OpenInNavigationAppExecuted);
         private async Task OpenInNavigationAppExecuted()
         {
+            LoggingService.Trace("Executing MapViewModel.OpenInNavigationAppCommand");
+            if (SelectedWasabeePin == null) return;
+
             try
             {
                 var cultureInfo = CultureInfo.GetCultureInfo("en-US");

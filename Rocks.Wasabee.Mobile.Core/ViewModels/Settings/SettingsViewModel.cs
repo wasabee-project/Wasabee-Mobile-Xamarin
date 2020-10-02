@@ -42,7 +42,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
         #region Properties
 
-        public string Version { get; set; }
+        public string Version { get; set; } = string.Empty;
 
         private bool _isAnonymousAnalyticsEnabled;
         public bool IsAnonymousAnalyticsEnabled

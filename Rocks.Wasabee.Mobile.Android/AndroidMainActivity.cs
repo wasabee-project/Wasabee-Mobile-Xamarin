@@ -8,9 +8,13 @@ using FFImageLoading.Forms.Platform;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Plugin.Messenger;
+using Rg.Plugins.Popup.Contracts;
+using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
+using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
 using System.Collections.Generic;
@@ -53,6 +57,8 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             else
             {
+                Rg.Plugins.Popup.Popup.Init(this, bundle);
+
                 Xamarin.Forms.Forms.Init(this, bundle);
                 Xamarin.Essentials.Platform.Init(this, bundle);
 
@@ -65,6 +71,9 @@ namespace Rocks.Wasabee.Mobile.Droid
                 CachedImageRenderer.InitImageViewHandler();
 
                 CreateNotificationChannels();
+
+                Mvx.IoCProvider.RegisterSingleton<IPopupNavigation>(PopupNavigation.Instance);
+                Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
 
                 base.OnCreate(bundle);
 
@@ -105,9 +114,16 @@ namespace Rocks.Wasabee.Mobile.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        public override void OnBackPressed()
+        public override async void OnBackPressed()
         {
-            // Do nothing
+            if (PopupNavigation.Instance.PopupStack.Count > 0)
+            {
+                await PopupNavigation.Instance.PopAsync();
+            }
+            else
+            {
+                // Do nothing
+            }
         }
 
         private void CreateNotificationChannels()
