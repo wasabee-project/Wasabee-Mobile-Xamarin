@@ -182,8 +182,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             Links.Clear();
             Anchors.Clear();
+            Markers.Clear();
 
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
+            if (Operation == null)
+            {
+                IsBusy = false;
+                return;
+            }
+
             try
             {
                 var culture = CultureInfo.GetCultureInfo("en-US");
