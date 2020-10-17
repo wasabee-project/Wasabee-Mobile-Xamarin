@@ -6,7 +6,6 @@ using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.Android.Factories;
 using AndroidBitmapDescriptor = Android.Gms.Maps.Model.BitmapDescriptor;
 using AndroidBitmapDescriptorFactory = Android.Gms.Maps.Model.BitmapDescriptorFactory;
-using SKSvg = SkiaSharp.Extended.Svg.SKSvg;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
@@ -17,9 +16,10 @@ namespace Rocks.Wasabee.Mobile.Droid
             int iconId;
             if (descriptor.Id.Equals("wasabee_player_marker"))
             {
-                return CreateBitmapFromSvgStream(Resource.Drawable.wasabee_player_marker);
+                return CreateMarker(Resource.Drawable.wasabee_player_marker);
             }
-            else if (descriptor.Id.Contains('|'))
+
+            if (descriptor.Id.Contains('|'))
             {
                 var descriptors = descriptor.Id.Split('|');
 
@@ -136,39 +136,41 @@ namespace Rocks.Wasabee.Mobile.Droid
                     _ => throw new ArgumentOutOfRangeException(descriptors[0])
                 };
 
-                return CreateBitmapFromSvgStream(iconId);
+                return CreateMarker(iconId);
             }
-            else
-            {
-                if (descriptor.Id.Contains("#"))
-                    iconId = Resource.Drawable.marker_layer_main;
-                else
-                    iconId = descriptor.Id switch
-                    {
-                        "marker_layer_groupa" => Resource.Drawable.marker_layer_groupa,
-                        "marker_layer_groupb" => Resource.Drawable.marker_layer_groupb,
-                        "marker_layer_groupc" => Resource.Drawable.marker_layer_groupc,
-                        "marker_layer_groupd" => Resource.Drawable.marker_layer_groupd,
-                        "marker_layer_groupe" => Resource.Drawable.marker_layer_groupe,
-                        "marker_layer_groupf" => Resource.Drawable.marker_layer_groupf,
-                        "marker_layer_main" => Resource.Drawable.marker_layer_main,
-                        _ => throw new ArgumentOutOfRangeException(descriptor.Id)
-                    };
 
-                return AndroidBitmapDescriptorFactory.FromResource(iconId);
-            }
+            if (descriptor.Id.Contains("#"))
+                iconId = Resource.Drawable.pin_green;
+            else
+                iconId = descriptor.Id switch
+                {
+                    "pin_orange" => Resource.Drawable.pin_orange,
+                    "pin_yellow" => Resource.Drawable.pin_yellow,
+                    "pin_tan" => Resource.Drawable.pin_tan,
+                    "pin_purple" => Resource.Drawable.pin_purple,
+                    "pin_teal" => Resource.Drawable.pin_teal,
+                    "pin_fuschia" => Resource.Drawable.pin_fuschia,
+                    "pin_red" => Resource.Drawable.pin_red,
+                    _ => Resource.Drawable.pin_lime
+                };
+
+            return CreatePin(iconId);
         }
 
-        private AndroidBitmapDescriptor CreateBitmapFromSvgStream(int iconId)
+        private static AndroidBitmapDescriptor CreatePin(int iconId) => CreateBitmapFromSvgStream(iconId, 60, 120);
+        private static AndroidBitmapDescriptor CreateMarker(int iconId) => CreateBitmapFromSvgStream(iconId, 70, 120);
+
+        private static AndroidBitmapDescriptor CreateBitmapFromSvgStream(int iconId, int width, int height)
         {
             var svgStream = Application.Context.Resources?.OpenRawResource(iconId);
-            var svg = new SKSvg();
+            var svg = new SkiaSharp.Extended.Svg.SKSvg();
             var picture = svg.Load(svgStream);
+
 
             return AndroidBitmapDescriptorFactory.FromBitmap(
                 SKBitmap.FromImage(
                         SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)))
-                    .Resize(new SKSizeI(70, 120), SKFilterQuality.None)
+                    .Resize(new SKSizeI(width, height), SKFilterQuality.None)
                     .ToBitmap());
         }
     }

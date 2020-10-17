@@ -34,10 +34,10 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             InitializeComponent();
             Title = "Map";
 
-            _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<MessageFrom<MapViewModel>>((msg) =>
+            _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
             {
                 _hasLoaded = false;
-                RefreshMapView();
+                RefreshMapView(msg.Data != null && msg.Data is bool data && data);
             });
 
             Map.UiSettings.ScrollGesturesEnabled = true;
@@ -64,12 +64,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "OperationMapRegion")
-            {
-                _hasLoaded = false;
-                RefreshMapView();
-            }
-            else if (e.PropertyName == "SelectedWasabeePin")
+            if (e.PropertyName == "SelectedWasabeePin")
                 AnimateDetailPanel();
             else if (e.PropertyName == "IsLocationAvailable")
                 Map.MyLocationEnabled = ViewModel.IsLocationAvailable;
@@ -113,7 +108,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             }
         }
 
-        private void RefreshMapView()
+        private void RefreshMapView(bool moveToRegion = true)
         {
             if (_hasLoaded)
                 return;
@@ -126,7 +121,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             RefreshMarkersLayer();
             RefreshAgentsLayer();
 
-            Map.MoveToRegion(ViewModel.OperationMapRegion);
+            if (moveToRegion)
+                Map.MoveToRegion(ViewModel.OperationMapRegion);
 
             _hasLoaded = true;
         }

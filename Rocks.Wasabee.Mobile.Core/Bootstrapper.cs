@@ -29,6 +29,8 @@ namespace Rocks.Wasabee.Mobile.Core
         public static void SetupCrossConcerns()
         {
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
         }
 
         public static void SetupEnvironment()
@@ -52,22 +54,24 @@ namespace Rocks.Wasabee.Mobile.Core
 #endif
         }
 
+        public static void SetupDatabases()
+        {
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new UsersDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new MarkersDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new LinksDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new OperationsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new TeamsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+        }
+
         public static void SetupServices()
         {
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
-
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new WasabeeApiV1Service(Mvx.IoCProvider.Resolve<IAppSettings>()));
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IUserSettingsService, UserSettingsService>();
 
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoginProvider, LoginProvider>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAuthentificationService, AuthentificationService>();
-        }
 
-        public static void SetupDatabases()
-        {
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new UsersDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new OperationsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new TeamsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IBackgroundDataUpdaterService, BackgroundDataUpdaterService>();
         }
     }
 }

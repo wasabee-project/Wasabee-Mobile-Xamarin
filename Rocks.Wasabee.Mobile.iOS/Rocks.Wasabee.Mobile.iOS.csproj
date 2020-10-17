@@ -169,25 +169,4 @@
       <Name>Rocks.Wasabee.Mobile.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\marker_layer_groupa.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\marker_layer_groupb.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\marker_layer_groupc.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\marker_layer_groupd.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\marker_layer_groupe.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\marker_layer_groupf.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\marker_layer_main.png" />
-  </ItemGroup>
 </Project>

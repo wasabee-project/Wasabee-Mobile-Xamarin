@@ -21,5 +21,19 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
                 _ => Color.FromHex("f00")
             };
         }
+
+        public static string GetPinColorNameFromHex(string hexColor)
+        {
+            return hexColor.ToUpper() switch
+            {
+                "#FF6600" => "orange",
+                "#FF9900" => "yellow",
+                "#BB9900" => "tan",
+                "#BB22CC" => "purple",
+                "#33CCCC" => "teal",
+                "#FF55FF" => "fuschia",
+                _ => "red"
+            };
+        }
     }
 }

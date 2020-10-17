@@ -130,9 +130,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             if (Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
                 GeolocationHelper.StopLocationService();
 
-            var result = await _wasabeeApiV1Service!.UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
+            var result = await _wasabeeApiV1Service!.User_UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
 #if DEBUG
-            Mvx.IoCProvider.Resolve<IUserDialogs>().Toast($"Location updated : {e.Position.Latitude}, {e.Position.Longitude} ({result})");
+            Mvx.IoCProvider.Resolve<IUserDialogs>().Toast(result ? $"Location updated : {e.Position.Latitude}, {e.Position.Longitude}" : "Location not updated (error)");
 #endif
         }
 

@@ -8,21 +8,23 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Rocks.Wasabee.Mobile.Core.Services;
 #if DEBUG
 using Android.Util;
 #endif
 
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
-    [Service]
-    [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT", "com.google.firebase.INSTANCE_ID_EVENT" })]
+    [Service()]
+    [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
+    [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
     public class WasabeeFcmService : FirebaseMessagingService
     {
         const string TAG = "[WASABEE_FCM_SERVICE]";
 
         private readonly IMvxMessenger _mvxMessenger;
         private readonly ILoginProvider _loginProvider;
+        private readonly IBackgroundDataUpdaterService _backgroundDataUpdaterService;
 
         private int _lastId = 0;
         private MvxSubscriptionToken _mvxToken;
@@ -33,6 +35,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         {
             _loginProvider = Mvx.IoCProvider.Resolve<ILoginProvider>();
             _mvxMessenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
+            _backgroundDataUpdaterService = Mvx.IoCProvider.Resolve<IBackgroundDataUpdaterService>();
 
             _mvxToken = _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer(_fcmToken));
         }
@@ -65,8 +68,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             }
             else
             {
-                var cmd = message.Data.First(x => x.Key.Equals("cmd"));
-                var msg = message.Data.First(x => x.Key.Equals("msg"));
+                var cmd = message.Data.FirstOrDefault(x => x.Key.Equals("cmd"));
+                var msg = message.Data.FirstOrDefault(x => x.Key.Equals("msg"));
 
                 var messageBody = $"{cmd.Value} : {msg.Value}";
 
@@ -77,6 +80,28 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
                 if (messageBody.Contains("Agent Location Change"))
                     _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this));
+                else if (messageBody.Contains("Marker"))
+                {
+                    var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
+                    var markerId = message.Data.FirstOrDefault(x => x.Key.Equals("markerID"));
+
+                    if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(markerId.Value))
+                        _backgroundDataUpdaterService.UpdateMarker(opId.Value, markerId.Value).ConfigureAwait(false);
+                }
+                else if (messageBody.Contains("Link"))
+                {
+                    var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
+                    var linkId = message.Data.FirstOrDefault(x => x.Key.Equals("linkID"));
+
+                    if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(linkId.Value))
+                        _backgroundDataUpdaterService.UpdateLink(opId.Value, linkId.Value).ConfigureAwait(false);
+                }
+                else if (messageBody.Contains("Map Change"))
+                {
+                    var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
+                    if (!string.IsNullOrWhiteSpace(opId.Value))
+                        _backgroundDataUpdaterService.UpdateOperation(opId.Value).ConfigureAwait(false);
+                }
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using MvvmCross;
+﻿using Acr.UserDialogs;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -26,11 +27,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly IMvxMessenger _messenger;
         private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IMvxNavigationService _navigationService;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly IUserDialogs _userDialogs;
 
         private readonly MvxSubscriptionToken _token;
+        private readonly MvxSubscriptionToken _tokenFromMap;
+        private readonly MvxSubscriptionToken _tokenRefresh;
 
-        public AssignmentsListViewModel(OperationsDatabase operationsDatabase, IPreferences preferences, IUserSettingsService userSettingsService,
-            IMvxMessenger messenger, IDialogNavigationService dialogNavigationService, IMvxNavigationService navigationService)
+        public AssignmentsListViewModel(OperationsDatabase operationsDatabase, IPreferences preferences,
+            IUserSettingsService userSettingsService, IMvxMessenger messenger, IDialogNavigationService dialogNavigationService,
+            IMvxNavigationService navigationService, WasabeeApiV1Service wasabeeApiV1Service, IUserDialogs userDialogs)
         {
             _operationsDatabase = operationsDatabase;
             _preferences = preferences;
@@ -38,8 +44,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _messenger = messenger;
             _dialogNavigationService = dialogNavigationService;
             _navigationService = navigationService;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
+            _userDialogs = userDialogs;
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenFromMap = messenger.Subscribe<MessageFor<AssignmentsListViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenRefresh = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
         }
 
         public override async Task Initialize()
@@ -50,6 +60,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         }
 
         #region Properties
+
+        public bool IsLoading { get; set; }
 
         public OperationModel? Operation { get; set; }
 
@@ -62,10 +74,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand RefreshCommand => new MvxAsyncCommand(RefreshExecuted);
         private async Task RefreshExecuted()
         {
-            if (IsBusy)
+            if (IsLoading)
                 return;
 
-            IsBusy = true;
+            IsLoading = true;
 
             LoggingService.Trace("Executing AssignmentsListViewModel.RefreshCommand");
 
@@ -88,7 +100,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (!Operation.Links.IsNullOrEmpty())
                 {
                     var links = Operation.Links.Where(l => l.AssignedTo.Equals(userGid))
-                        .Select(l => new LinkAssignmentData()
+                        .Select(l => new LinkAssignmentData(Operation.Id)
                         {
                             Link = l,
                             FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.FromPortalId)),
@@ -103,7 +115,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (!Operation.Markers.IsNullOrEmpty())
                 {
                     var markers = Operation.Markers.Where(m => m.AssignedTo.Equals(userGid))
-                        .Select(m => new MarkerAssignmentData()
+                        .Select(m => new MarkerAssignmentData(Operation.Id)
                         {
                             Marker = m,
                             Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(m.PortalId))
@@ -122,7 +134,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             {
                 await RaisePropertyChanged(() => Assignments);
 
-                IsBusy = false;
+                IsLoading = false;
             }
         }
 
@@ -138,12 +150,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
     public class AssignmentData
     {
+        public AssignmentData(string opId)
+        {
+            OpId = opId;
+        }
+
+        public string OpId { get; set; }
         public LinkModel? Link { get; set; }
         public MarkerModel? Marker { get; set; }
     }
 
     public class LinkAssignmentData : AssignmentData
     {
+        public LinkAssignmentData(string opId) : base(opId)
+        {
+
+        }
+
         public PortalModel? FromPortal { get; set; }
         public PortalModel? ToPortal { get; set; }
 
@@ -155,6 +178,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
     public class MarkerAssignmentData : AssignmentData
     {
+        public MarkerAssignmentData(string opId) : base(opId)
+        {
+
+        }
+
         public PortalModel? Portal { get; set; }
 
         public string PortalName => Portal?.Name ?? Portal?.Id ?? string.Empty;

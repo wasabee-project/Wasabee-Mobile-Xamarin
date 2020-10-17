@@ -9,4 +9,8 @@
                      SelectedTabColor="White"
                      Title="Operation">
 
+    <views:MvxTabbedPage.ToolbarItems>
+        <ToolbarItem Text="Refresh" Command="{Binding RefreshOperationCommand}" />
+    </views:MvxTabbedPage.ToolbarItems>
+
 </views:MvxTabbedPage>

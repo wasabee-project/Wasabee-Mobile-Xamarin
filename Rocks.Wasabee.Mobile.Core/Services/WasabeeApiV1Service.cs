@@ -1,6 +1,7 @@
 ﻿using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Threading;
@@ -12,20 +13,40 @@ namespace Rocks.Wasabee.Mobile.Core.Services
     [Headers("Accept: application/json")]
     public interface IWasabeeApiV1
     {
+        [Get("/team/{teamId}")]
+        Task<ApiResponse<TeamModel>> GetTeam(string teamId);
+
+        #region User
+
         [Get("/me?json=y")]
-        Task<string> User_GetUserInformations();
+        Task<ApiResponse<UserModel>> User_GetUserInformations();
 
         [Get("/me/{teamId}?state={state}")]
         Task<string> User_ChangeTeamState(string teamId, string state);
 
-        [Get("/draw/{opId}")]
-        Task<OperationModel> Operations_GetOperation(string opId);
-
         [Get("/me?lat={lat}&lon={lon}")]
-        Task<string> UpdateLocation(string lat, string lon);
+        Task<ApiResponse<string>> User_UpdateLocation(string lat, string lon);
 
-        [Get("/team/{teamId}")]
-        Task<TeamModel> GetTeam(string teamId);
+        #endregion
+
+        #region Operations
+
+        [Get("/draw/{opId}")]
+        Task<ApiResponse<OperationModel>> Operations_GetOperation(string opId);
+
+        [Get("/draw/{opId}/link/{linkId}")]
+        Task<ApiResponse<LinkModel>> Operations_GetLink(string opId, string linkId);
+
+        [Get("/draw/{opId}/marker/{markerId}")]
+        Task<ApiResponse<MarkerModel>> Operations_GetMarker(string opId, string markerId);
+
+        [Get("/draw/{opId}/link/{linkId}/complete")]
+        Task<ApiResponse<string>> Operation_Link_Complete(string opId, string linkId);
+
+        [Get("/draw/{opId}/link/{linkId}/incomplete")]
+        Task<ApiResponse<string>> Operation_Link_Incomplete(string opId, string linkId);
+
+        #endregion
     }
 
     public class WasabeeApiV1Service : BaseApiService
@@ -41,9 +62,18 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             _appSettings = appSettings;
         }
 
-        public async Task<string> User_GetUserInformations()
+        public async Task<TeamModel?> GetTeam(string teamId)
         {
-            return await AttemptAndRetry(() => WasabeeApiClient.User_GetUserInformations(), new CancellationToken()).ConfigureAwait(false);
+            var result = await AttemptAndRetry(() => WasabeeApiClient.GetTeam(teamId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : null;
+        }
+
+        #region User
+
+        public async Task<UserModel?> User_GetUserInformations()
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.User_GetUserInformations(), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : null;
         }
 
         public async Task<string> User_ChangeTeamState(string teamId, string state)
@@ -54,19 +84,46 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             throw new ArgumentException($"{nameof(state)} '{state}' is not a valid parameter");
         }
 
-        public async Task<string> UpdateLocation(string lat, string lon)
+        public async Task<bool> User_UpdateLocation(string lat, string lon)
         {
-            return await AttemptAndRetry(() => WasabeeApiClient.UpdateLocation(lat, lon), new CancellationToken()).ConfigureAwait(false);
+            var result = await AttemptAndRetry(() => WasabeeApiClient.User_UpdateLocation(lat, lon), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
-        public async Task<OperationModel> Operations_GetOperation(string opId)
+        #endregion
+
+        #region Operations
+
+        public async Task<OperationModel?> Operations_GetOperation(string opId)
         {
-            return await AttemptAndRetry(() => WasabeeApiClient.Operations_GetOperation(opId), new CancellationToken()).ConfigureAwait(false);
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operations_GetOperation(opId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : null;
         }
 
-        public async Task<TeamModel> GetTeam(string teamId)
+        public async Task<LinkModel?> Operations_GetLink(string opId, string linkId)
         {
-            return await AttemptAndRetry(() => WasabeeApiClient.GetTeam(teamId), new CancellationToken()).ConfigureAwait(false);
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operations_GetLink(opId, linkId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : null;
         }
+
+        public async Task<MarkerModel?> Operations_GetMarker(string opId, string markerId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operations_GetMarker(opId, markerId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : null;
+        }
+
+        public async Task<bool> Operation_Link_Complete(string opId, string linkId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Complete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        public async Task<bool> Operation_Link_Incomplete(string opId, string linkId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Incomplete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        #endregion
     }
 }

@@ -6,6 +6,7 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -14,18 +15,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
     public class LinkAssignmentDialogViewModel : BaseDialogViewModel, IMvxViewModel<LinkAssignmentData>
     {
         private readonly IDialogNavigationService _dialogNavigationService;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService)
+        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _dialogNavigationService = dialogNavigationService;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
         public void Prepare(LinkAssignmentData parameter)
         {
             LinkAssignment = parameter;
+            UpdateButtonText();
         }
 
+        #region Properties
+
+        public string ButtonText { get; set; }
         public LinkAssignmentData? LinkAssignment { get; set; }
+
+        #endregion
 
         #region Commands
 
@@ -128,6 +137,59 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             {
                 IsBusy = false;
             }
+        }
+
+        public IMvxAsyncCommand ChangeStateCommand => new MvxAsyncCommand(ChangeStateExecuted);
+        private async Task ChangeStateExecuted()
+        {
+            if (IsBusy)
+                return;
+
+            if (LinkAssignment?.Link == null)
+                return;
+
+            LoggingService.Trace("Executing LinkAssignmentDialogViewModel.ChangeStateCommand");
+
+            IsBusy = true;
+
+            try
+            {
+                if (LinkAssignment.Link.Completed)
+                {
+                    var result = await _wasabeeApiV1Service.Operation_Link_Incomplete(LinkAssignment.OpId, LinkAssignment.Link.Id);
+                    if (result)
+                        LinkAssignment.Link.Completed = !LinkAssignment.Link.Completed;
+                }
+                else
+                {
+                    var result = await _wasabeeApiV1Service.Operation_Link_Complete(LinkAssignment.OpId, LinkAssignment.Link.Id);
+                    if (result)
+                        LinkAssignment.Link.Completed = !LinkAssignment.Link.Completed;
+                }
+
+                UpdateButtonText();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing LinkAssignmentDialogViewModel.ChangeStateCommand");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void UpdateButtonText()
+        {
+            if (LinkAssignment?.Link == null)
+                return;
+
+            ButtonText = LinkAssignment.Link.Completed ? "Uncompleted" : "Completed";
         }
 
         #endregion

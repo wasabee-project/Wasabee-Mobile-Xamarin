@@ -1,9 +1,7 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
-using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
-using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
@@ -59,17 +57,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             {
                 IsRefreshing = true;
 
-                var rawUserInformations = await _wasabeeApiV1Service.User_GetUserInformations();
-                var userInformations = JsonConvert.DeserializeObject<UserModel>(rawUserInformations);
-
-                await _usersDatabase.SaveUserModel(userInformations);
-                TeamsCollection = new MvxObservableCollection<Team>(userInformations.Teams.Select(x =>
-                    new Team(this, x.Name, x.Id)
-                    {
-                        IsEnabled = x.State.Equals("On"),
-                        IsOwner = x.Owner.Equals(_userSettingsService.GetLoggedUserGoogleId())
-                    }
-                ));
+                var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
+                if (userModel != null)
+                {
+                    await _usersDatabase.SaveUserModel(userModel);
+                    TeamsCollection = new MvxObservableCollection<Team>(userModel.Teams.Select(x =>
+                        new Team(this, x.Name, x.Id)
+                        {
+                            IsEnabled = x.State.Equals("On"),
+                            IsOwner = x.Owner.Equals(_userSettingsService.GetLoggedUserGoogleId())
+                        }
+                    ));
+                }
             }
             catch (Exception e)
             {
