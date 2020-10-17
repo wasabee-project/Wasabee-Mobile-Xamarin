@@ -100,7 +100,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (!Operation.Links.IsNullOrEmpty())
                 {
                     var links = Operation.Links.Where(l => l.AssignedTo.Equals(userGid))
-                        .Select(l => new LinkAssignmentData()
+                        .Select(l => new LinkAssignmentData(Operation.Id)
                         {
                             Link = l,
                             FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.FromPortalId)),
@@ -115,7 +115,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (!Operation.Markers.IsNullOrEmpty())
                 {
                     var markers = Operation.Markers.Where(m => m.AssignedTo.Equals(userGid))
-                        .Select(m => new MarkerAssignmentData()
+                        .Select(m => new MarkerAssignmentData(Operation.Id)
                         {
                             Marker = m,
                             Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(m.PortalId))
@@ -150,12 +150,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
     public class AssignmentData
     {
+        public AssignmentData(string opId)
+        {
+            OpId = opId;
+        }
+
+        public string OpId { get; set; }
         public LinkModel? Link { get; set; }
         public MarkerModel? Marker { get; set; }
     }
 
     public class LinkAssignmentData : AssignmentData
     {
+        public LinkAssignmentData(string opId) : base(opId)
+        {
+
+        }
+
         public PortalModel? FromPortal { get; set; }
         public PortalModel? ToPortal { get; set; }
 
@@ -167,6 +178,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
     public class MarkerAssignmentData : AssignmentData
     {
+        public MarkerAssignmentData(string opId) : base(opId)
+        {
+
+        }
+
         public PortalModel? Portal { get; set; }
 
         public string PortalName => Portal?.Name ?? Portal?.Id ?? string.Empty;

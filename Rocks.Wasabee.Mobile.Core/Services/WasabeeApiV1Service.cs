@@ -40,6 +40,12 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Get("/draw/{opId}/marker/{markerId}")]
         Task<ApiResponse<MarkerModel>> Operations_GetMarker(string opId, string markerId);
 
+        [Get("/draw/{opId}/link/{linkId}/complete")]
+        Task<ApiResponse<string>> Operation_Link_Complete(string opId, string linkId);
+
+        [Get("/draw/{opId}/link/{linkId}/incomplete")]
+        Task<ApiResponse<string>> Operation_Link_Incomplete(string opId, string linkId);
+
         #endregion
     }
 
@@ -81,10 +87,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         public async Task<bool> User_UpdateLocation(string lat, string lon)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.User_UpdateLocation(lat, lon), new CancellationToken()).ConfigureAwait(false);
-            if (result.IsSuccessStatusCode)
-                return result.Content.Contains("{\"status\":\"ok\"}");
-
-            return false;
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
         #endregion
@@ -107,6 +110,18 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operations_GetMarker(opId, markerId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode ? result.Content : null;
+        }
+
+        public async Task<bool> Operation_Link_Complete(string opId, string linkId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Complete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        public async Task<bool> Operation_Link_Incomplete(string opId, string linkId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Incomplete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
         #endregion

@@ -65,7 +65,7 @@
                         <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
 
                         <StackLayout>
-                            <Button Text="Completed" IsEnabled="False" />
+                            <Button Text="{Binding ButtonText}" Command="{Binding ChangeStateCommand}"/>
                         </StackLayout>
                     </StackLayout>
 
