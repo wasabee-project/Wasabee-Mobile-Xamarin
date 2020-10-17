@@ -5,7 +5,6 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
-using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
@@ -49,6 +48,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly UsersDatabase _usersDatabase;
         private readonly OperationsDatabase _operationsDatabase;
+        private readonly LinksDatabase _linksDatabase;
+        private readonly MarkersDatabase _markersDatabase;
         private readonly TeamsDatabase _teamsDatabase;
 
         private bool _working = false;
@@ -60,7 +61,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
             IAuthentificationService authentificationService, IMvxNavigationService navigationService, IMvxMessenger messenger,
             ISecureStorage secureStorage, IAppSettings appSettings, IUserSettingsService userSettingsService, IUserDialogs userDialogs,
-            WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase)
+            WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, LinksDatabase linksDatabase,
+            MarkersDatabase markersDatabase, TeamsDatabase teamsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
@@ -75,6 +77,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _usersDatabase = usersDatabase;
             _operationsDatabase = operationsDatabase;
+            _linksDatabase = linksDatabase;
+            _markersDatabase = markersDatabase;
             _teamsDatabase = teamsDatabase;
         }
 
@@ -367,15 +371,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 try
                 {
-                    var result = await _wasabeeApiV1Service.User_GetUserInformations();
-                    if (!string.IsNullOrWhiteSpace(result))
+                    var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
+                    if (userModel != null)
                     {
-                        var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(result);
-                        if (wasabeeUserModel == null)
-                            throw new NullReferenceException("SplashScreenViewModel.BypassGoogleAndWasabeeLogin() => Can't deserialize UserModel from API result");
-
-                        await _usersDatabase.SaveUserModel(wasabeeUserModel);
-                        await FinishLogin(wasabeeUserModel);
+                        await _usersDatabase.SaveUserModel(userModel);
+                        await FinishLogin(userModel);
                     }
                     else
                         throw new NullReferenceException("SplashScreenViewModel.BypassGoogleAndWasabeeLogin() => _wasabeeApiV1Service.User_GetUserInformations() result is null");
@@ -440,6 +440,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _teamsDatabase.DeleteAllData();
             await _operationsDatabase.DeleteAllData();
+            await _linksDatabase.DeleteAllData();
+            await _markersDatabase.DeleteAllData();
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {

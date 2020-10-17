@@ -39,7 +39,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
         private readonly MvxSubscriptionToken _token;
+        private readonly MvxSubscriptionToken _tokenReload;
         private readonly MvxSubscriptionToken _tokenLiveLocation;
+        private readonly MvxSubscriptionToken _tokenMarkerUpdated;
 
         private bool _loadingAgentsLocations;
 
@@ -59,7 +61,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _wasabeeApiV1Service = wasabeeApiV1Service;
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await LoadOperationCommand.ExecuteAsync());
+            _tokenReload = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync());
+            _tokenMarkerUpdated = messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
         }
 
         public override async void Prepare()
@@ -112,6 +116,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         }
 
         #region Properties
+
+        public bool IsLoading { get; set; }
 
         public Pin? SelectedPin
         {
@@ -171,8 +177,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand LoadOperationCommand => new MvxAsyncCommand(LoadOperationExecuted);
         private async Task LoadOperationExecuted()
         {
-            if (IsBusy) return;
-            IsBusy = true;
+            if (IsLoading) return;
+            IsLoading = true;
 
             LoggingService.Trace("Executing MapViewModel.LoadOperationCommand");
 
@@ -187,7 +193,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
             if (Operation == null)
             {
-                IsBusy = false;
+                IsLoading = false;
                 return;
             }
 
@@ -272,7 +278,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         {
                             Portal = portal,
                             Marker = marker,
-                            AssignedTo = marker.AssignedNickname
+                            AssignedTo = marker.AssignedNickname // TODO Replace this
                         };
 
                         Markers.Add(pin);
@@ -289,25 +295,61 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             finally
             {
-                if (Anchors.Any())
+                var lowestLat = 0.0d;
+                var highestLat = 0.0d;
+                var lowestLong = 0.0d;
+                var highestLong = 0.0d;
+                var finalLat = 0.0d;
+                var finalLong = 0.0d;
+                var distance = 0.0d;
+
+                if (Markers.Any() && Anchors.Any())
                 {
-                    var lowestLat = Anchors.Min(p => p.Pin.Position.Latitude);
-                    var highestLat = Anchors.Max(p => p.Pin.Position.Latitude);
-                    var lowestLong = Anchors.Min(p => p.Pin.Position.Longitude);
-                    var highestLong = Anchors.Max(p => p.Pin.Position.Longitude);
-                    var finalLat = (lowestLat + highestLat) / 2;
-                    var finalLong = (lowestLong + highestLong) / 2;
-                    var distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                    lowestLat = Math.Min(Anchors.Min(p => p.Pin.Position.Latitude), Markers.Min(p => p.Pin.Position.Latitude));
+                    highestLat = Math.Max(Anchors.Max(p => p.Pin.Position.Latitude), Markers.Max(p => p.Pin.Position.Latitude));
+                    lowestLong = Math.Min(Anchors.Min(p => p.Pin.Position.Longitude), Markers.Min(p => p.Pin.Position.Longitude));
+                    highestLong = Math.Max(Anchors.Max(p => p.Pin.Position.Longitude), Markers.Max(p => p.Pin.Position.Longitude));
+                    finalLat = (lowestLat + highestLat) / 2;
+                    finalLong = (lowestLong + highestLong) / 2;
+                    distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
                         highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
 
                     OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
                 }
-                else
+                else if (Markers.Any() && !Anchors.Any())
                 {
-                    OperationMapRegion = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
+                    lowestLat = Markers.Min(p => p.Pin.Position.Latitude);
+                    highestLat = Markers.Max(p => p.Pin.Position.Latitude);
+                    lowestLong = Markers.Min(p => p.Pin.Position.Longitude);
+                    highestLong = Markers.Max(p => p.Pin.Position.Longitude);
+                    finalLat = (lowestLat + highestLat) / 2;
+                    finalLong = (lowestLong + highestLong) / 2;
+                    distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                        highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
+
+                    OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
+                }
+                else if (!Markers.Any() && Anchors.Any())
+                {
+                    lowestLat = Anchors.Min(p => p.Pin.Position.Latitude);
+                    highestLat = Anchors.Max(p => p.Pin.Position.Latitude);
+                    lowestLong = Anchors.Min(p => p.Pin.Position.Longitude);
+                    highestLong = Anchors.Max(p => p.Pin.Position.Longitude);
+                    finalLat = (lowestLat + highestLat) / 2;
+                    finalLong = (lowestLong + highestLong) / 2;
+                    distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                        highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
+
                 }
 
-                IsBusy = false;
+                if (distance != 0.0d)
+                    OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
+                else
+                    OperationMapRegion = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5000));
+
+                // Message data set to true to force move mapview
+                _messenger.Publish(new MessageFrom<MapViewModel>(this, true));
+                IsLoading = false;
             }
         }
 
@@ -382,48 +424,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-
-        public IMvxCommand RefreshOperationCommand => new MvxCommand(async () => await RefreshOperationExecuted());
-        private async Task RefreshOperationExecuted()
-        {
-            if (IsBusy) return;
-            LoggingService.Trace("Executing MapViewModel.RefreshOperationCommand");
-
-            IsBusy = true;
-            var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
-            if (string.IsNullOrWhiteSpace(selectedOpId))
-                return;
-
-            var hasUpdated = false;
-            try
-            {
-                var localData = await _operationsDatabase.GetOperationModel(selectedOpId);
-                var updatedData = await _wasabeeApiV1Service.Operations_GetOperation(selectedOpId);
-
-                if (localData != null && !localData.Modified.Equals(updatedData.Modified))
-                {
-                    await _operationsDatabase.SaveOperationModel(updatedData);
-                    hasUpdated = true;
-                }
-            }
-            catch (Exception e)
-            {
-                LoggingService.Error(e, "Error Executing MapViewModel.RefreshOperationCommand");
-            }
-            finally
-            {
-                IsBusy = false;
-                _userDialogs.Toast(hasUpdated ? "Operation data updated" : "You already have latest OP version");
-
-                if (hasUpdated)
-                {
-                    await LoadOperationCommand.ExecuteAsync();
-                    _messenger.Publish(new MessageFrom<MapViewModel>(this));
-                }
-            }
-
-        }
-
         public IMvxCommand<MapThemeEnum> SwitchThemeCommand => new MvxCommand<MapThemeEnum>(SwitchThemeExecuted);
         private void SwitchThemeExecuted(MapThemeEnum mapTheme)
         {
@@ -478,6 +478,46 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         #endregion
 
         #region Private methods
+
+        private void UpdateMarker(MarkerDataChangedMessage updateMessage)
+        {
+            if (Operation == null)
+                return;
+
+            if (!updateMessage.OperationId.Equals(Operation.Id))
+                return;
+
+            var marker = Markers.FirstOrDefault(x => x.Marker.Id.Equals(updateMessage.MarkerModel.Id));
+            if (marker != null)
+            {
+                var culture = CultureInfo.GetCultureInfo("en-US");
+                var portal = Operation.Portals.First(x => x.Id.Equals(updateMessage.MarkerModel.PortalId));
+                double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
+                double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
+
+                var pin = new WasabeePin(
+                    new Pin()
+                    {
+                        Position = new Position(portalLat, portalLng),
+                        Icon = BitmapDescriptorFactory.FromBundle($"{updateMessage.MarkerModel.Type}|{updateMessage.MarkerModel.State}"),
+                        Label = GetMarkerNameFromTypeAndState(updateMessage.MarkerModel.Type, updateMessage.MarkerModel.State)
+                    })
+                {
+                    Portal = portal,
+                    Marker = updateMessage.MarkerModel,
+                    AssignedTo = updateMessage.MarkerModel.AssignedNickname
+                };
+
+                Markers.Remove(marker);
+                Markers.Add(pin);
+
+                _messenger.Publish(new MessageFrom<MapViewModel>(this));
+
+                // If assigned to current user
+                if (updateMessage.MarkerModel.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
+                    _messenger.Publish(new MessageFor<AssignmentsListViewModel>(this));
+            }
+        }
 
         private string GetMarkerNameFromTypeAndState(string markerType, string markerState)
         {

@@ -15,6 +15,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
     {
         public OperationsDatabase(IFileSystem fileSystem, ILoggingService loggingService) : base(fileSystem, loggingService, TimeSpan.FromDays(7))
         {
+            GetDatabaseConnection<LinksDatabase.LinkDatabaseModel>().ConfigureAwait(false);
+            GetDatabaseConnection<MarkersDatabase.MarkerDatabaseModel>().ConfigureAwait(false);
         }
 
         public override async Task<int> DeleteAllData()
@@ -38,19 +40,28 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 await databaseConnection.DeleteAsync(expiredReferringSite).ConfigureAwait(false);
         }
 
-        public async Task<OperationModel> GetOperationModel(string operationId)
+        public async Task<OperationModel?> GetOperationModel(string operationId)
         {
-            LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
+            try
+            {
+                LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
 
-            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+                var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
 
-            var dbLock = databaseConnection.GetConnection().Lock();
-            var operationDatabaseModel = databaseConnection.GetConnection().GetWithChildren<OperationDatabaseModel>(operationId);
-            dbLock.Dispose();
+                var dbLock = databaseConnection.GetConnection().Lock();
+                var operationDatabaseModel = databaseConnection.GetConnection().GetWithChildren<OperationDatabaseModel>(operationId);
+                dbLock.Dispose();
 
-            return operationDatabaseModel != null ?
-                OperationDatabaseModel.ToOperationModel(operationDatabaseModel) :
-                new OperationModel();
+                return operationDatabaseModel != null ?
+                    OperationDatabaseModel.ToOperationModel(operationDatabaseModel) :
+                    new OperationModel();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.GetOperationModel");
+
+                return null;
+            }
         }
 
         public async Task<List<OperationModel>> GetOperationModels()
@@ -77,7 +88,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             try
             {
-                databaseConnection.GetConnection().InsertOrReplaceWithChildren(operationDatabaseModel, true);
+                databaseConnection.GetConnection().InsertOrReplaceWithChildren(operationDatabaseModel);
             }
             catch (Exception e)
             {
@@ -92,7 +103,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         }
 
 #nullable disable
-        class OperationDatabaseModel
+        internal class OperationDatabaseModel
         {
             [PrimaryKey, Unique]
             public string OpId { get; set; }
@@ -111,17 +122,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [TextBlob("AnchorsBlobbed")]
             public List<string> Anchors { get; set; }
 
-            public string LinksBlobbed { get; set; }
-            [TextBlob("LinksBlobbed")]
-            public List<LinkModel> Links { get; set; }
 
             public string BlockersBlobbed { get; set; }
             [TextBlob("BlockersBlobbed")]
             public List<BlockerModel> Blockers { get; set; }
-
-            public string MarkersBlobbed { get; set; }
-            [TextBlob("MarkersBlobbed")]
-            public List<MarkerModel> Markers { get; set; }
 
             public string TeamListBlobbed { get; set; }
             [TextBlob("TeamListBlobbed")]
@@ -134,6 +138,12 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             public string ZonesBlobbed { get; set; }
             [TextBlob("ZonesBlobbed")]
             public List<ZoneModel> Zones { get; set; }
+
+            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public List<MarkersDatabase.MarkerDatabaseModel> Markers { get; set; }
+
+            [OneToMany(CascadeOperations = CascadeOperation.All)]
+            public List<LinksDatabase.LinkDatabaseModel> Links { get; set; }
 
             public string Modified { get; set; }
 
@@ -153,15 +163,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         Color = operationDatabaseModel.Color,
                         Portals = operationDatabaseModel.Portals ?? new List<PortalModel>(),
                         Anchors = operationDatabaseModel.Anchors ?? new List<string>(),
-                        Links = operationDatabaseModel.Links ?? new List<LinkModel>(),
                         Blockers = operationDatabaseModel.Blockers ?? new List<BlockerModel>(),
-                        Markers = operationDatabaseModel.Markers ?? new List<MarkerModel>(),
                         TeamList = operationDatabaseModel.TeamList ?? new List<TeamModel>(),
                         Modified = operationDatabaseModel.Modified,
                         Comment = operationDatabaseModel.Comment,
                         KeysOnHand = operationDatabaseModel.KeysOnHand ?? new List<KeysOnHandModel>(),
                         Zones = operationDatabaseModel.Zones ?? new List<ZoneModel>(),
-                        DownloadedAt = operationDatabaseModel.DownloadedAt
+                        DownloadedAt = operationDatabaseModel.DownloadedAt,
+
+                        Markers = operationDatabaseModel.Markers?.Select(markerDbModel => MarkersDatabase.MarkerDatabaseModel.ToMarkerModel(markerDbModel)).ToList(),
+                        Links = operationDatabaseModel.Links?.Select(linkDbModel => LinksDatabase.LinkDatabaseModel.ToLinkModel(linkDbModel)).ToList()
                     };
                 }
                 catch (Exception)
@@ -180,15 +191,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Color = operationModel.Color,
                     Portals = operationModel.Portals ?? new List<PortalModel>(),
                     Anchors = operationModel.Anchors ?? new List<string>(),
-                    Links = operationModel.Links ?? new List<LinkModel>(),
                     Blockers = operationModel.Blockers ?? new List<BlockerModel>(),
-                    Markers = operationModel.Markers ?? new List<MarkerModel>(),
                     TeamList = operationModel.TeamList ?? new List<TeamModel>(),
                     Modified = operationModel.Modified,
                     Comment = operationModel.Comment,
                     KeysOnHand = operationModel.KeysOnHand ?? new List<KeysOnHandModel>(),
                     Zones = operationModel.Zones ?? new List<ZoneModel>(),
                     DownloadedAt = operationModel.DownloadedAt,
+
+                    Markers = operationModel.Markers?.Select(markerModel => MarkersDatabase.MarkerDatabaseModel.ToMarkerDatabaseModel(markerModel)).ToList(),
+                    Links = operationModel.Links?.Select(linkModel => LinksDatabase.LinkDatabaseModel.ToLinkDatabaseModel(linkModel)).ToList()
                 };
             }
         }

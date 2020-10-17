@@ -5,8 +5,11 @@ namespace Rocks.Wasabee.Mobile.Core.Messages
 {
     public class MessageFrom<T> : MvxMessage where T : BaseViewModel
     {
-        public MessageFrom(object sender) : base(sender)
+        public object? Data { get; }
+
+        public MessageFrom(object sender, object? data = null) : base(sender)
         {
+            Data = data;
         }
     }
 }

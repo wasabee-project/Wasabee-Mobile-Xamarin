@@ -12,11 +12,11 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="LinkTemplate"> 
+            <DataTemplate x:Key="LinkTemplate">
                 <ViewCell>
                     <Grid Padding="10" RowSpacing="0" ColumnSpacing="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -25,7 +25,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Padding="15, 0, 20, 0" VerticalTextAlignment="Center"
+                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,10,0"
+                               VerticalTextAlignment="Center" HorizontalTextAlignment="End"
                                Text="{Binding Link.ThrowOrderPos, StringFormat='{0}.'}" FontSize="16" />
 
                         <Label Grid.Column="1" Grid.Row="0" Text="{Binding FromPortalName}" FontSize="16" />
@@ -33,7 +34,7 @@
                             <iconize:IconLabel Text="mdi-arrow-right-bold" TextColor="{Binding Color}" FontSize="23" Margin="5, 0" />
                             <Label Text="{Binding ToPortalName}" FontSize="16" />
                         </StackLayout>
-                       
+
                         <!--IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}"-->
                         <pancakeView:PancakeView
                             Grid.Column="1" Grid.Row="2"
@@ -53,14 +54,14 @@
                 <ViewCell>
                     <Grid Padding="10" RowSpacing="0" ColumnSpacing="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Padding="15, 0, 20, 0"
-                               VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                        <Label Grid.Column="0" Margin="0,0,10,0"
+                               VerticalTextAlignment="Center" HorizontalTextAlignment="End"
                                Text="{Binding Marker.Order, StringFormat='{0}.'}" FontSize="16" />
 
                         <ffimageloadingsvg:SvgCachedImage Grid.Column="1"
@@ -92,16 +93,12 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <!--<ContentPage.ToolbarItems>
-        <ToolbarItem Text="Refresh" Command="{Binding RefreshCommand}" />
-    </ContentPage.ToolbarItems>-->
-
     <ContentPage.Content>
 
             <ListView x:Name="AssignmentListView" HasUnevenRows="True" Margin="0" CachingStrategy="RecycleElement"
                       IsPullToRefreshEnabled="True"
-                      RefreshCommand="{Binding RefreshCommand}"
-                      IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                      RefreshCommand="{Binding RefreshOperationCommand}"
+                      IsRefreshing="{Binding IsLoading, Mode=OneWay}"
                       ItemsSource="{Binding Assignments}"
                       ItemTemplate="{StaticResource AssignmentsListDataTemplateSelector}"
                       ItemSelected="AssignmentListView_OnItemSelected" />

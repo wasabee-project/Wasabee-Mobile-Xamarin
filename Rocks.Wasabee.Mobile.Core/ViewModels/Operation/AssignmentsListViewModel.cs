@@ -1,4 +1,5 @@
-﻿using MvvmCross;
+﻿using Acr.UserDialogs;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -26,11 +27,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly IMvxMessenger _messenger;
         private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IMvxNavigationService _navigationService;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly IUserDialogs _userDialogs;
 
         private readonly MvxSubscriptionToken _token;
+        private readonly MvxSubscriptionToken _tokenFromMap;
+        private readonly MvxSubscriptionToken _tokenRefresh;
 
-        public AssignmentsListViewModel(OperationsDatabase operationsDatabase, IPreferences preferences, IUserSettingsService userSettingsService,
-            IMvxMessenger messenger, IDialogNavigationService dialogNavigationService, IMvxNavigationService navigationService)
+        public AssignmentsListViewModel(OperationsDatabase operationsDatabase, IPreferences preferences,
+            IUserSettingsService userSettingsService, IMvxMessenger messenger, IDialogNavigationService dialogNavigationService,
+            IMvxNavigationService navigationService, WasabeeApiV1Service wasabeeApiV1Service, IUserDialogs userDialogs)
         {
             _operationsDatabase = operationsDatabase;
             _preferences = preferences;
@@ -38,8 +44,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _messenger = messenger;
             _dialogNavigationService = dialogNavigationService;
             _navigationService = navigationService;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
+            _userDialogs = userDialogs;
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenFromMap = messenger.Subscribe<MessageFor<AssignmentsListViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenRefresh = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
         }
 
         public override async Task Initialize()
@@ -50,6 +60,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         }
 
         #region Properties
+
+        public bool IsLoading { get; set; }
 
         public OperationModel? Operation { get; set; }
 
@@ -62,10 +74,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand RefreshCommand => new MvxAsyncCommand(RefreshExecuted);
         private async Task RefreshExecuted()
         {
-            if (IsBusy)
+            if (IsLoading)
                 return;
 
-            IsBusy = true;
+            IsLoading = true;
 
             LoggingService.Trace("Executing AssignmentsListViewModel.RefreshCommand");
 
@@ -122,7 +134,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             {
                 await RaisePropertyChanged(() => Assignments);
 
-                IsBusy = false;
+                IsLoading = false;
             }
         }
 
