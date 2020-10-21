@@ -35,11 +35,11 @@
                             <Label Text="{Binding ToPortalName}" FontSize="16" />
                         </StackLayout>
 
-                        <!--IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}"-->
                         <pancakeView:PancakeView
                             Grid.Column="1" Grid.Row="2"
                             BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="5"
-                            CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
+                            CornerRadius="0, 4, 4, 4" HorizontalOptions="Start"
+                            IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}">
                             <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
                                 <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
                                 <Label Text="{Binding Link.Description}" FontAttributes="Italic" FontSize="14" TextColor="Black" />
@@ -57,7 +57,6 @@
                             <ColumnDefinition Width="50"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Column="0" Margin="0,0,10,0"
@@ -65,7 +64,7 @@
                                Text="{Binding Marker.Order, StringFormat='{0}.'}" FontSize="16" />
 
                         <ffimageloadingsvg:SvgCachedImage Grid.Column="1"
-                                                          HeightRequest="50" Margin="0, 0, 10, 0"
+                                                          HeightRequest="50" Margin="5, 0"
                                                           Source="{Binding Marker, Converter={StaticResource MarkerDataToSvgFilenameConverter}}"/>
 
                         <StackLayout Grid.Column="2" Spacing="0" Margin="10, 0, 0, 0" Padding="0">
@@ -81,10 +80,6 @@
                                 </StackLayout>
                             </pancakeView:PancakeView>
                         </StackLayout>
-
-                        <iconize:IconButton Grid.Column="3" Text="mdi-map-marker" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
-                                            FontSize="24" HorizontalOptions="Start" VerticalOptions="Start" Command="{Binding ShowMarkerCommand}"/>
-
                     </Grid>
                 </ViewCell>
             </DataTemplate>
@@ -97,7 +92,7 @@
 
             <ListView x:Name="AssignmentListView" HasUnevenRows="True" Margin="0" CachingStrategy="RecycleElement"
                       IsPullToRefreshEnabled="True"
-                      RefreshCommand="{Binding RefreshOperationCommand}"
+                      RefreshCommand="{Binding RefreshCommand}"
                       IsRefreshing="{Binding IsLoading, Mode=OneWay}"
                       ItemsSource="{Binding Assignments}"
                       ItemTemplate="{StaticResource AssignmentsListDataTemplateSelector}"

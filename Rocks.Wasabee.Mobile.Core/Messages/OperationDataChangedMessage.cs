@@ -5,9 +5,9 @@ namespace Rocks.Wasabee.Mobile.Core.Messages
 {
     public class OperationDataChangedMessage : MvxMessage
     {
-        public OperationModel OperationModel { get; }
+        public OperationModel? OperationModel { get; }
 
-        public OperationDataChangedMessage(object sender, OperationModel operationModel) : base(sender)
+        public OperationDataChangedMessage(object sender, OperationModel? operationModel = null) : base(sender)
         {
             OperationModel = operationModel;
         }

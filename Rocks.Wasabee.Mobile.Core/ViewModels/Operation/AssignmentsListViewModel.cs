@@ -143,6 +143,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             if (data is LinkAssignmentData linkAssignmentData)
                 await _dialogNavigationService.Navigate<LinkAssignmentDialogViewModel, LinkAssignmentData>(linkAssignmentData);
+            else if (data is MarkerAssignmentData markerAssignmentData)
+                await _dialogNavigationService.Navigate<MarkerAssignmentDialogViewModel, MarkerAssignmentData>(markerAssignmentData);
         }
 
         #endregion
