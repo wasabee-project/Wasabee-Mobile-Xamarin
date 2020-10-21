@@ -16,7 +16,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void AssignmentListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (e.SelectedItem is LinkAssignmentData data)
+            if (e.SelectedItem is AssignmentData data)
                 ViewModel.SelectAssignmentCommand.ExecuteAsync(data);
 
             AssignmentListView.SelectedItem = null;

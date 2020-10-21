@@ -40,6 +40,15 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Get("/draw/{opId}/marker/{markerId}")]
         Task<ApiResponse<MarkerModel>> Operations_GetMarker(string opId, string markerId);
 
+        [Get("/draw/{opId}/marker/{markerId}/acknowledge")]
+        Task<ApiResponse<string>> Operation_Marker_Acknowledge(string opId, string markerId);
+
+        [Get("/draw/{opId}/marker/{markerId}/incomplete")]
+        Task<ApiResponse<string>> Operation_Marker_Incomplete(string opId, string markerId);
+
+        [Get("/draw/{opId}/marker/{markerId}/complete")]
+        Task<ApiResponse<string>> Operation_Marker_Complete(string opId, string markerId);
+
         [Get("/draw/{opId}/link/{linkId}/complete")]
         Task<ApiResponse<string>> Operation_Link_Complete(string opId, string linkId);
 
@@ -110,6 +119,24 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operations_GetMarker(opId, markerId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode ? result.Content : null;
+        }
+
+        public async Task<bool> Operation_Marker_Acknowledge(string opId, string markerId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Acknowledge(opId, markerId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        public async Task<bool> Operation_Marker_Incomplete(string opId, string markerId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Incomplete(opId, markerId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        public async Task<bool> Operation_Marker_Complete(string opId, string markerId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Complete(opId, markerId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
         public async Task<bool> Operation_Link_Complete(string opId, string linkId)
