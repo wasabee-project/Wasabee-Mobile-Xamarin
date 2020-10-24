@@ -7,9 +7,14 @@ using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 {
-    public class BaseDialogPage : PopupPage, IMvxPage
+    public abstract class BaseDialogPage : PopupPage, IMvxPage
     {
         public static readonly BindableProperty ViewModelProperty = BindableProperty.Create(nameof(ViewModel), typeof(IMvxViewModel), typeof(IMvxElement), default(MvxViewModel), BindingMode.Default, null, ViewModelChanged, null, null);
+
+        protected BaseDialogPage() : base()
+        {
+            CloseWhenBackgroundIsClicked = false;
+        }
 
         internal static void ViewModelChanged(BindableObject bindable, object oldvalue, object newvalue)
         {
@@ -35,10 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 
         public object DataContext
         {
-            get
-            {
-                return BindingContext.DataContext;
-            }
+            get => BindingContext.DataContext;
             set
             {
                 if (value != null && !(_bindingContext != null && ReferenceEquals(DataContext, value)))

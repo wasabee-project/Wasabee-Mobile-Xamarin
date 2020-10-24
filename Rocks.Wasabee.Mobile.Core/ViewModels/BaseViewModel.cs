@@ -6,7 +6,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
-    public abstract class BaseViewModel : MvxViewModel, IMvxViewModel
+    public abstract class BaseViewModel : MvxViewModel
     {
         protected static IGeolocator Geolocator => CrossGeolocator.Current;
         protected static ILoggingService LoggingService => Mvx.IoCProvider.Resolve<ILoggingService>();
@@ -28,10 +28,5 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
 
         #endregion
-    }
-
-    public abstract class BaseDialogViewModel : BaseViewModel, IMvxViewModel
-    {
-
     }
 }

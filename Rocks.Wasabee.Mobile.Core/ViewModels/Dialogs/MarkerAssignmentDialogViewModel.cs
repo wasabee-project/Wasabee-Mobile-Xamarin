@@ -21,8 +21,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly MarkersDatabase _markersDatabase;
 
-        public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger,
-            WasabeeApiV1Service wasabeeApiV1Service, MarkersDatabase markersDatabase)
+        public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger, WasabeeApiV1Service wasabeeApiV1Service, MarkersDatabase markersDatabase)
+            : base(dialogNavigationService)
         {
             _dialogNavigationService = dialogNavigationService;
             _messenger = messenger;
@@ -51,7 +51,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public bool CompletedEnabled { get; set; }
         public bool IncompleteEnabled { get; set; }
 
-        public string Goal { get; set; }
+        public string Goal { get; set; } = string.Empty;
 
         public MarkerAssignmentData? MarkerAssignment { get; set; }
         public MarkerModel? Marker { get; set; }
@@ -112,12 +112,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
                 IsBusy = false;
             }
-        }
-
-        public IMvxCommand CloseCommand => new MvxCommand(CloseExecuted);
-        private async void CloseExecuted()
-        {
-            await _dialogNavigationService.Close();
         }
 
         public IMvxCommand<string> ShowOnMapCommand => new MvxCommand<string>(ShowOnMapExecuted);

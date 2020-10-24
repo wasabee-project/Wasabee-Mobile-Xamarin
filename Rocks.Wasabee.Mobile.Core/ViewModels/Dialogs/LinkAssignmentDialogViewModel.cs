@@ -1,4 +1,4 @@
-﻿using MvvmCross;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
@@ -14,35 +14,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 {
     public class LinkAssignmentDialogViewModel : BaseDialogViewModel, IMvxViewModel<LinkAssignmentData>
     {
-        private readonly IDialogNavigationService _dialogNavigationService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, WasabeeApiV1Service wasabeeApiV1Service)
+        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
         {
-            _dialogNavigationService = dialogNavigationService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
         public void Prepare(LinkAssignmentData parameter)
         {
             LinkAssignment = parameter;
-            UpdateButtonText();
         }
 
         #region Properties
 
-        public string ButtonText { get; set; }
+        public string ButtonText { get; set; } = string.Empty;
         public LinkAssignmentData? LinkAssignment { get; set; }
 
         #endregion
 
         #region Commands
-
-        public IMvxCommand CloseCommand => new MvxCommand(CloseExecuted);
-        private async void CloseExecuted()
-        {
-            await _dialogNavigationService.Close();
-        }
 
         public IMvxCommand<string> ShowOnMapCommand => new MvxCommand<string>(ShowOnMapExecuted);
         private void ShowOnMapExecuted(string fromOrToPortal)
