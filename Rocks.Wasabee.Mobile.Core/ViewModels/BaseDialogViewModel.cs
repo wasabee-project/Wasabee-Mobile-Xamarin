@@ -14,9 +14,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         #region Commands
 
-        protected IMvxCommand CloseCommand => new MvxCommand(CloseExecuted, () => !IsBusy);
+        public IMvxCommand CloseCommand => new MvxCommand(CloseExecuted);
         private async void CloseExecuted()
         {
+            if (IsBusy)
+                return;
+
             await DialogNavigationService.Close();
         }
 
