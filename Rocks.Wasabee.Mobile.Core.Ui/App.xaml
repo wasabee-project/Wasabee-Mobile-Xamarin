@@ -11,6 +11,7 @@
         <ResourceDictionary Source="Styles.xaml">
             <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
             <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
+            <converters:AgentVerificationBoolToStringConverter x:Key="AgentVerificationBoolToStringConverter"/>
             <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
             <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
             <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>

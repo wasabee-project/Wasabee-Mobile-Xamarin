@@ -2,12 +2,12 @@
 using Android.Content;
 using AndroidX.Core.App;
 using Firebase.Messaging;
-using MvvmCross;
 using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using System.Linq;
 using System.Threading.Tasks;
+using MvvmCross;
 using Rocks.Wasabee.Mobile.Core.Services;
 #if DEBUG
 using Android.Util;
@@ -22,22 +22,19 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
     {
         const string TAG = "[WASABEE_FCM_SERVICE]";
 
-        private readonly IMvxMessenger _mvxMessenger;
-        private readonly ILoginProvider _loginProvider;
-        private readonly IBackgroundDataUpdaterService _backgroundDataUpdaterService;
+        private IMvxMessenger _mvxMessenger;
+        private ILoginProvider _loginProvider;
+        private IBackgroundDataUpdaterService _backgroundDataUpdaterService;
 
         private int _lastId = 0;
         private MvxSubscriptionToken _mvxToken;
 
         private string _fcmToken = string.Empty;
+        private bool _isInitialized = false;
 
         public WasabeeFcmService()
         {
-            _loginProvider = Mvx.IoCProvider.Resolve<ILoginProvider>();
-            _mvxMessenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
-            _backgroundDataUpdaterService = Mvx.IoCProvider.Resolve<IBackgroundDataUpdaterService>();
 
-            _mvxToken = _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer(_fcmToken));
         }
 
         public override void OnNewToken(string token)
@@ -50,11 +47,31 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
         private async Task SendRegistrationToServer(string token)
         {
+            if (!_isInitialized)
+                Initialize();
+
             await _loginProvider.SendFirebaseTokenAsync(token);
+        }
+
+        private void Initialize()
+        {
+            if (_isInitialized)
+                return;
+
+            _loginProvider = Mvx.IoCProvider.Resolve<ILoginProvider>();
+            _mvxMessenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
+            _backgroundDataUpdaterService = Mvx.IoCProvider.Resolve<IBackgroundDataUpdaterService>();
+
+            _mvxToken = _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer(_fcmToken));
+
+            _isInitialized = true;
         }
 
         public override void OnMessageReceived(RemoteMessage message)
         {
+            if (!_isInitialized)
+                Initialize();
+
 #if DEBUG
             Log.Debug(TAG + " : ", message.ToString());
 #endif
@@ -105,7 +122,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             }
         }
 
-        void SendNotification(string messageBody)
+        private void SendNotification(string messageBody)
         {
             var channels = new[]
             {
