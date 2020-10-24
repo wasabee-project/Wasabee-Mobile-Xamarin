@@ -4,35 +4,60 @@
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:profile="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Profile;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+                       xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Profile.ProfilePage"
                        Title="Profile">
     <ContentPage.Content>
-        <StackLayout>
-            <StackLayout Margin="10">
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Display Name :"/>
-                    <Label Text="{Binding AgentName}" TextColor="{StaticResource PrimaryGreen}" HorizontalOptions="EndAndExpand"/>
-                </StackLayout>
-                <Label Text="This information comes from V and/or .rocks.
-                       If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."
-                       FontAttributes="Italic" Margin="0, 0, 0, 20"/>
-                
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Level :"/>
-                    <Label Text="{Binding Level}" TextColor="{StaticResource PrimaryGreen}" HorizontalOptions="EndAndExpand"/>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <controls:LinkLabel Text="enl.rocks Status :" Clicked="EnlRocksLink_Clicked"/>
-                    <Label Text="{Binding RocksVerified, Converter={StaticResource BoolToStringConverter}}" HorizontalOptions="EndAndExpand"/>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <controls:LinkLabel Text="V Status :" Clicked="ProjectVLink_Clicked"/>
-                    <Label Text="{Binding VVerified, Converter={StaticResource BoolToStringConverter}}" HorizontalOptions="EndAndExpand"/>
-                </StackLayout>
+        <Grid BackgroundColor="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                <Image Source="{Binding Picture}" WidthRequest="200" HorizontalOptions="Center" Margin="0, 50, 0, 0"/>
+            <AbsoluteLayout Grid.Row="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <forms:CachedImage Source="{Binding Picture}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"/>
+            </AbsoluteLayout>
+
+            <StackLayout Grid.Row="1" VerticalOptions="End">
+                <yummy:PancakeView CornerRadius="40,40,0,0" BackgroundColor="White" HeightRequest="200">
+                    <Grid Padding="25,10,25,0" RowSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="5"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="5"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!--<iconize:IconButton Grid.Row="0" Grid.Column="1" HorizontalOptions="End" Text="mdi-telegram"
+                                            TextColor="White" FontSize="24" WidthRequest="48" HeightRequest="48"
+                                            BackgroundColor="{StaticResource PrimaryGreen}"
+                                            CornerRadius="28"/>-->
+
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding AgentName}" FontAttributes="Bold" FontSize="30"/>
+                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding Level, StringFormat='Level : {0}'}" TextColor="#a5a2a2" FontSize="16"/>
+
+                        <controls:LinkLabel Grid.Row="4" Grid.Column="0" Text="enl.rocks" Clicked="EnlRocksLink_Clicked"/>
+                        <Label Grid.Row="5" Grid.Column="0" Text="{Binding RocksVerified, Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
+
+                        <controls:LinkLabel Grid.Row="4" Grid.Column="1" Text="V Status" Clicked="ProjectVLink_Clicked"/>
+                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding VVerified, Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
+
+
+                        <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" FontAttributes="Italic"
+                               Text="This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."/>
+                    </Grid>
+                </yummy:PancakeView>
             </StackLayout>
-
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </views:BaseContentPage>
