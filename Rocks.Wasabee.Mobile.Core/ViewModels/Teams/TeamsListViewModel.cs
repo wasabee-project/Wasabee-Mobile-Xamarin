@@ -102,7 +102,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                     team.IsEnabled = !team.IsEnabled;
                     _userDialogs.Toast($"Location sharing state changed for team {team.Name}", TimeSpan.FromSeconds(3));
 
-                    var updatedTeam = await _wasabeeApiV1Service.GetTeam(team.Id);
+                    var updatedTeam = await _wasabeeApiV1Service.Teams_GetTeam(team.Id);
                     if (updatedTeam != null)
                     {
                         await _teamsDatabase.SaveTeamModel(updatedTeam);

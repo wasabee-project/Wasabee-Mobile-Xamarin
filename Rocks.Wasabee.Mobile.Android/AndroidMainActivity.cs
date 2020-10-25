@@ -58,6 +58,7 @@ namespace Rocks.Wasabee.Mobile.Droid
             else
             {
                 Rg.Plugins.Popup.Popup.Init(this, bundle);
+                ZXing.Net.Mobile.Forms.Android.Platform.Init();
 
                 Xamarin.Forms.Forms.Init(this, bundle);
                 Xamarin.Essentials.Platform.Init(this, bundle);

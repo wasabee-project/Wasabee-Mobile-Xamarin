@@ -172,6 +172,12 @@
     <PackageReference Include="Xamarin.GooglePlayServices.Maps">
       <Version>71.1610.4</Version>
     </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile">
+      <Version>2.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidMainActivity.cs" />
