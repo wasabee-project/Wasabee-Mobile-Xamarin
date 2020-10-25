@@ -37,6 +37,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Teams
         [JsonProperty("pic")]
         public string Pic { get; set; }
 
+        [JsonProperty("rocks")]
+        public bool RocksVerified { get; set; }
+
         [JsonProperty("Vverified")]
         public bool Vverified { get; set; }
 
@@ -57,6 +60,12 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Teams
 
         [JsonProperty("date")]
         public string Date { get; set; }
+
+        [JsonProperty("ShareWD")]
+        public bool ShareWD { get; set; }
+
+        [JsonProperty("LoadWD")]
+        public bool LoadWD { get; set; }
     }
 #nullable enable
 }

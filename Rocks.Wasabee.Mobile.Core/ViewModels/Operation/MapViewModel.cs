@@ -369,7 +369,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id);
                 foreach (var teamId in userTeamsIds)
                 {
-                    var updatedData = await _wasabeeApiV1Service.GetTeam(teamId);
+                    var updatedData = await _wasabeeApiV1Service.Teams_GetTeam(teamId);
                     if (updatedData == null)
                         continue;
 

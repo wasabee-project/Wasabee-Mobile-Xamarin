@@ -19,6 +19,7 @@ namespace Rocks.Wasabee.Mobile.iOS
         {
             Xamarin.Forms.Forms.Init();
             Xamarin.FormsGoogleMaps.Init("", new PlatformConfig() { });
+            ZXing.Net.Mobile.Forms.iOS.Platform.Init();
 
             LoadApplication(new App());
 

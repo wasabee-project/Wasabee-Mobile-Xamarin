@@ -451,7 +451,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 foreach (var id in teamIds)
                 {
-                    var team = await _wasabeeApiV1Service.GetTeam(id);
+                    var team = await _wasabeeApiV1Service.Teams_GetTeam(id);
                     if (team != null)
                         await _teamsDatabase.SaveTeamModel(team);
                 }

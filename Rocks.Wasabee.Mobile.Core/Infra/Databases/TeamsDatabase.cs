@@ -50,7 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return 0;
         }
 
-        public async Task<TeamModel> GetTeam(string teamId)
+        public async Task<TeamModel?> GetTeam(string teamId)
         {
             LoggingService.Trace("Querying TeamsDatabase.GetTeam");
 
@@ -61,7 +61,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             return teamDatabaseModel != null ?
                 TeamDatabaseModel.ToTeamModel(teamDatabaseModel) :
-                new TeamModel();
+                null;
         }
 
         public async Task<List<TeamModel>> GetTeams(string userId)

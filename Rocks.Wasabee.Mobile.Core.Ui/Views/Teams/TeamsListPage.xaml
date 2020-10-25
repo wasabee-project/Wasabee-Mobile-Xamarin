@@ -3,45 +3,49 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:teams="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Teams;assembly=Rocks.Wasabee.Mobile.Core"
-                       xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamsListPage"
                        Title="Teams">
     <ContentPage.Content>
         <StackLayout>
             <ListView
-                SelectionMode="None"
+                x:Name="TeamsList"
                 ItemsSource="{Binding TeamsCollection}"
                 HasUnevenRows="True"
                 IsPullToRefreshEnabled="True"
                 RefreshCommand="{Binding RefreshCommand}"
                 IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
-                RefreshControlColor="{StaticResource PrimaryGreenDark}">
+                RefreshControlColor="{StaticResource PrimaryGreenDark}"
+                ItemSelected="TeamsList_OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <mvx:MvxViewCell>
-                            <StackLayout Margin="10" Spacing="0" Orientation="Horizontal">
-                                <StackLayout Spacing="0" Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                                    <Label Text="{Binding Name}"/>
-                                </StackLayout>
+                        <ViewCell>
+                            <Grid Margin="10" ColumnSpacing="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                                <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="Center">
-                                    <iconize:IconButton Text="{Binding IsEnabled, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
-                                                        TextColor="{Binding IsEnabled, Converter={StaticResource BoolToColorConverter}}"
-                                                        BackgroundColor="Transparent"
-                                                        Command="{Binding Parent.SwitchTeamStateCommand}"
-                                                        CommandParameter="{Binding .}"
-                                                        FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
-                                                        BorderColor="{StaticResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center"/>
+                                
+                                <iconize:IconButton Grid.Column="1"
+                                                    Text="{Binding IsEnabled, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
+                                                    TextColor="{Binding IsEnabled, Converter={StaticResource BoolToColorConverter}}"
+                                                    BackgroundColor="Transparent"
+                                                    Command="{Binding Parent.SwitchTeamStateCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
+                                                    BorderColor="{StaticResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
 
-                                    <iconize:IconButton Text="mdi-arrow-right" TextColor="{StaticResource PrimaryGray}"
-                                                        Command="{Binding Parent.ShowTeamDetailCommand}"
-                                                        CommandParameter="{Binding .}"
-                                                        BackgroundColor="Transparent"
-                                                        FontSize="20" WidthRequest="40"  />
-                                </StackLayout>
-                            </StackLayout>
-                        </mvx:MvxViewCell>
+                                <iconize:IconButton Grid.Column="2"
+                                                    Text="mdi-arrow-right"
+                                                    Command="{Binding Parent.ShowTeamDetailCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="Transparent"
+                                                    FontSize="20" WidthRequest="40"  />
+                            </Grid>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
