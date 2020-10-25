@@ -6,26 +6,29 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TeamModel = Rocks.Wasabee.Mobile.Core.Models.Teams.TeamModel;
 
 namespace Rocks.Wasabee.Mobile.Core.Services
 {
     [Headers("Accept: application/json")]
     public interface IWasabeeApiV1
     {
-        [Get("/team/{teamId}")]
-        Task<ApiResponse<TeamModel>> GetTeam(string teamId);
-
         #region User
 
         [Get("/me?json=y")]
         Task<ApiResponse<UserModel>> User_GetUserInformations();
 
         [Get("/me/{teamId}?state={state}")]
-        Task<string> User_ChangeTeamState(string teamId, string state);
+        Task<ApiResponse<string>> User_ChangeTeamState(string teamId, string state);
 
         [Get("/me?lat={lat}&lon={lon}")]
         Task<ApiResponse<string>> User_UpdateLocation(string lat, string lon);
+
+        #endregion
+
+        #region Teams
+
+        [Get("/team/{teamId}")]
+        Task<ApiResponse<Models.Teams.TeamModel>> Teams_GetTeam(string teamId);
 
         #endregion
 
@@ -71,12 +74,6 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             _appSettings = appSettings;
         }
 
-        public async Task<TeamModel?> GetTeam(string teamId)
-        {
-            var result = await AttemptAndRetry(() => WasabeeApiClient.GetTeam(teamId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode ? result.Content : null;
-        }
-
         #region User
 
         public async Task<UserModel?> User_GetUserInformations()
@@ -85,10 +82,13 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             return result.IsSuccessStatusCode ? result.Content : null;
         }
 
-        public async Task<string> User_ChangeTeamState(string teamId, string state)
+        public async Task<bool> User_ChangeTeamState(string teamId, string state)
         {
             if (state.Equals("On") || state.Equals("Off"))
-                return await AttemptAndRetry(() => WasabeeApiClient.User_ChangeTeamState(teamId, state), new CancellationToken()).ConfigureAwait(false);
+            {
+                var result = await AttemptAndRetry(() => WasabeeApiClient.User_ChangeTeamState(teamId, state), new CancellationToken()).ConfigureAwait(false);
+                return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+            }
 
             throw new ArgumentException($"{nameof(state)} '{state}' is not a valid parameter");
         }
@@ -97,6 +97,16 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.User_UpdateLocation(lat, lon), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        #endregion
+
+        #region Teams
+
+        public async Task<Models.Teams.TeamModel?> Teams_GetTeam(string teamId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_GetTeam(teamId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : null;
         }
 
         #endregion

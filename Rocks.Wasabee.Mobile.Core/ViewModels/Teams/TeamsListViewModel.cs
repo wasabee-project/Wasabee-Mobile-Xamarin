@@ -1,11 +1,11 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,15 +15,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
     {
         private readonly IUserDialogs _userDialogs;
         private readonly IUserSettingsService _userSettingsService;
+        private readonly IMvxNavigationService _navigationService;
         private readonly UsersDatabase _usersDatabase;
+        private readonly TeamsDatabase _teamsDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        public TeamsListViewModel(IUserDialogs userDialogs, IUserSettingsService userSettingsService,
-            UsersDatabase usersDatabase, WasabeeApiV1Service wasabeeApiV1Service)
+        public TeamsListViewModel(IUserDialogs userDialogs, IUserSettingsService userSettingsService, IMvxNavigationService navigationService,
+            UsersDatabase usersDatabase, TeamsDatabase teamsDatabase, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _userDialogs = userDialogs;
             _userSettingsService = userSettingsService;
+            _navigationService = navigationService;
             _usersDatabase = usersDatabase;
+            _teamsDatabase = teamsDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
@@ -72,7 +76,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                LoggingService.Error(e, "Error Executing TeamsListViewModel.RefreshCommand");
             }
             finally
             {
@@ -83,7 +87,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxAsyncCommand<Team> SwitchTeamStateCommand => new MvxAsyncCommand<Team>(SwitchTeamStateExecuted);
         private async Task SwitchTeamStateExecuted(Team team)
         {
-            LoggingService.Trace($"Executing TeamsListViewModel.SwitchTeamStateCommand({team})");
+            LoggingService.Trace("Executing TeamsListViewModel.SwitchTeamStateCommand");
 
             if (IsBusy)
                 return;
@@ -93,15 +97,21 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             try
             {
                 var result = await _wasabeeApiV1Service.User_ChangeTeamState(team.Id, team.IsEnabled ? "Off" : "On");
-                if (result.Contains("ok"))
+                if (result)
                 {
                     team.IsEnabled = !team.IsEnabled;
-                    _userDialogs.Toast($"State changed for team {team.Name}", TimeSpan.FromSeconds(3));
+                    _userDialogs.Toast($"Location sharing state changed for team {team.Name}", TimeSpan.FromSeconds(3));
+
+                    var updatedTeam = await _wasabeeApiV1Service.GetTeam(team.Id);
+                    if (updatedTeam != null)
+                    {
+                        await _teamsDatabase.SaveTeamModel(updatedTeam);
+                    }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LoggingService.Error(e, "Error Executing TeamsListViewModel.SwitchTeamStateCommand");
             }
             finally
             {
@@ -112,11 +122,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxAsyncCommand<Team> ShowTeamDetailCommand => new MvxAsyncCommand<Team>(ShowTeamDetailExecuted);
         private async Task ShowTeamDetailExecuted(Team team)
         {
-            LoggingService.Trace($"Executing TeamsListViewModel.ShowTeamDetailCommand({team})");
+            LoggingService.Trace("Executing TeamsListViewModel.ShowTeamDetailCommand");
 
-            _userDialogs.Toast("Not implemented yet");
-
-            await Task.CompletedTask;
+            await _navigationService.Navigate<TeamDetailsViewModel, TeamDetailsNavigationParameter>(
+                new TeamDetailsNavigationParameter(team.Id, team.IsOwner));
         }
 
         #endregion
