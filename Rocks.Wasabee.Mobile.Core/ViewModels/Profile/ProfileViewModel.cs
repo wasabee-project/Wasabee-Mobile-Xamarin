@@ -57,6 +57,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             if (userModel != null)
             {
                 User = userModel;
+                QrCodeValue = userModel.GoogleId;
             }
             else
             {
@@ -71,6 +72,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
         public UserModel? User { get; set; }
         public bool IsSelfProfile { get; set; } = true;
+        public bool IsQrCodeVisible { get; set; }
+        public string QrCodeValue { get; set; }
 
         #endregion
 
@@ -130,6 +133,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             {
                 IsBusy = false;
             }
+        }
+
+        public IMvxCommand ShowQrCodeCommand => new MvxCommand(ShowQrCodeExecuted);
+        private void ShowQrCodeExecuted()
+        {
+            IsQrCodeVisible = !IsQrCodeVisible;
         }
 
         #endregion
