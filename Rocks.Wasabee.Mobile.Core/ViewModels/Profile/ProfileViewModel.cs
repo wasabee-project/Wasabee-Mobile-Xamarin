@@ -1,8 +1,12 @@
 ﻿using Microsoft.AppCenter.Analytics;
+using MvvmCross.Commands;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using System;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 {
@@ -41,8 +45,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
             if (_parameter != null)
             {
+                IsSelfProfile = false;
+
                 // TODO
-                AgentName = "NEED API CALL";
+                User = new UserModel { IngressName = "NEED API CALL" };
                 return;
             }
 
@@ -50,25 +56,82 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             var userModel = await _usersDatabase.GetUserModel(googleId);
             if (userModel != null)
             {
-                AgentName = userModel.IngressName;
-                Level = userModel.Level;
-                RocksVerified = userModel.RocksVerified;
-                VVerified = userModel.VVerified;
-                Picture = userModel.ProfileImage;
+                User = userModel;
             }
             else
             {
                 // TODO : API call
-                AgentName = "ERROR";
+                User = new UserModel { IngressName = "ERROR" };
             }
 
             await base.Initialize();
         }
 
-        public string AgentName { get; set; } = string.Empty;
-        public int Level { get; set; } = -1;
-        public bool RocksVerified { get; set; } = false;
-        public bool VVerified { get; set; } = false;
-        public string Picture { get; set; } = string.Empty;
+        #region Properties
+
+        public UserModel? User { get; set; }
+        public bool IsSelfProfile { get; set; } = true;
+
+        #endregion
+
+        #region Commands
+
+        public IMvxAsyncCommand OpenRocksProfileCommand => new MvxAsyncCommand(OpenRocksProfileExecuted);
+        private async Task OpenRocksProfileExecuted()
+        {
+            if (IsBusy || User == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(User.GoogleId))
+                return;
+
+            LoggingService.Trace("Executing ProfileViewModel.OpenRocksProfileCommand");
+
+            try
+            {
+                IsBusy = true;
+
+                var link = $"https://enlightened.rocks/u/{User.GoogleId}";
+                await Launcher.OpenAsync(new Uri(link));
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing ProfileViewModel.OpenRocksProfileCommand");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public IMvxAsyncCommand OpenVProfileCommand => new MvxAsyncCommand(OpenVProfileExecuted);
+        private async Task OpenVProfileExecuted()
+        {
+            if (IsBusy || User == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(User.GoogleId))
+                return;
+
+            LoggingService.Trace("Executing ProfileViewModel.OpenVProfileCommand");
+
+            try
+            {
+                IsBusy = true;
+
+                var link = $"https://v.enl.one/profile/{User.Vid}";
+                await Launcher.OpenAsync(new Uri(link));
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing ProfileViewModel.OpenVProfileCommand");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        #endregion
     }
 }

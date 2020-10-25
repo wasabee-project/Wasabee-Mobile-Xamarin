@@ -24,5 +24,15 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Profile
         {
             Launcher.OpenAsync(new Uri("https://v.enl.one"));
         }
+
+        private void EnlRocksCell_Tapped(object sender, EventArgs e)
+        {
+            ViewModel.OpenRocksProfileCommand.Execute();
+        }
+
+        private void ProjectVCell_Tapped(object sender, EventArgs e)
+        {
+            ViewModel.OpenVProfileCommand.Execute();
+        }
     }
 }
