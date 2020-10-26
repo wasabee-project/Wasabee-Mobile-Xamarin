@@ -122,7 +122,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             {
                 IsBusy = true;
 
-                var link = $"https://v.enl.one/profile/{User.Vid}";
+                var link = $"https://v.enl.one/profile/{User.EnlId}";
                 await Launcher.OpenAsync(new Uri(link));
             }
             catch (Exception e)
