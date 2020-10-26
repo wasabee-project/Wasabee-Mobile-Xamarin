@@ -79,35 +79,27 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [PrimaryKey, Unique]
             public string GoogleId { get; set; }
 
-            public string IngressName { get; set; }
+            public string EnlId { get; set; }
 
-            public string ProfileImage { get; set; }
+            public string IngressName { get; set; }
 
             public int Level { get; set; }
 
             public string LocationKey { get; set; }
 
-            public string OwnTracksPw { get; set; }
+            public bool RocksVerified { get; set; }
 
             public bool VVerified { get; set; }
 
-            public bool VBlacklisted { get; set; }
+            public bool Blacklisted { get; set; }
 
-            public string Vid { get; set; }
-
-            public string OwnTracksJson { get; set; }
-
-            public bool RocksVerified { get; set; }
+            public string ProfileImage { get; set; }
 
             public bool Raid { get; set; }
 
             public bool Risc { get; set; }
 
             public string Telegram { get; set; }
-
-            public string OwnedTeamsBlobbed { get; set; }
-            [TextBlob("OwnedTeamsBlobbed")]
-            public List<UserTeamModel> OwnedTeams { get; set; }
 
             public string TeamsBlobbed { get; set; }
             [TextBlob("TeamsBlobbed")]
@@ -128,20 +120,17 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     return new UserModel()
                     {
                         GoogleId = userDatabaseModel.GoogleId,
+                        EnlId = userDatabaseModel.EnlId,
                         IngressName = userDatabaseModel.IngressName,
-                        ProfileImage = userDatabaseModel.ProfileImage,
                         Level = userDatabaseModel.Level,
                         LocationKey = userDatabaseModel.LocationKey,
-                        OwnTracksPw = userDatabaseModel.OwnTracksPw,
-                        VVerified = userDatabaseModel.VVerified,
-                        VBlacklisted = userDatabaseModel.VBlacklisted,
-                        Vid = userDatabaseModel.Vid,
-                        OwnTracksJson = userDatabaseModel.OwnTracksJson,
                         RocksVerified = userDatabaseModel.RocksVerified,
+                        VVerified = userDatabaseModel.VVerified,
+                        Blacklisted = userDatabaseModel.Blacklisted,
+                        ProfileImage = userDatabaseModel.ProfileImage,
                         Raid = userDatabaseModel.Raid,
                         Risc = userDatabaseModel.Risc,
                         Telegram = string.IsNullOrWhiteSpace(userDatabaseModel.Telegram) ? new TelegramModel() : JsonConvert.DeserializeObject<TelegramModel>(userDatabaseModel.Telegram),
-                        OwnedTeams = userDatabaseModel.OwnedTeams ?? new List<UserTeamModel>(),
                         Teams = userDatabaseModel.Teams ?? new List<UserTeamModel>(),
                         Ops = userDatabaseModel.Ops ?? new List<OpModel>(),
                         Assignments = userDatabaseModel.Assignments ?? new List<AssignmentModel>()
@@ -159,20 +148,17 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 return new UserDatabaseModel()
                 {
                     GoogleId = userModel.GoogleId,
+                    EnlId = userModel.EnlId,
                     IngressName = userModel.IngressName,
-                    ProfileImage = userModel.ProfileImage,
                     Level = userModel.Level,
                     LocationKey = userModel.LocationKey,
-                    OwnTracksPw = userModel.OwnTracksPw,
-                    VVerified = userModel.VVerified,
-                    VBlacklisted = userModel.VBlacklisted,
-                    Vid = userModel.Vid,
-                    OwnTracksJson = userModel.OwnTracksJson,
                     RocksVerified = userModel.RocksVerified,
+                    VVerified = userModel.VVerified,
+                    Blacklisted = userModel.Blacklisted,
+                    ProfileImage = userModel.ProfileImage,
                     Raid = userModel.Raid,
                     Risc = userModel.Risc,
                     Telegram = userModel.Telegram != null ? JsonConvert.SerializeObject(userModel.Telegram) : string.Empty,
-                    OwnedTeams = userModel.OwnedTeams ?? new List<UserTeamModel>(),
                     Teams = userModel.Teams ?? new List<UserTeamModel>(),
                     Ops = userModel.Ops ?? new List<OpModel>(),
                     Assignments = userModel.Assignments ?? new List<AssignmentModel>()
