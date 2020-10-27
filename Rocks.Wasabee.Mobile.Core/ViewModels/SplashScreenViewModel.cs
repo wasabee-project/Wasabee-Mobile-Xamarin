@@ -1,10 +1,10 @@
 ﻿using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
-using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
@@ -198,6 +198,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _googleToken = await _authentificationService.GoogleLoginAsync();
             if (_googleToken != null)
             {
+                await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, JsonConvert.SerializeObject(_googleToken));
+
                 LoadingStepLabel = "Google login success...";
                 await Task.Delay(TimeSpan.FromMilliseconds(300));
 
@@ -311,14 +313,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task ConnectWasabee()
         {
+            if (_googleToken == null)
+            {
+                ErrorMessage = "Internal error";
+                IsAuthInError = true;
+                IsLoginVisible = true;
+                IsLoading = false;
+                return;
+            }
+
             IsLoading = true;
             LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
             await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken!);
+            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken);
             if (wasabeeUserModel != null)
             {
-                Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new UserLoggedInMessage(this));
+                _messenger.Publish(new UserLoggedInMessage(this));
 
                 if (RememberServerChoice)
                 {
@@ -344,6 +355,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task BypassGoogleAndWasabeeLogin()
         {
+            var cookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
+            if (string.IsNullOrWhiteSpace(cookie))
+            {
+                IsLoginVisible = true;
+                IsLoading = false;
+
+                RememberServerChoice = false;
+                SelectedServerItem = ServerItem.Undefined;
+
+                return;
+            }
+
             _isBypassingGoogleAndWasabeeLogin = true;
 
             var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
@@ -371,6 +394,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 try
                 {
+                    await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, string.Empty);
+
                     var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
                     if (userModel != null)
                     {
@@ -380,22 +405,58 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     else
                         throw new NullReferenceException("SplashScreenViewModel.BypassGoogleAndWasabeeLogin() => _wasabeeApiV1Service.User_GetUserInformations() result is null");
                 }
-                catch (Exception e)
+                catch
                 {
-                    LoggingService.Error(e, "Error Executing SplashScreenViewModel.BypassGoogleAndWasabeeLogin");
+                    // Auto login failed (expired cookie ?)
+                    // force relogin using saved googleToken if exist. If google token is expired, it will refresh it
+                    try
+                    {
+                        var rawGoogleToken = await _secureStorage.GetAsync(SecureStorageConstants.GoogleToken);
+                        if (!string.IsNullOrWhiteSpace(rawGoogleToken))
+                        {
+                            var googleToken = JsonConvert.DeserializeObject<GoogleToken>(rawGoogleToken);
+                            if (googleToken.CreatedAt.AddSeconds(double.Parse(googleToken.ExpiresIn)) <= DateTime.Now)
+                            {
+                                var refreshedToken = await _authentificationService.RefreshTokenAsync(googleToken.RefreshToken);
+                                if (refreshedToken != null)
+                                {
+                                    _googleToken = new GoogleToken()
+                                    {
+                                        AccessToken = refreshedToken.AccessToken,
+                                        ExpiresIn = refreshedToken.ExpiresIn,
+                                        Idtoken = refreshedToken.Idtoken,
+                                        Scope = refreshedToken.Scope,
+                                        TokenType = refreshedToken.Scope,
+                                        RefreshToken = googleToken.RefreshToken
+                                    };
 
-                    ErrorMessage = "Wasabee login failed !";
-                    IsAuthInError = true;
-                    IsLoading = false;
+                                    await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, JsonConvert.SerializeObject(_googleToken));
+                                    await ConnectWasabee();
+                                }
+                            }
+                            else
+                                await ConnectWasabee();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        LoggingService.Error(e, "Error Executing SplashScreenViewModel.BypassGoogleAndWasabeeLogin");
 
-                    RememberServerChoice = false;
+                        
+                        ErrorMessage = "Wasabee login failed !";
+                        IsAuthInError = true;
+                        IsLoading = false;
 
-                    await Task.Delay(TimeSpan.FromMilliseconds(300));
+                        RememberServerChoice = false;
+                        SelectedServerItem = ServerItem.Undefined;
 
-                    _isBypassingGoogleAndWasabeeLogin = false;
-                    _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
+                        await Task.Delay(TimeSpan.FromMilliseconds(300));
 
-                    await ChangeAccountCommand.ExecuteAsync();
+                        _isBypassingGoogleAndWasabeeLogin = false;
+                        _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
+
+                        await ChangeAccountCommand.ExecuteAsync();
+                    }
                 }
             }
         }
@@ -415,10 +476,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 else
                 {
-                    await PullDataFromServer(userModel);
+                    await PullDataFromServer(userModel).ContinueWith(async task =>
+                    {
+                        await _navigationService.Navigate<RootViewModel>();
+                        await _navigationService.Close(this);
+                    });
 
-                    await _navigationService.Navigate<RootViewModel>();
-                    await _navigationService.Close(this);
                 }
             }
             catch (Exception e)

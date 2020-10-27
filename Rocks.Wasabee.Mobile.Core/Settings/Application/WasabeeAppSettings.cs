@@ -35,7 +35,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
         {
             var server = Server switch
             {
-                WasabeeServer.US => "server",
+                WasabeeServer.US => "am",
                 WasabeeServer.EU => "eu",
                 WasabeeServer.APAC => "ap",
                 WasabeeServer.Undefined => string.Empty,

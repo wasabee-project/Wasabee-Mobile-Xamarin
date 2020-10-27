@@ -10,7 +10,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         Task<UserModel?> DoWasabeeLoginAsync(GoogleToken googleToken);
         Task RemoveTokenFromSecureStore();
         void ClearCookie();
-        Task RefreshTokenAsync();
+        Task<GoogleToken?> RefreshTokenAsync(string refreshToken);
         Task SendFirebaseTokenAsync(string token);
     }
 }

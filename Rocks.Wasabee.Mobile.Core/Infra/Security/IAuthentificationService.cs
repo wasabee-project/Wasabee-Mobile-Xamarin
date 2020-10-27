@@ -9,6 +9,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         Task<GoogleToken?> GoogleLoginAsync();
         Task<UserModel?> WasabeeLoginAsync(GoogleToken googleToken);
         Task LogoutAsync();
-        Task RefreshTokenAsync();
+        Task<GoogleToken?> RefreshTokenAsync(string refreshToken);
     }
 }
