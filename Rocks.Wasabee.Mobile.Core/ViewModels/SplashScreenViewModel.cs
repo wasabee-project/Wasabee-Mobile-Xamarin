@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -394,8 +394,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 try
                 {
-                    await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, string.Empty);
-
                     var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
                     if (userModel != null)
                     {
