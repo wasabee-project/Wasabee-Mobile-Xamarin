@@ -14,7 +14,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
     {
         #region User
 
-        [Get("/me?json=y")]
+        [Get("/me")]
         Task<ApiResponse<UserModel>> User_GetUserInformations();
 
         [Get("/me/{teamId}?state={state}")]

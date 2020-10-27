@@ -3,5 +3,6 @@
     public static class SecureStorageConstants
     {
         public static string WasabeeCookie => "WASABEE_COOKIE";
+        public static string GoogleToken => "GOOGLE_TOKEN";
     }
 }

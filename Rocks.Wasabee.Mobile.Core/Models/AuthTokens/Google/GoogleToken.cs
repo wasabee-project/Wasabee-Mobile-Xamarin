@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google
 {
@@ -22,6 +23,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google
 
         [JsonProperty("id_token")]
         public string Idtoken { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
     }
 #nullable enable
 }

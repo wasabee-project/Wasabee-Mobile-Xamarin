@@ -198,12 +198,36 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
         }
 
-        public Task RefreshTokenAsync()
+        public async Task<GoogleToken?> RefreshTokenAsync(string refreshToken)
         {
             _loggingService.Trace("Executing LoginProvider.RefreshTokenAsync");
 
-            // TODO
-            return Task.CompletedTask;
+            using var client = new HttpClient();
+            var parameters = new Dictionary<string, string> {
+                { "refresh_token", refreshToken },
+                { "client_id", _appSettings.ClientId },
+                { "grant_type", "refresh_token"}
+
+            };
+
+            HttpResponseMessage response;
+            var encodedContent = new FormUrlEncodedContent(parameters);
+            try
+            {
+                response = await client.PostAsync(_appSettings.GoogleTokenUrl, encodedContent).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                _loggingService.Error(e, "Error Executing LoginProvider.RefreshTokenAsync");
+
+                return null;
+            }
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var googleToken = JsonConvert.DeserializeObject<GoogleToken>(responseContent);
+
+            return googleToken;
         }
     }
 }

@@ -44,11 +44,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             await ClearUserTokenAndCookie(_loginProvider);
         }
 
-        public async Task RefreshTokenAsync()
+        public async Task<GoogleToken?> RefreshTokenAsync(string refreshToken)
         {
             _loggingService.Trace("Executing AuthentificationService.RefreshTokenAsync");
 
-            await _loginProvider.RefreshTokenAsync();
+            return await _loginProvider.RefreshTokenAsync(refreshToken);
         }
 
         private async Task ClearUserTokenAndCookie(ILoginProvider loginProvider)
