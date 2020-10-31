@@ -96,7 +96,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             AppEnvironnement = _preferences.Get(ApplicationSettingsConstants.AppEnvironnement, "unknown_env");
             var appVersion = _versionTracking.CurrentVersion;
-            DisplayVersion = AppEnvironnement != "release" ? $"{AppEnvironnement} - v{appVersion}" : $"v{appVersion}";
+            DisplayVersion = AppEnvironnement != "unknown_env" ? $"{AppEnvironnement} - v{appVersion}" : $"v{appVersion}";
         }
 
         public override Task Initialize()

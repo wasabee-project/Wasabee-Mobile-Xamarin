@@ -199,7 +199,7 @@ You don't have any assigned team or operation, contact your Operator before usin
                     VerticalTextAlignment="Center"
                     VerticalOptions="CenterAndExpand"
                     Text="{Binding DisplayVersion, Mode=OneWay}"
-                    TextColor="Black" />
+                    TextColor="White" />
             </StackLayout>
         </RelativeLayout>
     </ContentPage.Content>

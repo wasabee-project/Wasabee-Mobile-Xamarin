@@ -10,13 +10,13 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Settings;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
@@ -76,7 +76,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             var appEnvironnement = _preferences.Get(ApplicationSettingsConstants.AppEnvironnement, "unknown_env");
             var appVersion = _versionTracking.CurrentVersion;
-            DisplayVersion = appEnvironnement != "release" ? $"{appEnvironnement} - v{appVersion}" : $"v{appVersion}";
+            DisplayVersion = appEnvironnement != "unknown_env" ? $"{appEnvironnement} - v{appVersion}" : $"v{appVersion}";
             LoggedUser = _userSettingsService.GetIngressName();
 
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
@@ -89,9 +89,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         public override async Task Initialize()
         {
-            await RefreshAvailableOpsCommand.ExecuteAsync();
-
             await base.Initialize();
+
+            await RefreshAvailableOpsCommand.ExecuteAsync();
         }
 
         #region Properties
