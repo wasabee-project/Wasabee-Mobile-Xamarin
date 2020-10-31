@@ -35,6 +35,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
     public class SplashScreenViewModel : BaseViewModel, IMvxViewModel<SplashScreenNavigationParameter>
     {
+        private static int MessageDisplayTime => 150; // step message display timer in ms
+
         private readonly IConnectivity _connectivity;
         private readonly IPreferences _preferences;
         private readonly IVersionTracking _versionTracking;
@@ -184,8 +186,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsLoading = true;
             LoadingStepLabel = "Logging in...";
 
-            await Task.Delay(TimeSpan.FromMilliseconds(300));
-
             await _usersDatabase.DeleteAllData();
 
             var wasabeeCookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
@@ -201,7 +201,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, JsonConvert.SerializeObject(_googleToken));
 
                 LoadingStepLabel = "Google login success...";
-                await Task.Delay(TimeSpan.FromMilliseconds(300));
+                await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
 
                 var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
                 if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
@@ -324,7 +324,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             IsLoading = true;
             LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
-            await Task.Delay(TimeSpan.FromMilliseconds(300));
 
             var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken);
             if (wasabeeUserModel != null)
@@ -383,7 +382,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 IsLoading = true;
                 LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
-                await Task.Delay(TimeSpan.FromMilliseconds(300));
 
                 if (RememberServerChoice)
                 {
@@ -440,7 +438,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     {
                         LoggingService.Error(e, "Error Executing SplashScreenViewModel.BypassGoogleAndWasabeeLogin");
 
-                        
+
                         ErrorMessage = "Wasabee login failed !";
                         IsAuthInError = true;
                         IsLoading = false;
@@ -448,7 +446,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         RememberServerChoice = false;
                         SelectedServerItem = ServerItem.Undefined;
 
-                        await Task.Delay(TimeSpan.FromMilliseconds(300));
+                        await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
 
                         _isBypassingGoogleAndWasabeeLogin = false;
                         _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
@@ -462,7 +460,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task FinishLogin(UserModel userModel)
         {
             LoadingStepLabel = $"Welcome {userModel.IngressName}";
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime * 2));
 
             try
             {
@@ -474,11 +472,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 else
                 {
-                    await PullDataFromServer(userModel).ContinueWith(async task =>
-                    {
-                        await _navigationService.Navigate<RootViewModel>();
-                        await _navigationService.Close(this);
-                    });
+                    await PullDataFromServer(userModel)
+                        .ContinueWith(async task =>
+                        {
+                            await _navigationService.Navigate<RootViewModel>();
+                            await _navigationService.Close(this);
+                        });
 
                 }
             }
@@ -497,7 +496,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoadingStepLabel = "Harvesting beehive,\r\n" +
                                "Please wait...";
-            await Task.Delay(TimeSpan.FromMilliseconds(300));
 
             await _teamsDatabase.DeleteAllData();
             await _operationsDatabase.DeleteAllData();
@@ -506,16 +504,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {
-                var teamIds = userModel.Teams
-                    .Select(t => t.Id)
-                    .ToList();
-
-                foreach (var id in teamIds)
+                _ = Task.Factory.StartNew(async () =>
                 {
-                    var team = await _wasabeeApiV1Service.Teams_GetTeam(id);
-                    if (team != null)
-                        await _teamsDatabase.SaveTeamModel(team);
-                }
+                    var teamIds = userModel.Teams
+                        .Select(t => t.Id)
+                        .ToList();
+
+                    foreach (var id in teamIds)
+                    {
+                        var team = await _wasabeeApiV1Service.Teams_GetTeam(id);
+                        if (team != null)
+                            await _teamsDatabase.SaveTeamModel(team);
+                    }
+                }).ConfigureAwait(false);
             }
 
             if (userModel.Ops != null && userModel.Ops.Any())
