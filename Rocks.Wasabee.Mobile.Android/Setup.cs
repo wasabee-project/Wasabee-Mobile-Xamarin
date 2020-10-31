@@ -5,6 +5,7 @@ using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Platforms.Android;
 using MvvmCross.Platforms.Android.Presenters;
 using MvvmCross.ViewModels;
+using Plugin.CurrentActivity;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
@@ -17,7 +18,7 @@ namespace Rocks.Wasabee.Mobile.Droid
     {
         protected override IMvxApplication CreateApp()
         {
-            UserDialogs.Init(() => Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>().Activity);
+            UserDialogs.Init(() => CrossCurrentActivity.Current.Activity);
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterSingleton(typeof(IFirebaseAnalyticsService), () => new FirebaseAnalyticsService(Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>()));

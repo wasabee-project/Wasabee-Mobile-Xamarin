@@ -86,6 +86,9 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility">
       <Version>7.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Plugin.CurrentActivity">
+      <Version>2.1.0.4</Version>
+    </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>2.0.0.5</Version>
     </PackageReference>
@@ -184,6 +187,7 @@
     <Compile Include="AndroidSplashScreenActivity.cs" />
     <Compile Include="Infra\Firebase\FirebaseAnalyticsService.cs" />
     <Compile Include="Infra\Firebase\WasabeeFCMService.cs" />
+    <Compile Include="MainApplication.cs" />
     <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
     <Compile Include="Services\Geolocation\LiveGeolocationService.cs" />
     <Compile Include="WasabeeBitmapConfig.cs" />

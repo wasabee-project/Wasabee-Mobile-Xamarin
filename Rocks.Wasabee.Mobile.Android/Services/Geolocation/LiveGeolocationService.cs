@@ -35,9 +35,12 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
     {
         private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
         private const string ChannelId = "Live Location Sharing";
+        private const int NotificationId = 1337;
 
         private IBinder? _binder;
         private WasabeeApiV1Service? _wasabeeApiV1Service;
+        private ILoggingService? _loggingService;
+
         private bool _isRunning;
 
         private static IGeolocator Geolocator => CrossGeolocator.Current;
@@ -64,23 +67,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
         {
             CreateNotificationChannel();
 
-            var builder = new NotificationCompat.Builder(this, ChannelId);
+            StartForeground(NotificationId, CreateNotification());
 
-            var newIntent = new Intent(this, typeof(AndroidMainActivity));
-            newIntent.PutExtra("LiveGeolocationTrackingExtra", true);
-            newIntent.AddFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
-
-            var pendingIntent = PendingIntent.GetActivity(this, 0, newIntent, PendingIntentFlags.UpdateCurrent);
-            var notification = builder.SetContentIntent(pendingIntent)
-                .SetSmallIcon(Resource.Drawable.wasabee)
-                .SetAutoCancel(false)
-                .SetTicker("Wasabee location sharing")
-                .SetContentTitle("Wasabee")
-                .SetContentText("Wasabee is sharing your location")
-                .SetChannelId(ChannelId)
-                .Build();
-
-            StartForeground((int)NotificationFlags.ForegroundService, notification);
             return StartCommandResult.Sticky;
         }
 
@@ -130,10 +118,24 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             if (Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
                 GeolocationHelper.StopLocationService();
 
-            var result = await _wasabeeApiV1Service!.User_UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
-#if DEBUG
-            Mvx.IoCProvider.Resolve<IUserDialogs>().Toast(result ? $"Location updated : {e.Position.Latitude}, {e.Position.Longitude}" : "Location not updated (error)");
-#endif
+            try
+            {
+                var result = await _wasabeeApiV1Service!.User_UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
+                if (result)
+                {
+                    // Updates notification with latest update time
+                    var notification = CreateNotification();
+                    var notificationManager = (NotificationManager)GetSystemService(NotificationService)!;
+                    notificationManager.Notify(NotificationId, notification);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_loggingService == null && Mvx.IoCProvider.CanResolve(typeof(ILoggingService)))
+                    _loggingService = Mvx.IoCProvider.Resolve<ILoggingService>();
+
+                _loggingService!.Error(ex, "Error Executing LiveGeolocationService.Geolocator_PositionChanged");
+            }
         }
 
         public async Task StopLocationUpdates()
@@ -148,6 +150,27 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                     Mvx.IoCProvider.Resolve<IPreferences>().Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
                 }
             }
+        }
+
+        private Notification CreateNotification()
+        {
+            var builder = new NotificationCompat.Builder(this, ChannelId);
+
+            var newIntent = new Intent(this, typeof(AndroidMainActivity));
+            newIntent.PutExtra("LiveGeolocationTrackingExtra", true);
+            newIntent.AddFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
+
+            var pendingIntent = PendingIntent.GetActivity(this, 0, newIntent, PendingIntentFlags.UpdateCurrent);
+            var notification = builder.SetContentIntent(pendingIntent)
+                .SetSmallIcon(Resource.Drawable.wasabee)
+                .SetAutoCancel(false)
+                .SetTicker("Wasabee location sharing")
+                .SetContentTitle("Wasabee")
+                .SetContentText($"Wasabee is sharing your location.\r\nLast update at {DateTime.Now:T}")
+                .SetChannelId(ChannelId)
+                .Build();
+
+            return notification;
         }
 
         private void CreateNotificationChannel()

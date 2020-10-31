@@ -1,6 +1,8 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Provider;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
@@ -8,6 +10,7 @@ using FFImageLoading.Forms.Platform;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Plugin.Messenger;
+using Plugin.CurrentActivity;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
@@ -57,6 +60,8 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             else
             {
+                CrossCurrentActivity.Current.Init(this, bundle);
+
                 Rg.Plugins.Popup.Popup.Init(this, bundle);
                 ZXing.Net.Mobile.Forms.Android.Platform.Init();
 
@@ -99,6 +104,20 @@ namespace Rocks.Wasabee.Mobile.Droid
                 }
 #endif
 
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                {
+                    try
+                    {
+                        var dozeIntent = new Intent();
+                        dozeIntent.SetAction(Settings.ActionRequestIgnoreBatteryOptimizations);
+                        dozeIntent.SetData(Android.Net.Uri.Parse("package:" + CrossCurrentActivity.Current.AppContext.PackageName));
+                        StartActivity(dozeIntent);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
             }
         }
 
