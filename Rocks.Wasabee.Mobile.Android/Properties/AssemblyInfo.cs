@@ -6,13 +6,13 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Rocks.Wasabee.Mobile.Android")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Wasabee is not for dating.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Rocks.Wasabee.Mobile.Android")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © Sébastien FORAY 2020")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyCulture("en-US")]
 [assembly: ComVisible(false)]
 
 // Version information for an assembly consists of the following four values:
