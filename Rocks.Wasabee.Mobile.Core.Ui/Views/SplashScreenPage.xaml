@@ -181,9 +181,9 @@ You don't have any assigned team or operation, contact your Operator before usin
                     </Label.Text>
                 </Label>
 
-                <Button Margin="0, 30, 0, 0" Text="Change account" Style="{StaticResource WasabeeStyleAnnulerButton}" Command="{Binding ChangeAccountCommand}" />
-                <Button Text="Change server" Style="{StaticResource WasabeeStyleAnnulerButton}" Command="{Binding ChangeServerCommand}" />
-                <Button Text="Retry" Style="{StaticResource WasabeeStyleValiderButton}" Command="{Binding RetryTeamLoadingCommand}" />
+                <Button Margin="0, 30, 0, 0" Text="Change account" Style="{StaticResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
+                <Button Text="Change server" Style="{StaticResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
+                <Button Text="Retry" Style="{StaticResource WasabeeStyleValidateButton}" Command="{Binding RetryTeamLoadingCommand}" />
 
             </StackLayout>
 

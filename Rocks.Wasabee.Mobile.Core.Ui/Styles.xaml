@@ -52,22 +52,30 @@
     </Style>
 
     <!--Boutons-->
-    <!--Valider-->
-    <Style TargetType="Button" x:Key="WasabeeStyleValiderButton">
-        <Setter Property="Text" Value="Valider"/>
+    <!--Valider/Accepter-->
+    <Style TargetType="Button" x:Key="WasabeeStyleValidateButton">
+        <Setter Property="Text" Value="✓   Validate"/>
         <Setter Property="TextColor" Value="White"/>
-        <Setter Property="BorderWidth" Value="1"/>
-        <Setter Property="BorderColor" Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
+    <Style TargetType="Button" x:Key="WasabeeStyleAcceptButton" BasedOn="{StaticResource WasabeeStyleValidateButton}">
+        <Setter Property="Text" Value="✓   Accept"/>
+    </Style>
     <!--Annuler-->
-    <Style TargetType="Button" x:Key="WasabeeStyleAnnulerButton" >
-        <Setter Property="Text" Value="Annuler"/>
+    <Style TargetType="Button" x:Key="WasabeeStyleCancelButton" >
+        <Setter Property="Text" Value="Cancel"/>
         <Setter Property="TextColor" Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="BorderColor" Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+    <!--Refuser-->
+    <Style TargetType="Button" x:Key="WasabeeStyleDenyButton" >
+        <Setter Property="Text" Value="✗   Deny"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryRed}"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
     <!--Connexion-->
