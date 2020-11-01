@@ -4,6 +4,7 @@ using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +27,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         #endregion
 
         #region Teams
+
+        [Post("/teams")]
+        Task<ApiResponse<IList<Models.Teams.TeamModel>>> Teams_GetTeams(IEnumerable<string> teamsIds);
 
         [Get("/team/{teamId}")]
         Task<ApiResponse<Models.Teams.TeamModel>> Teams_GetTeam(string teamId);
@@ -102,6 +106,12 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         #endregion
 
         #region Teams
+
+        public async Task<IList<Models.Teams.TeamModel>> Teams_GetTeams(IEnumerable<string> teamsIds)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_GetTeams(teamsIds), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : new List<Models.Teams.TeamModel>();
+        }
 
         public async Task<Models.Teams.TeamModel?> Teams_GetTeam(string teamId)
         {

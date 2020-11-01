@@ -504,19 +504,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {
-                _ = Task.Factory.StartNew(async () =>
-                {
-                    var teamIds = userModel.Teams
-                        .Select(t => t.Id)
-                        .ToList();
+                var teamIds = userModel.Teams.Select(t => t.Id).ToList();
 
-                    foreach (var id in teamIds)
+                if (teamIds.Count() > 3)
+                {
+                    _ = Task.Factory.StartNew(async () =>
                     {
-                        var team = await _wasabeeApiV1Service.Teams_GetTeam(id);
-                        if (team != null)
-                            await _teamsDatabase.SaveTeamModel(team);
-                    }
-                }).ConfigureAwait(false);
+
+                        foreach (var id in teamIds)
+                        {
+                            var team = await _wasabeeApiV1Service.Teams_GetTeam(id);
+                            if (team != null)
+                                await _teamsDatabase.SaveTeamModel(team);
+                        }
+                    }).ConfigureAwait(false);
+                }
+                else
+                {
+                    var teams = await _wasabeeApiV1Service.Teams_GetTeams(teamIds);
+                    if (teams.Any())
+                        await _teamsDatabase.SaveTeamsModels(teams);
+                }
             }
 
             if (userModel.Ops != null && userModel.Ops.Any())

@@ -49,6 +49,31 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             return 0;
         }
+        public async Task<int> SaveTeamsModels(IList<TeamModel> teams)
+        {
+            LoggingService.Trace("Querying TeamsDatabase.SaveTeamsModels");
+
+            var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
+            var teamsDatabaseModels = new List<TeamDatabaseModel>(
+                teams.Select(model => TeamDatabaseModel.ToTeamDatabaseModel(model)));
+
+            var dbLock = databaseConnection.GetConnection().Lock();
+
+            try
+            {
+                databaseConnection.GetConnection().InsertOrReplaceAllWithChildren(teamsDatabaseModels, true);
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying TeamsDatabase.SaveTeamsModels");
+
+                return 1;
+            }
+
+            dbLock.Dispose();
+
+            return 0;
+        }
 
         public async Task<TeamModel?> GetTeam(string teamId)
         {
