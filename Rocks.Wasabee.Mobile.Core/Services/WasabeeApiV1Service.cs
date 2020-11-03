@@ -2,6 +2,7 @@
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
+using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         #region Teams
 
         [Post("/teams")]
-        Task<ApiResponse<IList<Models.Teams.TeamModel>>> Teams_GetTeams(IEnumerable<string> teamsIds);
+        Task<ApiResponse<IList<Models.Teams.TeamModel>>> Teams_GetTeams([Body] GetTeamsQuery getTeamsQuery);
 
         [Get("/team/{teamId}")]
         Task<ApiResponse<Models.Teams.TeamModel>> Teams_GetTeam(string teamId);
@@ -107,9 +108,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
         #region Teams
 
-        public async Task<IList<Models.Teams.TeamModel>> Teams_GetTeams(IEnumerable<string> teamsIds)
+        public async Task<IList<Models.Teams.TeamModel>> Teams_GetTeams(GetTeamsQuery getTeamsQuery)
         {
-            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_GetTeams(teamsIds), new CancellationToken()).ConfigureAwait(false);
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_GetTeams(getTeamsQuery), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode ? result.Content : new List<Models.Teams.TeamModel>();
         }
 

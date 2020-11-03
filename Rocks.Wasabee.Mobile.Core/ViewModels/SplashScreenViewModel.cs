@@ -12,6 +12,7 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
+using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -506,22 +507,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 var teamIds = userModel.Teams.Select(t => t.Id).ToList();
 
-                if (teamIds.Count() > 3)
+                if (teamIds.Count == 1)
                 {
-                    _ = Task.Factory.StartNew(async () =>
-                    {
-
-                        foreach (var id in teamIds)
-                        {
-                            var team = await _wasabeeApiV1Service.Teams_GetTeam(id);
-                            if (team != null)
-                                await _teamsDatabase.SaveTeamModel(team);
-                        }
-                    }).ConfigureAwait(false);
+                    var team = await _wasabeeApiV1Service.Teams_GetTeam(teamIds.First());
+                    if (team != null)
+                        await _teamsDatabase.SaveTeamModel(team);
                 }
                 else
                 {
-                    var teams = await _wasabeeApiV1Service.Teams_GetTeams(teamIds);
+                    var teams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(teamIds));
                     if (teams.Any())
                         await _teamsDatabase.SaveTeamsModels(teams);
                 }

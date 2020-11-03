@@ -9,6 +9,7 @@ using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
@@ -365,17 +366,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                var updatedTeams = new List<Models.Teams.TeamModel>();
-                var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id);
-                foreach (var teamId in userTeamsIds)
-                {
-                    var updatedData = await _wasabeeApiV1Service.Teams_GetTeam(teamId);
-                    if (updatedData == null)
-                        continue;
-
-                    await _teamsDatabase.SaveTeamModel(updatedData);
-                    updatedTeams.Add(updatedData);
-                }
+                var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList();
+                var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
+                if (updatedTeams.Any())
+                    await _teamsDatabase.SaveTeamsModels(updatedTeams);
 
                 var updatedAgents = new List<WasabeePlayerPin>();
                 var agents = updatedTeams.SelectMany(t => t.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Name);
