@@ -63,7 +63,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenReload = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
-            _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync());
+            _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(msg));
             _tokenMarkerUpdated = messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
         }
 
@@ -113,7 +113,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             await base.Initialize();
 
             await LoadOperationCommand.ExecuteAsync();
-            await RefreshTeamsMembersPositionsCommand.ExecuteAsync();
+            await RefreshTeamsMembersPositionsCommand.ExecuteAsync(null);
         }
 
         #region Properties
@@ -354,8 +354,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-        public IMvxAsyncCommand RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand(RefreshTeamsMembersPositionsExecuted);
-        private async Task RefreshTeamsMembersPositionsExecuted()
+        public IMvxAsyncCommand<TeamAgentLocationUpdatedMessage?> RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand<TeamAgentLocationUpdatedMessage?>(RefreshTeamsMembersPositionsExecuted);
+        private async Task RefreshTeamsMembersPositionsExecuted(TeamAgentLocationUpdatedMessage? message)
         {
             if (_loadingAgentsLocations)
                 return;
@@ -366,13 +366,31 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList();
-                var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
-                if (updatedTeams.Any())
-                    await _teamsDatabase.SaveTeamsModels(updatedTeams);
+                var updatedTeams = new List<Models.Teams.TeamModel>();
+                if (message == null)
+                {
+                    // Refresh all teams
+                    var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList();
+                    var teams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
+                    if (teams.Any())
+                        await _teamsDatabase.SaveTeamsModels(updatedTeams);
 
+                    updatedTeams.AddRange(teams);
+                }
+                else
+                {
+                    // Refresh specific team from FCM data
+                    var teamId = message.TeamId;
+                    var updatedTeam = await _wasabeeApiV1Service.Teams_GetTeam(teamId);
+                    if (updatedTeam == null)
+                        return;
+
+                    await _teamsDatabase.SaveTeamModel(updatedTeam);
+                    updatedTeams.Add(updatedTeam);
+                }
+                
                 var updatedAgents = new List<WasabeePlayerPin>();
-                var agents = updatedTeams.SelectMany(t => t.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Name);
+                var agents = updatedTeams.SelectMany(x => x.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Name);
                 foreach (var agent in agents)
                 {
                     if (updatedAgents.Any(a => a.AgentName.Equals(agent.Name)))
@@ -384,7 +402,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         Position = new Position(agent.Lat, agent.Lng),
                         Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
                     };
-                    var playerPin = new WasabeePlayerPin(pin) { AgentName = agent.Name };
+                    var playerPin = new WasabeePlayerPin(pin) { AgentId = agent.Id, AgentName = agent.Name };
 
                     if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
                     {
@@ -399,8 +417,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 }
 
                 foreach (var toRemove in from agent in updatedAgents
-                                         where AgentsPins.Any(a => a.AgentName.Equals(agent.AgentName))
-                                         select AgentsPins.First(a => a.AgentName.Equals(agent.AgentName)))
+                                         where AgentsPins.Any(a => a.AgentId.Equals(agent.AgentId))
+                                         select AgentsPins.First(a => a.AgentId.Equals(agent.AgentId)))
                 {
                     AgentsPins.Remove(toRemove);
                 }

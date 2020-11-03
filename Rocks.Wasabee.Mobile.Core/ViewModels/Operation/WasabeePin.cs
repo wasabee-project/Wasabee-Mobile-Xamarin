@@ -35,6 +35,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Pin.Label = "Unknown player";
         }
 
+        public string AgentId { get; set; } = string.Empty;
         public string AgentName { get; set; } = string.Empty;
         public string TimeAgo { get; set; } = string.Empty;
     }

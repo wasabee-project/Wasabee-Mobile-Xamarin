@@ -96,7 +96,10 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                 _mvxMessenger.Publish(new NotificationMessage(this, messageBody));
 
                 if (messageBody.Contains("Agent Location Change"))
-                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this));
+                {
+                    var gid = message.Data.FirstOrDefault(x => x.Key.Equals("gid"));
+                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, msg.Value, gid.Value));
+                }
                 else if (messageBody.Contains("Marker"))
                 {
                     var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
