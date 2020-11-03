@@ -162,16 +162,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 if (!_preferences.Get(UserSettingsKeys.NeverShowLiveLocationWaringAgain, false) && !byPassWarning)
                 {
-                    LoggingService.Trace("MenuViewModel - Showing location warning dialog");
-
-                    _messenger.Subscribe<MessageFrom<LocationWarningDialogViewModel>>(msg =>
+                    _ = _messenger.Subscribe<MessageFrom<LocationWarningDialogViewModel>>(msg =>
                     {
-                        if (msg.Data is bool neverShowWarningAgain && neverShowWarningAgain)
+                        LoggingService.Trace("MenuViewModel - Activating location sharing from warning dialog");
+
+                        if (msg.Data is bool neverShowWarningAgain && neverShowWarningAgain) {
                             _preferences.Set(UserSettingsKeys.NeverShowLiveLocationWaringAgain, true);
+                            SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                        }
 
                         ToggleLiveLocationSharingCommand.Execute(new Tuple<bool, bool>(value, true));
                     });
-
+                    
+                    LoggingService.Trace("MenuViewModel - Showing location warning dialog");
                     await _dialogNavigationService.Navigate<LocationWarningDialogViewModel>();
                 }
                 else
