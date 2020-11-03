@@ -34,12 +34,13 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
     public class LiveGeolocationService : Service
     {
         private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
-        private const string ChannelId = "Live Location Sharing";
+        private const string ChannelId = "Wasabee Live Location Sharing";
         private const int NotificationId = 1337;
 
         private IBinder? _binder;
         private WasabeeApiV1Service? _wasabeeApiV1Service;
         private ILoggingService? _loggingService;
+        private IPreferences? _preferences;
 
         private bool _isRunning;
 
@@ -80,8 +81,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             try
             {
                 _isRunning = true;
-                if (_wasabeeApiV1Service == null)
-                    _wasabeeApiV1Service = Mvx.IoCProvider.Resolve<WasabeeApiV1Service>();
+
+                _wasabeeApiV1Service ??= Mvx.IoCProvider.Resolve<WasabeeApiV1Service>();
+                _preferences ??= Mvx.IoCProvider.Resolve<IPreferences>();
 
                 if (Geolocator.IsListening)
                 {
@@ -114,12 +116,18 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
         {
             if (!_isRunning)
                 return;
-
-            if (Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
+            
+            _preferences ??= Mvx.IoCProvider.Resolve<IPreferences>();
+            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
+            {
                 GeolocationHelper.StopLocationService();
+                return;
+            }
 
             try
             {
+                _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
+
                 var result = await _wasabeeApiV1Service!.User_UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
                 if (result)
                 {
@@ -131,10 +139,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             }
             catch (Exception ex)
             {
-                if (_loggingService == null && Mvx.IoCProvider.CanResolve(typeof(ILoggingService)))
-                    _loggingService = Mvx.IoCProvider.Resolve<ILoggingService>();
-
-                _loggingService!.Error(ex, "Error Executing LiveGeolocationService.Geolocator_PositionChanged");
+                _loggingService ??= Mvx.IoCProvider.Resolve<ILoggingService>();
+                _loggingService.Error(ex, "Error Executing LiveGeolocationService.Geolocator_PositionChanged");
             }
         }
 
@@ -146,8 +152,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 {
                     Geolocator.PositionChanged -= Geolocator_PositionChanged;
                     _isRunning = false;
-
-                    Mvx.IoCProvider.Resolve<IPreferences>().Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
+                    
+                    _preferences ??= Mvx.IoCProvider.Resolve<IPreferences>();
+                    _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
                 }
             }
         }
@@ -168,6 +175,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 .SetContentTitle("Wasabee")
                 .SetContentText($"Wasabee is sharing your location.\r\nLast update at {DateTime.Now:T}")
                 .SetChannelId(ChannelId)
+                .SetSound(null)
                 .Build();
 
             return notification;
@@ -187,8 +195,10 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 
             var channel = new NotificationChannel(ChannelId, ChannelId, NotificationImportance.Default)
             {
-                Description = "Live location sharing service notification"
+                Description = "Live location sharing notification"
             };
+
+            channel.SetSound(null, null);
 
             notificationManager?.CreateNotificationChannel(channel);
         }

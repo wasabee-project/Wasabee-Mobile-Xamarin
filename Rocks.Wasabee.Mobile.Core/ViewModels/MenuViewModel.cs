@@ -89,6 +89,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var op = await _operationsDatabase.GetOperationModel(selectedOpId);
                 SelectedOpName = op == null ? "ERROR loading OP" : op.Name;
             }
+
+            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
+            {
+                _isLiveLocationSharingEnabled = true;
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+                await RaisePropertyChanged(() => IsLiveLocationSharingEnabled);
+            }
         }
 
         public override async Task Initialize()
@@ -203,6 +210,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (IsBusy) return;
             IsBusy = true;
+
+            if (IsLiveLocationSharingEnabled)
+                IsLiveLocationSharingEnabled = false;
 
             await _authentificationService.LogoutAsync();
             await _navigationService.Navigate<SplashScreenViewModel>();
