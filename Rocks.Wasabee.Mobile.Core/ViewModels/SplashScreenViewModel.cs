@@ -329,8 +329,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken);
             if (wasabeeUserModel != null)
             {
-                _messenger.Publish(new UserLoggedInMessage(this));
-
                 if (RememberServerChoice)
                 {
                     _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
@@ -460,6 +458,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task FinishLogin(UserModel userModel)
         {
+            _messenger.Publish(new UserLoggedInMessage(this));
+
             LoadingStepLabel = $"Welcome {userModel.IngressName}";
             await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime * 2));
 

@@ -1,6 +1,7 @@
 ﻿using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
@@ -27,6 +28,13 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
         #endregion
 
+        #region Agents
+
+        [Get("/agent/{agentId}")]
+        Task<ApiResponse<TeamAgentModel>> Agents_GetAgent(string agentId);
+        
+        #endregion
+        
         #region Teams
 
         [Post("/teams")]
@@ -106,6 +114,16 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
         #endregion
 
+        #region Agents
+        
+        public async Task<TeamAgentModel?> Agents_GetAgent(string agentId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Agents_GetAgent(agentId), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode ? result.Content : null;
+        }
+
+        #endregion
+        
         #region Teams
 
         public async Task<IList<Models.Teams.TeamModel>> Teams_GetTeams(GetTeamsQuery getTeamsQuery)

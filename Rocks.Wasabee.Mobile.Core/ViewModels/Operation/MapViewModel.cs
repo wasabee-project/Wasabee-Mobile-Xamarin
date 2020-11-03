@@ -63,7 +63,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenReload = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
-            _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(msg));
+            _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
             _tokenMarkerUpdated = messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
         }
 
@@ -113,7 +113,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             await base.Initialize();
 
             await LoadOperationCommand.ExecuteAsync();
-            await RefreshTeamsMembersPositionsCommand.ExecuteAsync(null);
+            await RefreshTeamsMembersPositionsCommand.ExecuteAsync();
         }
 
         #region Properties
@@ -354,8 +354,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-        public IMvxAsyncCommand<TeamAgentLocationUpdatedMessage?> RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand<TeamAgentLocationUpdatedMessage?>(RefreshTeamsMembersPositionsExecuted);
-        private async Task RefreshTeamsMembersPositionsExecuted(TeamAgentLocationUpdatedMessage? message)
+        public IMvxAsyncCommand RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand(RefreshTeamsMembersPositionsExecuted);
+        private async Task RefreshTeamsMembersPositionsExecuted()
         {
             if (_loadingAgentsLocations)
                 return;
@@ -366,34 +366,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                var updatedTeams = new List<Models.Teams.TeamModel>();
-                if (message == null)
-                {
-                    // Refresh all teams
-                    var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList();
-                    var teams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
-                    if (teams.Any())
-                        await _teamsDatabase.SaveTeamsModels(updatedTeams);
+                // TODO : load teams on OP according to user setting
 
-                    updatedTeams.AddRange(teams);
-                }
-                else
-                {
-                    // Refresh specific team from FCM data
-                    var teamId = message.TeamId;
-                    var updatedTeam = await _wasabeeApiV1Service.Teams_GetTeam(teamId);
-                    if (updatedTeam == null)
-                        return;
+                var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList();
+                var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
+                if (updatedTeams.Any())
+                    await _teamsDatabase.SaveTeamsModels(updatedTeams);
 
-                    await _teamsDatabase.SaveTeamModel(updatedTeam);
-                    updatedTeams.Add(updatedTeam);
-                }
-                
                 var updatedAgents = new List<WasabeePlayerPin>();
-                var agents = updatedTeams.SelectMany(x => x.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Name);
+                var agents = updatedTeams.SelectMany(x => x.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Id);
                 foreach (var agent in agents)
                 {
-                    if (updatedAgents.Any(a => a.AgentName.Equals(agent.Name)))
+                    if (updatedAgents.Any(a => a.AgentId.Equals(agent.Id)))
                         continue;
 
                     var pin = new Pin()
@@ -435,6 +419,68 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _loadingAgentsLocations = false;
             }
         }
+
+        
+
+        public IMvxAsyncCommand<TeamAgentLocationUpdatedMessage> RefreshTeamAgentPositionCommand => new MvxAsyncCommand<TeamAgentLocationUpdatedMessage>(RefreshTeamAgentPositionExecuted);
+        private async Task RefreshTeamAgentPositionExecuted(TeamAgentLocationUpdatedMessage message)
+        {
+            if (_loadingAgentsLocations)
+                return;
+
+            _loadingAgentsLocations = true;
+
+            LoggingService.Trace("Executing MapViewModel.RefreshTeamAgentPositionCommand");
+
+            try
+            {
+                var agentId = message.UserId;
+                var agent = await _wasabeeApiV1Service.Agents_GetAgent(agentId);
+                if (agent == null)
+                    return;
+                
+                var updatedAgentPin = new WasabeePlayerPin(
+                    new Pin()
+                    {
+                        Label = agent.Name,
+                        Position = new Position(agent.Lat, agent.Lng),
+                        Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
+                    })
+                {
+                    AgentId = agent.Id, 
+                    AgentName = agent.Name
+                };
+
+                if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
+                {
+                    var timeAgo = (DateTime.UtcNow - agentDate);
+                    if (timeAgo.TotalMinutes > 1.0)
+                    {
+                        updatedAgentPin.TimeAgo = timeAgo.Minutes.ToString();
+                        updatedAgentPin.Pin.Label += $" - {updatedAgentPin.TimeAgo}min ago";
+                    }
+                }
+
+                var toRemove = AgentsPins.FirstOrDefault(a => a.AgentId.Equals(agent.Id));
+                if (toRemove != null)
+                {
+                    AgentsPins.Remove(toRemove);
+                }
+
+                AgentsPins.Add(updatedAgentPin);
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing MapViewModel.RefreshTeamAgentPositionCommand");
+            }
+            finally
+            {
+                await RaisePropertyChanged(() => AgentsPins);
+                _loadingAgentsLocations = false;
+            }
+        }
+
+        
 
         public IMvxCommand<MapThemeEnum> SwitchThemeCommand => new MvxCommand<MapThemeEnum>(SwitchThemeExecuted);
         private void SwitchThemeExecuted(MapThemeEnum mapTheme)

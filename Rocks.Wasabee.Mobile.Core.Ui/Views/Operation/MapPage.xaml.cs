@@ -190,28 +190,9 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshAgentsLayer()
         {
-            foreach (var agent in ViewModel.AgentsPins)
+            foreach (var agentPin in ViewModel.AgentsPins)
             {
-                if (Map.Pins.Any(x => x.Label.Contains(agent.AgentName)))
-                {
-                    if (ViewModel.IsLayerAgentsActivated)
-                        continue;
-
-                    var toRemove = Map.Pins.First(x => x.Label.Contains(agent.AgentName));
-                    Map.Pins.Remove(toRemove);
-                }
-                else
-                {
-                    if (ViewModel.IsLayerAgentsActivated)
-                    {
-                        Map.Pins.Add(agent.Pin);
-                    }
-                }
-            }
-
-            /*foreach (var agentPin in ViewModel.AgentsPins)
-            {
-                if (Map.Pins.Any(x => x.Label.Contains(agentPin.AgentName)))
+                while (Map.Pins.Any(x => x.Label.Contains(agentPin.AgentName)))
                 {
                     var toRemove = Map.Pins.First(x => x.Label.Contains(agentPin.AgentName));
                     Map.Pins.Remove(toRemove);
@@ -222,7 +203,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
                 if (ViewModel.IsLayerAgentsActivated)
                     Map.Pins.Add(agentPin.Pin);
-            }*/
+            }
         }
 
         private void Map_OnMapClicked(object sender, MapClickedEventArgs e)
