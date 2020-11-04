@@ -209,6 +209,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         private void Map_OnMapClicked(object sender, MapClickedEventArgs e)
         {
             ViewModel.CloseDetailPanelCommand.Execute();
+            ViewModel.IsLayerChooserVisible = false;
         }
 
         private void StyleButton_OnClicked(object sender, EventArgs e)
