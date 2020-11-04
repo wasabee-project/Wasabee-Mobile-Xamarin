@@ -41,7 +41,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Teams
         public bool RocksVerified { get; set; }
 
         [JsonProperty("Vverified")]
-        public bool Vverified { get; set; }
+        public bool VVerified { get; set; }
 
         [JsonProperty("blacklisted")]
         public bool Blacklisted { get; set; }
