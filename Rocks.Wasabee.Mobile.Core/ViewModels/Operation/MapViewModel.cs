@@ -436,9 +436,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             {
                 var agentId = message.UserId;
                 var agent = await _wasabeeApiV1Service.Agents_GetAgent(agentId);
-                if (agent == null)
+                if (agent == null || (agent.Lat == 0 && agent.Lng == 0))
                     return;
-                
+
                 var updatedAgentPin = new WasabeePlayerPin(
                     new Pin()
                     {
