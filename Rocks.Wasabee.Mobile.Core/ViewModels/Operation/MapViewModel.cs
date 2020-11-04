@@ -138,7 +138,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public MvxObservableCollection<Polyline> Links { get; set; } = new MvxObservableCollection<Polyline>();
         public MvxObservableCollection<WasabeePin> Anchors { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeePin> Markers { get; set; } = new MvxObservableCollection<WasabeePin>();
-        public MvxObservableCollection<WasabeePlayerPin> AgentsPins { get; set; } = new MvxObservableCollection<WasabeePlayerPin>();
+        public MvxObservableCollection<WasabeeAgentPin> AgentsPins { get; set; } = new MvxObservableCollection<WasabeeAgentPin>();
 
         public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
@@ -296,57 +296,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             finally
             {
-                var lowestLat = 0.0d;
-                var highestLat = 0.0d;
-                var lowestLong = 0.0d;
-                var highestLong = 0.0d;
-                var finalLat = 0.0d;
-                var finalLong = 0.0d;
-                var distance = 0.0d;
-
-                if (Markers.Any() && Anchors.Any())
-                {
-                    lowestLat = Math.Min(Anchors.Min(p => p.Pin.Position.Latitude), Markers.Min(p => p.Pin.Position.Latitude));
-                    highestLat = Math.Max(Anchors.Max(p => p.Pin.Position.Latitude), Markers.Max(p => p.Pin.Position.Latitude));
-                    lowestLong = Math.Min(Anchors.Min(p => p.Pin.Position.Longitude), Markers.Min(p => p.Pin.Position.Longitude));
-                    highestLong = Math.Max(Anchors.Max(p => p.Pin.Position.Longitude), Markers.Max(p => p.Pin.Position.Longitude));
-                    finalLat = (lowestLat + highestLat) / 2;
-                    finalLong = (lowestLong + highestLong) / 2;
-                    distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
-                        highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-
-                    OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
-                }
-                else if (Markers.Any() && !Anchors.Any())
-                {
-                    lowestLat = Markers.Min(p => p.Pin.Position.Latitude);
-                    highestLat = Markers.Max(p => p.Pin.Position.Latitude);
-                    lowestLong = Markers.Min(p => p.Pin.Position.Longitude);
-                    highestLong = Markers.Max(p => p.Pin.Position.Longitude);
-                    finalLat = (lowestLat + highestLat) / 2;
-                    finalLong = (lowestLong + highestLong) / 2;
-                    distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
-                        highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-
-                    OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
-                }
-                else if (!Markers.Any() && Anchors.Any())
-                {
-                    lowestLat = Anchors.Min(p => p.Pin.Position.Latitude);
-                    highestLat = Anchors.Max(p => p.Pin.Position.Latitude);
-                    lowestLong = Anchors.Min(p => p.Pin.Position.Longitude);
-                    highestLong = Anchors.Max(p => p.Pin.Position.Longitude);
-                    finalLat = (lowestLat + highestLat) / 2;
-                    finalLong = (lowestLong + highestLong) / 2;
-                    distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
-                        highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-
-                }
-
-                if (distance != 0.0d)
-                    OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
-                else
-                    OperationMapRegion = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5000));
+                UpdateMapRegion();
 
                 // Message data set to true to force move mapview
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, true));
@@ -373,36 +323,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (updatedTeams.Any())
                     await _teamsDatabase.SaveTeamsModels(updatedTeams);
 
-                var updatedAgents = new List<WasabeePlayerPin>();
+                var updatedAgents = new List<WasabeeAgentPin>();
                 var agents = updatedTeams.SelectMany(x => x.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Id);
                 foreach (var agent in agents)
                 {
                     if (updatedAgents.Any(a => a.AgentId.Equals(agent.Id)))
                         continue;
 
-                    var pin = new Pin()
-                    {
-                        Label = agent.Name,
-                        Position = new Position(agent.Lat, agent.Lng),
-                        Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
-                    };
-                    var playerPin = new WasabeePlayerPin(pin) { AgentId = agent.Id, AgentName = agent.Name };
-
-                    if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
-                    {
-                        var timeAgo = (DateTime.UtcNow - agentDate);
-                        if (timeAgo.TotalSeconds > 1.0)
-                        {
-                            playerPin.TimeAgo = timeAgo.ToPrettyString();
-                            playerPin.Pin.Label += $" - {playerPin.TimeAgo} ago";
-                        }
-                    }
-                    updatedAgents.Add(playerPin);
+                    var updatedAgentPin = CreateAgentPin(agent);
+                    updatedAgents.Add(updatedAgentPin);
                 }
 
-                foreach (var toRemove in from agent in updatedAgents
-                                         where AgentsPins.Any(a => a.AgentId.Equals(agent.AgentId))
-                                         select AgentsPins.First(a => a.AgentId.Equals(agent.AgentId)))
+                foreach (var toRemove in from agentPin in updatedAgents
+                                         where AgentsPins.Any(a => a.AgentId.Equals(agentPin.AgentId))
+                                         select AgentsPins.First(a => a.AgentId.Equals(agentPin.AgentId)))
                 {
                     AgentsPins.Remove(toRemove);
                 }
@@ -438,35 +372,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var agent = await _wasabeeApiV1Service.Agents_GetAgent(agentId);
                 if (agent == null || (agent.Lat == 0 && agent.Lng == 0))
                     return;
-
-                var updatedAgentPin = new WasabeePlayerPin(
-                    new Pin()
-                    {
-                        Label = agent.Name,
-                        Position = new Position(agent.Lat, agent.Lng),
-                        Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
-                    })
-                {
-                    AgentId = agent.Id, 
-                    AgentName = agent.Name
-                };
-
-                if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
-                {
-                    var timeAgo = (DateTime.UtcNow - agentDate);
-                    if (timeAgo.TotalSeconds > 1.0)
-                    {
-                        updatedAgentPin.TimeAgo = timeAgo.ToPrettyString();
-                        updatedAgentPin.Pin.Label += $" - {updatedAgentPin.TimeAgo} ago";
-                    }
-                }
-
-                var toRemove = AgentsPins.FirstOrDefault(a => a.AgentId.Equals(agent.Id));
+                
+                var updatedAgentPin = CreateAgentPin(agent);
+                var toRemove = AgentsPins.FirstOrDefault(a => a.AgentId.Equals(updatedAgentPin.AgentId));
                 if (toRemove != null)
-                {
                     AgentsPins.Remove(toRemove);
-                }
-
+                
                 AgentsPins.Add(updatedAgentPin);
             }
             catch (Exception e)
@@ -536,6 +447,84 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         #endregion
 
         #region Private methods
+
+        private WasabeeAgentPin CreateAgentPin(Models.Teams.TeamAgentModel agent)
+        {
+            var pin = new Pin()
+            {
+                Label = agent.Name,
+                Position = new Position(agent.Lat, agent.Lng),
+                Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
+            };
+            var playerPin = new WasabeeAgentPin(pin) { AgentId = agent.Id, AgentName = agent.Name };
+
+            if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
+            {
+                var timeAgo = (DateTime.UtcNow - agentDate);
+                if (timeAgo.TotalSeconds <= 1.0)
+                    return playerPin;
+
+                playerPin.TimeAgo = timeAgo.ToPrettyString();
+                playerPin.Pin.Label += $" - {playerPin.TimeAgo} ago";
+            }
+
+            return playerPin;
+        }
+
+        private void UpdateMapRegion()
+        {
+            var lowestLat = 0.0d;
+            var highestLat = 0.0d;
+            var lowestLong = 0.0d;
+            var highestLong = 0.0d;
+            var finalLat = 0.0d;
+            var finalLong = 0.0d;
+            var distance = 0.0d;
+
+            if (Markers.Any() && Anchors.Any())
+            {
+                lowestLat = Math.Min(Anchors.Min(p => p.Pin.Position.Latitude), Markers.Min(p => p.Pin.Position.Latitude));
+                highestLat = Math.Max(Anchors.Max(p => p.Pin.Position.Latitude), Markers.Max(p => p.Pin.Position.Latitude));
+                lowestLong = Math.Min(Anchors.Min(p => p.Pin.Position.Longitude), Markers.Min(p => p.Pin.Position.Longitude));
+                highestLong = Math.Max(Anchors.Max(p => p.Pin.Position.Longitude), Markers.Max(p => p.Pin.Position.Longitude));
+                finalLat = (lowestLat + highestLat) / 2;
+                finalLong = (lowestLong + highestLong) / 2;
+                distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                    highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
+
+                OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
+            }
+            else if (Markers.Any() && !Anchors.Any())
+            {
+                lowestLat = Markers.Min(p => p.Pin.Position.Latitude);
+                highestLat = Markers.Max(p => p.Pin.Position.Latitude);
+                lowestLong = Markers.Min(p => p.Pin.Position.Longitude);
+                highestLong = Markers.Max(p => p.Pin.Position.Longitude);
+                finalLat = (lowestLat + highestLat) / 2;
+                finalLong = (lowestLong + highestLong) / 2;
+                distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                    highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
+
+                OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
+            }
+            else if (!Markers.Any() && Anchors.Any())
+            {
+                lowestLat = Anchors.Min(p => p.Pin.Position.Latitude);
+                highestLat = Anchors.Max(p => p.Pin.Position.Latitude);
+                lowestLong = Anchors.Min(p => p.Pin.Position.Longitude);
+                highestLong = Anchors.Max(p => p.Pin.Position.Longitude);
+                finalLat = (lowestLat + highestLat) / 2;
+                finalLong = (lowestLong + highestLong) / 2;
+                distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                    highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
+
+            }
+
+            if (distance != 0.0d)
+                OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
+            else
+                OperationMapRegion = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5000));
+        }
 
         private void UpdateMarker(MarkerDataChangedMessage updateMessage)
         {
