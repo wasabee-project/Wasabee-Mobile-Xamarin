@@ -5,13 +5,10 @@
         "hue": "#589e58"
       },
       {
-        "saturation": "-50"
+        "saturation": -50
       },
       {
         "invert_lightness": true
-      },
-      {
-        "visibility": "on"
       }
     ]
   },
@@ -27,10 +24,7 @@
     "featureType": "transit",
     "stylers": [
       {
-        "hue": "#589e58"
-      },
-      {
-        "visibility": "on"
+        "visibility": "off"
       }
     ]
   },
@@ -42,9 +36,6 @@
       },
       {
         "invert_lightness": true
-      },
-      {
-        "visibility": "on"
       }
     ]
   }
