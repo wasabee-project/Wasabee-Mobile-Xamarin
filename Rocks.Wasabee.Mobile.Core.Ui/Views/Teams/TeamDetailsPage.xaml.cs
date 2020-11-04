@@ -1,5 +1,7 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
+using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
@@ -11,6 +13,18 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
         public TeamDetailsPage()
         {
             InitializeComponent();
+        }
+        private void AgentsList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem == null)
+                return;
+
+            if (e.SelectedItem is TeamAgentModel item)
+            {
+                ViewModel.ShowAgentCommand.Execute(item);
+            }
+
+            AgentsList.SelectedItem = null;
         }
     }
 }

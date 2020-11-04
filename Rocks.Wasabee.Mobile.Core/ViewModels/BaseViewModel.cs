@@ -20,6 +20,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         public string Title { get; set; } = string.Empty;
         public bool IsBusy { get; set; } = false;
+        public bool HasHistory { get; set; } = false;
 
         #endregion
 

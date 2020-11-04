@@ -5,7 +5,6 @@ using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -19,12 +18,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
     [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true)]
     public partial class MapPage : BaseContentPage<MapViewModel>
     {
-        private readonly MvxSubscriptionToken _token;
-
-        private List<Polyline> _links = new List<Polyline>();
-        private List<Pin> _anchorsPins = new List<Pin>();
-        private List<Pin> _markersPins = new List<Pin>();
-        private List<Pin> _agentPins = new List<Pin>();
+        private MvxSubscriptionToken _token;
 
         private bool _hasLoaded = false;
         private bool _isDetailPanelVisible = false;
@@ -33,12 +27,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             InitializeComponent();
             Title = "Map";
-
-            _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
-            {
-                _hasLoaded = false;
-                RefreshMapView(msg.Data != null && msg.Data is bool data && data);
-            });
 
             Map.UiSettings.ScrollGesturesEnabled = true;
             Map.UiSettings.ZoomControlsEnabled = true;
@@ -86,10 +74,24 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             base.OnAppearing();
 
-            RefreshMapTheme();
-            RefreshMapView();
+            _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
+            {
+                _hasLoaded = false;
+                RefreshMapView(msg.Data != null && msg.Data is bool data && data);
+            });
 
             AnimateDetailPanel();
+            RefreshMapTheme();
+
+            RefreshMapView();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            _token?.Dispose();
+            _token = null;
         }
 
         private async void AnimateDetailPanel()
@@ -190,44 +192,23 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshAgentsLayer()
         {
-            foreach (var agent in ViewModel.AgentsPins)
+            foreach (var agentPin in ViewModel.AgentsPins)
             {
-                if (Map.Pins.Any(x => x.Label.Contains(agent.AgentName)))
-                {
-                    if (ViewModel.IsLayerAgentsActivated)
-                        continue;
-
-                    var toRemove = Map.Pins.First(x => x.Label.Contains(agent.AgentName));
-                    Map.Pins.Remove(toRemove);
-                }
-                else
-                {
-                    if (ViewModel.IsLayerAgentsActivated)
-                    {
-                        Map.Pins.Add(agent.Pin);
-                    }
-                }
-            }
-
-            /*foreach (var agentPin in ViewModel.AgentsPins)
-            {
-                if (Map.Pins.Any(x => x.Label.Contains(agentPin.AgentName)))
+                while (Map.Pins.Any(x => x.Label.Contains(agentPin.AgentName)))
                 {
                     var toRemove = Map.Pins.First(x => x.Label.Contains(agentPin.AgentName));
                     Map.Pins.Remove(toRemove);
-                    _agentPins.Remove(toRemove);
                 }
-
-                _agentPins.Add(agentPin.Pin);
 
                 if (ViewModel.IsLayerAgentsActivated)
                     Map.Pins.Add(agentPin.Pin);
-            }*/
+            }
         }
 
         private void Map_OnMapClicked(object sender, MapClickedEventArgs e)
         {
             ViewModel.CloseDetailPanelCommand.Execute();
+            ViewModel.IsLayerChooserVisible = false;
         }
 
         private void StyleButton_OnClicked(object sender, EventArgs e)

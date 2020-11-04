@@ -23,11 +23,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                                   !string.IsNullOrWhiteSpace(Marker?.Comment);
     }
 
-    public class WasabeePlayerPin
+    public class WasabeeAgentPin
     {
         public Pin Pin { get; }
 
-        public WasabeePlayerPin(Pin pin)
+        public WasabeeAgentPin(Pin pin)
         {
             Pin = pin;
 
@@ -35,6 +35,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Pin.Label = "Unknown player";
         }
 
+        public string AgentId { get; set; } = string.Empty;
         public string AgentName { get; set; } = string.Empty;
         public string TimeAgo { get; set; } = string.Empty;
     }

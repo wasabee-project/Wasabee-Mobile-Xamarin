@@ -15,10 +15,11 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding Team.Agents}"
-                      SelectionMode="None"
+            <ListView x:Name="AgentsList"
+                      ItemsSource="{Binding Team.Agents}"
                       HasUnevenRows="True"
-                      CachingStrategy="RecycleElement">
+                      CachingStrategy="RecycleElement"
+                      ItemSelected="AgentsList_OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

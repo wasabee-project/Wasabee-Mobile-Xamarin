@@ -10,13 +10,15 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Settings;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
+using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
@@ -38,12 +40,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IMvxMessenger _messenger;
         private readonly OperationsDatabase _operationsDatabase;
+        private readonly IDialogNavigationService _dialogNavigationService;
 
         private readonly MvxSubscriptionToken _token;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IPermissions permissions, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
-            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase)
+            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase, IDialogNavigationService dialogNavigationService)
         {
             _navigationService = navigationService;
             _authentificationService = authentificationService;
@@ -54,6 +57,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _userDialogs = userDialogs;
             _messenger = messenger;
             _operationsDatabase = operationsDatabase;
+            _dialogNavigationService = dialogNavigationService;
 
             MenuItems = new MvxObservableCollection<MenuItem>()
             {
@@ -67,7 +71,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 #endif
             };
 
-            _token = messenger.Subscribe<NewOpAvailableMessage>(async msg => await RefreshAvailableOpsCommand.ExecuteAsync());
+            _token = messenger.Subscribe<NewOpAvailableMessage>(msg => RefreshAvailableOpsCommand.Execute());
         }
 
         public override async void Prepare()
@@ -76,7 +80,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             var appEnvironnement = _preferences.Get(ApplicationSettingsConstants.AppEnvironnement, "unknown_env");
             var appVersion = _versionTracking.CurrentVersion;
-            DisplayVersion = appEnvironnement != "release" ? $"{appEnvironnement} - v{appVersion}" : $"v{appVersion}";
+            DisplayVersion = appEnvironnement != "unknown_env" ? $"{appEnvironnement} - v{appVersion}" : $"v{appVersion}";
             LoggedUser = _userSettingsService.GetIngressName();
 
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
@@ -85,13 +89,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var op = await _operationsDatabase.GetOperationModel(selectedOpId);
                 SelectedOpName = op == null ? "ERROR loading OP" : op.Name;
             }
+
+            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
+            {
+                _isLiveLocationSharingEnabled = true;
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+                await RaisePropertyChanged(() => IsLiveLocationSharingEnabled);
+            }
         }
 
         public override async Task Initialize()
         {
-            await RefreshAvailableOpsCommand.ExecuteAsync();
-
             await base.Initialize();
+
+            RefreshAvailableOpsCommand.Execute();
         }
 
         #region Properties
@@ -118,14 +129,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public bool IsLiveLocationSharingEnabled
         {
             get => _isLiveLocationSharingEnabled;
-            set => ToggleLiveLocationSharingCommand.Execute(value);
+            set => ToggleLiveLocationSharingCommand.Execute(new Tuple<bool, bool>(value, false));
         }
 
         #endregion
 
         #region Commands
 
-        public IMvxAsyncCommand RefreshAvailableOpsCommand => new MvxAsyncCommand(RefreshAvailableOpsExecuted);
+        public IMvxCommand RefreshAvailableOpsCommand => new MvxCommand(async () => await RefreshAvailableOpsExecuted());
         private async Task RefreshAvailableOpsExecuted()
         {
             LoggingService.Trace("Executing MenuViewModel.RefreshAvailableOpsCommand");
@@ -142,41 +153,38 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 .OrderBy(x => x.Name));
         }
 
-        public IMvxCommand<bool> ToggleLiveLocationSharingCommand => new MvxCommand<bool>(async value => await ToggleLiveLocationSharingExecuted(value));
-        private async Task ToggleLiveLocationSharingExecuted(bool value)
+        public IMvxCommand<Tuple<bool, bool>> ToggleLiveLocationSharingCommand => new MvxCommand<Tuple<bool, bool>>(async value => await ToggleLiveLocationSharingExecuted(value.Item1, value.Item2));
+        private async Task ToggleLiveLocationSharingExecuted(bool value, bool byPassWarning)
         {
             LoggingService.Trace($"Executing MenuViewModel.ToggleLiveLocationSharingCommand({value})");
 
             if (!_isLiveLocationSharingEnabled && value)
             {
-                var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
-                var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-
-                if (statusLocationAlways == PermissionStatus.Granted || statusLocationWhenInUse == PermissionStatus.Granted)
+                if (!_preferences.Get(UserSettingsKeys.NeverShowLiveLocationWaringAgain, false) && !byPassWarning)
                 {
-                    var result = await _userDialogs.ConfirmAsync(
-                        "Your location will be shared with all your enabled teams. Start tracking anyway ?\r\n\r\nYou can disable sharing for specific team by disabling it in the Teams menu.", "Warning",
-                        "Yes", "No");
+                    _ = _messenger.Subscribe<MessageFrom<LocationWarningDialogViewModel>>(msg =>
+                    {
+                        LoggingService.Trace("MenuViewModel - Activating location sharing from warning dialog");
 
-                    if (!result)
-                        return;
+                        if (msg.Data is bool neverShowWarningAgain && neverShowWarningAgain) {
+                            _preferences.Set(UserSettingsKeys.NeverShowLiveLocationWaringAgain, true);
+                            SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                        }
 
-                    SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
-                    _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
-                    _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+                        ToggleLiveLocationSharingCommand.Execute(new Tuple<bool, bool>(value, true));
+                    });
+                    
+                    LoggingService.Trace("MenuViewModel - Showing location warning dialog");
+                    await _dialogNavigationService.Navigate<LocationWarningDialogViewModel>();
                 }
                 else
                 {
-                    var requestResult = await _permissions.RequestAsync<Permissions.LocationAlways>();
-                    statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                    if (requestResult != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+                    if (await CheckAndAskForLocationPermissions())
                     {
-                        _userDialogs.Alert("Geolocation permission is required !");
-                        return;
+                        SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                        _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
+                        _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
                     }
-
-                    LoggingService.Info("User has granted geolocation permissions");
-                    await ToggleLiveLocationSharingExecuted(true);
                 }
             }
             else
@@ -190,7 +198,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand<MenuItem> SelectedMenuItemChangedCommand => new MvxCommand<MenuItem>(SelectedMenuItemChangedExecuted);
         private void SelectedMenuItemChangedExecuted(MenuItem menuItem)
         {
-            LoggingService.Trace($"Executing MenuViewModel.SelectedMenuItemChangedCommand({menuItem})");
+            LoggingService.Trace($"Executing MenuViewModel.SelectedMenuItemChangedCommand({menuItem.Title})");
 
             if (menuItem?.ViewModelType == null) return;
 
@@ -205,6 +213,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (IsBusy) return;
             IsBusy = true;
+
+            if (IsLiveLocationSharingEnabled)
+                IsLiveLocationSharingEnabled = false;
 
             await _authentificationService.LogoutAsync();
             await _navigationService.Navigate<SplashScreenViewModel>();
@@ -248,6 +259,30 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             SelectedOpName = selectedOp.Name;
             _preferences.Set(UserSettingsKeys.SelectedOp, selectedOp.Id);
             _messenger.Publish(new SelectedOpChangedMessage(this, selectedOp.Id));
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private async Task<bool> CheckAndAskForLocationPermissions()
+        {
+            var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
+            var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+            if (statusLocationAlways == PermissionStatus.Granted || statusLocationWhenInUse == PermissionStatus.Granted)
+                return true;
+
+            var requestResult = await _permissions.RequestAsync<Permissions.LocationAlways>();
+            statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+            if (requestResult != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+            {
+                _userDialogs.Alert("Geolocation permission is required !");
+                return false;
+            }
+
+            LoggingService.Info("User has granted geolocation permissions");
+            return true;
         }
 
         #endregion

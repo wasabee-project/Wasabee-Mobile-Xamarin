@@ -39,18 +39,20 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
         public override void OnNewToken(string token)
         {
+            if (!_isInitialized)
+                Initialize();
 #if DEBUG
             Log.Debug(TAG, "FCM token: " + token);
 #endif
             _fcmToken = token;
         }
 
-        private async Task SendRegistrationToServer(string token)
+        private async Task SendRegistrationToServer()
         {
             if (!_isInitialized)
                 Initialize();
 
-            await _loginProvider.SendFirebaseTokenAsync(token);
+            await _loginProvider.SendFirebaseTokenAsync(_fcmToken);
         }
 
         private void Initialize()
@@ -62,7 +64,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             _mvxMessenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
             _backgroundDataUpdaterService = Mvx.IoCProvider.Resolve<IBackgroundDataUpdaterService>();
 
-            _mvxToken = _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer(_fcmToken));
+            _mvxToken = _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer());
 
             _isInitialized = true;
         }
@@ -96,7 +98,10 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                 _mvxMessenger.Publish(new NotificationMessage(this, messageBody));
 
                 if (messageBody.Contains("Agent Location Change"))
-                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this));
+                {
+                    var gid = message.Data.FirstOrDefault(x => x.Key.Equals("gid"));
+                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, gid.Value));
+                }
                 else if (messageBody.Contains("Marker"))
                 {
                     var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));

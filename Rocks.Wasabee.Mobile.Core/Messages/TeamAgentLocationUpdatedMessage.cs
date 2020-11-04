@@ -4,9 +4,11 @@ namespace Rocks.Wasabee.Mobile.Core.Messages
 {
     public class TeamAgentLocationUpdatedMessage : MvxMessage
     {
-        public TeamAgentLocationUpdatedMessage(object sender) : base(sender)
+        public string UserId { get; }
+
+        public TeamAgentLocationUpdatedMessage(object sender, string userId) : base(sender)
         {
-            
+            UserId = userId;
         }
     }
 }
