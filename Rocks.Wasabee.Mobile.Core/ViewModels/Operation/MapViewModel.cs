@@ -391,10 +391,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
                     {
                         var timeAgo = (DateTime.UtcNow - agentDate);
-                        if (timeAgo.TotalMinutes > 1.0)
+                        if (timeAgo.TotalSeconds > 1.0)
                         {
-                            playerPin.TimeAgo = timeAgo.Minutes.ToString();
-                            playerPin.Pin.Label += $" - {playerPin.TimeAgo}min ago";
+                            playerPin.TimeAgo = timeAgo.ToPrettyString();
+                            playerPin.Pin.Label += $" - {playerPin.TimeAgo} ago";
                         }
                     }
                     updatedAgents.Add(playerPin);
@@ -454,10 +454,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (!string.IsNullOrWhiteSpace(agent.Date) && DateTime.TryParse(agent.Date, out var agentDate))
                 {
                     var timeAgo = (DateTime.UtcNow - agentDate);
-                    if (timeAgo.TotalMinutes > 1.0)
+                    if (timeAgo.TotalSeconds > 1.0)
                     {
-                        updatedAgentPin.TimeAgo = timeAgo.Minutes.ToString();
-                        updatedAgentPin.Pin.Label += $" - {updatedAgentPin.TimeAgo}min ago";
+                        updatedAgentPin.TimeAgo = timeAgo.ToPrettyString();
+                        updatedAgentPin.Pin.Label += $" - {updatedAgentPin.TimeAgo} ago";
                     }
                 }
 

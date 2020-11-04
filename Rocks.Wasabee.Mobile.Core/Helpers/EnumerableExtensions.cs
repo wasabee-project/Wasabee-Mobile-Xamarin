@@ -18,4 +18,5 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
             return !enumerable.Any();
         }
     }
+
 }
