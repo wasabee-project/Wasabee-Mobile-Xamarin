@@ -9,7 +9,10 @@ using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Settings;
@@ -17,15 +20,9 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Rocks.Wasabee.Mobile.Core.Services;
-using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
-
-#if DEBUG
-using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
-#endif
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
@@ -43,6 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IDialogNavigationService _dialogNavigationService;
 
         private readonly MvxSubscriptionToken _token;
+        private readonly MvxSubscriptionToken _tokenDebug;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IPermissions permissions, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
@@ -59,19 +57,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _operationsDatabase = operationsDatabase;
             _dialogNavigationService = dialogNavigationService;
 
-            MenuItems = new MvxObservableCollection<MenuItem>()
-            {
-                new MenuItem() { Icon = "mdi-account", Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
-                new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
-                new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(OperationRootTabbedViewModel) },
-                new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) },
-#if DEBUG
-                new MenuItem() { Icon = "", Title = "", ViewModelType = null },
-                new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) }
-#endif
-            };
+            BuildMenu();
 
             _token = messenger.Subscribe<NewOpAvailableMessage>(msg => RefreshAvailableOpsCommand.Execute());
+            _tokenDebug = messenger.SubscribeOnMainThread<MessageFrom<SettingsViewModel>>(msg =>
+            {
+                if (MenuItems.Any(x => x.ViewModelType == typeof(LogsViewModel)))
+                    return;
+
+                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) });
+                RaisePropertyChanged(() => MenuItems);
+
+                _preferences.Set(UserSettingsKeys.DevModeActivated, true);
+            });
         }
 
         public override async void Prepare()
@@ -111,7 +109,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public string DisplayVersion { get; set; } = string.Empty;
         public string SelectedOpName { get; set; } = string.Empty;
         public MvxObservableCollection<OperationModel> AvailableOpsCollection { get; set; } = new MvxObservableCollection<OperationModel>();
-        public MvxObservableCollection<MenuItem> MenuItems { get; set; }
+        public MvxObservableCollection<MenuItem> MenuItems { get; set; } = new MvxObservableCollection<MenuItem>();
         public bool HasLocalOps { get; set; } = true;
 
         private MenuItem? _selectedMenuItem;
@@ -264,6 +262,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         #endregion
 
         #region Private methods
+
+        private void BuildMenu()
+        {
+            MenuItems = new MvxObservableCollection<MenuItem>()
+            {
+                new MenuItem() { Icon = "mdi-account", Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
+                new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
+                new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(OperationRootTabbedViewModel) },
+                new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) }
+            };
+
+            if (_preferences.Get(UserSettingsKeys.DevModeActivated, false))
+                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) });
+        }
 
         private async Task<bool> CheckAndAskForLocationPermissions()
         {

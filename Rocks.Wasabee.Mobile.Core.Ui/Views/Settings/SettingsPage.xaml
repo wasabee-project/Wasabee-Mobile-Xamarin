@@ -46,7 +46,7 @@ If you're a C# / Xamarin.Forms developer and interested in helping us, reach us 
                     </ViewCell>
                     <TextCell Text="Wasabee Webpage" TextColor="Black" Command="{Binding OpenWasabeeWebpageCommand}" />
                     <TextCell Text="Telegram Chat" TextColor="Black" Command="{Binding OpenWasabeeTelegramChatCommand}" />
-                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Gray"/>
+                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Gray" Command="{Binding VersionTappedCommand}"/>
                 </TableSection>
             </TableRoot>
         </TableView>

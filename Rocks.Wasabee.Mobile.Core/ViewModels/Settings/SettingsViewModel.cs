@@ -2,6 +2,8 @@
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross.Commands;
+using MvvmCross.Plugin.Messenger;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.IO;
@@ -18,19 +20,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         private readonly IPermissions _permissions;
         private readonly IUserDialogs _userDialogs;
         private readonly IPreferences _preferences;
+        private readonly IMvxMessenger _messenger;
+
+        private int _tapCount = 0;
+        private bool _devModeActivated = false;
 
         public SettingsViewModel(IVersionTracking versionTracking, IPermissions permissions, IUserDialogs userDialogs,
-            IPreferences preferences)
+            IPreferences preferences, IMvxMessenger messenger)
         {
             _versionTracking = versionTracking;
             _permissions = permissions;
             _userDialogs = userDialogs;
             _preferences = preferences;
+            _messenger = messenger;
         }
 
         public override Task Initialize()
         {
             Analytics.TrackEvent(GetType().Name);
+
+            _devModeActivated = _preferences.Get(UserSettingsKeys.DevModeActivated, false);
 
             Version = _versionTracking.CurrentVersion;
 
@@ -193,6 +202,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                 await Crashes.SetEnabledAsync(false);
                 await Analytics.SetEnabledAsync(false);
             }
+        }
+
+        public IMvxCommand VersionTappedCommand => new MvxCommand(VersionTappedExecuted);
+        private void VersionTappedExecuted()
+        {
+            if (_devModeActivated)
+                return;
+            
+            _tapCount++;
+            if (_tapCount < 5)
+                return;
+
+            _messenger.Publish(new MessageFrom<SettingsViewModel>(this));
+            _userDialogs.Toast("Dev mode activated");
         }
 
         #endregion
