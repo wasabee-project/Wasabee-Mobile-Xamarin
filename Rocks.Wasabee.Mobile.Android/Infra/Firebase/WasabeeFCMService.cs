@@ -95,7 +95,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 #if DEBUG
                 Log.Debug(TAG + " : ", messageBody);
 #endif
-                _mvxMessenger.Publish(new NotificationMessage(this, messageBody));
+                _mvxMessenger.Publish(new NotificationMessage(this, messageBody, message.Data));
 
                 if (messageBody.Contains("Agent Location Change"))
                 {
