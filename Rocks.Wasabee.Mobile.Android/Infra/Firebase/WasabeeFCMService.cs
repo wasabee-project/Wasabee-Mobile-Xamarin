@@ -7,12 +7,17 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using System.Linq;
 using System.Threading.Tasks;
+using Firebase.Iid;
 using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Xamarin.Essentials.Interfaces;
 #if DEBUG
 using Android.Util;
 #endif
 
+#pragma warning disable CS0618 // Type or member is obsolete
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
     [Service()]
@@ -25,6 +30,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         private IMvxMessenger _mvxMessenger;
         private ILoginProvider _loginProvider;
         private IBackgroundDataUpdaterService _backgroundDataUpdaterService;
+        private ISecureStorage _secureStorage;
 
         private int _lastId = 0;
         private MvxSubscriptionToken _mvxToken;
@@ -37,42 +43,58 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
         }
 
-        public override void OnNewToken(string token)
+        public override async void OnNewToken(string token)
         {
+            _fcmToken = token;
+
             if (!_isInitialized)
-                Initialize();
+                await Initialize();
 #if DEBUG
             Log.Debug(TAG, "FCM token: " + token);
 #endif
-            _fcmToken = token;
         }
 
         private async Task SendRegistrationToServer()
         {
             if (!_isInitialized)
-                Initialize();
-
+                await Initialize();
+            
+            await _secureStorage.SetAsync(SecureStorageConstants.FcmToken, _fcmToken);
             await _loginProvider.SendFirebaseTokenAsync(_fcmToken);
         }
 
-        private void Initialize()
+        private async Task Initialize()
         {
             if (_isInitialized)
                 return;
 
-            _loginProvider = Mvx.IoCProvider.Resolve<ILoginProvider>();
-            _mvxMessenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
-            _backgroundDataUpdaterService = Mvx.IoCProvider.Resolve<IBackgroundDataUpdaterService>();
+            _loginProvider ??= Mvx.IoCProvider.Resolve<ILoginProvider>();
+            _mvxMessenger ??= Mvx.IoCProvider.Resolve<IMvxMessenger>();
+            _backgroundDataUpdaterService ??= Mvx.IoCProvider.Resolve<IBackgroundDataUpdaterService>();
+            _secureStorage ??= Mvx.IoCProvider.Resolve<ISecureStorage>();
 
-            _mvxToken = _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer());
+            _mvxToken ??= _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer());
 
             _isInitialized = true;
+
+            if (FirebaseInstanceId.Instance.Token != null)
+            {
+                var instanceIdToken = FirebaseInstanceId.Instance.Token;
+
+                if (!instanceIdToken.Equals(_fcmToken))
+                {
+                    if (_fcmToken.IsNullOrEmpty())
+                        _fcmToken = instanceIdToken;
+
+                    await SendRegistrationToServer();
+                }
+            }
         }
 
-        public override void OnMessageReceived(RemoteMessage message)
+        public override async void OnMessageReceived(RemoteMessage message)
         {
             if (!_isInitialized)
-                Initialize();
+                await Initialize();
 
 #if DEBUG
             Log.Debug(TAG + " : ", message.ToString());
@@ -108,7 +130,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                     var markerId = message.Data.FirstOrDefault(x => x.Key.Equals("markerID"));
 
                     if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(markerId.Value))
-                        _backgroundDataUpdaterService.UpdateMarker(opId.Value, markerId.Value).ConfigureAwait(false);
+                        await _backgroundDataUpdaterService.UpdateMarker(opId.Value, markerId.Value).ConfigureAwait(false);
                 }
                 else if (messageBody.Contains("Link"))
                 {
@@ -116,13 +138,13 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                     var linkId = message.Data.FirstOrDefault(x => x.Key.Equals("linkID"));
 
                     if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(linkId.Value))
-                        _backgroundDataUpdaterService.UpdateLink(opId.Value, linkId.Value).ConfigureAwait(false);
+                        await _backgroundDataUpdaterService.UpdateLink(opId.Value, linkId.Value).ConfigureAwait(false);
                 }
                 else if (messageBody.Contains("Map Change"))
                 {
                     var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
                     if (!string.IsNullOrWhiteSpace(opId.Value))
-                        _backgroundDataUpdaterService.UpdateOperation(opId.Value).ConfigureAwait(false);
+                        await _backgroundDataUpdaterService.UpdateOperation(opId.Value).ConfigureAwait(false);
                 }
             }
         }
@@ -163,3 +185,4 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         }
     }
 }
+#pragma warning restore CS0618

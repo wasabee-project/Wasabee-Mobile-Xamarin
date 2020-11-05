@@ -3,7 +3,10 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
+using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.IO;
@@ -21,18 +24,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         private readonly IUserDialogs _userDialogs;
         private readonly IPreferences _preferences;
         private readonly IMvxMessenger _messenger;
+        private readonly ISecureStorage _secureStorage;
+        private readonly ILoginProvider _loginProvider;
+        private readonly IFirebaseService _firebaseService;
 
         private int _tapCount = 0;
         private bool _devModeActivated = false;
 
         public SettingsViewModel(IVersionTracking versionTracking, IPermissions permissions, IUserDialogs userDialogs,
-            IPreferences preferences, IMvxMessenger messenger)
+            IPreferences preferences, IMvxMessenger messenger, ISecureStorage secureStorage, ILoginProvider loginProvider,
+            IFirebaseService firebaseService)
         {
             _versionTracking = versionTracking;
             _permissions = permissions;
             _userDialogs = userDialogs;
             _preferences = preferences;
             _messenger = messenger;
+            _secureStorage = secureStorage;
+            _loginProvider = loginProvider;
+            _firebaseService = firebaseService;
         }
 
         public override Task Initialize()
@@ -180,7 +190,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand<bool> ToggleAnalyticsCommand => new MvxCommand<bool>(async value => await ToggleAnalyticsExecuted(value));
         private async Task ToggleAnalyticsExecuted(bool value)
         {
-            LoggingService.Trace($"Executing SettingsViewModel.ToggleAnalyticsCommand({value}");
+            LoggingService.Trace($"Executing SettingsViewModel.ToggleAnalyticsCommand({value})");
 
             if (value)
             {
@@ -216,6 +226,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
             _messenger.Publish(new MessageFrom<SettingsViewModel>(this));
             _userDialogs.Toast("Dev mode activated");
+        }
+
+        public IMvxCommand RefreshFcmTokenCommand => new MvxCommand(async () => await RefreshFcmTokenExecuted());
+        private async Task  RefreshFcmTokenExecuted()
+        {
+            if (IsBusy)
+                return;
+            
+            LoggingService.Trace("Executing SettingsViewModel.RefreshFcmTokenCommand");
+
+            IsBusy = true;
+            
+            var token = await _secureStorage.GetAsync(SecureStorageConstants.FcmToken) 
+                        ?? _firebaseService.GetFcmToken();
+
+            var result = await _loginProvider.SendFirebaseTokenAsync(token);
+            _userDialogs.Toast(result ? "Token upated" : "Error refreshing token");
+
+            LoggingService.Trace($"Result for SettingsViewModel.RefreshFcmTokenCommand : {result}");
+
+            IsBusy = false;
         }
 
         #endregion

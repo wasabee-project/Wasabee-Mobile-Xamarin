@@ -9,6 +9,7 @@ using Plugin.CurrentActivity;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Droid.Infra.Firebase;
 
@@ -22,6 +23,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterSingleton(typeof(IFirebaseAnalyticsService), () => new FirebaseAnalyticsService(Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>()));
+            Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
 
             AndroidEnvironment.UnhandledExceptionRaiser += UnhandledExceptionHandler;
 

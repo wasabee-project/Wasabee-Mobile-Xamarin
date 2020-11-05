@@ -139,7 +139,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// </summary>
         /// <param name="token">FCM token</param>
         /// <returns></returns>
-        public async Task SendFirebaseTokenAsync(string token)
+        public async Task<bool> SendFirebaseTokenAsync(string token)
         {
             _loggingService.Trace("Executing LoginProvider.SendFirebaseTokenAsync");
 
@@ -147,7 +147,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             {
                 _loggingService.Info("Token is null, returning");
 
-                return;
+                return false;
             }
 
             var cookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
@@ -175,14 +175,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             {
                 _loggingService.Error(e, "Error Executing LoginProvider.SendFirebaseTokenAsync");
 
-                return;
+                return false;
             }
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                // TODO handle response
+                return responseContent.Contains("\"status\":\"ok\"");
             }
+
+            return false;
         }
 
         public Task RemoveTokenFromSecureStore()

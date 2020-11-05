@@ -34,6 +34,7 @@
                         </Grid>
                     </ViewCell>
                     <TextCell Text="Send logs" TextColor="Black" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="Gray"/>
+                    <TextCell Text="Refresh FCM token" TextColor="Black" Command="{Binding RefreshFcmTokenCommand}"/>
                 </TableSection>
                 <TableSection Title="About" TextColor="{StaticResource PrimaryGreen}">
                     <ViewCell>
