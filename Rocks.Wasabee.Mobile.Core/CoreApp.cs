@@ -29,6 +29,10 @@ namespace Rocks.Wasabee.Mobile.Core
             Bootstrapper.SetupDatabases();
             Bootstrapper.SetupServices();
 
+#if DEBUG
+            Mvx.IoCProvider.Resolve<IPreferences>().Set(UserSettingsKeys.DevModeActivated, true);
+#endif
+
             AppCenter.Start(
                 $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};"
                 // TODO + "ios={Your iOS App secret here}"

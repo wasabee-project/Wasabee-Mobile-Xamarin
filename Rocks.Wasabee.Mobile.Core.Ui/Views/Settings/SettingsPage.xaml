@@ -34,6 +34,7 @@
                         </Grid>
                     </ViewCell>
                     <TextCell Text="Send logs" TextColor="Black" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="Gray"/>
+                    <TextCell Text="Refresh FCM token" TextColor="Black" Command="{Binding RefreshFcmTokenCommand}"/>
                 </TableSection>
                 <TableSection Title="About" TextColor="{StaticResource PrimaryGreen}">
                     <ViewCell>
@@ -46,7 +47,7 @@ If you're a C# / Xamarin.Forms developer and interested in helping us, reach us 
                     </ViewCell>
                     <TextCell Text="Wasabee Webpage" TextColor="Black" Command="{Binding OpenWasabeeWebpageCommand}" />
                     <TextCell Text="Telegram Chat" TextColor="Black" Command="{Binding OpenWasabeeTelegramChatCommand}" />
-                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Gray"/>
+                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Gray" Command="{Binding VersionTappedCommand}"/>
                 </TableSection>
             </TableRoot>
         </TableView>
