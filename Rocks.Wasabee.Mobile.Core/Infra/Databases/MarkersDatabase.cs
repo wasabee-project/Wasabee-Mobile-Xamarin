@@ -26,15 +26,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<MarkerModel?> GetMarkerModel(string markerId)
         {
+            LoggingService.Trace("Querying MarkersDatabase.GetMarkerModel");
+
+            var databaseConnection = await GetDatabaseConnection<MarkerDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
             try
             {
-                LoggingService.Trace("Querying MarkersDatabase.GetMarkerModel");
-
-                var databaseConnection = await GetDatabaseConnection<MarkerDatabaseModel>().ConfigureAwait(false);
-
-                var dbLock = databaseConnection.GetConnection().Lock();
                 var markerDatabaseModel = databaseConnection.GetConnection().Get<MarkerDatabaseModel>(markerId);
-                dbLock.Dispose();
 
                 return markerDatabaseModel != null ?
                     MarkerDatabaseModel.ToMarkerModel(markerDatabaseModel) :
@@ -46,22 +44,26 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
                 return null;
             }
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
-
 
         public async Task<int> SaveMarkerModel(MarkerModel markerModel, string operationId)
         {
             LoggingService.Trace("Querying MarkersDatabase.SaveMarkerModel");
 
             var databaseConnection = await GetDatabaseConnection<MarkerDatabaseModel>().ConfigureAwait(false);
-            var markerDatabaseModel = MarkerDatabaseModel.ToMarkerDatabaseModel(markerModel);
-            markerDatabaseModel.OpId = operationId;
-
             var dbLock = databaseConnection.GetConnection().Lock();
-
             try
             {
+                var markerDatabaseModel = MarkerDatabaseModel.ToMarkerDatabaseModel(markerModel);
+                markerDatabaseModel.OpId = operationId;
+
                 databaseConnection.GetConnection().InsertOrReplaceWithChildren(markerDatabaseModel);
+
+                return 0;
             }
             catch (Exception e)
             {
@@ -69,10 +71,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
                 return 1;
             }
-
-            dbLock.Dispose();
-
-            return 0;
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
 #nullable disable

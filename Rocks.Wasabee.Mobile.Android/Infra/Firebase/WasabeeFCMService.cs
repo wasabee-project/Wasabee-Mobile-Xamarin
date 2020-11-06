@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Firebase.Iid;
 using MvvmCross;
-using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Xamarin.Essentials.Interfaces;
@@ -83,7 +82,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
                 if (!instanceIdToken.Equals(_fcmToken))
                 {
-                    if (_fcmToken.IsNullOrEmpty())
+                    if (string.IsNullOrEmpty(_fcmToken))
                         _fcmToken = instanceIdToken;
 
                     await SendRegistrationToServer();

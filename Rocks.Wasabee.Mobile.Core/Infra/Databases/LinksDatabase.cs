@@ -26,15 +26,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<LinkModel?> GetLinkModel(string linkId)
         {
+            LoggingService.Trace("Querying LinksDatabase.GetLinkModel");
+
+            var databaseConnection = await GetDatabaseConnection<LinkDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
             try
             {
-                LoggingService.Trace("Querying LinksDatabase.GetLinkModel");
-
-                var databaseConnection = await GetDatabaseConnection<LinkDatabaseModel>().ConfigureAwait(false);
-
-                var dbLock = databaseConnection.GetConnection().Lock();
                 var linkDatabaseModel = databaseConnection.GetConnection().Get<LinkDatabaseModel>(linkId);
-                dbLock.Dispose();
 
                 return linkDatabaseModel != null ?
                     LinkDatabaseModel.ToLinkModel(linkDatabaseModel) :
@@ -46,6 +44,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
                 return null;
             }
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
 
@@ -54,14 +56,15 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             LoggingService.Trace("Querying LinksDatabase.SaveLinkModel");
 
             var databaseConnection = await GetDatabaseConnection<LinkDatabaseModel>().ConfigureAwait(false);
-            var linkDatabaseModel = LinkDatabaseModel.ToLinkDatabaseModel(linkModel);
-            linkDatabaseModel.OpId = operationId;
-
             var dbLock = databaseConnection.GetConnection().Lock();
-
             try
             {
+                var linkDatabaseModel = LinkDatabaseModel.ToLinkDatabaseModel(linkModel);
+                linkDatabaseModel.OpId = operationId;
+
                 databaseConnection.GetConnection().InsertOrReplaceWithChildren(linkDatabaseModel);
+
+                return 0;
             }
             catch (Exception e)
             {
@@ -69,10 +72,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
                 return 1;
             }
-
-            dbLock.Dispose();
-
-            return 0;
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
 #nullable disable
