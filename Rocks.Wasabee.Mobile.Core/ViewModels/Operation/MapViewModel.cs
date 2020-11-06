@@ -374,6 +374,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
+                // TODO : Handle full team refresh when userId null
+                if (message.UserId.IsNullOrEmpty())
+                {
+                    return;
+                }
+
                 var agentId = message.UserId;
                 var agent = await _teamAgentsDatabase.GetTeamAgent(agentId);
                 if (agent == null)
