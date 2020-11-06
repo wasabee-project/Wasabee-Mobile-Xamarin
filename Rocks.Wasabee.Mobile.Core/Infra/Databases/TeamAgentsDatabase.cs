@@ -96,7 +96,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                LoggingService.Error(e, "Error uerying TeamAgentsDatabase.GetTeamAgent");
+                LoggingService.Error(e, "Error Querying TeamAgentsDatabase.GetTeamAgent");
 
                 return null;
             }
@@ -125,7 +125,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                LoggingService.Error(e, "Error uerying TeamAgentsDatabase.GetAgentsInTeam");
+                LoggingService.Error(e, "Error Querying TeamAgentsDatabase.GetAgentsInTeam");
 
                 return new List<TeamAgentModel>();
             }
@@ -152,7 +152,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                LoggingService.Error(e, "Error uerying TeamAgentsDatabase.GetAgentsInTeams");
+                LoggingService.Error(e, "Error Querying TeamAgentsDatabase.GetAgentsInTeams");
 
                 return new List<TeamAgentModel>();
             }
