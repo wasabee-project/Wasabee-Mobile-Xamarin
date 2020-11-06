@@ -15,6 +15,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
     {
         public TeamsDatabase(IFileSystem fileSystem, ILoggingService loggingService) : base(fileSystem, loggingService, TimeSpan.FromDays(7))
         {
+            GetDatabaseConnection<TeamAgent>().ConfigureAwait(false);
+            GetDatabaseConnection<TeamAgentsDatabase.TeamAgentDatabaseModel>().ConfigureAwait(false);
         }
 
         public override async Task<int> DeleteAllData()
@@ -49,6 +51,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             return 0;
         }
+
         public async Task<int> SaveTeamsModels(IList<TeamModel> teams)
         {
             LoggingService.Trace("Querying TeamsDatabase.SaveTeamsModels");
@@ -99,22 +102,21 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             dbLock.Dispose();
 
             return teamDatabaseModels
-                .Where(x => x.Agents.Any(a => a.Id != null && a.Id.Equals(userId)))
+                .Where(x => x.Agents.Any(a => a.AgentId != null && a.AgentId.Equals(userId)))
                 .Select(x => TeamDatabaseModel.ToTeamModel(x))
                 .ToList();
         }
 
 #nullable disable
-        class TeamDatabaseModel
+        internal class TeamDatabaseModel
         {
             [PrimaryKey, Unique]
-            public string Id { get; set; }
+            public string TeamId { get; set; }
 
             public string Name { get; set; }
 
-            public string AgentsBlobbed { get; set; }
-            [TextBlob("AgentsBlobbed")]
-            public List<TeamAgentModel> Agents { get; set; }
+            [ManyToMany(typeof(TeamAgent), CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
+            public List<TeamAgentsDatabase.TeamAgentDatabaseModel> Agents { get; set; }
 
             public DateTime DownloadedAt { get; set; }
 
@@ -122,9 +124,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             {
                 return new TeamModel()
                 {
-                    Id = teamDatabaseModel.Id,
+                    Id = teamDatabaseModel.TeamId,
                     Name = teamDatabaseModel.Name,
-                    Agents = teamDatabaseModel.Agents ?? new List<TeamAgentModel>(),
+                    Agents = teamDatabaseModel.Agents?.Select(agentDbModel => TeamAgentsDatabase.TeamAgentDatabaseModel.ToTeamAgentModel(agentDbModel)).ToList(),
                     DownloadedAt = teamDatabaseModel.DownloadedAt
                 };
             }
@@ -133,13 +135,24 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             {
                 return new TeamDatabaseModel
                 {
-                    Id = teamModel.Id,
+                    TeamId = teamModel.Id,
                     Name = teamModel.Name,
-                    Agents = teamModel.Agents ?? new List<TeamAgentModel>(),
+                    Agents = teamModel.Agents?.Select(agentModel => TeamAgentsDatabase.TeamAgentDatabaseModel.ToTeamAgentDatabaseModel(agentModel)).ToList(),
                     DownloadedAt = teamModel.DownloadedAt
                 };
             }
         }
 #nullable enable
     }
+    
+#nullable disable
+    internal class TeamAgent
+    {	   
+        [ForeignKey(typeof(TeamsDatabase.TeamDatabaseModel))]
+        public string TeamId { get; set; }	
+
+        [ForeignKey(typeof(TeamAgentsDatabase.TeamAgentDatabaseModel))]
+        public string AgentId { get; set; }
+    }
+#nullable enable
 }

@@ -30,6 +30,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
+        private readonly TeamAgentsDatabase _teamAgentsDatabase;
         private readonly UsersDatabase _usersDatabase;
         private readonly IPreferences _preferences;
         private readonly IPermissions _permissions;
@@ -46,12 +47,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private bool _loadingAgentsLocations;
 
-        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, UsersDatabase usersDatabase, IPreferences preferences,
-            IPermissions permissions, IMvxMessenger messenger, IUserDialogs userDialogs, IMvxNavigationService navigationService,
-            IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service)
+        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase, 
+            UsersDatabase usersDatabase, IPreferences preferences, IPermissions permissions, IMvxMessenger messenger, 
+            IUserDialogs userDialogs, IMvxNavigationService navigationService, IUserSettingsService userSettingsService, 
+            WasabeeApiV1Service wasabeeApiV1Service)
         {
             _operationsDatabase = operationsDatabase;
             _teamsDatabase = teamsDatabase;
+            _teamAgentsDatabase = teamAgentsDatabase;
             _usersDatabase = usersDatabase;
             _preferences = preferences;
             _permissions = permissions;
@@ -322,26 +325,29 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
                 if (updatedTeams.Any())
                     await _teamsDatabase.SaveTeamsModels(updatedTeams);
-
-                var updatedAgents = new List<WasabeeAgentPin>();
-                var agents = updatedTeams.SelectMany(x => x.Agents).Where(a => a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Id);
-                foreach (var agent in agents)
+                
+                var agents = await _teamAgentsDatabase.GetAgentsInTeams(updatedTeams.Select(x => x.Id));
+                if (agents.IsNullOrEmpty())
+                    return;
+                
+                var wasabeeAgentPins = new List<WasabeeAgentPin>();
+                foreach (var agent in agents.Where(a => a.State && a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Id))
                 {
-                    if (updatedAgents.Any(a => a.AgentId.Equals(agent.Id)))
+                    if (wasabeeAgentPins.Any(a => a.AgentId.Equals(agent.Id)))
                         continue;
 
                     var updatedAgentPin = CreateAgentPin(agent);
-                    updatedAgents.Add(updatedAgentPin);
+                    wasabeeAgentPins.Add(updatedAgentPin);
                 }
 
-                foreach (var toRemove in from agentPin in updatedAgents
+                foreach (var toRemove in from agentPin in wasabeeAgentPins
                                          where AgentsPins.Any(a => a.AgentId.Equals(agentPin.AgentId))
                                          select AgentsPins.First(a => a.AgentId.Equals(agentPin.AgentId)))
                 {
                     AgentsPins.Remove(toRemove);
                 }
 
-                AgentsPins.AddRange(updatedAgents);
+                AgentsPins.AddRange(wasabeeAgentPins);
             }
             catch (Exception e)
             {
@@ -369,16 +375,40 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             try
             {
                 var agentId = message.UserId;
-                var agent = await _wasabeeApiV1Service.Agents_GetAgent(agentId);
-                if (agent == null || (agent.Lat == 0 && agent.Lng == 0))
+                var agent = await _teamAgentsDatabase.GetTeamAgent(agentId);
+                if (agent == null)
+                {
+                    var team = await _teamsDatabase.GetTeam(message.TeamId);
+                    if (team == null)
+                    {
+                        team = await _wasabeeApiV1Service.Teams_GetTeam(message.TeamId);
+                        if (team == null)
+                            return;
+                        
+                        await _teamsDatabase.SaveTeamModel(team);
+                    }
+
+                    if (team.Agents.Any(x => x.Id.Equals(agentId)))
+                        agent = team.Agents.First(x => x.Id.Equals(agentId));
+                    else
+                        return;
+                }
+
+                if (DateTime.Now - agent.LastUpdatedAt < TimeSpan.FromSeconds(10))
                     return;
-                
-                var updatedAgentPin = CreateAgentPin(agent);
+
+                var updatedAgent = await _wasabeeApiV1Service.Agents_GetAgent(agentId);
+                if (updatedAgent == null || (updatedAgent.Lat == 0 && updatedAgent.Lng == 0))
+                    return;
+
+                var updatedAgentPin = CreateAgentPin(updatedAgent);
                 var toRemove = AgentsPins.FirstOrDefault(a => a.AgentId.Equals(updatedAgentPin.AgentId));
                 if (toRemove != null)
                     AgentsPins.Remove(toRemove);
                 
                 AgentsPins.Add(updatedAgentPin);
+
+                await _teamAgentsDatabase.SaveTeamAgentModel(updatedAgent);
             }
             catch (Exception e)
             {
@@ -390,9 +420,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _loadingAgentsLocations = false;
             }
         }
-
         
-
         public IMvxCommand<MapThemeEnum> SwitchThemeCommand => new MvxCommand<MapThemeEnum>(SwitchThemeExecuted);
         private void SwitchThemeExecuted(MapThemeEnum mapTheme)
         {
