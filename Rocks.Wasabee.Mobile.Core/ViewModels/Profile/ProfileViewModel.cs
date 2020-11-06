@@ -1,7 +1,6 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
-using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Services;
@@ -93,7 +92,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         {
             LoggingService.Trace("Executing ProfileViewModel.LoadAgentProfileCommand");
 
-            if (agentId.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(agentId))
             {
                 IsBusy = false;
                 return;
@@ -127,7 +126,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             if (IsBusy || User == null)
                 return;
 
-            if (User.GoogleId.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(User.GoogleId))
                 return;
 
             LoggingService.Trace("Executing ProfileViewModel.OpenRocksProfileCommand");
@@ -155,7 +154,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             if (IsBusy || User == null)
                 return;
 
-            if (User.GoogleId.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(User.GoogleId))
                 return;
 
             LoggingService.Trace("Executing ProfileViewModel.OpenVProfileCommand");

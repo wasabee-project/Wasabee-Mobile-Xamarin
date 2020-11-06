@@ -375,7 +375,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             try
             {
                 // TODO : Handle full team refresh when userId null
-                if (message.UserId.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(message.UserId))
                 {
                     return;
                 }
