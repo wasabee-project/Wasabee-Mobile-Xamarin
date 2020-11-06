@@ -122,7 +122,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                 if (messageBody.Contains("Agent Location Change"))
                 {
                     var gid = message.Data.FirstOrDefault(x => x.Key.Equals("gid"));
-                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, gid.Value));
+                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, gid.Value, msg.Value));
                 }
                 else if (messageBody.Contains("Marker"))
                 {

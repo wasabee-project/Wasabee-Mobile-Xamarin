@@ -66,6 +66,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Teams
 
         [JsonProperty("LoadWD")]
         public bool LoadWD { get; set; }
+
+        [JsonIgnore]
+        public DateTime LastUpdatedAt { get; set; }
     }
 #nullable enable
 }

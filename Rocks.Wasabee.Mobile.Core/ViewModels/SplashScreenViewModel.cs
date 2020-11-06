@@ -54,6 +54,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly LinksDatabase _linksDatabase;
         private readonly MarkersDatabase _markersDatabase;
         private readonly TeamsDatabase _teamsDatabase;
+        private readonly TeamAgentsDatabase _teamAgentsDatabase;
 
         private bool _working = false;
         private GoogleToken? _googleToken;
@@ -65,7 +66,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IAuthentificationService authentificationService, IMvxNavigationService navigationService, IMvxMessenger messenger,
             ISecureStorage secureStorage, IAppSettings appSettings, IUserSettingsService userSettingsService, IUserDialogs userDialogs,
             WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, LinksDatabase linksDatabase,
-            MarkersDatabase markersDatabase, TeamsDatabase teamsDatabase)
+            MarkersDatabase markersDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
@@ -83,6 +84,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _linksDatabase = linksDatabase;
             _markersDatabase = markersDatabase;
             _teamsDatabase = teamsDatabase;
+            _teamAgentsDatabase = teamAgentsDatabase;
         }
 
         public void Prepare(SplashScreenNavigationParameter parameter)
@@ -499,6 +501,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                                "Please wait...";
 
             await _teamsDatabase.DeleteAllData();
+            await _teamAgentsDatabase.DeleteAllData();
             await _operationsDatabase.DeleteAllData();
             await _linksDatabase.DeleteAllData();
             await _markersDatabase.DeleteAllData();

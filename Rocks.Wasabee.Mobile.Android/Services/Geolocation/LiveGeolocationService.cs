@@ -95,8 +95,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                     Geolocator.DesiredAccuracy = 5;
                     Geolocator.PositionChanged += Geolocator_PositionChanged;
 
-                    //every 3 second, 5 meters
-                    await Geolocator.StartListeningAsync(TimeSpan.FromSeconds(3), 5);
+                    //every 5 second, 5 meters
+                    await Geolocator.StartListeningAsync(TimeSpan.FromSeconds(5), 5);
                 }
                 else
                 {
