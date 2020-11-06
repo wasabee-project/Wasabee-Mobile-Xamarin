@@ -29,24 +29,50 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<List<UserTeamModel>> GetUserTeams(string googleId)
         {
             LoggingService.Trace("Querying UsersDatabase.GetUserTeams");
+            
+            var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+            try
+            {
+                var userDatabaseModel = databaseConnection.GetConnection().GetWithChildren<UserDatabaseModel>(googleId);
+                var userModel = UserDatabaseModel.ToUserModel(userDatabaseModel);
 
-            var userModel = await GetUserModel(googleId);
-            return userModel?.Teams ?? new List<UserTeamModel>();
+                return userModel?.Teams ?? new List<UserTeamModel>();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying UsersDatabase.GetUserTeams");
+                return new List<UserTeamModel>();
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
         public async Task<UserModel?> GetUserModel(string googleId)
         {
-            LoggingService.Trace("Querying UsersDatabase.GetUserModel");
-
+            LoggingService.Trace("Querying UsersDatabase.SaveUserModel");
+            
             var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
-
             var dbLock = databaseConnection.GetConnection().Lock();
-            var userDatabaseModel = databaseConnection.GetConnection().GetWithChildren<UserDatabaseModel>(googleId);
-            dbLock.Dispose();
+            try
+            {
+                var userDatabaseModel = databaseConnection.GetConnection().GetWithChildren<UserDatabaseModel>(googleId);
 
-            return userDatabaseModel != null ?
-                UserDatabaseModel.ToUserModel(userDatabaseModel) :
-                new UserModel();
+                return userDatabaseModel != null ?
+                    UserDatabaseModel.ToUserModel(userDatabaseModel) :
+                    null;
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying UsersDatabase.GetUserModel");
+                return null;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
         public async Task<int> SaveUserModel(UserModel userModel)
@@ -54,23 +80,24 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             LoggingService.Trace("Querying UsersDatabase.SaveUserModel");
 
             var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
-            var userDatabaseModel = UserDatabaseModel.ToUserDatabaseModel(userModel);
-
             var dbLock = databaseConnection.GetConnection().Lock();
-
             try
             {
+                var userDatabaseModel = UserDatabaseModel.ToUserDatabaseModel(userModel);
+
                 databaseConnection.GetConnection().InsertOrReplaceWithChildren(userDatabaseModel, true);
+            
+                return 0;
             }
             catch (Exception e)
             {
                 LoggingService.Error(e, "Error Querying UsersDatabase.SaveUserModel");
                 return 1;
             }
-
-            dbLock.Dispose();
-
-            return 0;
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
 #nullable disable

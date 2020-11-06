@@ -27,40 +27,29 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return await databaseConnection.DeleteAllAsync<OperationDatabaseModel>().ConfigureAwait(false);
         }
 
-        public async Task DeleteExpiredData()
-        {
-            LoggingService.Trace("Querying OperationsDatabase.DeleteExpiredData");
-
-            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
-
-            var operationDatabaseModels = await databaseConnection.Table<OperationDatabaseModel>().ToListAsync();
-            var expiredDatabaseModels = operationDatabaseModels.Where(x => IsExpired(x.DownloadedAt)).ToList();
-
-            foreach (var expiredReferringSite in expiredDatabaseModels)
-                await databaseConnection.DeleteAsync(expiredReferringSite).ConfigureAwait(false);
-        }
-
         public async Task<OperationModel?> GetOperationModel(string operationId)
         {
+            LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
+
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
             try
             {
-                LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
-
-                var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
-
-                var dbLock = databaseConnection.GetConnection().Lock();
                 var operationDatabaseModel = databaseConnection.GetConnection().GetWithChildren<OperationDatabaseModel>(operationId);
-                dbLock.Dispose();
 
                 return operationDatabaseModel != null ?
                     OperationDatabaseModel.ToOperationModel(operationDatabaseModel) :
-                    new OperationModel();
+                    null;
             }
             catch (Exception e)
             {
                 LoggingService.Error(e, "Error Querying OperationsDatabase.GetOperationModel");
 
                 return null;
+            }
+            finally
+            {
+                dbLock.Dispose();
             }
         }
 
@@ -69,12 +58,23 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             LoggingService.Trace("Querying OperationsDatabase.GetOperationModels");
 
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
-
             var dbLock = databaseConnection.GetConnection().Lock();
-            var operationDatabaseModelList = databaseConnection.GetConnection().GetAllWithChildren<OperationDatabaseModel>();
-            dbLock.Dispose();
+            try
+            {
+                var operationDatabaseModelList = databaseConnection.GetConnection().GetAllWithChildren<OperationDatabaseModel>();
 
-            return operationDatabaseModelList.Select(x => OperationDatabaseModel.ToOperationModel(x)).ToList();
+                return operationDatabaseModelList.Select(x => OperationDatabaseModel.ToOperationModel(x)).ToList();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error OperationsDatabase.GetOperationModels");
+
+                return new List<OperationModel>();
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
         public async Task<int> SaveOperationModel(OperationModel operationModel)
@@ -82,13 +82,14 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             LoggingService.Trace("Querying OperationsDatabase.SaveOperationModel");
 
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
-            var operationDatabaseModel = OperationDatabaseModel.ToOperationDatabaseModel(operationModel);
-
             var dbLock = databaseConnection.GetConnection().Lock();
-
             try
             {
+                var operationDatabaseModel = OperationDatabaseModel.ToOperationDatabaseModel(operationModel);
+
                 databaseConnection.GetConnection().InsertOrReplaceWithChildren(operationDatabaseModel);
+
+                return 0;
             }
             catch (Exception e)
             {
@@ -96,10 +97,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
                 return 1;
             }
-
-            dbLock.Dispose();
-
-            return 0;
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
 #nullable disable

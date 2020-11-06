@@ -31,13 +31,15 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             LoggingService.Trace("Querying TeamAgentsDatabase.SaveTeamAgentModel");
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
-            var teamAgentDatabaseModel = TeamAgentDatabaseModel.ToTeamAgentDatabaseModel(teamAgentModel);
 
             var dbLock = databaseConnection.GetConnection().Lock();
-
             try
             {
+                var teamAgentDatabaseModel = TeamAgentDatabaseModel.ToTeamAgentDatabaseModel(teamAgentModel);
+                
                 databaseConnection.GetConnection().InsertOrReplace(teamAgentDatabaseModel);
+
+                return 0;
             }
             catch (Exception e)
             {
@@ -45,10 +47,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
                 return 1;
             }
-
-            dbLock.Dispose();
-
-            return 0;
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
         public async Task<int> SaveTeamAgentsModels(IList<TeamAgentModel> agents)
@@ -56,14 +58,15 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             LoggingService.Trace("Querying TeamAgentsDatabase.SaveTeamAgentsModels");
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
-            var teamAgentDatabaseModels = new List<TeamAgentDatabaseModel>(
-                agents.Select(model => TeamAgentDatabaseModel.ToTeamAgentDatabaseModel(model)));
 
             var dbLock = databaseConnection.GetConnection().Lock();
-
             try
             {
+                var teamAgentDatabaseModels = new List<TeamAgentDatabaseModel>(
+                    agents.Select(model => TeamAgentDatabaseModel.ToTeamAgentDatabaseModel(model)));
                 databaseConnection.GetConnection().InsertOrReplaceAllWithChildren(teamAgentDatabaseModels, true);
+
+                return 0;
             }
             catch (Exception e)
             {
@@ -71,10 +74,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
                 return 1;
             }
-
-            dbLock.Dispose();
-
-            return 0;
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
         public async Task<TeamAgentModel?> GetTeamAgent(string agentId)
@@ -83,12 +86,25 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
-            var teamAgentDatabaseModel = databaseConnection.GetConnection().Get<TeamAgentDatabaseModel>(agentId);
-            dbLock.Dispose();
+            try
+            {
+                var teamAgentDatabaseModel = databaseConnection.GetConnection().Get<TeamAgentDatabaseModel>(agentId);
+                
+                return teamAgentDatabaseModel != null ?
+                    TeamAgentDatabaseModel.ToTeamAgentModel(teamAgentDatabaseModel) :
+                    null;
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error uerying TeamAgentsDatabase.GetTeamAgent");
 
-            return teamAgentDatabaseModel != null ?
-                TeamAgentDatabaseModel.ToTeamAgentModel(teamAgentDatabaseModel) :
-                null;
+                return null;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+
         }
 
         public async Task<List<TeamAgentModel>> GetAgentsInTeam(string teamId)
@@ -97,13 +113,26 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
-            var teamAgentDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<TeamAgentDatabaseModel>();
-            dbLock.Dispose();
+            try
+            {
+                var teamAgentDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<TeamAgentDatabaseModel>();
+                dbLock.Dispose();
 
-            return teamAgentDatabaseModels
-                .Where(x => x.Teams.Any(t => t.TeamId.Equals(teamId)))
-                .Select(x => TeamAgentDatabaseModel.ToTeamAgentModel(x))
-                .ToList();
+                return teamAgentDatabaseModels?
+                    .Where(x => x.Teams.Any(t => t.TeamId.Equals(teamId)))
+                    .Select(x => TeamAgentDatabaseModel.ToTeamAgentModel(x))
+                    .ToList() ?? new List<TeamAgentModel>();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error uerying TeamAgentsDatabase.GetAgentsInTeam");
+
+                return new List<TeamAgentModel>();
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
         public async Task<List<TeamAgentModel>> GetAgentsInTeams(IEnumerable<string> teamIds)
@@ -112,13 +141,25 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
-            var teamAgentDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<TeamAgentDatabaseModel>();
-            dbLock.Dispose();
+            try
+            {
+                var teamAgentDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<TeamAgentDatabaseModel>();
 
-            return teamAgentDatabaseModels
-                .Where(x => teamIds.Any(id => x.Teams.Any(t => t.TeamId.Equals(id))))
-                .Select(x => TeamAgentDatabaseModel.ToTeamAgentModel(x))
-                .ToList();
+                return teamAgentDatabaseModels?
+                    .Where(x => teamIds.Any(id => x.Teams.Any(t => t.TeamId.Equals(id))))
+                    .Select(x => TeamAgentDatabaseModel.ToTeamAgentModel(x))
+                    .ToList() ?? new List<TeamAgentModel>();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error uerying TeamAgentsDatabase.GetAgentsInTeams");
+
+                return new List<TeamAgentModel>();
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
         }
 
 #nullable disable
