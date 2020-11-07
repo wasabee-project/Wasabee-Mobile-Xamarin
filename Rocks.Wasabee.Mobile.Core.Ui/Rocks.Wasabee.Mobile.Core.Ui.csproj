@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GoogleRoads.MapStyle.json" />
     <None Remove="Greenlightened.MapStyle.json" />
     <None Remove="Intel.MapStyle.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="GoogleRoads.MapStyle.json" />
     <EmbeddedResource Include="Intel.MapStyle.json" />
     <EmbeddedResource Include="Greenlightened.MapStyle.json" />
   </ItemGroup>

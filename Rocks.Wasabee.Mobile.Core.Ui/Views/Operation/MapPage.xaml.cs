@@ -242,35 +242,29 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshMapTheme()
         {
-            if (ViewModel.MapTheme == MapThemeEnum.GoogleLight)
+            try
             {
-                Map.MapStyle = MapStyle.FromJson("[]");
+                var resourceName = ViewModel.MapTheme switch
+                {
+                    MapThemeEnum.GoogleLight => "Rocks.Wasabee.Mobile.Core.Ui.GoogleRoads.MapStyle.json",
+                    MapThemeEnum.Enlightened => "Rocks.Wasabee.Mobile.Core.Ui.Greenlightened.MapStyle.json",
+                    MapThemeEnum.IntelDefault => "Rocks.Wasabee.Mobile.Core.Ui.Intel.MapStyle.json",
+                    _ => throw new ArgumentOutOfRangeException(ViewModel.MapTheme.ToString())
+                };
+                var assembly = typeof(MapPage).GetTypeInfo().Assembly;
+                var stream = assembly.GetManifestResourceStream(resourceName);
+
+                string styleFile;
+                using (var reader = new System.IO.StreamReader(stream))
+                {
+                    styleFile = reader.ReadToEnd();
+                }
+
+                Map.MapStyle = MapStyle.FromJson(styleFile);
             }
-            else
+            catch (Exception e)
             {
-                try
-                {
-                    var resourceName = ViewModel.MapTheme switch
-                    {
-                        MapThemeEnum.Enlightened => "Rocks.Wasabee.Mobile.Core.Ui.Greenlightened.MapStyle.json",
-                        MapThemeEnum.IntelDefault => "Rocks.Wasabee.Mobile.Core.Ui.Intel.MapStyle.json",
-                        _ => throw new ArgumentOutOfRangeException(ViewModel.MapTheme.ToString())
-                    };
-                    var assembly = typeof(MapPage).GetTypeInfo().Assembly;
-                    var stream = assembly.GetManifestResourceStream(resourceName);
-
-                    string styleFile;
-                    using (var reader = new System.IO.StreamReader(stream))
-                    {
-                        styleFile = reader.ReadToEnd();
-                    }
-
-                    Map.MapStyle = MapStyle.FromJson(styleFile);
-                }
-                catch (Exception e)
-                {
-                    Mvx.IoCProvider.Resolve<ILoggingService>().Error(e, $"Error Executing MapPage.RefreshMapTheme({ViewModel.MapTheme})");
-                }
+                Mvx.IoCProvider.Resolve<ILoggingService>().Error(e, $"Error Executing MapPage.RefreshMapTheme({ViewModel.MapTheme})");
             }
         }
     }
