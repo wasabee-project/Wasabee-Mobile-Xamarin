@@ -33,9 +33,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
         public override async Task Initialize()
         {
-            LoggingService.Trace("Navigated to ProfileViewModel");
-
             await base.Initialize();
+
+            LoggingService.Trace("Navigated to TeamsListViewModel");
 
             RefreshCommand.Execute();
         }

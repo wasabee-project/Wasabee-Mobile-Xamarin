@@ -10,7 +10,6 @@ using FFImageLoading.Forms.Platform;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Plugin.Messenger;
-using Plugin.CurrentActivity;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
@@ -60,13 +59,14 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             else
             {
-                CrossCurrentActivity.Current.Init(this, bundle);
+                Xamarin.Forms.Forms.Init(this, bundle);
+                Xamarin.Essentials.Platform.Init(this, bundle);
+
+                Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
 
                 Rg.Plugins.Popup.Popup.Init(this, bundle);
                 ZXing.Net.Mobile.Forms.Android.Platform.Init();
-
-                Xamarin.Forms.Forms.Init(this, bundle);
-                Xamarin.Essentials.Platform.Init(this, bundle);
+                ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
 
                 var platformConfig = new PlatformConfig() { BitmapDescriptorFactory = new WasabeeBitmapConfig() };
                 Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig);
@@ -110,7 +110,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                     {
                         var dozeIntent = new Intent();
                         dozeIntent.SetAction(Settings.ActionRequestIgnoreBatteryOptimizations);
-                        dozeIntent.SetData(Android.Net.Uri.Parse("package:" + CrossCurrentActivity.Current.AppContext.PackageName));
+                        dozeIntent.SetData(Android.Net.Uri.Parse("package:" + Plugin.CurrentActivity.CrossCurrentActivity.Current.AppContext.PackageName));
                         StartActivity(dozeIntent);
                     }
                     catch
@@ -131,6 +131,8 @@ namespace Rocks.Wasabee.Mobile.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
@@ -139,6 +141,10 @@ namespace Rocks.Wasabee.Mobile.Droid
             if (PopupNavigation.Instance.PopupStack.Count > 0)
             {
                 await PopupNavigation.Instance.PopAsync();
+            }
+            else if (Xamarin.Forms.Application.Current.MainPage.Navigation.ModalStack.Count > 0)
+            {
+                await Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync(true);
             }
             else
             {
