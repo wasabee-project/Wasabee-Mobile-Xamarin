@@ -158,20 +158,21 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (!_isLiveLocationSharingEnabled && value)
             {
-                if (!_preferences.Get(UserSettingsKeys.NeverShowLiveLocationWaringAgain, false) && !byPassWarning)
+                if (!_preferences.Get(UserSettingsKeys.NeverShowLiveLocationWarningAgain, false) && !byPassWarning)
                 {
                     _ = _messenger.Subscribe<MessageFrom<LocationWarningDialogViewModel>>(msg =>
                     {
                         LoggingService.Trace("MenuViewModel - Activating location sharing from warning dialog");
 
-                        if (msg.Data is bool neverShowWarningAgain && neverShowWarningAgain) {
-                            _preferences.Set(UserSettingsKeys.NeverShowLiveLocationWaringAgain, true);
+                        if (msg.Data is bool neverShowWarningAgain && neverShowWarningAgain)
+                        {
+                            _preferences.Set(UserSettingsKeys.NeverShowLiveLocationWarningAgain, true);
                             SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
                         }
 
                         ToggleLiveLocationSharingCommand.Execute(new Tuple<bool, bool>(value, true));
                     });
-                    
+
                     LoggingService.Trace("MenuViewModel - Showing location warning dialog");
                     await _dialogNavigationService.Navigate<LocationWarningDialogViewModel>();
                 }
@@ -279,21 +280,32 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task<bool> CheckAndAskForLocationPermissions()
         {
+            LoggingService.Trace("MenuViewModel - Checking location permissions");
+
             var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
             var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+            LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways} and LocationWhenInUse={statusLocationWhenInUse}");
 
             if (statusLocationAlways == PermissionStatus.Granted || statusLocationWhenInUse == PermissionStatus.Granted)
                 return true;
 
-            var requestResult = await _permissions.RequestAsync<Permissions.LocationAlways>();
+            LoggingService.Trace("MenuViewModel - Requesting location permissions");
+
+            statusLocationAlways = await _permissions.RequestAsync<Permissions.LocationAlways>();
             statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-            if (requestResult != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+
+            LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways} and LocationWhenInUse={statusLocationWhenInUse}");
+
+            if (statusLocationAlways != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
             {
+                LoggingService.Trace("User didn't granted geolocation permissions");
+
                 _userDialogs.Alert("Geolocation permission is required !");
                 return false;
             }
 
-            LoggingService.Info("User has granted geolocation permissions");
+            LoggingService.Info("MenuViewModel - User has granted geolocation permissions");
             return true;
         }
 
