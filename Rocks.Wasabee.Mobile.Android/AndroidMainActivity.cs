@@ -14,6 +14,7 @@ using Plugin.CurrentActivity;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
@@ -130,6 +131,11 @@ namespace Rocks.Wasabee.Mobile.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
+            Mvx.IoCProvider.Resolve<ILoggingService>().Info("AndroidMainActivity.OnRequestPermissionsResult -" +
+                                                            $"requestCode={grantResults}  ||" +
+                                                            $"permissions={permissions}  ||" +
+                                                            $"grantResults={grantResults}");
+
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
