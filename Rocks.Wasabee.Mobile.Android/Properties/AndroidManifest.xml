@@ -23,7 +23,7 @@
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
 				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-				<category android:name="1:269534461245:android:fe143fcf337662a96a5954" />
+        <category android:name="${applicationId}" /> <!-- stored in the google-services.json -->
 			</intent-filter>
 		</receiver>
 	</application>
