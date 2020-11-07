@@ -2,12 +2,10 @@
 using Android.Runtime;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
-using MvvmCross.Platforms.Android;
 using MvvmCross.Platforms.Android.Presenters;
 using MvvmCross.ViewModels;
 using Plugin.CurrentActivity;
 using Rocks.Wasabee.Mobile.Core;
-using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
@@ -22,7 +20,6 @@ namespace Rocks.Wasabee.Mobile.Droid
             UserDialogs.Init(() => CrossCurrentActivity.Current.Activity);
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
-            Mvx.IoCProvider.RegisterSingleton(typeof(IFirebaseAnalyticsService), () => new FirebaseAnalyticsService(Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>()));
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
 
             AndroidEnvironment.UnhandledExceptionRaiser += UnhandledExceptionHandler;
