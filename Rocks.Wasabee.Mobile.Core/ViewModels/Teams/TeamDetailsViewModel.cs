@@ -28,7 +28,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private string _teamId = string.Empty;
         private bool _isOwner = false;
 
-        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService) {
+        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService)
+        {
             _teamsDatabase = teamsDatabase;
             _navigationService = navigationService;
         }

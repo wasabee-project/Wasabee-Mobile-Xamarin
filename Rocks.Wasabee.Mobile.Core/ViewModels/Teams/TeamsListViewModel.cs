@@ -77,6 +77,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             catch (Exception e)
             {
                 LoggingService.Error(e, "Error Executing TeamsListViewModel.RefreshCommand");
+
+                _userDialogs.Toast("Error occured while loading your teams");
             }
             finally
             {
@@ -108,10 +110,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                         await _teamsDatabase.SaveTeamModel(updatedTeam);
                     }
                 }
+                else
+                {
+                    _userDialogs.Toast("State can't be changed, please try again", TimeSpan.FromSeconds(3));
+                }
             }
             catch (Exception e)
             {
                 LoggingService.Error(e, "Error Executing TeamsListViewModel.SwitchTeamStateCommand");
+
+                _userDialogs.Toast("Error occured, please retry", TimeSpan.FromSeconds(3));
             }
             finally
             {
