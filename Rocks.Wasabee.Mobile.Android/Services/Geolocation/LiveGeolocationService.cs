@@ -14,6 +14,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Timers;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
@@ -31,8 +32,10 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
     }
 
     [Service(DirectBootAware = false, Enabled = true, Exported = false, ForegroundServiceType = ForegroundService.TypeLocation)]
-    public class LiveGeolocationService : Service
-    {
+    public class LiveGeolocationService : Service {
+
+        private static readonly int MinimalUpdateTimespan = 60; // in seconds
+
         private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
         private const string ChannelId = "Wasabee Live Location Sharing";
         private const int NotificationId = 1337;
@@ -42,7 +45,11 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
         private ILoggingService? _loggingService;
         private IPreferences? _preferences;
 
+        
+        private Timer _forceSendTimer = new Timer(MinimalUpdateTimespan * 1000) { AutoReset = true };
+
         private bool _isRunning;
+        private DateTime _lastUpdateTime;
 
         private static IGeolocator Geolocator => CrossGeolocator.Current;
 
@@ -95,8 +102,38 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                     Geolocator.DesiredAccuracy = 5;
                     Geolocator.PositionChanged += Geolocator_PositionChanged;
 
+                    _forceSendTimer.Elapsed += async (sender, args) =>
+                    {
+                        if (!_isRunning)
+                        {
+                            _forceSendTimer.Stop();
+                            return;
+                        }
+
+                        // Ensure it updates at least every 60 seconds
+                        if (DateTime.Now - _lastUpdateTime < TimeSpan.FromSeconds(MinimalUpdateTimespan))
+                            return;
+
+                        var lastKnownLocation = await Geolocator.GetLastKnownLocationAsync();
+                        if (lastKnownLocation != null)
+                        {
+                            try
+                            {
+                                var position = new Position(lastKnownLocation.Latitude, lastKnownLocation.Longitude);
+                                await UpdateLocation(position);
+                            }
+                            catch (Exception ex)
+                            {
+                                _loggingService ??= Mvx.IoCProvider.Resolve<ILoggingService>();
+                                _loggingService.Error(ex, "Error Executing LiveGeolocationService._forceSendTimer.Elapsed");
+                            }
+                        }
+                    };
+
+
                     //every 5 second, 5 meters
                     await Geolocator.StartListeningAsync(TimeSpan.FromSeconds(5), 5);
+                    _forceSendTimer.Start();
                 }
                 else
                 {
@@ -128,14 +165,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             {
                 _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
 
-                var result = await _wasabeeApiV1Service!.User_UpdateLocation(e.Position.Latitude.ToString(Culture), e.Position.Longitude.ToString(Culture));
-                if (result)
-                {
-                    // Updates notification with latest update time
-                    var notification = CreateNotification();
-                    var notificationManager = (NotificationManager)GetSystemService(NotificationService)!;
-                    notificationManager.Notify(NotificationId, notification);
-                }
+                var position = new Position(e.Position.Latitude, e.Position.Longitude);
+                await UpdateLocation(position);
             }
             catch (Exception ex)
             {
@@ -144,10 +175,26 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             }
         }
 
+        private async Task UpdateLocation(Position position)
+        {
+            var result = await _wasabeeApiV1Service!.User_UpdateLocation(position.Latitude.ToString(Culture), position.Longitude.ToString(Culture));
+            if (result)
+            {
+                _lastUpdateTime = DateTime.Now;
+                
+                // Updates notification with latest update time
+                var notification = CreateNotification();
+                var notificationManager = (NotificationManager)GetSystemService(NotificationService)!;
+                notificationManager.Notify(NotificationId, notification);
+            }
+        }
+
         public async Task StopLocationUpdates()
         {
             if (_isRunning)
             {
+                _forceSendTimer.Stop();
+
                 if (await Geolocator.StopListeningAsync())
                 {
                     Geolocator.PositionChanged -= Geolocator_PositionChanged;
@@ -173,7 +220,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 .SetAutoCancel(false)
                 .SetTicker("Wasabee location sharing")
                 .SetContentTitle("Wasabee")
-                .SetContentText($"Wasabee is sharing your location.\r\nLast update at {DateTime.Now:T}")
+                .SetContentText($"Wasabee is sharing your location.\r\nLast update at {_lastUpdateTime:T}")
                 .SetChannelId(ChannelId)
                 .SetSound(null)
                 .Build();
