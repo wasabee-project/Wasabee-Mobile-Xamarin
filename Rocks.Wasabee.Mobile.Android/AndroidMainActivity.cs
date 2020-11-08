@@ -6,15 +6,12 @@ using Android.Provider;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
-using FFImageLoading.Forms.Platform;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Plugin.Messenger;
-using Plugin.CurrentActivity;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
-using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
@@ -61,7 +58,7 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             else
             {
-                CrossCurrentActivity.Current.Init(this, bundle);
+                Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
 
                 Rg.Plugins.Popup.Popup.Init(this, bundle);
                 ZXing.Net.Mobile.Forms.Android.Platform.Init();
@@ -74,8 +71,8 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
 
-                CachedImageRenderer.Init(true);
-                CachedImageRenderer.InitImageViewHandler();
+                FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
+                FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageViewHandler();
 
                 CreateNotificationChannels();
 
@@ -111,7 +108,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                     {
                         var dozeIntent = new Intent();
                         dozeIntent.SetAction(Settings.ActionRequestIgnoreBatteryOptimizations);
-                        dozeIntent.SetData(Android.Net.Uri.Parse("package:" + CrossCurrentActivity.Current.AppContext.PackageName));
+                        dozeIntent.SetData(Android.Net.Uri.Parse("package:" + Plugin.CurrentActivity.CrossCurrentActivity.Current.AppContext.PackageName));
                         StartActivity(dozeIntent);
                     }
                     catch
@@ -131,11 +128,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
-            Mvx.IoCProvider.Resolve<ILoggingService>().Info("AndroidMainActivity.OnRequestPermissionsResult -" +
-                                                            $"requestCode={grantResults}  ||" +
-                                                            $"permissions={permissions}  ||" +
-                                                            $"grantResults={grantResults}");
-
+            Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
