@@ -6,7 +6,6 @@ using Android.Provider;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
-using FFImageLoading.Forms.Platform;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Plugin.Messenger;
@@ -73,8 +72,8 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
 
-                CachedImageRenderer.Init(true);
-                CachedImageRenderer.InitImageViewHandler();
+                FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
+                FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageViewHandler();
 
                 CreateNotificationChannels();
 
@@ -130,6 +129,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
+            Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 

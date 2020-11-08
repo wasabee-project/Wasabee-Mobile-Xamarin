@@ -3,6 +3,8 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
@@ -20,9 +22,9 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
+using ICrossPermissions = Plugin.Permissions.Abstractions.IPermissions;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
@@ -31,7 +33,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IMvxNavigationService _navigationService;
         private readonly IAuthentificationService _authentificationService;
         private readonly IPreferences _preferences;
-        private readonly IPermissions _permissions;
+        private readonly ICrossPermissions _crossPermissions;
         private readonly IVersionTracking _versionTracking;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IUserDialogs _userDialogs;
@@ -43,13 +45,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly MvxSubscriptionToken _tokenDebug;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
-            IPreferences preferences, IPermissions permissions, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
+            IPreferences preferences, ICrossPermissions crossPermissions, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
             IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase, IDialogNavigationService dialogNavigationService)
         {
             _navigationService = navigationService;
             _authentificationService = authentificationService;
             _preferences = preferences;
-            _permissions = permissions;
+            _crossPermissions = crossPermissions;
             _versionTracking = versionTracking;
             _userSettingsService = userSettingsService;
             _userDialogs = userDialogs;
@@ -282,22 +284,29 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoggingService.Trace("MenuViewModel - Checking location permissions");
 
-            var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
-            var statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+            var statusLocationAlways = await _crossPermissions.CheckPermissionStatusAsync<LocationAlwaysPermission>();
 
-            LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways} and LocationWhenInUse={statusLocationWhenInUse}");
+            LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways}");
 
-            if (statusLocationAlways == PermissionStatus.Granted || statusLocationWhenInUse == PermissionStatus.Granted)
+            if (statusLocationAlways == PermissionStatus.Granted)
                 return true;
 
+            var requestPermission = true;
+            var showRationale = await _crossPermissions.ShouldShowRequestPermissionRationaleAsync(Permission.LocationAlways);
+            if (showRationale)
+                requestPermission = await _userDialogs.ConfirmAsync(
+                  "To use the live location sharing, please set the permission to 'Allow all the time' in the next screen.",
+                  "Permissions required",
+                  "Ok", "Cancel");
+
+            if (!requestPermission)
+                return false;
+
             LoggingService.Trace("MenuViewModel - Requesting location permissions");
+            statusLocationAlways = await _crossPermissions.RequestPermissionAsync<LocationAlwaysPermission>();
+            LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways}");
 
-            statusLocationAlways = await _permissions.RequestAsync<Permissions.LocationAlways>();
-            statusLocationWhenInUse = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-
-            LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways} and LocationWhenInUse={statusLocationWhenInUse}");
-
-            if (statusLocationAlways != PermissionStatus.Granted && statusLocationWhenInUse != PermissionStatus.Granted)
+            if (statusLocationAlways != PermissionStatus.Granted)
             {
                 LoggingService.Trace("User didn't granted geolocation permissions");
 
@@ -307,6 +316,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             LoggingService.Info("MenuViewModel - User has granted geolocation permissions");
             return true;
+
         }
 
         #endregion

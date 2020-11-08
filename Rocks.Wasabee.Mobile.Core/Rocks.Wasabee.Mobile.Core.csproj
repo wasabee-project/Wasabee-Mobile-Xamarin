@@ -32,6 +32,7 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility" Version="7.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.5" />
+    <PackageReference Include="Plugin.Permissions" Version="6.0.1" />
     <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>

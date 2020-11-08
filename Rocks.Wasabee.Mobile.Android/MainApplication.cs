@@ -1,6 +1,5 @@
 ﻿using Android.App;
 using Android.Runtime;
-using Plugin.CurrentActivity;
 using System;
 
 namespace Rocks.Wasabee.Mobile.Droid
@@ -20,7 +19,7 @@ namespace Rocks.Wasabee.Mobile.Droid
         public override void OnCreate()
         {
             base.OnCreate();
-            CrossCurrentActivity.Current.Init(this);
+            Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this);
         }
     }
 }

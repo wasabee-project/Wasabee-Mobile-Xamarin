@@ -2,9 +2,9 @@ using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MoreLinq;
 using MvvmCross.Commands;
-using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Plugin.Permissions;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -21,6 +21,7 @@ using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
+using ICrossPermissions = Plugin.Permissions.Abstractions.IPermissions;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
@@ -33,10 +34,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly TeamAgentsDatabase _teamAgentsDatabase;
         private readonly UsersDatabase _usersDatabase;
         private readonly IPreferences _preferences;
-        private readonly IPermissions _permissions;
+        private readonly ICrossPermissions _crossPermissions;
         private readonly IMvxMessenger _messenger;
         private readonly IUserDialogs _userDialogs;
-        private readonly IMvxNavigationService _navigationService;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
@@ -47,20 +47,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private bool _loadingAgentsLocations;
 
-        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase, 
-            UsersDatabase usersDatabase, IPreferences preferences, IPermissions permissions, IMvxMessenger messenger, 
-            IUserDialogs userDialogs, IMvxNavigationService navigationService, IUserSettingsService userSettingsService, 
-            WasabeeApiV1Service wasabeeApiV1Service)
+        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase,
+            UsersDatabase usersDatabase, IPreferences preferences, ICrossPermissions crossPermissions, IMvxMessenger messenger,
+            IUserDialogs userDialogs, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _operationsDatabase = operationsDatabase;
             _teamsDatabase = teamsDatabase;
             _teamAgentsDatabase = teamAgentsDatabase;
             _usersDatabase = usersDatabase;
             _preferences = preferences;
-            _permissions = permissions;
+            _crossPermissions = crossPermissions;
             _messenger = messenger;
             _userDialogs = userDialogs;
-            _navigationService = navigationService;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
 
@@ -74,24 +72,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             base.Prepare();
 
-            var statusLocationAlways = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
-            if (statusLocationAlways != PermissionStatus.Granted)
+            var status = await _crossPermissions.CheckPermissionStatusAsync<LocationWhenInUsePermission>();
+            if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
             {
-                var result = await _permissions.RequestAsync<Permissions.LocationAlways>();
-                if (result != PermissionStatus.Granted)
+                LoggingService.Info("MapViewModel - Requesting WhenInUse geolocation permissions");
+
+                status = await _crossPermissions.RequestPermissionAsync<LocationWhenInUsePermission>();
+                if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
                 {
-                    var ifInUsePermission = await _permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                    if (ifInUsePermission != PermissionStatus.Granted)
-                        _userDialogs.Alert("Geolocation permission is required to show your position !");
-                    else
-                    {
-                        LoggingService.Info("User has granted WhenInUse geolocation permissions");
-                        IsLocationAvailable = true;
-                    }
+                    LoggingService.Info("MapViewModel - User has not granted permissions");
+                    _userDialogs.Alert("Geolocation permission is required to show your position !");
                 }
                 else
                 {
-                    LoggingService.Info("User has granted full geolocation permissions");
+                    LoggingService.Info("MapViewModel - User has granted WhenInUse geolocation permissions");
                     IsLocationAvailable = true;
                 }
             }
@@ -325,11 +319,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
                 if (updatedTeams.Any())
                     await _teamsDatabase.SaveTeamsModels(updatedTeams);
-                
+
                 var agents = await _teamAgentsDatabase.GetAgentsInTeams(updatedTeams.Select(x => x.Id));
                 if (agents.IsNullOrEmpty())
                     return;
-                
+
                 var wasabeeAgentPins = new List<WasabeeAgentPin>();
                 foreach (var agent in agents.Where(a => a.State && a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Id))
                 {
@@ -360,7 +354,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-        
+
 
         public IMvxAsyncCommand<TeamAgentLocationUpdatedMessage> RefreshTeamAgentPositionCommand => new MvxAsyncCommand<TeamAgentLocationUpdatedMessage>(RefreshTeamAgentPositionExecuted);
         private async Task RefreshTeamAgentPositionExecuted(TeamAgentLocationUpdatedMessage message)
@@ -390,7 +384,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         team = await _wasabeeApiV1Service.Teams_GetTeam(message.TeamId);
                         if (team == null)
                             return;
-                        
+
                         await _teamsDatabase.SaveTeamModel(team);
                     }
 
@@ -411,7 +405,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var toRemove = AgentsPins.FirstOrDefault(a => a.AgentId.Equals(updatedAgentPin.AgentId));
                 if (toRemove != null)
                     AgentsPins.Remove(toRemove);
-                
+
                 AgentsPins.Add(updatedAgentPin);
 
                 await _teamAgentsDatabase.SaveTeamAgentModel(updatedAgent);
@@ -426,7 +420,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _loadingAgentsLocations = false;
             }
         }
-        
+
         public IMvxCommand<MapThemeEnum> SwitchThemeCommand => new MvxCommand<MapThemeEnum>(SwitchThemeExecuted);
         private void SwitchThemeExecuted(MapThemeEnum mapTheme)
         {
