@@ -140,6 +140,9 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility">
       <Version>7.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Plugin.Permissions">
+      <Version>6.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>2.0.0.5</Version>
     </PackageReference>
