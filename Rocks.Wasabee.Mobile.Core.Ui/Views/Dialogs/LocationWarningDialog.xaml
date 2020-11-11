@@ -64,7 +64,7 @@
                 </ScrollView>
 
                 <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                    <Button Style="{StaticResource WasabeeStyleDenyButton}" Command="{Binding CloseCommand}" />
+                    <Button Style="{StaticResource WasabeeStyleDenyButton}" Command="{Binding DenyCommand}" />
                     <Button Style="{StaticResource WasabeeStyleAcceptButton}" Command="{Binding AcceptCommand}" />
                 </StackLayout>
 

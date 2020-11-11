@@ -1,26 +1,31 @@
 ﻿using MvvmCross.Commands;
-using MvvmCross.Plugin.Messenger;
-using Rocks.Wasabee.Mobile.Core.Messages;
+using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 {
-    public class LocationWarningDialogViewModel : BaseDialogViewModel
+    public class LocationWarningDialogResult
     {
-        private readonly IMvxMessenger _messenger;
-        private readonly IPreferences _preferences;
+        public bool Accepted { get; } = false;
+        public bool NeverShowWarningAgain { get; } = false;
+
+        public LocationWarningDialogResult(bool accepted, bool neverShowWarningAgain)
+        {
+            Accepted = accepted;
+            NeverShowWarningAgain = neverShowWarningAgain;
+        }
+    }
+
+    public class LocationWarningDialogViewModel : BaseDialogViewModel, IMvxViewModelResult<LocationWarningDialogResult>
+    {
         private readonly IAppSettings _appSettings;
 
-        public LocationWarningDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger,
-            IPreferences preferences, IAppSettings appSettings) : base(dialogNavigationService)
+        public LocationWarningDialogViewModel(IDialogNavigationService dialogNavigationService, IAppSettings appSettings) : base(dialogNavigationService)
         {
-            _messenger = messenger;
-            _preferences = preferences;
             _appSettings = appSettings;
         }
 
@@ -40,18 +45,43 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         #region Commands
 
-        public IMvxCommand AcceptCommand => new MvxCommand(AcceptExecuted);
-        private void AcceptExecuted()
+        public IMvxCommand DenyCommand => new MvxCommand(DenyExecuted);
+        private async void DenyExecuted()
         {
-            _messenger.Publish(new MessageFrom<LocationWarningDialogViewModel>(this, NeverShowAgain));
+            var result = new LocationWarningDialogResult(false, false);
+            CloseCompletionSource.SetResult(result);
 
-            base.CloseCommand.Execute();
+            await DialogNavigationService.Close(this, true, result);
         }
+
+        public IMvxCommand AcceptCommand => new MvxCommand(AcceptExecuted);
+        private async void AcceptExecuted()
+        {
+            var result = new LocationWarningDialogResult(true, NeverShowAgain);
+            CloseCompletionSource.SetResult(result);
+
+            await DialogNavigationService.Close(this, true, result);
+        }
+
         public IMvxAsyncCommand OpenPrivacyPolicyCommand => new MvxAsyncCommand(OpenPrivacyPolicyExecuted);
         private async Task OpenPrivacyPolicyExecuted()
         {
             var uri = _appSettings.WasabeeBaseUrl + "/privacy";
             await Launcher.OpenAsync(new Uri(uri));
+        }
+
+        #endregion
+
+        #region IMvxViewModelResult<TResult> implementation
+
+        public TaskCompletionSource<object> CloseCompletionSource { get; set; } = new TaskCompletionSource<object>();
+
+        public override void ViewDestroy(bool viewFinishing = true)
+        {
+            if (viewFinishing && !CloseCompletionSource.Task.IsCompleted && !CloseCompletionSource.Task.IsFaulted)
+                CloseCompletionSource?.TrySetCanceled();
+
+            base.ViewDestroy(viewFinishing);
         }
 
         #endregion

@@ -55,9 +55,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
                 IsSelfProfile = false;
                 IsBusy = true;
-            
+
                 QrCodeValue = _parameter.UserGoogleId;
-            
+
                 await LoadAgentProfileCommand.ExecuteAsync(_parameter.UserGoogleId);
                 return;
             }
@@ -81,7 +81,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         public UserModel? User { get; set; }
         public bool IsSelfProfile { get; set; } = true;
         public bool IsQrCodeVisible { get; set; }
-        public string QrCodeValue { get; set; } = string.Empty;
+
+        private string _qrCodeValue = string.Empty;
+        public string QrCodeValue
+        {
+            get => _qrCodeValue;
+            set => SetProperty(ref _qrCodeValue, $"wasabee:{value}");
+        }
 
         #endregion
 

@@ -8,11 +8,6 @@
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamDetailsPage"
                        Title="{Binding Team.Name}">
-
-    <!--<ContentPage.ToolbarItems>
-        <ToolbarItem Text="＋"/>
-    </ContentPage.ToolbarItems>-->
-
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="AgentsList"
@@ -64,6 +59,11 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <Button x:Name="AddAgentButton" Text="Add Agent" CornerRadius="0" Margin="0"
+                    Style="{StaticResource WasabeeStyleValidateButton}"
+                    IsVisible="{Binding IsOwner}"
+                    Clicked="AddAgentButton_OnClicked"/>
         </StackLayout>
     </ContentPage.Content>
 </views:BaseContentPage>

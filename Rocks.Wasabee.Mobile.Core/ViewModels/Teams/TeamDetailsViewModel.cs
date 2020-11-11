@@ -1,10 +1,13 @@
-﻿using MvvmCross.Commands;
+﻿using Acr.UserDialogs;
+using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
+using System.Linq;
 using System.Threading.Tasks;
+using Device = Xamarin.Forms.Device;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -24,14 +27,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
     {
         private readonly TeamsDatabase _teamsDatabase;
         private readonly IMvxNavigationService _navigationService;
+        private readonly IUserDialogs _userDialogs;
 
         private string _teamId = string.Empty;
-        private bool _isOwner = false;
 
-        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService)
+        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService, IUserDialogs userDialogs)
         {
             _teamsDatabase = teamsDatabase;
             _navigationService = navigationService;
+            _userDialogs = userDialogs;
         }
 
         public void Prepare(TeamDetailsNavigationParameter parameter)
@@ -40,7 +44,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 return;
 
             _teamId = parameter.TeamId;
-            _isOwner = parameter.IsOwner;
+            IsOwner = parameter.IsOwner;
         }
 
         public override async Task Initialize()
@@ -56,7 +60,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
         #region Properties
 
-        public TeamModel? Team { get; set; }
+        public bool IsOwner { get; set; }
+        public TeamModel Team { get; set; }
 
         #endregion
 
@@ -74,6 +79,31 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 new ProfileViewModelNavigationParameter(agent.Id));
 
             IsBusy = false;
+        }
+
+        public IMvxCommand<string> AddAgentFromQrCodeCommand => new MvxCommand<string>(async (qrCodeData) => await AddAgentFromQrCodeExecuted(qrCodeData));
+        private async Task AddAgentFromQrCodeExecuted(string qrCodeData)
+        {
+            if (string.IsNullOrEmpty(qrCodeData))
+                return;
+            else
+            {
+                if (qrCodeData.StartsWith("wasabee:"))
+                {
+                    var userId = qrCodeData.Substring(8, qrCodeData.Length - 8);
+                    var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(userId)) ?? null;
+                    if (user != null)
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            _userDialogs.Toast($"{user.Name} is already in the team !");
+                        });
+                        return;
+                    }
+
+                    // TODO
+                }
+            }
         }
 
         #endregion

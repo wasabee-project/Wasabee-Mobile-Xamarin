@@ -129,7 +129,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public bool IsLiveLocationSharingEnabled
         {
             get => _isLiveLocationSharingEnabled;
-            set => ToggleLiveLocationSharingCommand.Execute(new Tuple<bool, bool>(value, false));
+            set => ToggleLiveLocationSharingCommand.Execute(value);
         }
 
         #endregion
@@ -153,32 +153,31 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 .OrderBy(x => x.Name));
         }
 
-        public IMvxCommand<Tuple<bool, bool>> ToggleLiveLocationSharingCommand => new MvxCommand<Tuple<bool, bool>>(async value => await ToggleLiveLocationSharingExecuted(value.Item1, value.Item2));
-        private async Task ToggleLiveLocationSharingExecuted(bool value, bool byPassWarning)
+        public IMvxCommand<bool> ToggleLiveLocationSharingCommand => new MvxCommand<bool>(async value => await ToggleLiveLocationSharingExecuted(value));
+        private async Task ToggleLiveLocationSharingExecuted(bool value)
         {
             LoggingService.Trace($"Executing MenuViewModel.ToggleLiveLocationSharingCommand({value})");
 
             if (!_isLiveLocationSharingEnabled && value)
             {
-                if (!_preferences.Get(UserSettingsKeys.NeverShowLiveLocationWarningAgain, false) && !byPassWarning)
+                if (!_preferences.Get(UserSettingsKeys.NeverShowLiveLocationWarningAgain, false))
                 {
-                    _ = _messenger.Subscribe<MessageFrom<LocationWarningDialogViewModel>>(msg =>
-                    {
-                        LoggingService.Trace("MenuViewModel - Activating location sharing from warning dialog");
-
-                        if (msg.Data is bool neverShowWarningAgain && neverShowWarningAgain)
-                        {
-                            _preferences.Set(UserSettingsKeys.NeverShowLiveLocationWarningAgain, true);
-                            SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
-                        }
-
-                        ToggleLiveLocationSharingCommand.Execute(new Tuple<bool, bool>(value, true));
-                    });
-
                     LoggingService.Trace("MenuViewModel - Showing location warning dialog");
-                    await _dialogNavigationService.Navigate<LocationWarningDialogViewModel>();
+                    var result = await _dialogNavigationService.Navigate<LocationWarningDialogViewModel, LocationWarningDialogResult>();
+
+                    if (result.NeverShowWarningAgain)
+                    {
+                        _preferences.Set(UserSettingsKeys.NeverShowLiveLocationWarningAgain, true);
+                        SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                    }
+
+                    if (!result.Accepted)
+                        return;
+
+                    LoggingService.Trace("MenuViewModel - Activating location sharing from warning dialog");
                 }
-                else
+
+                try
                 {
                     if (await CheckAndAskForLocationPermissions())
                     {
@@ -186,6 +185,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
                         _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
                     }
+                }
+                catch (Exception e)
+                {
+                    LoggingService.Error(e, "Error MenuViewModel requesing permission LocationAlways");
                 }
             }
             else

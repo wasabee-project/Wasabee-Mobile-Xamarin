@@ -12,6 +12,7 @@ using MvvmCross;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Xamarin.Essentials.Interfaces;
+
 #if DEBUG
 using Android.Util;
 #endif
@@ -19,10 +20,10 @@ using Android.Util;
 #pragma warning disable CS0618 // Type or member is obsolete
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
-    [Service()]
+    [Service]
     [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
     [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
-    public class WasabeeFcmService : FirebaseMessagingService
+    public class WasabeeFirebaseMessagingService : FirebaseMessagingService
     {
         const string TAG = "[WASABEE_FCM_SERVICE]";
 
@@ -36,11 +37,6 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
         private string _fcmToken = string.Empty;
         private bool _isInitialized = false;
-
-        public WasabeeFcmService()
-        {
-
-        }
 
         public override async void OnNewToken(string token)
         {
@@ -57,7 +53,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         {
             if (!_isInitialized)
                 await Initialize();
-            
+
             await _secureStorage.SetAsync(SecureStorageConstants.FcmToken, _fcmToken);
             await _loginProvider.SendFirebaseTokenAsync(_fcmToken);
         }

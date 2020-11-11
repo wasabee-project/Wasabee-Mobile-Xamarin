@@ -58,13 +58,14 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             else
             {
+                Xamarin.Forms.Forms.Init(this, bundle);
+                Xamarin.Essentials.Platform.Init(this, bundle);
+
                 Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
 
                 Rg.Plugins.Popup.Popup.Init(this, bundle);
                 ZXing.Net.Mobile.Forms.Android.Platform.Init();
-
-                Xamarin.Forms.Forms.Init(this, bundle);
-                Xamarin.Essentials.Platform.Init(this, bundle);
+                ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
 
                 var platformConfig = new PlatformConfig() { BitmapDescriptorFactory = new WasabeeBitmapConfig() };
                 Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig);
@@ -130,6 +131,8 @@ namespace Rocks.Wasabee.Mobile.Droid
         {
             Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
@@ -138,6 +141,10 @@ namespace Rocks.Wasabee.Mobile.Droid
             if (PopupNavigation.Instance.PopupStack.Count > 0)
             {
                 await PopupNavigation.Instance.PopAsync();
+            }
+            else if (Xamarin.Forms.Application.Current.MainPage.Navigation.ModalStack.Count > 0)
+            {
+                await Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync(true);
             }
             else
             {

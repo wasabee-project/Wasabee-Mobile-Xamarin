@@ -23,6 +23,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         private bool _hasLoaded = false;
         private bool _isDetailPanelVisible = false;
 
+        private static int zIndexForLinks = 0;
+        private static int zIndexForAnchors = 1;
+        private static int zIndexForMarkers = 2;
+        private static int zIndexForPlayers = 3;
+
         public MapPage()
         {
             InitializeComponent();
@@ -142,6 +147,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 if (Map.Polylines.Any(x => x.Equals(link)))
                     continue;
 
+                link.ZIndex = zIndexForLinks;
                 Map.Polylines.Add(link);
             }
         }
@@ -162,6 +168,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 {
                     if (ViewModel.IsLayerAnchorsActivated)
                     {
+                        anchor.Pin.ZIndex = zIndexForAnchors;
                         Map.Pins.Add(anchor.Pin);
                     }
                 }
@@ -184,6 +191,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 {
                     if (ViewModel.IsLayerMarkersActivated)
                     {
+                        marker.Pin.ZIndex = zIndexForMarkers;
                         Map.Pins.Add(marker.Pin);
                     }
                 }
@@ -201,7 +209,10 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 }
 
                 if (ViewModel.IsLayerAgentsActivated)
+                {
+                    agentPin.Pin.ZIndex = zIndexForPlayers;
                     Map.Pins.Add(agentPin.Pin);
+                }
             }
         }
 
@@ -231,35 +242,29 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshMapTheme()
         {
-            if (ViewModel.MapTheme == MapThemeEnum.GoogleLight)
+            try
             {
-                Map.MapStyle = MapStyle.FromJson("[]");
+                var resourceName = ViewModel.MapTheme switch
+                {
+                    MapThemeEnum.GoogleLight => "Rocks.Wasabee.Mobile.Core.Ui.GoogleRoads.MapStyle.json",
+                    MapThemeEnum.Enlightened => "Rocks.Wasabee.Mobile.Core.Ui.Greenlightened.MapStyle.json",
+                    MapThemeEnum.IntelDefault => "Rocks.Wasabee.Mobile.Core.Ui.Intel.MapStyle.json",
+                    _ => throw new ArgumentOutOfRangeException(ViewModel.MapTheme.ToString())
+                };
+                var assembly = typeof(MapPage).GetTypeInfo().Assembly;
+                var stream = assembly.GetManifestResourceStream(resourceName);
+
+                string styleFile;
+                using (var reader = new System.IO.StreamReader(stream))
+                {
+                    styleFile = reader.ReadToEnd();
+                }
+
+                Map.MapStyle = MapStyle.FromJson(styleFile);
             }
-            else
+            catch (Exception e)
             {
-                try
-                {
-                    var resourceName = ViewModel.MapTheme switch
-                    {
-                        MapThemeEnum.Enlightened => "Rocks.Wasabee.Mobile.Core.Ui.Greenlightened.MapStyle.json",
-                        MapThemeEnum.IntelDefault => "Rocks.Wasabee.Mobile.Core.Ui.Intel.MapStyle.json",
-                        _ => throw new ArgumentOutOfRangeException(ViewModel.MapTheme.ToString())
-                    };
-                    var assembly = typeof(MapPage).GetTypeInfo().Assembly;
-                    var stream = assembly.GetManifestResourceStream(resourceName);
-
-                    string styleFile;
-                    using (var reader = new System.IO.StreamReader(stream))
-                    {
-                        styleFile = reader.ReadToEnd();
-                    }
-
-                    Map.MapStyle = MapStyle.FromJson(styleFile);
-                }
-                catch (Exception e)
-                {
-                    Mvx.IoCProvider.Resolve<ILoggingService>().Error(e, $"Error Executing MapPage.RefreshMapTheme({ViewModel.MapTheme})");
-                }
+                Mvx.IoCProvider.Resolve<ILoggingService>().Error(e, $"Error Executing MapPage.RefreshMapTheme({ViewModel.MapTheme})");
             }
         }
     }

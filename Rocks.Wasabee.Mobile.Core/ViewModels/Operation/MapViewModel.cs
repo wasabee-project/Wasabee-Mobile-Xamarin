@@ -22,6 +22,7 @@ using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using ICrossPermissions = Plugin.Permissions.Abstractions.IPermissions;
+using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
@@ -68,33 +69,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _tokenMarkerUpdated = messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
         }
 
-        public override async void Prepare()
-        {
-            base.Prepare();
-
-            var status = await _crossPermissions.CheckPermissionStatusAsync<LocationWhenInUsePermission>();
-            if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
-            {
-                LoggingService.Info("MapViewModel - Requesting WhenInUse geolocation permissions");
-
-                status = await _crossPermissions.RequestPermissionAsync<LocationWhenInUsePermission>();
-                if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
-                {
-                    LoggingService.Info("MapViewModel - User has not granted permissions");
-                    _userDialogs.Alert("Geolocation permission is required to show your position !");
-                }
-                else
-                {
-                    LoggingService.Info("MapViewModel - User has granted WhenInUse geolocation permissions");
-                    IsLocationAvailable = true;
-                }
-            }
-            else
-            {
-                IsLocationAvailable = true;
-            }
-        }
-
         public override async Task Initialize()
         {
             Analytics.TrackEvent(GetType().Name);
@@ -111,6 +85,40 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             await LoadOperationCommand.ExecuteAsync();
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync();
+        }
+
+        public override async void ViewAppeared()
+        {
+            base.ViewAppeared();
+
+            try
+            {
+                var status = await _crossPermissions.CheckPermissionStatusAsync<LocationWhenInUsePermission>();
+                if (status != PermissionStatus.Granted && status != PermissionStatus.Restricted)
+                {
+                    LoggingService.Info("MapViewModel - Requesting WhenInUse geolocation permissions");
+
+                    status = await _crossPermissions.RequestPermissionAsync<LocationWhenInUsePermission>();
+                    if (status != PermissionStatus.Granted && status != PermissionStatus.Restricted)
+                    {
+                        LoggingService.Info("MapViewModel - User has not granted permissions");
+                        _userDialogs.Alert("Geolocation permission is required to show your position !");
+                    }
+                    else
+                    {
+                        LoggingService.Info("MapViewModel - User has granted WhenInUse geolocation permissions");
+                        IsLocationAvailable = true;
+                    }
+                }
+                else
+                {
+                    IsLocationAvailable = true;
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error MapViewModel requesing permission LocationWhenInUse");
+            }
         }
 
         #region Properties
