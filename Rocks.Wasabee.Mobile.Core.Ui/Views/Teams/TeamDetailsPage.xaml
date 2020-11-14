@@ -11,10 +11,14 @@
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="AgentsList"
-                      ItemsSource="{Binding Team.Agents}"
                       HasUnevenRows="True"
+                      IsPullToRefreshEnabled="True"
                       CachingStrategy="RecycleElement"
-                      ItemSelected="AgentsList_OnItemSelected">
+                      ItemSelected="AgentsList_OnItemSelected"
+                      RefreshControlColor="{StaticResource PrimaryGreenDark}"
+                      ItemsSource="{Binding Team.Agents}"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -32,7 +36,7 @@
                                 <ffimageloading:CachedImage Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
                                                             WidthRequest="50" HeightRequest="50"
                                                             Margin="0,0,20,0"
-                                                            Source="{Binding Pic}" Aspect="AspectFill">
+                                                            Source="{Binding Pic}" Aspect="AspectFit">
                                     <ffimageloading:CachedImage.Transformations>
                                         <fftransformations:RoundedTransformation Radius="500"/>
                                     </ffimageloading:CachedImage.Transformations>

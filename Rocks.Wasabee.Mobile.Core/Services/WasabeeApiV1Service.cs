@@ -32,9 +32,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
         [Get("/agent/{agentId}")]
         Task<ApiResponse<TeamAgentModel>> Agents_GetAgent(string agentId);
-        
+
         #endregion
-        
+
         #region Teams
 
         [Post("/teams")]
@@ -42,6 +42,12 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
         [Get("/team/{teamId}")]
         Task<ApiResponse<Models.Teams.TeamModel>> Teams_GetTeam(string teamId);
+
+        [Post("/team/{teamId}/{key}")]
+        Task<ApiResponse<string>> Teams_AddAgentToTeam(string teamId, string key);
+
+        [Delete("/team/{teamId}/{key}")]
+        Task<ApiResponse<string>> Teams_RemoveAgentFromTeam(string teamId, string key);
 
         #endregion
 
@@ -115,7 +121,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         #endregion
 
         #region Agents
-        
+
         public async Task<TeamAgentModel?> Agents_GetAgent(string agentId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Agents_GetAgent(agentId), new CancellationToken()).ConfigureAwait(false);
@@ -123,7 +129,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         }
 
         #endregion
-        
+
         #region Teams
 
         public async Task<IList<Models.Teams.TeamModel>> Teams_GetTeams(GetTeamsQuery getTeamsQuery)
@@ -136,6 +142,18 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_GetTeam(teamId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode ? result.Content : null;
+        }
+
+        public async Task<bool> Teams_AddAgentToTeam(string teamId, string key)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_AddAgentToTeam(teamId, key), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        public async Task<bool> Teams_RemoveAgentFromTeam(string teamId, string key)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_RemoveAgentFromTeam(teamId, key), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
         #endregion

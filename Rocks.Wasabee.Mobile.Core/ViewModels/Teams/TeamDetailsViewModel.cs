@@ -2,12 +2,13 @@
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System.Linq;
 using System.Threading.Tasks;
-using Device = Xamarin.Forms.Device;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -28,14 +29,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private readonly TeamsDatabase _teamsDatabase;
         private readonly IMvxNavigationService _navigationService;
         private readonly IUserDialogs _userDialogs;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
         private string _teamId = string.Empty;
 
-        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService, IUserDialogs userDialogs)
+        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService, IUserDialogs userDialogs,
+            WasabeeApiV1Service wasabeeApiV1Service)
         {
             _teamsDatabase = teamsDatabase;
             _navigationService = navigationService;
             _userDialogs = userDialogs;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
         public void Prepare(TeamDetailsNavigationParameter parameter)
@@ -55,17 +59,39 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 return;
 
             var team = await _teamsDatabase.GetTeam(_teamId);
-            Team = team ?? new TeamModel();
+            if (team == null || team.Agents.IsNullOrEmpty())
+                RefreshCommand.Execute();
+            else
+                Team = team;
         }
 
         #region Properties
 
         public bool IsOwner { get; set; }
+        public bool IsRefreshing { get; set; }
         public TeamModel Team { get; set; }
 
         #endregion
 
         #region Commands
+
+        public IMvxCommand RefreshCommand => new MvxCommand(async () => await RefreshExecuted());
+        private async Task RefreshExecuted()
+        {
+            if (IsRefreshing)
+                return;
+
+            IsRefreshing = true;
+
+            var updatedTeam = await _wasabeeApiV1Service.Teams_GetTeam(_teamId);
+            if (updatedTeam != null)
+            {
+                await _teamsDatabase.SaveTeamModel(updatedTeam);
+                Team = updatedTeam;
+            }
+
+            IsRefreshing = false;
+        }
 
         public IMvxAsyncCommand<TeamAgentModel> ShowAgentCommand => new MvxAsyncCommand<TeamAgentModel>(ShowAgentExecuted);
         private async Task ShowAgentExecuted(TeamAgentModel agent)
@@ -86,23 +112,22 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         {
             if (string.IsNullOrEmpty(qrCodeData))
                 return;
-            else
-            {
-                if (qrCodeData.StartsWith("wasabee:"))
-                {
-                    var userId = qrCodeData.Substring(8, qrCodeData.Length - 8);
-                    var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(userId)) ?? null;
-                    if (user != null)
-                    {
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            _userDialogs.Toast($"{user.Name} is already in the team !");
-                        });
-                        return;
-                    }
 
-                    // TODO
+            if (qrCodeData.StartsWith("wasabee:"))
+            {
+                var userId = qrCodeData.Substring(8, qrCodeData.Length - 8);
+                var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(userId)) ?? null;
+                if (user != null)
+                {
+                    _userDialogs.Toast($"{user.Name} is already in the team !");
+                    return;
                 }
+
+                var result = await _wasabeeApiV1Service.Teams_AddAgentToTeam(Team.Id, userId);
+                if (result)
+                    RefreshCommand.Execute();
+                else
+                    _userDialogs.Toast("Agent not found");
             }
         }
 
