@@ -34,8 +34,8 @@
 
                 <Grid Grid.Row="0" Grid.Column="1" RowSpacing="0" ColumnSpacing="0" VerticalOptions="Center">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -107,21 +107,22 @@
                    Text="This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."/>
             </Grid>
 
-            <Frame IsVisible="{Binding IsQrCodeVisible}" BackgroundColor="#55000000"
-                   WidthRequest="300" HeightRequest="300" Padding="0"
-                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.5, Constant=-150}"
-                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.5, Constant=-150}">
-                <StackLayout BackgroundColor="White" Orientation="Vertical">
-                    <forms:ZXingBarcodeImageView HorizontalOptions="Center" VerticalOptions="Center"
-                                             WidthRequest="300" HeightRequest="300"
-                                             BarcodeValue="{Binding QrCodeValue}" BarcodeFormat="QR_CODE">
+            <Frame IsVisible="{Binding IsQrCodeVisible}" Margin="0" Padding="0" BackgroundColor="Transparent"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                   RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}">
+                <RelativeLayout BackgroundColor="#55000000" Margin="0" Padding="0">
+                    <forms:ZXingBarcodeImageView HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="300" HeightRequest="300"
+                                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.5, Constant=-150}"
+                                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.5, Constant=-150}"
+                                                 BarcodeFormat="QR_CODE" BarcodeValue="{Binding QrCodeValue}">
                         <forms:ZXingBarcodeImageView.BarcodeOptions>
                             <common:EncodingOptions Width="300" Height="300" />
                         </forms:ZXingBarcodeImageView.BarcodeOptions>
                     </forms:ZXingBarcodeImageView>
-
-                    <Label Text="{Binding QrCodeValue}" HorizontalOptions="Center"/>
-                </StackLayout>
+                    <RelativeLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowQrCodeCommand}" />
+                    </RelativeLayout.GestureRecognizers>
+                </RelativeLayout>
             </Frame>
         </RelativeLayout>
     </ContentPage.Content>
