@@ -64,7 +64,8 @@
                        BackgroundColor="#4285F4" 
                        Margin="10"
                        Padding="1"
-                       HasShadow="false">
+                       HasShadow="false"
+                       IsVisible="{Binding IsGButtonVisible}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50" />
