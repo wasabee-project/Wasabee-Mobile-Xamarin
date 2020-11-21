@@ -152,36 +152,35 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             var cookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
             if (string.IsNullOrWhiteSpace(cookie))
-                throw new KeyNotFoundException(SecureStorageConstants.WasabeeCookie);
-
-            var wasabeeCookie = JsonConvert.DeserializeObject<Cookie>(cookie);
-
-            var cookieContainer = new CookieContainer();
-
-            using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            using var client = new HttpClient(handler);
-
-            cookieContainer.Add(new Uri(_appSettings.WasabeeBaseUrl), wasabeeCookie);
-
-            var url = $"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.Firebase}";
-            var postContent = new StringContent(token, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(url, postContent).ConfigureAwait(false);
+                return false;
+            //TODO : catch this : throw new KeyNotFoundException(SecureStorageConstants.WasabeeCookie);
 
             try
             {
+                var wasabeeCookie = JsonConvert.DeserializeObject<Cookie>(cookie);
+                var cookieContainer = new CookieContainer();
+                cookieContainer.Add(new Uri(_appSettings.WasabeeBaseUrl), wasabeeCookie);
+
+                using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+                using var client = new HttpClient(handler);
+
+                var url = $"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.Firebase}";
+                var postContent = new StringContent(token, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(url, postContent).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    return responseContent.Contains("\"status\":\"ok\"");
+                }
             }
             catch (Exception e)
             {
                 _loggingService.Error(e, "Error Executing LoginProvider.SendFirebaseTokenAsync");
 
                 return false;
-            }
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return responseContent.Contains("\"status\":\"ok\"");
             }
 
             return false;
