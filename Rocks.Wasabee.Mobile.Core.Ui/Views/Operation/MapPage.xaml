@@ -20,7 +20,7 @@
 
     <ContentPage.Content>
         <RelativeLayout>
-            <googleMaps:Map x:Name="Map" MapType="Street"
+            <googleMaps:Map x:Name="Map" MapType="{Binding MapType}"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
                             SelectedPin="{Binding SelectedPin}" MapClicked="Map_OnMapClicked" />
@@ -33,42 +33,47 @@
                 <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
                     <iconize:IconButton Text="mdi-texture" BackgroundColor="Transparent" TextColor="Gray"
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
-                                        Clicked="StyleButton_OnClicked" />
+                                        Clicked="TypeButton_OnClicked" />
                 </Frame>
                 <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
                     <iconize:IconButton Text="mdi-layers" BackgroundColor="Transparent" TextColor="Gray"
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
                                         Clicked="LayerChooserButton_OnClicked" />
                 </Frame>
+                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF" IsVisible="{Binding IsStylingAvailable}">
+                    <iconize:IconButton Text="mdi-brush" BackgroundColor="Transparent" TextColor="Gray"
+                                        Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
+                                        Clicked="StyleButton_OnClicked" />
+                </Frame>
             </StackLayout>
 
-            <pancake:PancakeView BackgroundColor="#FFF" CornerRadius="0, 5, 5, 5" Padding="10"
+            <pancake:PancakeView BackgroundColor="#FFF" CornerRadius="0, 5, 5, 5" Padding="10,5"
                                  IsVisible="{Binding IsLayerChooserVisible}"
-                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=Width, Factor=1, Constant=15}"
-                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=Height, Factor=1, Constant=-5}">
-                <Grid>
+                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=X, Factor=1, Constant=0}"
+                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=Height, Factor=0.5, Constant=-7}">
+                <Grid Margin="0" Padding="0" RowSpacing="0" ColumnSpacing="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" Color="{Binding IsLayerLinksActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerLinksActivated}"/>
-                    <Label Grid.Row="0" Grid.Column="1" Text="Links" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="Links" TextColor="Black" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="1" Grid.Column="0" Color="{Binding IsLayerAnchorsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAnchorsActivated}"/>
-                    <Label Grid.Row="1" Grid.Column="1" Text="Anchors" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="Anchors" TextColor="Black" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="2" Grid.Column="0" Color="{Binding IsLayerMarkersActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerMarkersActivated}"/>
-                    <Label Grid.Row="2" Grid.Column="1" Text="Markers" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="Markers" TextColor="Black" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="3" Grid.Column="0" Color="{Binding IsLayerAgentsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAgentsActivated}"/>
-                    <Label Grid.Row="3" Grid.Column="1" Text="Agents" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="Agents" TextColor="Black" VerticalTextAlignment="Center"/>
                 </Grid>
             </pancake:PancakeView>
 

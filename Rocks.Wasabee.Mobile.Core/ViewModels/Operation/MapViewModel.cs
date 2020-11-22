@@ -80,6 +80,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 nameof(MapThemeEnum.IntelDefault) => MapThemeEnum.IntelDefault,
                 _ => MapThemeEnum.GoogleLight
             };
+            MapType = _preferences.Get(UserSettingsKeys.MapType, nameof(MapType.Street)) switch
+            {
+                nameof(MapType.Street) => MapType.Street,
+                nameof(MapType.Hybrid) => MapType.Hybrid,
+                _ => MapType.Street
+            };
 
             await base.Initialize();
 
@@ -152,6 +158,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLocationAvailable { get; set; } = false;
 
         public MapThemeEnum MapTheme { get; set; } = MapThemeEnum.GoogleLight;
+        public MapType MapType { get; set; } = MapType.Street;
+        public bool IsStylingAvailable { get; set; } = true;
 
         public bool IsLayerChooserVisible { get; set; } = false;
         public bool IsLayerLinksActivated { get; set; } = true;
@@ -432,7 +440,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxCommand<MapThemeEnum> SwitchThemeCommand => new MvxCommand<MapThemeEnum>(SwitchThemeExecuted);
         private void SwitchThemeExecuted(MapThemeEnum mapTheme)
         {
-            LoggingService.Trace("Executing MapViewModel.RefreshOperationCommand");
+            LoggingService.Trace("Executing MapViewModel.SwitchThemeCommand");
 
             MapTheme = mapTheme;
             switch (mapTheme)
@@ -448,6 +456,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapTheme), mapTheme, null);
+            }
+        }
+
+        public IMvxCommand<MapType> SwitchMapTypeCommand => new MvxCommand<MapType>(SwitchMapTypeExecuted);
+        private void SwitchMapTypeExecuted(MapType mapType)
+        {
+            LoggingService.Trace("Executing MapViewModel.SwitchMapTypeCommand");
+
+            MapType = mapType;
+            switch (mapType)
+            {
+                case MapType.Street:
+                    _preferences.Set(UserSettingsKeys.MapType, nameof(MapType.Street));
+                    IsStylingAvailable = true;
+                    break;
+                case MapType.Hybrid:
+                    _preferences.Set(UserSettingsKeys.MapType, nameof(MapType.Hybrid));
+                    IsStylingAvailable = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
             }
         }
 

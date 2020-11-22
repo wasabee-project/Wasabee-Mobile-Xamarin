@@ -235,6 +235,17 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             RefreshMapTheme();
         }
 
+        private void TypeButton_OnClicked(object sender, EventArgs e)
+        {
+            ViewModel.SwitchMapTypeCommand.Execute(
+                ViewModel.MapType switch
+                {
+                    MapType.Street => MapType.Hybrid,
+                    MapType.Hybrid => MapType.Street,
+                    _ => MapType.Street
+                });
+        }
+
         private void LayerChooserButton_OnClicked(object sender, EventArgs e)
         {
             ViewModel.IsLayerChooserVisible = !ViewModel.IsLayerChooserVisible;
