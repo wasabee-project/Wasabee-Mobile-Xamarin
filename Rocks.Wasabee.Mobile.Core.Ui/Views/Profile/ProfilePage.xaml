@@ -9,8 +9,15 @@
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
                        xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Profile.ProfilePage"
-                       Title="Profile">
+                       Title="Profile"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+
+    <ContentPage.Resources>
+        <converters:AgentVerificationBoolToStringConverter x:Key="AgentVerificationBoolToStringConverter"/>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <RelativeLayout>
             <Grid RowSpacing="0">
@@ -26,7 +33,7 @@
 
                 <yummy:PancakeView Grid.Column="0" Grid.Row="0" WidthRequest="100" HeightRequest="100" CornerRadius="50" Margin="30,20,15,20">
                     <yummy:PancakeView.Border>
-                        <yummy:Border Color="{StaticResource PrimaryGreen}" Thickness="4" />
+                        <yummy:Border Color="{DynamicResource PrimaryGreen}" Thickness="4" />
                     </yummy:PancakeView.Border>
 
                     <ffimageloading:CachedImage Source="{Binding User.ProfileImage}"/>
@@ -45,11 +52,11 @@
 
 
                     <Label Grid.Column="0" Grid.Row="0" Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
-                    <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat='Level : {0}'}" TextColor="Gray" FontSize="Medium"/>
-                    <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='Id : {0}'}" TextColor="Gray" FontSize="12"/>
+                    <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat='Level : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>
+                    <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='Id : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="12"/>
 
                     <iconize:IconButton Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
-                                    Text="mdi-qrcode" FontSize="28"
+                                    Text="mdi-qrcode" TextColor="{DynamicResource PrimaryTextColor}" FontSize="28"
                                     HorizontalOptions="Center" VerticalOptions="Center"
                                     BackgroundColor="Transparent"
                                     Command="{Binding ShowQrCodeCommand}"/>
@@ -57,10 +64,9 @@
 
                 <TableView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
                        Intent="Settings"
-                       HasUnevenRows="True"
-                       BackgroundColor="#F1F1F1">
+                       HasUnevenRows="True">
                     <TableRoot>
-                        <TableSection Title="Infos" TextColor="{StaticResource PrimaryGreen}">
+                        <TableSection Title="Infos" TextColor="{DynamicResource PrimaryGreen}">
                             <ViewCell Tapped="EnlRocksCell_Tapped">
                                 <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="15, 10" >
                                     <Grid.ColumnDefinitions>
@@ -101,10 +107,10 @@
 
                 <!-- TODO : Common teams here for other agents -->
 
-                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Padding="10" BackgroundColor="#F1F1F1"
-                   FontAttributes="Italic" VerticalOptions="End"
-                   IsVisible="{Binding IsSelfProfile}"
-                   Text="This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."/>
+                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Padding="10"
+                       FontAttributes="Italic" VerticalOptions="End"
+                       IsVisible="{Binding IsSelfProfile}"
+                       Text="This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."/>
             </Grid>
 
             <Frame IsVisible="{Binding IsQrCodeVisible}" Margin="0" Padding="0" BackgroundColor="Transparent"

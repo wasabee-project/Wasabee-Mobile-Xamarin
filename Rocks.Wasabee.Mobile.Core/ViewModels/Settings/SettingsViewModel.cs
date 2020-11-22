@@ -219,7 +219,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         {
             if (_devModeActivated)
                 return;
-            
+
             _tapCount++;
             if (_tapCount < 5)
                 return;
@@ -229,16 +229,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         }
 
         public IMvxCommand RefreshFcmTokenCommand => new MvxCommand(async () => await RefreshFcmTokenExecuted());
-        private async Task  RefreshFcmTokenExecuted()
+        private async Task RefreshFcmTokenExecuted()
         {
             if (IsBusy)
                 return;
-            
+
             LoggingService.Trace("Executing SettingsViewModel.RefreshFcmTokenCommand");
 
             IsBusy = true;
-            
-            var token = await _secureStorage.GetAsync(SecureStorageConstants.FcmToken) 
+
+            var token = await _secureStorage.GetAsync(SecureStorageConstants.FcmToken)
                         ?? _firebaseService.GetFcmToken();
 
             var result = await _loginProvider.SendFirebaseTokenAsync(token);
@@ -247,6 +247,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             LoggingService.Trace($"Result for SettingsViewModel.RefreshFcmTokenCommand : {result}");
 
             IsBusy = false;
+        }
+
+        public IMvxCommand SwitchThemeCommand => new MvxCommand(SwitchThemeExecuted);
+        private void SwitchThemeExecuted()
+        {
+            var themeRequested = CoreApp.AppTheme == Theme.Light ? Theme.Dark : Theme.Light;
+            _messenger.Publish(new ChangeThemeMessage(this, themeRequested));
         }
 
         #endregion

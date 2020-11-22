@@ -6,8 +6,16 @@
                        xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
                        xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamDetailsPage"
-                       Title="{Binding Team.Name}">
+                       Title="{Binding Team.Name}"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="AgentsList"
@@ -15,7 +23,7 @@
                       IsPullToRefreshEnabled="True"
                       CachingStrategy="RecycleElement"
                       ItemSelected="AgentsList_OnItemSelected"
-                      RefreshControlColor="{StaticResource PrimaryGreenDark}"
+                      RefreshControlColor="{DynamicResource PrimaryGreenDark}"
                       ItemsSource="{Binding Team.Agents}"
                       RefreshCommand="{Binding RefreshCommand}"
                       IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
@@ -65,7 +73,7 @@
             </ListView>
 
             <Button x:Name="AddAgentButton" Text="Add Agent" CornerRadius="0" Margin="0"
-                    Style="{StaticResource WasabeeStyleValidateButton}"
+                    Style="{DynamicResource WasabeeStyleValidateButton}"
                     IsVisible="{Binding IsOwner}"
                     Clicked="AddAgentButton_OnClicked"/>
         </StackLayout>

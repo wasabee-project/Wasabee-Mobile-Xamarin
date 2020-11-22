@@ -8,6 +8,7 @@
                       xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                       xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+                      xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.MarkerAssignmentDialog"
                       BackgroundColor="#B000">
 
@@ -17,15 +18,19 @@
             PositionOut="Top"/>
     </pages:PopupPage.Animation>
 
+    <ContentPage.Resources>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter" />
+        <converters:MarkerDataToSvgFilenameConverter x:Key="MarkerDataToSvgFilenameConverter" />
+    </ContentPage.Resources>
 
     <ContentPage.Content>
         <RelativeLayout HorizontalOptions="Center" VerticalOptions="Center">
-            <pancakeView:PancakeView x:Name="Popup" CornerRadius="5" BackgroundColor="{StaticResource PrimaryGreen}" Margin="0, 15">
+            <pancakeView:PancakeView x:Name="Popup" CornerRadius="5" BackgroundColor="{DynamicResource PrimaryGreen}" Margin="0, 15">
                 <StackLayout Padding="0" Margin="0">
 
                     <Label Text="Marker informations" TextColor="White" FontSize="Large" FontAttributes="Bold" Margin="8, 8, 0, 4" />
 
-                    <StackLayout BackgroundColor="White" Padding="10, 5, 10, 10">
+                    <StackLayout BackgroundColor="{DynamicResource DialogsBackgroundColor}" Padding="10, 5, 10, 10">
                         <StackLayout Orientation="Horizontal" Spacing="10">
 
                             <ffimageloadingsvg:SvgCachedImage HeightRequest="50" Margin="5, 0"
@@ -36,10 +41,10 @@
                                 <Label Text="{Binding Goal}" FontAttributes="Italic" />
                             </StackLayout>
                             <StackLayout HorizontalOptions="EndAndExpand">
-                                <iconize:IconButton Text="mdi-map-marker" TextColor="{StaticResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
+                                <iconize:IconButton Text="mdi-map-marker" TextColor="{DynamicResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
                                                     BackgroundColor="Transparent" FontSize="24" HorizontalOptions="Start"
                                                     Command="{Binding ShowOnMapCommand}" />
-                                <iconize:IconButton Text="mdi-map-search" TextColor="{StaticResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
+                                <iconize:IconButton Text="mdi-map-search" TextColor="{DynamicResource PrimaryGreen}" WidthRequest="30" HeightRequest="30" Padding="0"
                                                     BackgroundColor="Transparent" FontSize="24" HorizontalOptions="Start"
                                                     Command="{Binding OpenInNavigationAppCommand}" />
                             </StackLayout>
@@ -50,12 +55,12 @@
                         <StackLayout>
                             <Label Text="{Binding Marker.State, StringFormat='State : {0}'}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                <Button Text="Ack" TextColor="White" BackgroundColor="{StaticResource PrimaryOrange}"
+                                <Button Text="Ack" TextColor="White" BackgroundColor="{DynamicResource PrimaryOrange}"
                                     Command="{Binding AckCommand}" />
-                                <Button Text="Done" TextColor="White" BackgroundColor="{StaticResource PrimaryGreen}"
+                                <Button Text="Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}"
                                     Command="{Binding DoneCommand}"
                                     IsVisible="{Binding IncompleteEnabled, Converter={StaticResource BoolNegateConverter}}"/>
-                                <Button Text="Undone" TextColor="White" BackgroundColor="{StaticResource PrimaryRed}"
+                                <Button Text="Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}"
                                     Command="{Binding IncompleteCommand}"
                                     IsVisible="{Binding IncompleteEnabled}"/>
                             </StackLayout>
@@ -66,7 +71,7 @@
 
             </pancakeView:PancakeView>
 
-            <pancakeView:PancakeView BackgroundColor="{StaticResource PrimaryRed}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
+            <pancakeView:PancakeView BackgroundColor="{DynamicResource AccentColor}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
                                      RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Popup, Property=Width, Factor=1, Constant=-15}" 
                                      RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Popup, Property=Y, Factor=1, Constant=-15}" >
 
