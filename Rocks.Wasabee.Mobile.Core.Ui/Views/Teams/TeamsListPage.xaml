@@ -4,8 +4,16 @@
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:teams="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Teams;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamsListPage"
-                       Title="Teams">
+                       Title="Teams"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <StackLayout>
             <ListView
@@ -15,7 +23,7 @@
                 IsPullToRefreshEnabled="True"
                 RefreshCommand="{Binding RefreshCommand}"
                 IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
-                RefreshControlColor="{StaticResource PrimaryGreenDark}"
+                RefreshControlColor="{DynamicResource PrimaryGreenDark}"
                 ItemSelected="TeamsList_OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -36,7 +44,7 @@
                                                     Command="{Binding Parent.SwitchTeamStateCommand}"
                                                     CommandParameter="{Binding .}"
                                                     FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
-                                                    BorderColor="{StaticResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                                    BorderColor="{DynamicResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
 
                                 <iconize:IconButton Grid.Column="2"
                                                     Text="mdi-arrow-right"

@@ -1,11 +1,11 @@
 ﻿using Xamarin.Forms.Xaml;
 
-namespace Rocks.Wasabee.Mobile.Core.Ui
+namespace Rocks.Wasabee.Mobile.Core.Ui.Themes
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Styles
+    public partial class BaseStyle
     {
-        public Styles()
+        public BaseStyle()
         {
             InitializeComponent();
         }

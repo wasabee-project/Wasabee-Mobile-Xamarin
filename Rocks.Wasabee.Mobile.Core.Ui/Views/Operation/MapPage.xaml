@@ -8,8 +8,15 @@
                        xmlns:googleMaps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        mc:Ignorable="d"
-                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.MapPage">
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.MapPage"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
+    </ContentPage.Resources>
 
     <ContentPage.Content>
         <RelativeLayout>
@@ -66,7 +73,7 @@
             </pancake:PancakeView>
 
 
-            <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{StaticResource DarkGray}" CornerRadius="10, 10, 0, 0" Padding="10"
+            <pancake:PancakeView x:Name="DetailPanel" BackgroundColor="{DynamicResource BackgroundColorLevel1}" CornerRadius="10, 10, 0, 0" Padding="10"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-180}"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=180}">
@@ -76,38 +83,37 @@
                         <StackLayout HorizontalOptions="FillAndExpand">
 
                             <StackLayout Orientation="Horizontal">
-                                <iconize:IconButton Text="mdi-map-marker" TextColor="White" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
+                                <iconize:IconButton Text="mdi-map-marker" TextColor="{DynamicResource PrimaryTextColor}" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
                                                     FontSize="24" HorizontalOptions="Start" VerticalOptions="Start" Command="{Binding MoveToPortalCommand}"/>
-                                <Label Text="{Binding SelectedWasabeePin.Portal.Name}" FontSize="18" TextColor="White" VerticalOptions="CenterAndExpand"/>
+                                <Label Text="{Binding SelectedWasabeePin.Portal.Name}" FontSize="18" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
                             </StackLayout>
                         
                             <StackLayout IsVisible="{Binding SelectedWasabeePin.AssignedTo, Converter={StaticResource StringToBoolNegateConverter}}"
                                          Orientation="Horizontal" Margin="2, 0, 0, 0">
-                                <iconize:IconLabel Text="mdi-account-arrow-right" TextColor="White" FontSize="24"/>
-                                <Label Text="{Binding SelectedWasabeePin.AssignedTo}" TextColor="White" VerticalOptions="CenterAndExpand"/>
+                                <iconize:IconLabel Text="mdi-account-arrow-right" TextColor="{DynamicResource PrimaryTextColor}" FontSize="24"/>
+                                <Label Text="{Binding SelectedWasabeePin.AssignedTo}" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
                             </StackLayout>
-                            
-                            <pancake:PancakeView IsVisible="{Binding SelectedWasabeePin.HasComment}"
-                                                 BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="5, 5, 0, 0"
+
+                            <pancake:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel2}" IsVisible="{Binding SelectedWasabeePin.HasComment}" Padding="5" Margin="5, 5, 0, 0"
                                                  CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
                                 <StackLayout Orientation="Vertical" Padding="0" Margin="0" Spacing="0">
 
                                     <StackLayout IsVisible="{Binding SelectedWasabeePin.Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
                                                  Orientation="Horizontal" Padding="0" Margin="0" HorizontalOptions="Start" Spacing="3">
-                                        <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
+                                        <iconize:IconLabel Text="mdi-format-quote-open" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12"/>
                                         <Label Text="{Binding SelectedWasabeePin.Marker.Comment}" FontAttributes="Italic" FontSize="14"/>
                                     </StackLayout>
 
                                     <StackLayout IsVisible="{Binding SelectedWasabeePin.Portal.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
                                                  Orientation="Horizontal" Padding="0" Margin="0" HorizontalOptions="Start" Spacing="3">
-                                        <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
-                                        <Label Text="{Binding SelectedWasabeePin.Portal.Comment}" TextColor="{StaticResource PortalCommentColor}" FontAttributes="Italic" FontSize="14"/>
+                                        <iconize:IconLabel Text="mdi-format-quote-open" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12"/>
+                                        <Label Text="{Binding SelectedWasabeePin.Portal.Comment}" TextColor="{DynamicResource PortalCommentColor}" FontAttributes="Italic" FontSize="14"/>
                                     </StackLayout>
 
                                     <StackLayout IsVisible="{Binding SelectedWasabeePin.Portal.Hardness, Converter={StaticResource StringToBoolNegateConverter}}"
                                                  Orientation="Horizontal" Padding="0" Margin="0" HorizontalOptions="Start" Spacing="3">
-                                        <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
-                                        <Label Text="{Binding SelectedWasabeePin.Portal.Hardness}" TextColor="Red" FontAttributes="Italic" FontSize="14"/>
+                                        <iconize:IconLabel Text="mdi-format-quote-open" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12"/>
+                                        <Label Text="{Binding SelectedWasabeePin.Portal.Hardness}" TextColor="{DynamicResource AccentColor}" FontAttributes="Italic" FontSize="14"/>
                                     </StackLayout>
 
                                 </StackLayout>
@@ -117,11 +123,11 @@
                     </ScrollView>
                 
                     <StackLayout Orientation="Vertical" Spacing="0">
-                
-                        <iconize:IconButton Text="mdi-close" TextColor="White" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
+
+                        <iconize:IconButton Text="mdi-close" TextColor="{DynamicResource PrimaryTextColor}" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
                                             FontSize="20" HorizontalOptions="End" VerticalOptions="Start" Command="{Binding CloseDetailPanelCommand}"/>
 
-                        <iconize:IconButton Text="mdi-map-search" TextColor="White" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
+                        <iconize:IconButton Text="mdi-map-search" TextColor="{DynamicResource PrimaryTextColor}" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
                                             FontSize="20" HorizontalOptions="End" VerticalOptions="Start" Command="{Binding OpenInNavigationAppCommand}"/>
 
                     </StackLayout>

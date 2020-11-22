@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
 
-  <style name="Theme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
+  <style name="Theme.Splash" parent="Theme.MaterialComponents.NoActionBar">
     <item name="android:windowBackground">@drawable/splashscreen</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowFullscreen">true</item>
@@ -14,7 +14,7 @@
   </style>
 
   <!-- Base theme applied no matter what API -->
-  <style name="MainTheme.Base" parent="Theme.MaterialComponents.Light">
+  <style name="MainTheme.Base" parent="Theme.MaterialComponents.DayNight">
     <!--If you are using revision 22.1 please use just windowNoTitle. Without android:-->
     <item name="windowNoTitle">true</item>
     <!--We will be using the toolbar so no need to show ActionBar-->
@@ -34,7 +34,9 @@
     <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
   </style>
 
-  <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+  <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Dialog">
     <item name="colorAccent">@color/colorAccent</item>
+    <item name="android:background">#282828</item>
   </style>
+
 </resources>

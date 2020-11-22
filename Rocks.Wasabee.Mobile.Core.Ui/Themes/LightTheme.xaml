@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                    x:Class="Rocks.Wasabee.Mobile.Core.Ui.Themes.LightTheme"
+                    Source="BaseStyle.xaml">
+
+    <!-- COLORS -->
+    <Color x:Key="BackgroundColorLevel0">#FFF</Color>
+    <Color x:Key="BackgroundColorLevel1">#E5E5E5</Color>
+    <Color x:Key="BackgroundColorLevel2">#C9C9C9</Color>
+
+    <Color x:Key="PrimaryRed">#CC0000</Color>
+
+    <Color x:Key="MasterMenuBackgroundColor">#4E5B59</Color>
+    <Color x:Key="DialogsBackgroundColor">#FFF</Color>
+
+    <Color x:Key="PrimaryTextColor">Black</Color>
+    <Color x:Key="SecondaryTextColor">Gray</Color>
+
+    <!--Containers-->
+    <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColorLevel0}" />
+    </Style>
+    <Style TargetType="ContentView">
+        <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColorLevel0}" />
+    </Style>
+
+    <Style TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColorLevel0}" />
+    </Style>
+
+    <Style TargetType="pancakeView:PancakeView">
+        <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColorLevel0}" />
+    </Style>
+
+    <!--Labels-->
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="LineBreakMode" Value="WordWrap"/>
+    </Style>
+
+    <!--Menu buttons-->
+    <Style TargetType="Button" x:Key="WasabeeStyleMenuButton">
+        <Setter Property="HeightRequest" Value="35"/>
+        <Setter Property="WidthRequest" Value="140"/>
+        <Setter Property="TextColor" Value="{StaticResource LightGray}"/>
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="BorderColor" Value="{StaticResource LightGray}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource MasterMenuBackgroundColor}"/>
+    </Style>
+
+</ResourceDictionary>

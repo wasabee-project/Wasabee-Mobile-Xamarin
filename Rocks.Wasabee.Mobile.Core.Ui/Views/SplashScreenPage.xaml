@@ -7,11 +7,11 @@
                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       mc:Ignorable="d"
-                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.SplashScreenPage">
-  <ContentPage.Resources>
-        <ResourceDictionary>
-            <converters:EnvironnementToColorConverter x:Key="EnvironnementToColorConverter" />
-        </ResourceDictionary>
+                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.SplashScreenPage"
+                      BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+    <ContentPage.Resources>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter" />
+        <converters:EnvironnementToColorConverter x:Key="EnvironnementToColorConverter" />
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -40,7 +40,7 @@
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
                 IsVisible="{Binding IsLoading}">
                 <ActivityIndicator
-                    Color="{StaticResource PrimaryGreen}"
+                    Color="{DynamicResource PrimaryGreen}"
                     IsRunning="True"
                     HeightRequest="80"/>
                 <Label
@@ -94,14 +94,14 @@
                     IsVisible="{Binding IsAuthInError}"
                     Text="{Binding ErrorMessage}"
                     Margin="0, 20, 0, 0"
-                    TextColor="Red" />
+                    TextColor="{DynamicResource AccentColor}" />
 
                 <Label
                     HorizontalTextAlignment="Center"
                     IsVisible="{Binding IsConnected, Converter={StaticResource BoolNegateConverter}}"
                     Text="You must be connected to Internet over Wi-Fi or cellular network to use this application"
                     Margin="0, 20, 0, 0"
-                    TextColor="Red" />
+                    TextColor="{DynamicResource AccentColor}" />
             </StackLayout>
             
             
@@ -119,7 +119,7 @@
                     FontSize="Large"/>
 
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                    <CheckBox Color="{StaticResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
+                    <CheckBox Color="{DynamicResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
                     <Label Text="Remember my choice (quick login if enabled)" VerticalOptions="CenterAndExpand" FontSize="Small">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding RememberChoiceCommand}"/>
@@ -132,13 +132,10 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Frame CornerRadius="2"
+                                <Frame BackgroundColor="{DynamicResource BackgroundColorLevel1}" CornerRadius="2" Margin="0" Padding="0"
                                        HorizontalOptions="CenterAndExpand" 
                                        VerticalOptions="CenterAndExpand"
-                                       BackgroundColor="White"
-                                       HasShadow="True"
-                                       Margin="0"
-                                       Padding="0">
+                                       HasShadow="True">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="70" />
@@ -148,7 +145,7 @@
                                             <RowDefinition Height="60" />
                                         </Grid.RowDefinitions>
 
-                                        <Frame Margin="0" Padding="0" Grid.Column="0" Grid.Row="0" HasShadow="false" HorizontalOptions="Center" VerticalOptions="Center">
+                                        <Frame Margin="0" Padding="0" Grid.Column="0" Grid.Row="0" HasShadow="false" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="Transparent">
                                             <Image Source="{Binding Image}" HeightRequest="30" Margin="10, 0, 0, 0"/>
                                         </Frame>
                                         <Label  Text="{Binding Name}" Grid.Column="1" Grid.Row="0" 
@@ -172,7 +169,7 @@
                 <Label
                     HorizontalTextAlignment="Center"
                     Margin="0, 20, 0, 0"
-                    TextColor="Red"
+                    TextColor="{DynamicResource AccentColor}"
                     FontSize="Medium">
                     <!-- DO NOT touch Label.Text indentation !-->
                     <Label.Text>
@@ -182,9 +179,9 @@ You don't have any assigned team or operation, contact your Operator before usin
                     </Label.Text>
                 </Label>
 
-                <Button Margin="0, 30, 0, 0" Text="Change account" Style="{StaticResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
-                <Button Text="Change server" Style="{StaticResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
-                <Button Text="Retry" Style="{StaticResource WasabeeStyleValidateButton}" Command="{Binding RetryTeamLoadingCommand}" />
+                <Button Margin="0, 30, 0, 0" Text="Change account" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
+                <Button Text="Change server" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
+                <Button Text="Retry" Style="{DynamicResource WasabeeStyleValidateButton}" Command="{Binding RetryTeamLoadingCommand}" />
 
             </StackLayout>
 

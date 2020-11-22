@@ -2,10 +2,20 @@
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-                    x:Class="Rocks.Wasabee.Mobile.Core.Ui.Styles">
+                    x:Class="Rocks.Wasabee.Mobile.Core.Ui.Themes.BaseStyle">
+
+    <!--
+    <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+    <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
+    <converters:AgentVerificationBoolToStringConverter x:Key="AgentVerificationBoolToStringConverter"/>
+    <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+    <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
+    <converters:TextToGridVisibilityConverter x:Key="TextToGridVisibilityConverter"/>
+    <converters:MarkerDataToSvgFilenameConverter x:Key="MarkerDataToSvgFilenameConverter"/>
+    -->
 
     <!-- COLORS -->
-    <Color x:Key="PrimaryRed">#CC0000</Color>
     <Color x:Key="PrimaryBlue">#3788D8</Color>
     <Color x:Key="PrimaryOrange">#F59100</Color>
     <Color x:Key="PrimaryOrangeDark">#EE7F01</Color>
@@ -26,11 +36,6 @@
     <Color x:Key="PrimaryBlack">#090C02</Color>
     
     <!--Labels-->
-    <Style TargetType="Label">
-        <Setter Property="TextColor" Value="Black" />
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="LineBreakMode" Value="WordWrap"/>
-    </Style>
     
     <Style x:Key="WasabeeStyleMenuTitre" TargetType="Label">
         <Setter Property="FontSize" Value="30"/>
@@ -75,7 +80,7 @@
     <Style TargetType="Button" x:Key="WasabeeStyleDenyButton" >
         <Setter Property="Text" Value="✗   Deny"/>
         <Setter Property="TextColor" Value="White"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryRed}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
     <!--Connexion-->
@@ -87,15 +92,6 @@
         <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="BorderColor" Value="{StaticResource LightGray}"/>
         <Setter Property="BackgroundColor" Value="White"/>
-    </Style>
-    <!--Menu buttons-->
-    <Style TargetType="Button" x:Key="WasabeeStyleMenuButton">
-        <Setter Property="HeightRequest" Value="35"/>
-        <Setter Property="WidthRequest" Value="140"/>
-        <Setter Property="TextColor" Value="{StaticResource LightGray}"/>
-        <Setter Property="BorderWidth" Value="1" />
-        <Setter Property="BorderColor" Value="{StaticResource LightGray}" />
-        <Setter Property="BackgroundColor"  Value="{StaticResource DarkGray}"/>
     </Style>
 
 

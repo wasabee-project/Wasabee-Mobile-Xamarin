@@ -3,15 +3,22 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:settings="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Settings;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Settings.SettingsPage"
-                       Title="Settings">
+                       Title="Settings"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <TableView Intent="Settings" HasUnevenRows="True">
             <TableRoot>
-                <TableSection Title="Permissions" TextColor="{StaticResource PrimaryGreen}">
-                    <TextCell Text="Open app system settings" TextColor="Black" Command="{Binding OpenApplicationSettingsCommand}"/>
+                <TableSection Title="Permissions" TextColor="{DynamicResource PrimaryGreen}">
+                    <TextCell Text="Open app system settings" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenApplicationSettingsCommand}"/>
                 </TableSection>
-                <TableSection Title="Application" TextColor="{StaticResource PrimaryGreen}">
+                <TableSection Title="Application" TextColor="{DynamicResource PrimaryGreen}">
                     <ViewCell Tapped="AnalyticsCell_OnTapped">
                         <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
                             <Grid.ColumnDefinitions>
@@ -22,32 +29,33 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            
-                            <Label Grid.Row="0" Grid.Column="0" Text="Enable Anonymous Analytics" TextColor="Black" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
-                            <Switch Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" OnColor="{StaticResource PrimaryGreenDark}"
+
+                            <Label Grid.Row="0" Grid.Column="0" Text="Enable Anonymous Analytics" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
+                            <Switch Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" OnColor="{DynamicResource PrimaryGreenDark}"
                                     ThumbColor="{Binding IsAnonymousAnalyticsEnabled, Converter={StaticResource BoolToColorConverter}}"
                                     IsToggled="{Binding IsAnonymousAnalyticsEnabled}"
                                     HorizontalOptions="EndAndExpand" Margin="0, 0, 10, 0"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" Text="(this helps the developers improve Wasabee)" TextColor="Gray" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
+                            <Label Grid.Row="1" Grid.Column="0" Text="(this helps the developers improve Wasabee)" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
 
                         </Grid>
                     </ViewCell>
-                    <TextCell Text="Send logs" TextColor="Black" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="Gray"/>
-                    <TextCell Text="Refresh FCM token" TextColor="Black" Command="{Binding RefreshFcmTokenCommand}"/>
+                    <TextCell Text="Send logs" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="{DynamicResource SecondaryTextColor}"/>
+                    <TextCell Text="Refresh FCM token" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
+                    <TextCell Text="Switch light/dark theme" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
                 </TableSection>
-                <TableSection Title="About" TextColor="{StaticResource PrimaryGreen}">
+                <TableSection Title="About" TextColor="{DynamicResource PrimaryGreen}">
                     <ViewCell>
-                        <Label TextColor="Gray" FontSize="Small" Padding="15, 10" LineBreakMode="WordWrap">
+                        <Label TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 10" LineBreakMode="WordWrap">
                             <Label.Text>
 Wasabee mobile application is still under huge development process. Bugs and crashes are possible.
 If you're a C# / Xamarin.Forms developer and interested in helping us, reach us through Telegram.
                             </Label.Text>
                         </Label>
                     </ViewCell>
-                    <TextCell Text="Wasabee Webpage" TextColor="Black" Command="{Binding OpenWasabeeWebpageCommand}" />
-                    <TextCell Text="Telegram Chat" TextColor="Black" Command="{Binding OpenWasabeeTelegramChatCommand}" />
-                    <TextCell Text="Version" TextColor="Black" Detail="{Binding Version}" DetailColor="Gray" Command="{Binding VersionTappedCommand}"/>
+                    <TextCell Text="Wasabee Webpage" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeWebpageCommand}" />
+                    <TextCell Text="Telegram Chat" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeTelegramChatCommand}" />
+                    <TextCell Text="Version" TextColor="{DynamicResource PrimaryTextColor}" Detail="{Binding Version}" DetailColor="{DynamicResource SecondaryTextColor}" Command="{Binding VersionTappedCommand}"/>
                 </TableSection>
             </TableRoot>
         </TableView>

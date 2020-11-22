@@ -5,6 +5,7 @@ using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
@@ -14,6 +15,8 @@ namespace Rocks.Wasabee.Mobile.Core
 {
     public class CoreApp : MvxApplication
     {
+        public static Theme AppTheme { get; set; } = Theme.Light;
+
         public override async void Initialize()
         {
             CreatableTypes()

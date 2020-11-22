@@ -55,6 +55,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Themes\BaseStyle.xaml.cs">
+      <DependentUpon>BaseStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\LightTheme.xaml.cs">
+      <DependentUpon>LightTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\DarkTheme.xaml.cs">
+      <DependentUpon>DarkTheme.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
@@ -70,7 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Styles.xaml">
+    <EmbeddedResource Update="Themes\BaseStyle.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Dialogs\LinkAssignmentDialog.xaml">
