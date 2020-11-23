@@ -2,7 +2,6 @@
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Services;
@@ -58,18 +57,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             if (string.IsNullOrWhiteSpace(_teamId))
                 return;
 
-            var team = await _teamsDatabase.GetTeam(_teamId);
-            if (team == null || team.Agents.IsNullOrEmpty())
-                RefreshCommand.Execute();
-            else
-                Team = team;
+            RefreshCommand.Execute();
         }
 
         #region Properties
 
         public bool IsOwner { get; set; }
         public bool IsRefreshing { get; set; }
-        public TeamModel Team { get; set; }
+        public TeamModel Team { get; set; } = new TeamModel();
 
         #endregion
 
@@ -88,6 +83,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             {
                 await _teamsDatabase.SaveTeamModel(updatedTeam);
                 Team = updatedTeam;
+            }
+            else
+            {
+                var localData = await _teamsDatabase.GetTeam(_teamId);
+                if (localData != null)
+                    Team = localData;
             }
 
             IsRefreshing = false;
