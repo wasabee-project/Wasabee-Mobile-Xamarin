@@ -3,14 +3,16 @@
                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                      xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                      xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
+                     xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.OperationRootTabbedPage"
+                     android:TabbedPage.ToolbarPlacement="Bottom"
                      BarBackgroundColor="{DynamicResource PrimaryGreenDark}"
                      BarTextColor="White"
                      SelectedTabColor="White"
                      Title="Operation">
 
     <views:MvxTabbedPage.ToolbarItems>
-        <ToolbarItem Text="Refresh" Command="{Binding RefreshOperationCommand}" />
+        <ToolbarItem IconImageSource="cloudrefresh.png" Command="{Binding RefreshOperationCommand}" />
     </views:MvxTabbedPage.ToolbarItems>
 
 </views:MvxTabbedPage>
