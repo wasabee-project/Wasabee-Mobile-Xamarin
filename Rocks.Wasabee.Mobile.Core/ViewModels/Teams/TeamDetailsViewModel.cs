@@ -62,6 +62,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
         #region Properties
 
+        public bool IsAddingAgent { get; set; }
         public bool IsOwner { get; set; }
         public bool IsRefreshing { get; set; }
         public TeamModel Team { get; set; } = new TeamModel();
@@ -97,6 +98,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxAsyncCommand<TeamAgentModel> ShowAgentCommand => new MvxAsyncCommand<TeamAgentModel>(ShowAgentExecuted);
         private async Task ShowAgentExecuted(TeamAgentModel agent)
         {
+            IsAddingAgent = false;
+
             if (IsBusy)
                 return;
 
@@ -111,6 +114,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxCommand<string> AddAgentFromQrCodeCommand => new MvxCommand<string>(async (qrCodeData) => await AddAgentFromQrCodeExecuted(qrCodeData));
         private async Task AddAgentFromQrCodeExecuted(string qrCodeData)
         {
+            IsAddingAgent = false;
+
             if (string.IsNullOrEmpty(qrCodeData))
                 return;
 
@@ -130,6 +135,30 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 else
                     _userDialogs.Toast("Agent not found");
             }
+        }
+
+        public IMvxCommand PromptAddUserAgentCommand => new MvxCommand(PromptAddUserAgentExecuted);
+        private async void PromptAddUserAgentExecuted()
+        {
+            IsAddingAgent = false;
+
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig
+            {
+                InputType = InputType.Name,
+                OkText = "Add",
+                CancelText = "Cancel",
+                Title = "Agent name",
+            });
+
+            if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
+            {
+                var result = await _wasabeeApiV1Service.Teams_AddAgentToTeam(Team.Id, promptResult.Text);
+                if (result)
+                    RefreshCommand.Execute();
+                else
+                    _userDialogs.Toast("Agent not found or already in team");
+            }
+
         }
 
         #endregion
