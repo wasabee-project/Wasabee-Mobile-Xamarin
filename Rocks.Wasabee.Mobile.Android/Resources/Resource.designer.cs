@@ -27770,235 +27770,238 @@ namespace Rocks.Wasabee.Mobile.Droid
 			public const int notify_panel_notification_icon_bg = 2131165563;
 			
 			// aapt resource value: 0x7F07017C
-			public const int pin_black = 2131165564;
+			public const int pencil = 2131165564;
 			
 			// aapt resource value: 0x7F07017D
-			public const int pin_blue = 2131165565;
+			public const int pin_black = 2131165565;
 			
 			// aapt resource value: 0x7F07017E
-			public const int pin_fuschia = 2131165566;
+			public const int pin_blue = 2131165566;
 			
 			// aapt resource value: 0x7F07017F
-			public const int pin_green = 2131165567;
+			public const int pin_fuschia = 2131165567;
 			
 			// aapt resource value: 0x7F070180
-			public const int pin_lime = 2131165568;
+			public const int pin_green = 2131165568;
 			
 			// aapt resource value: 0x7F070181
-			public const int pin_magenta = 2131165569;
+			public const int pin_lime = 2131165569;
 			
 			// aapt resource value: 0x7F070182
-			public const int pin_orange = 2131165570;
+			public const int pin_magenta = 2131165570;
 			
 			// aapt resource value: 0x7F070183
-			public const int pin_purple = 2131165571;
+			public const int pin_orange = 2131165571;
 			
 			// aapt resource value: 0x7F070184
-			public const int pin_red = 2131165572;
+			public const int pin_purple = 2131165572;
 			
 			// aapt resource value: 0x7F070185
-			public const int pin_tan = 2131165573;
+			public const int pin_red = 2131165573;
 			
 			// aapt resource value: 0x7F070186
-			public const int pin_teal = 2131165574;
+			public const int pin_tan = 2131165574;
 			
 			// aapt resource value: 0x7F070187
-			public const int pin_yellow = 2131165575;
+			public const int pin_teal = 2131165575;
 			
 			// aapt resource value: 0x7F070188
-			public const int preference_list_divider_material = 2131165576;
+			public const int pin_yellow = 2131165576;
 			
 			// aapt resource value: 0x7F070189
-			public const int refresh = 2131165577;
+			public const int preference_list_divider_material = 2131165577;
 			
 			// aapt resource value: 0x7F07018A
-			public const int roundedbg = 2131165578;
+			public const int refresh = 2131165578;
 			
 			// aapt resource value: 0x7F07018B
-			public const int roundedbgdark = 2131165579;
+			public const int roundedbg = 2131165579;
 			
 			// aapt resource value: 0x7F07018C
-			public const int splashscreen = 2131165580;
+			public const int roundedbgdark = 2131165580;
 			
 			// aapt resource value: 0x7F07018D
-			public const int test_custom_background = 2131165581;
+			public const int splashscreen = 2131165581;
 			
 			// aapt resource value: 0x7F07018E
-			public const int todolist = 2131165582;
+			public const int test_custom_background = 2131165582;
 			
 			// aapt resource value: 0x7F07018F
-			public const int tooltip_frame_dark = 2131165583;
+			public const int todolist = 2131165583;
 			
 			// aapt resource value: 0x7F070190
-			public const int tooltip_frame_light = 2131165584;
+			public const int tooltip_frame_dark = 2131165584;
 			
 			// aapt resource value: 0x7F070191
-			public const int US = 2131165585;
+			public const int tooltip_frame_light = 2131165585;
 			
 			// aapt resource value: 0x7F070192
-			public const int wasabee = 2131165586;
-			
-			// aapt resource value: 0x7F0701C8
-			public const int wasabeedev = 2131165640;
+			public const int US = 2131165586;
 			
 			// aapt resource value: 0x7F070193
-			public const int wasabee_markers_capture_acknowledge = 2131165587;
+			public const int wasabee = 2131165587;
+			
+			// aapt resource value: 0x7F0701C9
+			public const int wasabeedev = 2131165641;
 			
 			// aapt resource value: 0x7F070194
-			public const int wasabee_markers_capture_assigned = 2131165588;
+			public const int wasabee_markers_capture_acknowledge = 2131165588;
 			
 			// aapt resource value: 0x7F070195
-			public const int wasabee_markers_capture_done = 2131165589;
+			public const int wasabee_markers_capture_assigned = 2131165589;
 			
 			// aapt resource value: 0x7F070196
-			public const int wasabee_markers_capture_pending = 2131165590;
+			public const int wasabee_markers_capture_done = 2131165590;
 			
 			// aapt resource value: 0x7F070197
-			public const int wasabee_markers_decay_acknowledge = 2131165591;
+			public const int wasabee_markers_capture_pending = 2131165591;
 			
 			// aapt resource value: 0x7F070198
-			public const int wasabee_markers_decay_assigned = 2131165592;
+			public const int wasabee_markers_decay_acknowledge = 2131165592;
 			
 			// aapt resource value: 0x7F070199
-			public const int wasabee_markers_decay_done = 2131165593;
+			public const int wasabee_markers_decay_assigned = 2131165593;
 			
 			// aapt resource value: 0x7F07019A
-			public const int wasabee_markers_decay_pending = 2131165594;
+			public const int wasabee_markers_decay_done = 2131165594;
 			
 			// aapt resource value: 0x7F07019B
-			public const int wasabee_markers_destroy_acknowledge = 2131165595;
+			public const int wasabee_markers_decay_pending = 2131165595;
 			
 			// aapt resource value: 0x7F07019C
-			public const int wasabee_markers_destroy_assigned = 2131165596;
+			public const int wasabee_markers_destroy_acknowledge = 2131165596;
 			
 			// aapt resource value: 0x7F07019D
-			public const int wasabee_markers_destroy_done = 2131165597;
+			public const int wasabee_markers_destroy_assigned = 2131165597;
 			
 			// aapt resource value: 0x7F07019E
-			public const int wasabee_markers_destroy_pending = 2131165598;
+			public const int wasabee_markers_destroy_done = 2131165598;
 			
 			// aapt resource value: 0x7F07019F
-			public const int wasabee_markers_exclude_acknowledge = 2131165599;
+			public const int wasabee_markers_destroy_pending = 2131165599;
 			
 			// aapt resource value: 0x7F0701A0
-			public const int wasabee_markers_exclude_assigned = 2131165600;
+			public const int wasabee_markers_exclude_acknowledge = 2131165600;
 			
 			// aapt resource value: 0x7F0701A1
-			public const int wasabee_markers_exclude_done = 2131165601;
+			public const int wasabee_markers_exclude_assigned = 2131165601;
 			
 			// aapt resource value: 0x7F0701A2
-			public const int wasabee_markers_exclude_pending = 2131165602;
+			public const int wasabee_markers_exclude_done = 2131165602;
 			
 			// aapt resource value: 0x7F0701A3
-			public const int wasabee_markers_farm_acknowledge = 2131165603;
+			public const int wasabee_markers_exclude_pending = 2131165603;
 			
 			// aapt resource value: 0x7F0701A4
-			public const int wasabee_markers_farm_assigned = 2131165604;
+			public const int wasabee_markers_farm_acknowledge = 2131165604;
 			
 			// aapt resource value: 0x7F0701A5
-			public const int wasabee_markers_farm_done = 2131165605;
+			public const int wasabee_markers_farm_assigned = 2131165605;
 			
 			// aapt resource value: 0x7F0701A6
-			public const int wasabee_markers_farm_pending = 2131165606;
+			public const int wasabee_markers_farm_done = 2131165606;
 			
 			// aapt resource value: 0x7F0701A7
-			public const int wasabee_markers_goto_acknowledge = 2131165607;
+			public const int wasabee_markers_farm_pending = 2131165607;
 			
 			// aapt resource value: 0x7F0701A8
-			public const int wasabee_markers_goto_assigned = 2131165608;
+			public const int wasabee_markers_goto_acknowledge = 2131165608;
 			
 			// aapt resource value: 0x7F0701A9
-			public const int wasabee_markers_goto_done = 2131165609;
+			public const int wasabee_markers_goto_assigned = 2131165609;
 			
 			// aapt resource value: 0x7F0701AA
-			public const int wasabee_markers_goto_pending = 2131165610;
+			public const int wasabee_markers_goto_done = 2131165610;
 			
 			// aapt resource value: 0x7F0701AB
-			public const int wasabee_markers_key_acknowledge = 2131165611;
+			public const int wasabee_markers_goto_pending = 2131165611;
 			
 			// aapt resource value: 0x7F0701AC
-			public const int wasabee_markers_key_assigned = 2131165612;
+			public const int wasabee_markers_key_acknowledge = 2131165612;
 			
 			// aapt resource value: 0x7F0701AD
-			public const int wasabee_markers_key_done = 2131165613;
+			public const int wasabee_markers_key_assigned = 2131165613;
 			
 			// aapt resource value: 0x7F0701AE
-			public const int wasabee_markers_key_pending = 2131165614;
+			public const int wasabee_markers_key_done = 2131165614;
 			
 			// aapt resource value: 0x7F0701AF
-			public const int wasabee_markers_link_acknowledge = 2131165615;
+			public const int wasabee_markers_key_pending = 2131165615;
 			
 			// aapt resource value: 0x7F0701B0
-			public const int wasabee_markers_link_assigned = 2131165616;
+			public const int wasabee_markers_link_acknowledge = 2131165616;
 			
 			// aapt resource value: 0x7F0701B1
-			public const int wasabee_markers_link_done = 2131165617;
+			public const int wasabee_markers_link_assigned = 2131165617;
 			
 			// aapt resource value: 0x7F0701B2
-			public const int wasabee_markers_link_pending = 2131165618;
+			public const int wasabee_markers_link_done = 2131165618;
 			
 			// aapt resource value: 0x7F0701B3
-			public const int wasabee_markers_meetagent_acknowledge = 2131165619;
+			public const int wasabee_markers_link_pending = 2131165619;
 			
 			// aapt resource value: 0x7F0701B4
-			public const int wasabee_markers_meetagent_assigned = 2131165620;
+			public const int wasabee_markers_meetagent_acknowledge = 2131165620;
 			
 			// aapt resource value: 0x7F0701B5
-			public const int wasabee_markers_meetagent_done = 2131165621;
+			public const int wasabee_markers_meetagent_assigned = 2131165621;
 			
 			// aapt resource value: 0x7F0701B6
-			public const int wasabee_markers_meetagent_pending = 2131165622;
+			public const int wasabee_markers_meetagent_done = 2131165622;
 			
 			// aapt resource value: 0x7F0701B7
-			public const int wasabee_markers_other_acknowledge = 2131165623;
+			public const int wasabee_markers_meetagent_pending = 2131165623;
 			
 			// aapt resource value: 0x7F0701B8
-			public const int wasabee_markers_other_assigned = 2131165624;
+			public const int wasabee_markers_other_acknowledge = 2131165624;
 			
 			// aapt resource value: 0x7F0701B9
-			public const int wasabee_markers_other_done = 2131165625;
+			public const int wasabee_markers_other_assigned = 2131165625;
 			
 			// aapt resource value: 0x7F0701BA
-			public const int wasabee_markers_other_pending = 2131165626;
+			public const int wasabee_markers_other_done = 2131165626;
 			
 			// aapt resource value: 0x7F0701BB
-			public const int wasabee_markers_recharge_acknowledge = 2131165627;
+			public const int wasabee_markers_other_pending = 2131165627;
 			
 			// aapt resource value: 0x7F0701BC
-			public const int wasabee_markers_recharge_assigned = 2131165628;
+			public const int wasabee_markers_recharge_acknowledge = 2131165628;
 			
 			// aapt resource value: 0x7F0701BD
-			public const int wasabee_markers_recharge_done = 2131165629;
+			public const int wasabee_markers_recharge_assigned = 2131165629;
 			
 			// aapt resource value: 0x7F0701BE
-			public const int wasabee_markers_recharge_pending = 2131165630;
+			public const int wasabee_markers_recharge_done = 2131165630;
 			
 			// aapt resource value: 0x7F0701BF
-			public const int wasabee_markers_upgrade_acknowledge = 2131165631;
+			public const int wasabee_markers_recharge_pending = 2131165631;
 			
 			// aapt resource value: 0x7F0701C0
-			public const int wasabee_markers_upgrade_assigned = 2131165632;
+			public const int wasabee_markers_upgrade_acknowledge = 2131165632;
 			
 			// aapt resource value: 0x7F0701C1
-			public const int wasabee_markers_upgrade_done = 2131165633;
+			public const int wasabee_markers_upgrade_assigned = 2131165633;
 			
 			// aapt resource value: 0x7F0701C2
-			public const int wasabee_markers_upgrade_pending = 2131165634;
+			public const int wasabee_markers_upgrade_done = 2131165634;
 			
 			// aapt resource value: 0x7F0701C3
-			public const int wasabee_markers_virus_acknowledge = 2131165635;
+			public const int wasabee_markers_upgrade_pending = 2131165635;
 			
 			// aapt resource value: 0x7F0701C4
-			public const int wasabee_markers_virus_assigned = 2131165636;
+			public const int wasabee_markers_virus_acknowledge = 2131165636;
 			
 			// aapt resource value: 0x7F0701C5
-			public const int wasabee_markers_virus_done = 2131165637;
+			public const int wasabee_markers_virus_assigned = 2131165637;
 			
 			// aapt resource value: 0x7F0701C6
-			public const int wasabee_markers_virus_pending = 2131165638;
+			public const int wasabee_markers_virus_done = 2131165638;
 			
 			// aapt resource value: 0x7F0701C7
-			public const int wasabee_player_marker = 2131165639;
+			public const int wasabee_markers_virus_pending = 2131165639;
+			
+			// aapt resource value: 0x7F0701C8
+			public const int wasabee_player_marker = 2131165640;
 			
 			static Drawable()
 			{

@@ -1,8 +1,10 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
@@ -29,16 +31,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private readonly IMvxNavigationService _navigationService;
         private readonly IUserDialogs _userDialogs;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly IMvxMessenger _messenger;
 
         private string _teamId = string.Empty;
 
         public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService, IUserDialogs userDialogs,
-            WasabeeApiV1Service wasabeeApiV1Service)
+            WasabeeApiV1Service wasabeeApiV1Service, IMvxMessenger messenger)
         {
             _teamsDatabase = teamsDatabase;
             _navigationService = navigationService;
             _userDialogs = userDialogs;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+            _messenger = messenger;
         }
 
         public void Prepare(TeamDetailsNavigationParameter parameter)
@@ -142,7 +146,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         {
             IsAddingAgent = false;
 
-            var promptResult = await _userDialogs.PromptAsync(new PromptConfig
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
             {
                 InputType = InputType.Name,
                 OkText = "Add",
@@ -157,6 +161,31 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                     RefreshCommand.Execute();
                 else
                     _userDialogs.Toast("Agent not found or already in team");
+            }
+
+        }
+
+        public IMvxCommand EditTeamNameCommand => new MvxCommand(EditTeamNameExecuted);
+        private async void EditTeamNameExecuted()
+        {
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
+            {
+                InputType = InputType.Name,
+                OkText = "Ok",
+                CancelText = "Cancel",
+                Title = "Change team name",
+            });
+
+            if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
+            {
+                var result = await _wasabeeApiV1Service.Teams_RenameTeam(Team.Id, promptResult.Text);
+                if (result)
+                {
+                    RefreshCommand.Execute();
+                    _messenger.Publish(new MessageFor<TeamsListViewModel>(this));
+                }
+                else
+                    _userDialogs.Toast("Rename failed");
             }
 
         }

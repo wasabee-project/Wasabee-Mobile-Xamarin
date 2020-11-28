@@ -1,9 +1,11 @@
-using MvvmCross.Forms.Presenters.Attributes;
+﻿using MvvmCross.Forms.Presenters.Attributes;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
+using Rocks.Wasabee.Mobile.Core.Ui.Helpers.Extensions;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing;
@@ -16,6 +18,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
     public partial class TeamDetailsPage : BaseContentPage<TeamDetailsViewModel>
     {
         private readonly ToolbarItem _addAgenToolbarItem;
+        private readonly ToolbarItem _editTeamNameToolbarItem;
 
         private bool _isPanelVisible = false;
 
@@ -23,7 +26,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
         {
             InitializeComponent();
 
-            _addAgenToolbarItem = new ToolbarItem(string.Empty, "addpeople.png", () => ViewModel.IsAddingAgent = true);
+            _addAgenToolbarItem = new ToolbarItem("Add Agent", "addpeople.png", () => ViewModel.IsAddingAgent = true);
+            _editTeamNameToolbarItem = new ToolbarItem("Change name", "pencil.png", () => ViewModel.EditTeamNameCommand.Execute());
         }
 
         protected override void OnViewModelSet()
@@ -36,6 +40,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
             {
                 if (!ToolbarItems.Contains(_addAgenToolbarItem))
                     ToolbarItems.Add(_addAgenToolbarItem);
+                if (!ToolbarItems.Contains(_editTeamNameToolbarItem))
+                    ToolbarItems.Add(_editTeamNameToolbarItem);
             }
         }
 
