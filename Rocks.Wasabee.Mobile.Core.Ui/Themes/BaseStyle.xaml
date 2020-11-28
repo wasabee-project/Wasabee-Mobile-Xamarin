@@ -96,9 +96,7 @@
 
 
     <!--MenuList-->
-    <Style TargetType="ListView" x:Key="WasabeeMasterDetailMenuStyle">
-        <Setter Property="SeparatorVisibility" Value="None"/>
-        <Setter Property="IsPullToRefreshEnabled" Value="False"/>
+    <Style TargetType="StackLayout" x:Key="WasabeeMasterDetailMenuStyle">
         <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 

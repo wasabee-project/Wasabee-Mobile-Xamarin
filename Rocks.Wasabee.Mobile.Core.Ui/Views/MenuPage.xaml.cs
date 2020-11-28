@@ -4,7 +4,6 @@ using Rocks.Wasabee.Mobile.Core.ViewModels;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using MenuItem = Rocks.Wasabee.Mobile.Core.ViewModels.MenuItem;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 {
@@ -15,7 +14,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
         public MenuPage()
         {
             InitializeComponent();
-            MenuList.ItemSelected += (sender, e) => { ((ListView)sender).SelectedItem = null; };
         }
 
         private void Logout_Clicked(object sender, EventArgs e)
@@ -24,16 +22,9 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
             ViewModel.LogoutCommand.Execute();
         }
 
-        private void MenuList_OnItemTapped(object sender, ItemTappedEventArgs e)
+        private void MenuList_OnItemTapped(object sender, EventArgs args)
         {
-            if (!(e.Item is MenuItem menuItem)) return;
-
-            if (menuItem.ViewModelType == null)
-                return;
-
             CloseMenu();
-
-            ViewModel.SelectedMenuItem = menuItem;
         }
 
         private void CloseMenu()
