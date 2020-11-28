@@ -1,4 +1,4 @@
-﻿using MvvmCross.Forms.Presenters.Attributes;
+using MvvmCross.Forms.Presenters.Attributes;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
@@ -65,17 +65,28 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
 
         private async void AnimatePanel()
         {
+            const uint duration = 150u;
             if (ViewModel.IsAddingAgent)
             {
                 if (_isPanelVisible) return;
 
                 _isPanelVisible = true;
-                await AddAgentPanel.TranslateTo(0, 0, 150); // Show
+                PanelBackground.IsVisible = true;
+
+                await Task.WhenAll(
+                    // Show
+                    PanelBackground.ColorTo(Color.FromRgba(0, 0, 0, 0x00), Color.FromRgba(0, 0, 0, 0xBB), color => PanelBackground.BackgroundColor = color, duration),
+                    AddAgentPanel.TranslateTo(0, 0, duration));
             }
             else
             {
                 _isPanelVisible = false;
-                await AddAgentPanel.TranslateTo(0, 180, 150); // Hide
+                await Task.WhenAll(
+                    // Hide
+                    PanelBackground.ColorTo(Color.FromRgba(0, 0, 0, 0xBB), Color.FromRgba(0, 0, 0, 0x00), color => PanelBackground.BackgroundColor = color, duration),
+                    AddAgentPanel.TranslateTo(0, 180, duration));
+
+                PanelBackground.IsVisible = false;
             }
         }
 
@@ -113,6 +124,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
             };
 
             await Navigation.PushModalAsync(scanPage, false);
+        }
+
+        private void PanelBackground_OnTapped(object sender, EventArgs e)
+        {
+            ViewModel.IsAddingAgent = false;
         }
     }
 }

@@ -75,6 +75,14 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <Frame x:Name="PanelBackground" IsVisible="False" BackgroundColor="Transparent" BorderColor="Transparent" CornerRadius="0" Margin="0" HasShadow="False"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                   RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="PanelBackground_OnTapped"/>
+                </Frame.GestureRecognizers>
+            </Frame>
+
             <pancakeView:PancakeView x:Name="AddAgentPanel" BackgroundColor="{DynamicResource BackgroundColorLevel1}" CornerRadius="10, 10, 0, 0" Padding="10"
                                  RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-100}"
                                  RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"

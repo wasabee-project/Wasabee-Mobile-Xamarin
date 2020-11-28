@@ -40,7 +40,7 @@
                                 <iconize:IconButton Grid.Column="1"
                                                     Text="{Binding IsEnabled, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
                                                     TextColor="{Binding IsEnabled, Converter={StaticResource BoolToColorConverter}}"
-                                                    BackgroundColor="{DynamicResource BackgroundColorLevel2}"
+                                                    BackgroundColor="{DynamicResource BackgroundColorLevel1}"
                                                     Command="{Binding Parent.SwitchTeamStateCommand}"
                                                     CommandParameter="{Binding .}"
                                                     FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
