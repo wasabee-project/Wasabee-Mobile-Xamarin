@@ -74,7 +74,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 {
                     await _usersDatabase.SaveUserModel(userModel);
                     TeamsCollection = new MvxObservableCollection<Team>(userModel.Teams.Select(x =>
-                        new Team(this, x.Name, x.Id)
+                        new Team(x.Name, x.Id)
                         {
                             IsEnabled = x.State.Equals("On"),
                             IsOwner = x.Owner.Equals(_userSettingsService.GetLoggedUserGoogleId())
@@ -149,13 +149,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
     public class Team : MvxNotifyPropertyChanged
     {
-        public TeamsListViewModel Parent { get; }
         public string Name { get; }
         public string Id { get; }
 
-        public Team(TeamsListViewModel parent, string name, string id)
+        public Team(string name, string id)
         {
-            Parent = parent;
             Name = name;
             Id = id;
         }

@@ -6,6 +6,7 @@
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamsListPage"
+                       x:Name="Page"
                        Title="Teams"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
@@ -41,14 +42,14 @@
                                                     Text="{Binding IsEnabled, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
                                                     TextColor="{Binding IsEnabled, Converter={StaticResource BoolToColorConverter}}"
                                                     BackgroundColor="{DynamicResource BackgroundColorLevel1}"
-                                                    Command="{Binding Parent.SwitchTeamStateCommand}"
+                                                    Command="{Binding ViewModel.SwitchTeamStateCommand, Source={x:Reference Page}}"
                                                     CommandParameter="{Binding .}"
                                                     FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
                                                     BorderColor="{DynamicResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
 
                                 <iconize:IconButton Grid.Column="2"
                                                     Text="mdi-chevron-right"
-                                                    Command="{Binding Parent.ShowTeamDetailCommand}"
+                                                    Command="{Binding ViewModel.ShowTeamDetailCommand, Source={x:Reference Page}}"
                                                     CommandParameter="{Binding .}"
                                                     BackgroundColor="Transparent"
                                                     FontSize="30"
