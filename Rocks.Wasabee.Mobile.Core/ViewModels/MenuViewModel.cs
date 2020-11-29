@@ -114,17 +114,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public MvxObservableCollection<MenuItem> MenuItems { get; set; } = new MvxObservableCollection<MenuItem>();
         public bool HasLocalOps { get; set; } = true;
 
-        private MenuItem? _selectedMenuItem;
-        public MenuItem? SelectedMenuItem
-        {
-            get => _selectedMenuItem;
-            set
-            {
-                if (SetProperty(ref _selectedMenuItem, value) && value != null)
-                    SelectedMenuItemChangedCommand.Execute(value);
-            }
-        }
-
         private bool _isLiveLocationSharingEnabled;
         public bool IsLiveLocationSharingEnabled
         {
@@ -204,10 +193,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoggingService.Trace($"Executing MenuViewModel.SelectedMenuItemChangedCommand({menuItem.Title})");
 
-            if (menuItem?.ViewModelType == null) return;
+            if (menuItem.ViewModelType == null) return;
 
             _navigationService.Navigate(menuItem.ViewModelType);
-            _selectedMenuItem = null;
         }
 
         public IMvxAsyncCommand LogoutCommand => new MvxAsyncCommand(Logout);
