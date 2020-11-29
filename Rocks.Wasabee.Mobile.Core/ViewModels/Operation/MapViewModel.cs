@@ -329,9 +329,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                // TODO : load teams on OP according to user setting
+                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) || Operation == null;
 
-                var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList();
+                var userTeamsIds = showFromAnyTeams ?
+                    (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList() :
+                    Operation!.TeamList.Select(x => x.TeamId).ToList();
+
                 var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
                 if (updatedTeams.Any())
                     await _teamsDatabase.SaveTeamsModels(updatedTeams);
@@ -375,6 +378,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand<TeamAgentLocationUpdatedMessage> RefreshTeamAgentPositionCommand => new MvxAsyncCommand<TeamAgentLocationUpdatedMessage>(RefreshTeamAgentPositionExecuted);
         private async Task RefreshTeamAgentPositionExecuted(TeamAgentLocationUpdatedMessage message)
         {
+            if (Operation == null)
+                return;
+
             if (_loadingAgentsLocations)
                 return;
 
@@ -390,12 +396,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     return;
                 }
 
+                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
+                if (!showFromAnyTeams)
+                    return;
+
                 var agentId = message.UserId;
+                var agentTeams = await _teamsDatabase.GetTeamsForAgent(agentId);
+                if (!agentTeams.Any())
+                    return;
+
                 var agent = await _teamAgentsDatabase.GetTeamAgent(agentId);
                 if (agent == null)
                 {
                     var team = await _teamsDatabase.GetTeam(message.TeamId);
-                    if (team == null)
+                    if (team == null || team.Agents.All(x => x.Id != agentId))
                     {
                         team = await _wasabeeApiV1Service.Teams_GetTeam(message.TeamId);
                         if (team == null)
@@ -404,9 +418,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         await _teamsDatabase.SaveTeamModel(team);
                     }
 
-                    if (team.Agents.Any(x => x.Id.Equals(agentId)))
-                        agent = team.Agents.First(x => x.Id.Equals(agentId));
-                    else
+                    agent = team.Agents.FirstOrDefault(x => x.Id.Equals(agentId));
+                    if (agent == null)
                         return;
                 }
 
