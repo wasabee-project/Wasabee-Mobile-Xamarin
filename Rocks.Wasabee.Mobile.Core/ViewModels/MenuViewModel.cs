@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -16,6 +16,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Settings;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
@@ -264,6 +265,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 new MenuItem() { Icon = "mdi-account", Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
                 new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
                 new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(OperationRootTabbedViewModel) },
+                new MenuItem() { Icon = "mdi-widgets", Title = "My Operations", ViewModelType = typeof(OperationsListViewModel) },
                 new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) }
             };
 

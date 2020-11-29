@@ -50,6 +50,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public string Modified { get; set; }
 
         [JsonIgnore]
+        public bool IsHiddenLocally { get; set; } = false;
+
+        [JsonIgnore]
         public DateTime DownloadedAt { get; set; } = DateTime.UtcNow;
     }
 
