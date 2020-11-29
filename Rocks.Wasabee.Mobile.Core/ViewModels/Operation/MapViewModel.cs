@@ -556,8 +556,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 finalLong = (lowestLong + highestLong) / 2;
                 distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
                     highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-
-                OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
             }
             else if (Markers.Any() && !Anchors.Any())
             {
@@ -569,8 +567,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 finalLong = (lowestLong + highestLong) / 2;
                 distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
                     highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-
-                OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
             }
             else if (!Markers.Any() && Anchors.Any())
             {
