@@ -13,5 +13,6 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.User
         public static string MapTheme => "MAP_THEME";
         public static string MapType => "MAP_TYPE";
         public static string NeverShowLiveLocationWarningAgain => "NEVER_SHOW_LIVE_LOCATION_WARNING_AGAIN";
+        public static string ShowAgentsFromAnyTeam => "SHOW_AGENTS_FROM_ANY_TEAM";
     }
 }

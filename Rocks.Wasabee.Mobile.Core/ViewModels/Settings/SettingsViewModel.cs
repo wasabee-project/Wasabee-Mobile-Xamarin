@@ -56,6 +56,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             var analyticsSetting = _preferences.Get(UserSettingsKeys.AnalyticsEnabled, false);
             SetProperty(ref _isAnonymousAnalyticsEnabled, analyticsSetting);
 
+            var showAgentsFromAnyTeamSetting = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
+            SetProperty(ref _showAgentsFromAnyTeam, showAgentsFromAnyTeamSetting);
+
             return base.Initialize();
         }
 
@@ -68,6 +71,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         {
             get => _isAnonymousAnalyticsEnabled;
             set => ToggleAnalyticsCommand.Execute(value);
+        }
+
+        private bool _showAgentsFromAnyTeam;
+        public bool ShowAgentsFromAnyTeam
+        {
+            get => _showAgentsFromAnyTeam;
+            set => ToggleAgentsFromAnyTeamCommand.Execute(value);
         }
 
         #endregion
@@ -254,6 +264,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         {
             var themeRequested = CoreApp.AppTheme == Theme.Light ? Theme.Dark : Theme.Light;
             _messenger.Publish(new ChangeThemeMessage(this, themeRequested));
+        }
+
+        public IMvxCommand<bool> ToggleAgentsFromAnyTeamCommand => new MvxCommand<bool>(ToggleAgentsFromAnyTeamExecuted);
+        private void ToggleAgentsFromAnyTeamExecuted(bool value)
+        {
+            LoggingService.Trace($"Executing SettingsViewModel.ToggleAgentsFromAnyTeamCommand({value})");
+
+            if (value)
+            {
+                SetProperty(ref _showAgentsFromAnyTeam, true);
+                _preferences.Set(UserSettingsKeys.ShowAgentsFromAnyTeam, true);
+            }
+            else
+            {
+                SetProperty(ref _showAgentsFromAnyTeam, false);
+                _preferences.Remove(UserSettingsKeys.ShowAgentsFromAnyTeam);
+            }
         }
 
         #endregion
