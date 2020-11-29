@@ -44,6 +44,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private readonly MvxSubscriptionToken _token;
         private readonly MvxSubscriptionToken _tokenDebug;
+        private readonly MvxSubscriptionToken _tokenOps;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, ICrossPermissions crossPermissions, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
@@ -73,6 +74,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 _preferences.Set(UserSettingsKeys.DevModeActivated, true);
             });
+
+            _tokenOps = messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());
         }
 
         public override async void Prepare()
@@ -139,7 +142,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
 
             AvailableOpsCollection = new MvxObservableCollection<OperationModel>(
-                ops.Where(x => !string.IsNullOrWhiteSpace(x.Name))
+                ops.Where(x => !string.IsNullOrWhiteSpace(x.Name) && !x.IsHiddenLocally)
                 .OrderBy(x => x.Name));
         }
 

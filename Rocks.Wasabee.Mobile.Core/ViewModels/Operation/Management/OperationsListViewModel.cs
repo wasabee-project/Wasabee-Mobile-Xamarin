@@ -1,6 +1,8 @@
 ﻿using MvvmCross.Commands;
+using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,10 +11,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
     public class OperationsListViewModel : BaseViewModel
     {
         private readonly OperationsDatabase _operationsDatabase;
+        private readonly IMvxMessenger _messenger;
 
-        public OperationsListViewModel(OperationsDatabase operationsDatabase)
+        public OperationsListViewModel(OperationsDatabase operationsDatabase, IMvxMessenger messenger)
         {
             _operationsDatabase = operationsDatabase;
+            _messenger = messenger;
         }
 
         public override async Task Initialize()
@@ -87,6 +91,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
                 }
             }
 
+            _messenger.Publish(new MessageFrom<OperationsListViewModel>(this));
             IsBusy = false;
         }
 

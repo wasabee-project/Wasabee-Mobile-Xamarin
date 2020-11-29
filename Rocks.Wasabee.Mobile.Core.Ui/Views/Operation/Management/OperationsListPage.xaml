@@ -21,6 +21,7 @@
                 SelectionMode="None"
                 HasUnevenRows="True"
                 IsPullToRefreshEnabled="True"
+                CachingStrategy="RecycleElement"
                 RefreshCommand="{Binding RefreshCommand}"
                 IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
                 ItemsSource="{Binding OperationsCollection}"
@@ -34,7 +35,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Label Grid.Column="0" Text="{Binding Name}"/>
+                                <Label Grid.Column="0" Text="{Binding Name}" VerticalTextAlignment="Center"/>
 
                                 <iconize:IconButton Grid.Column="1"
                                                     Text="{Binding IsHiddenLocally, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-eye-off|mdi-eye}"
