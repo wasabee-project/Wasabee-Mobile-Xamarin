@@ -87,6 +87,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             {
                 var operationDatabaseModel = OperationDatabaseModel.ToOperationDatabaseModel(operationModel);
 
+                var existingData = await GetOperationModel(operationModel.Id);
+                if (existingData != null)
+                    operationDatabaseModel.IsHiddenLocally = existingData.IsHiddenLocally;
+
                 databaseConnection.GetConnection().InsertOrReplaceWithChildren(operationDatabaseModel);
 
                 return 0;
