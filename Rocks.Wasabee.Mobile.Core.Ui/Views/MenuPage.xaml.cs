@@ -1,5 +1,4 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
-using MvvmCross.Forms.Views;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
 using System;
 using Xamarin.Forms;
@@ -9,7 +8,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     [MvxMasterDetailPagePresentation(MasterDetailPosition.Master)]
-    public partial class MenuPage : MvxContentPage<MenuViewModel>
+    public partial class MenuPage : BaseContentPage<MenuViewModel>
     {
         public MenuPage()
         {
