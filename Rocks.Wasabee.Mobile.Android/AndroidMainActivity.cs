@@ -1,11 +1,13 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Content.Res;
 using Android.OS;
 using Android.Provider;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using AndroidX.AppCompat.App;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Plugin.Messenger;
@@ -16,6 +18,7 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Core.Ui.Services;
+using Rocks.Wasabee.Mobile.Core.Ui.Themes;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
 using System.Collections.Generic;
@@ -29,12 +32,13 @@ namespace Rocks.Wasabee.Mobile.Droid
         ResizeableActivity = true,
         WindowSoftInputMode = SoftInput.AdjustPan,
         ScreenOrientation = ScreenOrientation.Portrait,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode)]
     public class AndroidMainActivity : MvxFormsAppCompatActivity<Setup, CoreApp, App>
     {
         public const string CHANNEL_ID = "WASABEE_FCM_CHANNEL";
 
         private MvxSubscriptionToken _token;
+        private MvxSubscriptionToken _tokenTheme;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -58,6 +62,8 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             else
             {
+                SetAppTheme();
+
                 Xamarin.Forms.Forms.Init(this, bundle);
                 Xamarin.Essentials.Platform.Init(this, bundle);
 
@@ -89,6 +95,8 @@ namespace Rocks.Wasabee.Mobile.Droid
                     else
                         GeolocationHelper.StopLocationService();
                 });
+
+                _tokenTheme = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<ChangeThemeMessage>(msg => OnThemeChanged(msg.Theme));
 
 #if DEBUG
                 if (System.Diagnostics.Debugger.IsAttached)
@@ -179,6 +187,46 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 notificationManager?.CreateNotificationChannel(channel);
             }
+        }
+
+        private void OnThemeChanged(Theme theme)
+        {
+            if (theme == Core.Messages.Theme.Light)
+            {
+                Delegate.SetLocalNightMode(AppCompatDelegate.ModeNightNo);
+            }
+            else
+            {
+                Delegate.SetLocalNightMode(AppCompatDelegate.ModeNightYes);
+            }
+            SetTheme(theme);
+        }
+
+        private void SetAppTheme()
+        {
+            if (Resources?.Configuration != null && Resources.Configuration.UiMode.HasFlag(UiMode.NightYes))
+                SetTheme(Core.Messages.Theme.Dark);
+            else
+                SetTheme(Core.Messages.Theme.Light);
+        }
+
+        private void SetTheme(Theme mode)
+        {
+            if (mode == Core.Messages.Theme.Dark)
+            {
+                if (CoreApp.AppTheme == Core.Messages.Theme.Dark)
+                    return;
+
+                App.Current.Resources = new DarkTheme();
+            }
+            else
+            {
+                if (CoreApp.AppTheme != Core.Messages.Theme.Dark)
+                    return;
+
+                App.Current.Resources = new LightTheme();
+            }
+            CoreApp.AppTheme = mode;
         }
     }
 }

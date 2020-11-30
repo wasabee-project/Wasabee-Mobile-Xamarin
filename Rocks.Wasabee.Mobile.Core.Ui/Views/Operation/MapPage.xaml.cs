@@ -15,7 +15,7 @@ using Xamarin.Forms.Xaml;
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true)]
+    [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true, Icon = "map.png")]
     public partial class MapPage : BaseContentPage<MapViewModel>
     {
         private MvxSubscriptionToken _token;
@@ -31,7 +31,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         public MapPage()
         {
             InitializeComponent();
-            Title = "Map";
 
             Map.UiSettings.ScrollGesturesEnabled = true;
             Map.UiSettings.ZoomControlsEnabled = true;
@@ -233,6 +232,17 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                     _ => MapThemeEnum.GoogleLight
                 });
             RefreshMapTheme();
+        }
+
+        private void TypeButton_OnClicked(object sender, EventArgs e)
+        {
+            ViewModel.SwitchMapTypeCommand.Execute(
+                ViewModel.MapType switch
+                {
+                    MapType.Street => MapType.Hybrid,
+                    MapType.Hybrid => MapType.Street,
+                    _ => MapType.Street
+                });
         }
 
         private void LayerChooserButton_OnClicked(object sender, EventArgs e)

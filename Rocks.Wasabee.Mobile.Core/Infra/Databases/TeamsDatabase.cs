@@ -106,7 +106,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
         }
 
-        public async Task<List<TeamModel>> GetTeams(string userId)
+        public async Task<List<TeamModel>> GetTeamsForAgent(string agentId)
         {
             LoggingService.Trace("Querying TeamsDatabase.GetTeams");
 
@@ -116,10 +116,12 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             {
                 var teamDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<TeamDatabaseModel>();
 
-                return teamDatabaseModels
-                    .Where(x => x.Agents.Any(a => a.AgentId != null && a.AgentId.Equals(userId)))
-                    .Select(x => TeamDatabaseModel.ToTeamModel(x))
-                    .ToList();
+                return teamDatabaseModels != null && teamDatabaseModels.Any() ?
+                    teamDatabaseModels
+                        .Where(model => model.Agents.Any(a => a.AgentId != null && a.AgentId.Equals(agentId)))
+                        .Select(x => TeamDatabaseModel.ToTeamModel(x))
+                        .ToList() :
+                    new List<TeamModel>();
             }
             catch (Exception e)
             {
@@ -170,12 +172,12 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         }
 #nullable enable
     }
-    
+
 #nullable disable
     internal class TeamAgent
-    {	   
+    {
         [ForeignKey(typeof(TeamsDatabase.TeamDatabaseModel))]
-        public string TeamId { get; set; }	
+        public string TeamId { get; set; }
 
         [ForeignKey(typeof(TeamAgentsDatabase.TeamAgentDatabaseModel))]
         public string AgentId { get; set; }

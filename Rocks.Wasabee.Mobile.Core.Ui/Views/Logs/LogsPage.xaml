@@ -7,7 +7,8 @@
                       xmlns:logs="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Logs;assembly=Rocks.Wasabee.Mobile.Core"
                       mc:Ignorable="d"
                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Logs.LogsPage"
-                      Title="Live FCM logs">
+                      Title="Live FCM logs"
+                      BackgroundColor="{DynamicResource BackgroundColorLevel0}">
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Label Text="[DEBUG DATA]"/>
@@ -15,7 +16,7 @@
             <views:MvxListView x:Name="LogsListView"  ItemsSource="{Binding LogsCollection}" SelectionMode="None">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Text}" TextColor="Black" Command="{Binding ShowDetailsCommand}"/>
+                        <TextCell Text="{Binding Text}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding ShowDetailsCommand}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </views:MvxListView>

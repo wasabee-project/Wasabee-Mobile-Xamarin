@@ -135,6 +135,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public bool IsLoading { get; set; }
         public bool IsConnected { get; set; }
         public bool IsLoginVisible { get; set; }
+        public bool IsGButtonVisible { get; set; } = true;
         public bool IsAuthInError { get; set; }
         public bool IsSelectingServer { get; set; }
         public bool RememberServerChoice { get; set; }
@@ -460,6 +461,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task FinishLogin(UserModel userModel)
         {
+            if (userModel.Blacklisted)
+            {
+                ErrorMessage = "Account error";
+                IsAuthInError = true;
+                IsLoginVisible = true;
+                IsGButtonVisible = false;
+                IsLoading = false;
+                return;
+            }
+
             _messenger.Publish(new UserLoggedInMessage(this));
 
             LoadingStepLabel = $"Welcome {userModel.IngressName}";
@@ -502,9 +513,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
-            await _operationsDatabase.DeleteAllData();
-            await _linksDatabase.DeleteAllData();
-            await _markersDatabase.DeleteAllData();
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {

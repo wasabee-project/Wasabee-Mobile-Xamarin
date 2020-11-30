@@ -6,15 +6,30 @@
                        xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
                        xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamDetailsPage"
-                       Title="{Binding Team.Name}">
+                       Title="{Binding Team.Name}"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
-        <StackLayout>
+        <RelativeLayout>
             <ListView x:Name="AgentsList"
-                      ItemsSource="{Binding Team.Agents}"
+                      RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                      RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
                       HasUnevenRows="True"
+                      IsPullToRefreshEnabled="True"
                       CachingStrategy="RecycleElement"
-                      ItemSelected="AgentsList_OnItemSelected">
+                      ItemSelected="AgentsList_OnItemSelected"
+                      RefreshControlColor="{DynamicResource PrimaryGreenDark}"
+                      ItemsSource="{Binding Team.Agents}"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -32,7 +47,7 @@
                                 <ffimageloading:CachedImage Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
                                                             WidthRequest="50" HeightRequest="50"
                                                             Margin="0,0,20,0"
-                                                            Source="{Binding Pic}" Aspect="AspectFill">
+                                                            Source="{Binding Pic}" Aspect="AspectFit">
                                     <ffimageloading:CachedImage.Transformations>
                                         <fftransformations:RoundedTransformation Radius="500"/>
                                     </ffimageloading:CachedImage.Transformations>
@@ -60,10 +75,33 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Button x:Name="AddAgentButton" Text="Add Agent" CornerRadius="0" Margin="0"
-                    Style="{StaticResource WasabeeStyleValidateButton}"
-                    IsVisible="{Binding IsOwner}"
-                    Clicked="AddAgentButton_OnClicked"/>
-        </StackLayout>
+            <Frame x:Name="PanelBackground" IsVisible="False" BackgroundColor="Transparent" BorderColor="Transparent" CornerRadius="0" Margin="0" HasShadow="False"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                   RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="PanelBackground_OnTapped"/>
+                </Frame.GestureRecognizers>
+            </Frame>
+
+            <pancakeView:PancakeView x:Name="AddAgentPanel" BackgroundColor="{DynamicResource BackgroundColorLevel1}" CornerRadius="10, 10, 0, 0" Padding="10"
+                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-100}"
+                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=100}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <iconize:IconButton Grid.Column="0" Text="mdi-format-text" FontSize="40"
+                                        Style="{DynamicResource WasabeeStyleValidateButton}"
+                                        Command="{Binding PromptAddUserAgentCommand}"/>
+
+                    <iconize:IconButton Grid.Column="1" Text="mdi-qrcode" FontSize="40"
+                                        Style="{DynamicResource WasabeeStyleValidateButton}"
+                                        Clicked="ScanQrCodeButton_OnClicked"/>
+                </Grid>
+            </pancakeView:PancakeView>
+        </RelativeLayout>
     </ContentPage.Content>
 </views:BaseContentPage>

@@ -1,13 +1,15 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
+using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System.Linq;
 using System.Threading.Tasks;
-using Device = Xamarin.Forms.Device;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -28,14 +30,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private readonly TeamsDatabase _teamsDatabase;
         private readonly IMvxNavigationService _navigationService;
         private readonly IUserDialogs _userDialogs;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly IMvxMessenger _messenger;
 
         private string _teamId = string.Empty;
 
-        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService, IUserDialogs userDialogs)
+        public TeamDetailsViewModel(TeamsDatabase teamsDatabase, IMvxNavigationService navigationService, IUserDialogs userDialogs,
+            WasabeeApiV1Service wasabeeApiV1Service, IMvxMessenger messenger)
         {
             _teamsDatabase = teamsDatabase;
             _navigationService = navigationService;
             _userDialogs = userDialogs;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
+            _messenger = messenger;
         }
 
         public void Prepare(TeamDetailsNavigationParameter parameter)
@@ -54,22 +61,49 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             if (string.IsNullOrWhiteSpace(_teamId))
                 return;
 
-            var team = await _teamsDatabase.GetTeam(_teamId);
-            Team = team ?? new TeamModel();
+            RefreshCommand.Execute();
         }
 
         #region Properties
 
+        public bool IsAddingAgent { get; set; }
         public bool IsOwner { get; set; }
-        public TeamModel Team { get; set; }
+        public bool IsRefreshing { get; set; }
+        public TeamModel Team { get; set; } = new TeamModel();
 
         #endregion
 
         #region Commands
 
+        public IMvxCommand RefreshCommand => new MvxCommand(async () => await RefreshExecuted());
+        private async Task RefreshExecuted()
+        {
+            if (IsRefreshing)
+                return;
+
+            IsRefreshing = true;
+
+            var updatedTeam = await _wasabeeApiV1Service.Teams_GetTeam(_teamId);
+            if (updatedTeam != null)
+            {
+                await _teamsDatabase.SaveTeamModel(updatedTeam);
+                Team = updatedTeam;
+            }
+            else
+            {
+                var localData = await _teamsDatabase.GetTeam(_teamId);
+                if (localData != null)
+                    Team = localData;
+            }
+
+            IsRefreshing = false;
+        }
+
         public IMvxAsyncCommand<TeamAgentModel> ShowAgentCommand => new MvxAsyncCommand<TeamAgentModel>(ShowAgentExecuted);
         private async Task ShowAgentExecuted(TeamAgentModel agent)
         {
+            IsAddingAgent = false;
+
             if (IsBusy)
                 return;
 
@@ -84,26 +118,76 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxCommand<string> AddAgentFromQrCodeCommand => new MvxCommand<string>(async (qrCodeData) => await AddAgentFromQrCodeExecuted(qrCodeData));
         private async Task AddAgentFromQrCodeExecuted(string qrCodeData)
         {
+            IsAddingAgent = false;
+
             if (string.IsNullOrEmpty(qrCodeData))
                 return;
-            else
-            {
-                if (qrCodeData.StartsWith("wasabee:"))
-                {
-                    var userId = qrCodeData.Substring(8, qrCodeData.Length - 8);
-                    var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(userId)) ?? null;
-                    if (user != null)
-                    {
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            _userDialogs.Toast($"{user.Name} is already in the team !");
-                        });
-                        return;
-                    }
 
-                    // TODO
+            if (qrCodeData.StartsWith("wasabee:"))
+            {
+                var userId = qrCodeData.Substring(8, qrCodeData.Length - 8);
+                var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(userId)) ?? null;
+                if (user != null)
+                {
+                    _userDialogs.Toast($"{user.Name} is already in the team !");
+                    return;
                 }
+
+                var result = await _wasabeeApiV1Service.Teams_AddAgentToTeam(Team.Id, userId);
+                if (result)
+                    RefreshCommand.Execute();
+                else
+                    _userDialogs.Toast("Agent not found");
             }
+        }
+
+        public IMvxCommand PromptAddUserAgentCommand => new MvxCommand(PromptAddUserAgentExecuted);
+        private async void PromptAddUserAgentExecuted()
+        {
+            IsAddingAgent = false;
+
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
+            {
+                InputType = InputType.Name,
+                OkText = "Add",
+                CancelText = "Cancel",
+                Title = "Agent name",
+            });
+
+            if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
+            {
+                var result = await _wasabeeApiV1Service.Teams_AddAgentToTeam(Team.Id, promptResult.Text);
+                if (result)
+                    RefreshCommand.Execute();
+                else
+                    _userDialogs.Toast("Agent not found or already in team");
+            }
+
+        }
+
+        public IMvxCommand EditTeamNameCommand => new MvxCommand(EditTeamNameExecuted);
+        private async void EditTeamNameExecuted()
+        {
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
+            {
+                InputType = InputType.Name,
+                OkText = "Ok",
+                CancelText = "Cancel",
+                Title = "Change team name",
+            });
+
+            if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
+            {
+                var result = await _wasabeeApiV1Service.Teams_RenameTeam(Team.Id, promptResult.Text);
+                if (result)
+                {
+                    RefreshCommand.Execute();
+                    _messenger.Publish(new MessageFor<TeamsListViewModel>(this));
+                }
+                else
+                    _userDialogs.Toast("Rename failed");
+            }
+
         }
 
         #endregion

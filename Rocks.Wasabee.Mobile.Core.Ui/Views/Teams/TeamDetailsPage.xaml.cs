@@ -1,8 +1,11 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
+using Rocks.Wasabee.Mobile.Core.Ui.Helpers.Extensions;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing;
@@ -14,13 +17,89 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
     [MvxMasterDetailPagePresentation(NoHistory = false)]
     public partial class TeamDetailsPage : BaseContentPage<TeamDetailsViewModel>
     {
+        private readonly ToolbarItem _addAgenToolbarItem;
+        private readonly ToolbarItem _editTeamNameToolbarItem;
+
+        private bool _isPanelVisible = false;
+
         public TeamDetailsPage()
         {
             InitializeComponent();
+
+            _addAgenToolbarItem = new ToolbarItem("Add Agent", "addpeople.png", () => ViewModel.IsAddingAgent = true);
+            _editTeamNameToolbarItem = new ToolbarItem("Change name", "pencil.png", () => ViewModel.EditTeamNameCommand.Execute());
+        }
+
+        protected override void OnViewModelSet()
+        {
+            base.OnViewModelSet();
+
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+
+            if (ViewModel.IsOwner)
+            {
+                if (!ToolbarItems.Contains(_addAgenToolbarItem))
+                    ToolbarItems.Add(_addAgenToolbarItem);
+                if (!ToolbarItems.Contains(_editTeamNameToolbarItem))
+                    ToolbarItems.Add(_editTeamNameToolbarItem);
+            }
+        }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsAddingAgent")
+                AnimatePanel();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            AnimatePanel();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            if (_isPanelVisible)
+            {
+                _isPanelVisible = false;
+                AnimatePanel();
+            }
+
+            return base.OnBackButtonPressed();
+        }
+
+        private async void AnimatePanel()
+        {
+            const uint duration = 150u;
+            if (ViewModel.IsAddingAgent)
+            {
+                if (_isPanelVisible) return;
+
+                _isPanelVisible = true;
+                PanelBackground.IsVisible = true;
+
+                await Task.WhenAll(
+                    // Show
+                    PanelBackground.ColorTo(Color.FromRgba(0, 0, 0, 0x00), Color.FromRgba(0, 0, 0, 0xBB), color => PanelBackground.BackgroundColor = color, duration),
+                    AddAgentPanel.TranslateTo(0, 0, duration));
+            }
+            else
+            {
+                _isPanelVisible = false;
+                await Task.WhenAll(
+                    // Hide
+                    PanelBackground.ColorTo(Color.FromRgba(0, 0, 0, 0xBB), Color.FromRgba(0, 0, 0, 0x00), color => PanelBackground.BackgroundColor = color, duration),
+                    AddAgentPanel.TranslateTo(0, 180, duration));
+
+                PanelBackground.IsVisible = false;
+            }
         }
 
         private void AgentsList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
+            ViewModel.IsAddingAgent = false;
+
             if (e.SelectedItem == null)
                 return;
 
@@ -32,8 +111,10 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
             AgentsList.SelectedItem = null;
         }
 
-        private async void AddAgentButton_OnClicked(object sender, EventArgs e)
+        private async void ScanQrCodeButton_OnClicked(object sender, EventArgs e)
         {
+            ViewModel.IsAddingAgent = false;
+
             var options = new ZXing.Mobile.MobileBarcodeScanningOptions()
             {
                 PossibleFormats = new List<BarcodeFormat>() { BarcodeFormat.QR_CODE }
@@ -49,6 +130,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
             };
 
             await Navigation.PushModalAsync(scanPage, false);
+        }
+
+        private void PanelBackground_OnTapped(object sender, EventArgs e)
+        {
+            ViewModel.IsAddingAgent = false;
         }
     }
 }

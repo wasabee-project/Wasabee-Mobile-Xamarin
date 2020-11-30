@@ -7,10 +7,15 @@
                        xmlns:local="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views.Operation;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.AssignmentsListPage"
-                       Title="Assignments">
-
+                       Title="Assignments"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
     <ContentPage.Resources>
+
+        <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
+        <converters:MarkerDataToSvgFilenameConverter x:Key="MarkerDataToSvgFilenameConverter"/>
+
         <ResourceDictionary>
             <DataTemplate x:Key="LinkTemplate">
                 <ViewCell>
@@ -35,14 +40,13 @@
                             <Label Text="{Binding ToPortalName}" FontSize="16" />
                         </StackLayout>
 
-                        <pancakeView:PancakeView
-                            Grid.Column="1" Grid.Row="2"
-                            BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="5"
+                        <pancakeView:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel1}"
+                            Grid.Column="1" Grid.Row="2" Padding="5" Margin="5"
                             CornerRadius="0, 4, 4, 4" HorizontalOptions="Start"
                             IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}">
                             <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
-                                <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
-                                <Label Text="{Binding Link.Description}" FontAttributes="Italic" FontSize="14" TextColor="Black" />
+                                <iconize:IconLabel Text="mdi-format-quote-open" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12"/>
+                                <Label Text="{Binding Link.Description}" FontAttributes="Italic" FontSize="14" />
                             </StackLayout>
                         </pancakeView:PancakeView>
 
@@ -71,12 +75,12 @@
                             <Label Text="{Binding PortalName}" FontSize="16" LineBreakMode="TailTruncation" />
                             <Label Text="{Binding Marker.State}" FontSize="14" />
 
-                            <pancakeView:PancakeView IsVisible="{Binding Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
-                                                     BackgroundColor="{StaticResource LightGray}" Padding="5" Margin="0, 5, 0, 0"
+                            <pancakeView:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel1}" IsVisible="{Binding Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
+                                                     Padding="5" Margin="0, 5, 0, 0"
                                                      CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">
                                 <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
-                                    <iconize:IconLabel Text="mdi-format-quote-open" FontSize="12"/>
-                                    <Label Text="{Binding Marker.Comment}" FontAttributes="Italic" FontSize="14" TextColor="Black" />
+                                    <iconize:IconLabel Text="mdi-format-quote-open" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12"/>
+                                    <Label Text="{Binding Marker.Comment}" FontAttributes="Italic" FontSize="14" />
                                 </StackLayout>
                             </pancakeView:PancakeView>
                         </StackLayout>

@@ -1,8 +1,10 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
@@ -16,19 +18,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private readonly IUserDialogs _userDialogs;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IMvxNavigationService _navigationService;
+        private readonly IMvxMessenger _messenger;
         private readonly UsersDatabase _usersDatabase;
         private readonly TeamsDatabase _teamsDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        public TeamsListViewModel(IUserDialogs userDialogs, IUserSettingsService userSettingsService, IMvxNavigationService navigationService,
+        private readonly MvxSubscriptionToken _token;
+
+        public TeamsListViewModel(IUserDialogs userDialogs, IUserSettingsService userSettingsService, IMvxNavigationService navigationService, IMvxMessenger messenger,
             UsersDatabase usersDatabase, TeamsDatabase teamsDatabase, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _userDialogs = userDialogs;
             _userSettingsService = userSettingsService;
             _navigationService = navigationService;
+            _messenger = messenger;
             _usersDatabase = usersDatabase;
             _teamsDatabase = teamsDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+
+            _token = _messenger.Subscribe<MessageFor<TeamsListViewModel>>(msg => RefreshCommand.Execute());
         }
 
         public override async Task Initialize()
@@ -66,7 +74,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 {
                     await _usersDatabase.SaveUserModel(userModel);
                     TeamsCollection = new MvxObservableCollection<Team>(userModel.Teams.Select(x =>
-                        new Team(this, x.Name, x.Id)
+                        new Team(x.Name, x.Id)
                         {
                             IsEnabled = x.State.Equals("On"),
                             IsOwner = x.Owner.Equals(_userSettingsService.GetLoggedUserGoogleId())
@@ -141,13 +149,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
     public class Team : MvxNotifyPropertyChanged
     {
-        public TeamsListViewModel Parent { get; }
         public string Name { get; }
         public string Id { get; }
 
-        public Team(TeamsListViewModel parent, string name, string id)
+        public Team(string name, string id)
         {
-            Parent = parent;
             Name = name;
             Id = id;
         }

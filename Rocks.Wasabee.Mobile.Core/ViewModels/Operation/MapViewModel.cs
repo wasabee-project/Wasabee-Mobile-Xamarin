@@ -80,6 +80,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 nameof(MapThemeEnum.IntelDefault) => MapThemeEnum.IntelDefault,
                 _ => MapThemeEnum.GoogleLight
             };
+            MapType = _preferences.Get(UserSettingsKeys.MapType, nameof(MapType.Street)) switch
+            {
+                nameof(MapType.Street) => MapType.Street,
+                nameof(MapType.Hybrid) => MapType.Hybrid,
+                _ => MapType.Street
+            };
 
             await base.Initialize();
 
@@ -152,6 +158,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLocationAvailable { get; set; } = false;
 
         public MapThemeEnum MapTheme { get; set; } = MapThemeEnum.GoogleLight;
+        public MapType MapType { get; set; } = MapType.Street;
+        public bool IsStylingAvailable { get; set; } = true;
 
         public bool IsLayerChooserVisible { get; set; } = false;
         public bool IsLayerLinksActivated { get; set; } = true;
@@ -321,9 +329,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                // TODO : load teams on OP according to user setting
+                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) || Operation == null;
 
-                var userTeamsIds = (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList();
+                var userTeamsIds = showFromAnyTeams ?
+                    (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList() :
+                    Operation!.TeamList.Select(x => x.TeamId).ToList();
+
                 var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
                 if (updatedTeams.Any())
                     await _teamsDatabase.SaveTeamsModels(updatedTeams);
@@ -367,6 +378,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand<TeamAgentLocationUpdatedMessage> RefreshTeamAgentPositionCommand => new MvxAsyncCommand<TeamAgentLocationUpdatedMessage>(RefreshTeamAgentPositionExecuted);
         private async Task RefreshTeamAgentPositionExecuted(TeamAgentLocationUpdatedMessage message)
         {
+            if (Operation == null)
+                return;
+
             if (_loadingAgentsLocations)
                 return;
 
@@ -382,12 +396,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     return;
                 }
 
+                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
+                if (!showFromAnyTeams)
+                    return;
+
                 var agentId = message.UserId;
+                var agentTeams = await _teamsDatabase.GetTeamsForAgent(agentId);
+                if (!agentTeams.Any())
+                    return;
+
                 var agent = await _teamAgentsDatabase.GetTeamAgent(agentId);
                 if (agent == null)
                 {
                     var team = await _teamsDatabase.GetTeam(message.TeamId);
-                    if (team == null)
+                    if (team == null || team.Agents.All(x => x.Id != agentId))
                     {
                         team = await _wasabeeApiV1Service.Teams_GetTeam(message.TeamId);
                         if (team == null)
@@ -396,9 +418,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         await _teamsDatabase.SaveTeamModel(team);
                     }
 
-                    if (team.Agents.Any(x => x.Id.Equals(agentId)))
-                        agent = team.Agents.First(x => x.Id.Equals(agentId));
-                    else
+                    agent = team.Agents.FirstOrDefault(x => x.Id.Equals(agentId));
+                    if (agent == null)
                         return;
                 }
 
@@ -432,7 +453,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxCommand<MapThemeEnum> SwitchThemeCommand => new MvxCommand<MapThemeEnum>(SwitchThemeExecuted);
         private void SwitchThemeExecuted(MapThemeEnum mapTheme)
         {
-            LoggingService.Trace("Executing MapViewModel.RefreshOperationCommand");
+            LoggingService.Trace("Executing MapViewModel.SwitchThemeCommand");
 
             MapTheme = mapTheme;
             switch (mapTheme)
@@ -448,6 +469,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapTheme), mapTheme, null);
+            }
+        }
+
+        public IMvxCommand<MapType> SwitchMapTypeCommand => new MvxCommand<MapType>(SwitchMapTypeExecuted);
+        private void SwitchMapTypeExecuted(MapType mapType)
+        {
+            LoggingService.Trace("Executing MapViewModel.SwitchMapTypeCommand");
+
+            MapType = mapType;
+            switch (mapType)
+            {
+                case MapType.Street:
+                    _preferences.Set(UserSettingsKeys.MapType, nameof(MapType.Street));
+                    IsStylingAvailable = true;
+                    break;
+                case MapType.Hybrid:
+                    _preferences.Set(UserSettingsKeys.MapType, nameof(MapType.Hybrid));
+                    IsStylingAvailable = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mapType), mapType, null);
             }
         }
 
@@ -527,8 +569,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 finalLong = (lowestLong + highestLong) / 2;
                 distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
                     highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-
-                OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
             }
             else if (Markers.Any() && !Anchors.Any())
             {
@@ -540,8 +580,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 finalLong = (lowestLong + highestLong) / 2;
                 distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
                     highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-
-                OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
             }
             else if (!Markers.Any() && Anchors.Any())
             {
