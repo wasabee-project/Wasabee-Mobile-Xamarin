@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage x:TypeArguments="vm:OperationDetailViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:vm="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.Management.OperationDetailPage"
+                       x:Name="Page"
+                       Title="Operation"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+    <ContentPage.Content>
+        <StackLayout Spacing="0">
+            <StackLayout Padding="10">
+                <Label Text="Operation Name" TextColor="{DynamicResource PrimaryGreen}"/>
+                <Label Text="{Binding Operation.Name}" Margin="10,0,10,30"/>
+
+            </StackLayout>
+
+            <StackLayout>
+                <Label Text="Involved teams" TextColor="{DynamicResource PrimaryGreen}" Margin="10,0,0,0"/>
+                <BoxView BackgroundColor="{DynamicResource PrimaryGreen}" HeightRequest="1"/>
+
+                <ListView
+                    x:Name="TeamsList"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="False"
+                    CachingStrategy="RecycleElement"
+                    ItemSelected="TeamsList_OnItemSelected"
+                    ItemsSource="{Binding TeamsCollection}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="10" ColumnSpacing="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Column="0" Text="{Binding Name}" VerticalTextAlignment="Center"/>
+
+                                    <iconize:IconButton Grid.Column="1"
+                                                        Text="mdi-chevron-right"
+                                                        Command="{Binding ViewModel.ShowTeamDetailCommand, Source={x:Reference Page}}"
+                                                        CommandParameter="{Binding .}"
+                                                        BackgroundColor="Transparent"
+                                                        FontSize="30"
+                                                        WidthRequest="40" HeightRequest="50" Padding="0" />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</views:BaseContentPage>

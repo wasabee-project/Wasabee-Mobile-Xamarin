@@ -87,6 +87,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             {
                 var operationDatabaseModel = OperationDatabaseModel.ToOperationDatabaseModel(operationModel);
 
+                var existingData = await GetOperationModel(operationModel.Id);
+                if (existingData != null)
+                    operationDatabaseModel.IsHiddenLocally = existingData.IsHiddenLocally;
+
                 databaseConnection.GetConnection().InsertOrReplaceWithChildren(operationDatabaseModel);
 
                 return 0;
@@ -96,6 +100,37 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 LoggingService.Error(e, "Error Querying OperationsDatabase.SaveOperationModel");
 
                 return 1;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+        }
+
+        public async Task<bool> HideLocalOperation(string opId, bool isHidden)
+        {
+            LoggingService.Trace("Querying OperationsDatabase.HideLocalOperation");
+
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+            try
+            {
+                var operationModel = await GetOperationModel(opId);
+                if (operationModel == null)
+                    return false;
+
+                operationModel.IsHiddenLocally = isHidden;
+
+                var dbModel = OperationDatabaseModel.ToOperationDatabaseModel(operationModel);
+                databaseConnection.GetConnection().UpdateWithChildren(dbModel);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.HideLocalOperation");
+
+                return false;
             }
             finally
             {
@@ -123,7 +158,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [TextBlob("AnchorsBlobbed")]
             public List<string> Anchors { get; set; }
 
-
             public string BlockersBlobbed { get; set; }
             [TextBlob("BlockersBlobbed")]
             public List<BlockerModel> Blockers { get; set; }
@@ -150,6 +184,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string Comment { get; set; }
 
+            public bool IsHiddenLocally { get; set; }
+
             public DateTime DownloadedAt { get; set; }
 
             public static OperationModel ToOperationModel(OperationDatabaseModel operationDatabaseModel)
@@ -170,6 +206,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         Comment = operationDatabaseModel.Comment,
                         KeysOnHand = operationDatabaseModel.KeysOnHand ?? new List<KeysOnHandModel>(),
                         Zones = operationDatabaseModel.Zones ?? new List<ZoneModel>(),
+                        IsHiddenLocally = operationDatabaseModel.IsHiddenLocally,
                         DownloadedAt = operationDatabaseModel.DownloadedAt,
 
                         Markers = operationDatabaseModel.Markers?.Select(markerDbModel => MarkersDatabase.MarkerDatabaseModel.ToMarkerModel(markerDbModel)).ToList(),
@@ -198,6 +235,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Comment = operationModel.Comment,
                     KeysOnHand = operationModel.KeysOnHand ?? new List<KeysOnHandModel>(),
                     Zones = operationModel.Zones ?? new List<ZoneModel>(),
+                    IsHiddenLocally = operationModel.IsHiddenLocally,
                     DownloadedAt = operationModel.DownloadedAt,
 
                     Markers = operationModel.Markers?.Select(markerModel => MarkersDatabase.MarkerDatabaseModel.ToMarkerDatabaseModel(markerModel)).ToList(),
