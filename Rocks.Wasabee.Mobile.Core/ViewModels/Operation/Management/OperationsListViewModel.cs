@@ -1,8 +1,10 @@
 ﻿using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,11 +14,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
     {
         private readonly OperationsDatabase _operationsDatabase;
         private readonly IMvxMessenger _messenger;
+        private readonly IMvxNavigationService _navigationService;
 
-        public OperationsListViewModel(OperationsDatabase operationsDatabase, IMvxMessenger messenger)
+        public OperationsListViewModel(OperationsDatabase operationsDatabase, IMvxMessenger messenger, IMvxNavigationService navigationService)
         {
             _operationsDatabase = operationsDatabase;
             _messenger = messenger;
+            _navigationService = navigationService;
         }
 
         public override async Task Initialize()
@@ -52,15 +56,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
             if (IsRefreshing)
                 return;
 
+            LoggingService.Trace("Executing OperationsListViewModel.RefreshCommand");
+
             IsRefreshing = true;
 
             var ops = await _operationsDatabase.GetOperationModels();
             if (ops.Any())
             {
                 if (!ShowHiddenOps)
-                    ops = ops.Where(x => !x.IsHiddenLocally).ToList();
+                    ops = ops.Where(x => !x.IsHiddenLocally).OrderBy(x => x.Name).ToList();
 
-                OperationsCollection = new MvxObservableCollection<Operation>(ops.Select(x => new Operation(x.Id, x.Name) { IsHiddenLocally = x.IsHiddenLocally }));
+                OperationsCollection = new MvxObservableCollection<Operation>(
+                    ops.Select(x => new Operation(x.Id, x.Name) { IsHiddenLocally = x.IsHiddenLocally }));
             }
 
             IsRefreshing = false;
@@ -72,26 +79,54 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
             if (IsBusy)
                 return;
 
+            LoggingService.Trace("Executing OperationsListViewModel.HideOperationCommand");
+
             IsBusy = true;
 
-            var hideOp = !op.IsHiddenLocally;
-            var result = await _operationsDatabase.HideLocalOperation(op.Id, hideOp);
-            if (result)
+            try
             {
-                var rowToUpdate = OperationsCollection.First(x => x.Id.Equals(op.Id));
-                var rowIndex = OperationsCollection.IndexOf(rowToUpdate);
-                if (ShowHiddenOps)
+                var hideOp = !op.IsHiddenLocally;
+                var result = await _operationsDatabase.HideLocalOperation(op.Id, hideOp);
+                if (result)
                 {
-                    OperationsCollection[rowIndex].IsHiddenLocally = hideOp;
+                    var rowToUpdate = OperationsCollection.First(x => x.Id.Equals(op.Id));
+                    var rowIndex = OperationsCollection.IndexOf(rowToUpdate);
+                    if (ShowHiddenOps)
+                    {
+                        OperationsCollection[rowIndex].IsHiddenLocally = hideOp;
+                    }
+                    else
+                    {
+                        if (hideOp)
+                            OperationsCollection.Remove(op);
+                    }
                 }
-                else
-                {
-                    if (hideOp)
-                        OperationsCollection.Remove(op);
-                }
-            }
 
-            _messenger.Publish(new MessageFrom<OperationsListViewModel>(this));
+                _messenger.Publish(new MessageFrom<OperationsListViewModel>(this));
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing OperationsListViewModel.HideOperationCommand");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public IMvxCommand<Operation> ShowOperationDetailCommand => new MvxCommand<Operation>(ShowOperationDetailExecuted);
+        private async void ShowOperationDetailExecuted(Operation op)
+        {
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
+            LoggingService.Trace("Executing OperationsListViewModel.ShowOperationDetailCommand");
+
+            await _navigationService.Navigate<OperationDetailViewModel, OperationDetailNavigationParameter>(
+                new OperationDetailNavigationParameter(op.Id));
+
             IsBusy = false;
         }
 

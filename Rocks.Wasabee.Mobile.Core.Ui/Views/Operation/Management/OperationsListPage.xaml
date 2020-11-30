@@ -17,11 +17,12 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <ListView 
-                SelectionMode="None"
+            <ListView
+                x:Name="OperationsList"
                 HasUnevenRows="True"
                 IsPullToRefreshEnabled="True"
                 CachingStrategy="RecycleElement"
+                ItemSelected="OperationsList_OnItemSelected"
                 RefreshCommand="{Binding RefreshCommand}"
                 IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
                 ItemsSource="{Binding OperationsCollection}"
@@ -32,6 +33,7 @@
                             <Grid Padding="10" ColumnSpacing="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
@@ -45,6 +47,14 @@
                                                     CommandParameter="{Binding .}"
                                                     FontSize="18" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
                                                     BorderColor="{DynamicResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                <iconize:IconButton Grid.Column="2"
+                                                    Text="mdi-chevron-right"
+                                                    Command="{Binding ViewModel.ShowOperationDetailCommand, Source={x:Reference Page}}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="Transparent"
+                                                    FontSize="30"
+                                                    WidthRequest="40" HeightRequest="50" Padding="0" />
 
                                 <Grid.Triggers>
                                     <DataTrigger TargetType="Grid" Binding="{Binding IsHiddenLocally}" Value="True">

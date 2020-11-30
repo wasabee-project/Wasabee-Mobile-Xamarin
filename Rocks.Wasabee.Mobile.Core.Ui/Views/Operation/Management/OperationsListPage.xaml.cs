@@ -35,5 +35,15 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.Management
                 false => "eyeoff.png"
             };
         }
+
+        private void OperationsList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            OperationsList.SelectedItem = null;
+
+            if (e.SelectedItem is ViewModels.Operation.Management.Operation operation)
+            {
+                ViewModel.ShowOperationDetailCommand.Execute(operation);
+            }
+        }
     }
 }
