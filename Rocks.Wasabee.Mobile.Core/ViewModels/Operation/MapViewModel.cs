@@ -19,7 +19,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using ICrossPermissions = Plugin.Permissions.Abstractions.IPermissions;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
@@ -501,20 +500,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                var cultureInfo = CultureInfo.GetCultureInfo("en-US");
-                var uri = Device.RuntimePlatform switch
-                {
-                    Device.Android => "https://www.google.com/maps/search/?api=1&query=" +
-                                      $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(cultureInfo)}," +
-                                      $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(cultureInfo)}",
-                    Device.iOS => "https://maps.apple.com/?ll=" +
-                                  $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(cultureInfo)}," +
-                                  $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(cultureInfo)}",
-                    _ => throw new ArgumentOutOfRangeException(Device.RuntimePlatform)
-                };
-
-                if (await Launcher.CanOpenAsync(uri))
-                    await Launcher.OpenAsync(uri);
+                var location = new Location(SelectedWasabeePin.Pin.Position.Latitude, SelectedWasabeePin.Pin.Position.Longitude);
+                await Xamarin.Essentials.Map.OpenAsync(location);
             }
             catch (Exception e)
             {
