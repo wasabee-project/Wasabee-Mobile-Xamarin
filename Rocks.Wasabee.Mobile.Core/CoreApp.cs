@@ -9,16 +9,16 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
+using System;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core
 {
-    public class CoreApp : MvxApplication
-    {
+    public class CoreApp : MvxApplication {
+
         public static Theme AppTheme { get; set; } = Theme.Light;
 
-        public override async void Initialize()
-        {
+        public override async void Initialize() {
             CreatableTypes()
                 .EndingWith("ViewModel")
                 .Except(typeof(BaseViewModel))
@@ -32,8 +32,18 @@ namespace Rocks.Wasabee.Mobile.Core
             Bootstrapper.SetupDatabases();
             Bootstrapper.SetupServices();
 
+            var preferences = Mvx.IoCProvider.Resolve<IPreferences>();
+            var versionTracking = Mvx.IoCProvider.Resolve<IVersionTracking>();
+            
+            var lastVersion = preferences.Get(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
+            if (Version.Parse(versionTracking.CurrentVersion) > Version.Parse(lastVersion))
+            {
+                // App has updated
+                preferences.Set(UserSettingsKeys.DevModeActivated, false);
+            }
+
 #if DEBUG
-            Mvx.IoCProvider.Resolve<IPreferences>().Set(UserSettingsKeys.DevModeActivated, true);
+            preferences.Set(UserSettingsKeys.DevModeActivated, true);
 #endif
 
             AppCenter.Start(
@@ -41,9 +51,9 @@ namespace Rocks.Wasabee.Mobile.Core
                 // TODO + "ios={Your iOS App secret here}"
                 , typeof(Crashes), typeof(Analytics));
 
-            var analyticsEnabled = Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.AnalyticsEnabled, false);
-            if (!analyticsEnabled)
-            {
+            var analyticsEnabled =
+                Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.AnalyticsEnabled, false);
+            if (!analyticsEnabled) {
                 await Crashes.SetEnabledAsync(false);
                 await Analytics.SetEnabledAsync(false);
             }
@@ -53,5 +63,6 @@ namespace Rocks.Wasabee.Mobile.Core
 
             RegisterAppStart<SplashScreenViewModel>();
         }
+
     }
 }

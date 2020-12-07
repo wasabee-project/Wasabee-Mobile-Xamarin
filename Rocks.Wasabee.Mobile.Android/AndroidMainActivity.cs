@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
+using Orientation = Rocks.Wasabee.Mobile.Core.Messages.Orientation;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
@@ -31,7 +32,6 @@ namespace Rocks.Wasabee.Mobile.Droid
         Theme = "@style/MainTheme",
         ResizeableActivity = true,
         WindowSoftInputMode = SoftInput.AdjustPan,
-        ScreenOrientation = ScreenOrientation.Portrait,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode)]
     public class AndroidMainActivity : MvxFormsAppCompatActivity<Setup, CoreApp, App>
     {
@@ -39,6 +39,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
         private MvxSubscriptionToken _token;
         private MvxSubscriptionToken _tokenTheme;
+        private MvxSubscriptionToken _tokenOrientation;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -97,6 +98,15 @@ namespace Rocks.Wasabee.Mobile.Droid
                 });
 
                 _tokenTheme = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<ChangeThemeMessage>(msg => OnThemeChanged(msg.Theme));
+                _tokenOrientation = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<ChangeOrientationMessage>(msg =>
+                {
+                    if (msg.Orientation == Orientation.Portait)
+                        RequestedOrientation = ScreenOrientation.Portrait;
+                    else if (msg.Orientation == Orientation.Landscape)
+                        RequestedOrientation = ScreenOrientation.Landscape;
+                    else if (msg.Orientation == Orientation.Any)
+                        RequestedOrientation = ScreenOrientation.Unspecified;
+                });
 
 #if DEBUG
                 if (System.Diagnostics.Debugger.IsAttached)

@@ -11,7 +11,7 @@
                        xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Profile.ProfilePage"
-                       Title="Profile"
+                       Title="Profile" x:Name="Page"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Resources>
@@ -20,98 +20,92 @@
 
     <ContentPage.Content>
         <RelativeLayout>
-            <Grid RowSpacing="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <ScrollView RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Grid RowSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                <yummy:PancakeView Grid.Column="0" Grid.Row="0" WidthRequest="100" HeightRequest="100" CornerRadius="50" Margin="30,20,15,20">
-                    <yummy:PancakeView.Border>
-                        <yummy:Border Color="{DynamicResource PrimaryGreen}" Thickness="4" />
-                    </yummy:PancakeView.Border>
+                        <yummy:PancakeView Grid.Column="0" WidthRequest="100" HeightRequest="100" CornerRadius="50" Margin="20"
+                                               BackgroundColor="{DynamicResource PrimaryGreen}">
+                            <ffimageloading:CachedImage Source="{Binding User.ProfileImage}"/>
+                        </yummy:PancakeView>
 
-                    <ffimageloading:CachedImage Source="{Binding User.ProfileImage}"/>
-                </yummy:PancakeView>
-
-                <Grid Grid.Row="0" Grid.Column="1" RowSpacing="0" ColumnSpacing="0" VerticalOptions="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="70"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                        <Grid Grid.Column="1" RowSpacing="0" ColumnSpacing="0" VerticalOptions="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="70"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
 
-                    <Label Grid.Column="0" Grid.Row="0" Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
-                    <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat='Level : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>
-                    <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='Id : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="12"/>
+                            <Label Grid.Column="0" Grid.Row="0" Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
+                            <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat='Level : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>
+                            <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='Id : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="12"/>
 
-                    <iconize:IconButton Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
-                                    Text="mdi-qrcode" TextColor="{DynamicResource PrimaryTextColor}" FontSize="28"
-                                    HorizontalOptions="Center" VerticalOptions="Center"
-                                    BackgroundColor="Transparent"
-                                    Command="{Binding ShowQrCodeCommand}"/>
-                </Grid>
+                            <iconize:IconButton Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
+                                        Text="mdi-qrcode" TextColor="{DynamicResource PrimaryTextColor}" FontSize="28"
+                                        HorizontalOptions="Center" VerticalOptions="Center"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding ShowQrCodeCommand}"/>
+                        </Grid>
+                    </Grid>
 
-                <TableView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
-                       Intent="Settings"
-                       HasUnevenRows="True">
-                    <TableRoot>
-                        <TableSection Title="Infos" TextColor="{DynamicResource PrimaryGreen}">
-                            <ViewCell Tapped="EnlRocksCell_Tapped">
-                                <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="15, 10" >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+                    <TableView Intent="Settings" HasUnevenRows="True" VerticalOptions="Start">
+                        <TableRoot>
+                            <TableSection Title="Infos" TextColor="{DynamicResource PrimaryGreen}">
+                                <ViewCell Tapped="EnlRocksCell_Tapped">
+                                    <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="15, 10" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                                    <controls:LinkLabel Grid.Column="0" Grid.Row="0" Text="enl.rocks" Clicked="EnlRocksLink_Clicked" FontSize="18"/>
-                                    <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.RocksVerified, StringFormat='Status : {0}', Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
+                                        <controls:LinkLabel Grid.Column="0" Grid.Row="0" Text="enl.rocks" Clicked="EnlRocksLink_Clicked" FontSize="18"/>
+                                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.RocksVerified, StringFormat='Status : {0}', Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
 
-                                    <iconize:IconLabel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="mdi-chevron-right" FontSize="40" VerticalOptions="Center" HorizontalOptions="End"/>
-                                </Grid>
-                            </ViewCell>
-                            <ViewCell Tapped="ProjectVCell_Tapped">
-                                <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="15, 10" >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+                                        <iconize:IconLabel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="mdi-chevron-right" FontSize="40" VerticalOptions="Center" HorizontalOptions="End"/>
+                                    </Grid>
+                                </ViewCell>
+                                <ViewCell Tapped="ProjectVCell_Tapped">
+                                    <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="15, 10" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                                    <controls:LinkLabel Grid.Column="0" Grid.Row="0" Text="V Status" Clicked="ProjectVLink_Clicked" FontSize="18"/>
-                                    <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.VVerified, StringFormat='Status : {0}', Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
+                                        <controls:LinkLabel Grid.Column="0" Grid.Row="0" Text="V Status" Clicked="ProjectVLink_Clicked" FontSize="18"/>
+                                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.VVerified, StringFormat='Status : {0}', Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
 
-                                    <iconize:IconLabel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="mdi-chevron-right" FontSize="40" VerticalOptions="Center" HorizontalOptions="End"/>
-                                </Grid>
-                            </ViewCell>
-                        </TableSection>
-                    </TableRoot>
-                </TableView>
+                                        <iconize:IconLabel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="mdi-chevron-right" FontSize="40" VerticalOptions="Center" HorizontalOptions="End"/>
+                                    </Grid>
+                                </ViewCell>
+                            </TableSection>
+                        </TableRoot>
+                    </TableView>
 
-                <!-- TODO : Common teams here for other agents -->
+                    <!-- TODO : Common teams here for other agents -->
 
-                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Padding="10"
-                       FontAttributes="Italic" VerticalOptions="End"
-                       IsVisible="{Binding IsSelfProfile}"
-                       Text="This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."/>
-            </Grid>
+                    <Label Padding="10" FontAttributes="Italic" VerticalOptions="EndAndExpand"
+                           IsVisible="{Binding IsSelfProfile}"
+                           Text="This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."/>
+                </StackLayout>
+            </ScrollView>
 
             <Frame IsVisible="{Binding IsQrCodeVisible}" Margin="0" Padding="0" BackgroundColor="Transparent"
                    RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"

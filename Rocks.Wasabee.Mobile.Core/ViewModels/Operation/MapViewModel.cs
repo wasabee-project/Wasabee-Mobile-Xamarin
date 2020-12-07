@@ -19,7 +19,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using ICrossPermissions = Plugin.Permissions.Abstractions.IPermissions;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
@@ -46,7 +45,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly MvxSubscriptionToken _tokenLiveLocation;
         private readonly MvxSubscriptionToken _tokenMarkerUpdated;
 
-        private bool _loadingAgentsLocations;
+        private bool _isLoadingAgentsLocations;
 
         public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase,
             UsersDatabase usersDatabase, IPreferences preferences, ICrossPermissions crossPermissions, IMvxMessenger messenger,
@@ -90,7 +89,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             await base.Initialize();
 
             await LoadOperationCommand.ExecuteAsync();
-            await RefreshTeamsMembersPositionsCommand.ExecuteAsync();
+            await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
         }
 
         public override async void ViewAppeared()
@@ -317,13 +316,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-        public IMvxAsyncCommand RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand(RefreshTeamsMembersPositionsExecuted);
-        private async Task RefreshTeamsMembersPositionsExecuted()
+        public IMvxAsyncCommand<string> RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand<string>(RefreshTeamsMembersPositionsExecuted);
+        private async Task RefreshTeamsMembersPositionsExecuted(string teamId)
         {
-            if (_loadingAgentsLocations)
+            if (_isLoadingAgentsLocations)
                 return;
 
-            _loadingAgentsLocations = true;
+            _isLoadingAgentsLocations = true;
 
             LoggingService.Trace("Executing MapViewModel.RefreshTeamsMembersPositionsCommand");
 
@@ -331,9 +330,30 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             {
                 var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) || Operation == null;
 
+                // Get all teams by default
                 var userTeamsIds = showFromAnyTeams ?
                     (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList() :
                     Operation!.TeamList.Select(x => x.TeamId).ToList();
+
+                // If teamId is specified, refresh only this one
+                if (!string.IsNullOrWhiteSpace(teamId))
+                {
+                    // but only if Operation is assigned to the team or showFromAnyTeams is true from Settings
+                    if (Operation!.TeamList.Any(x => x.TeamId.Equals(teamId)) || showFromAnyTeams)
+                    {
+                        userTeamsIds.Clear();
+                        userTeamsIds.Add(teamId);
+                    }
+                    else
+                    {
+                        userTeamsIds.Clear();
+                        _isLoadingAgentsLocations = false;
+                        return;
+                    }
+                }
+
+                if (!userTeamsIds.Any())
+                    return;
 
                 var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
                 if (updatedTeams.Any())
@@ -369,7 +389,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             finally
             {
                 await RaisePropertyChanged(() => AgentsPins);
-                _loadingAgentsLocations = false;
+                _isLoadingAgentsLocations = false;
             }
         }
 
@@ -381,28 +401,30 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             if (Operation == null)
                 return;
 
-            if (_loadingAgentsLocations)
+            if (_isLoadingAgentsLocations)
                 return;
 
-            _loadingAgentsLocations = true;
+            _isLoadingAgentsLocations = true;
 
             LoggingService.Trace("Executing MapViewModel.RefreshTeamAgentPositionCommand");
 
             try
             {
-                // TODO : Handle full team refresh when userId null
                 if (string.IsNullOrEmpty(message.UserId))
                 {
+                    _isLoadingAgentsLocations = false;
+                    await RefreshTeamsMembersPositionsExecuted(message.TeamId);
+
                     return;
                 }
-
-                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
-                if (!showFromAnyTeams)
-                    return;
 
                 var agentId = message.UserId;
                 var agentTeams = await _teamsDatabase.GetTeamsForAgent(agentId);
                 if (!agentTeams.Any())
+                    return;
+
+                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
+                if (!agentTeams.Any(x => x.Id.Equals(message.TeamId)) && !showFromAnyTeams)
                     return;
 
                 var agent = await _teamAgentsDatabase.GetTeamAgent(agentId);
@@ -423,7 +445,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         return;
                 }
 
-                if (DateTime.Now - agent.LastUpdatedAt < TimeSpan.FromSeconds(10))
+                if (DateTime.Now - agent.LastUpdatedAt < TimeSpan.FromSeconds(5))
                     return;
 
                 var updatedAgent = await _wasabeeApiV1Service.Agents_GetAgent(agentId);
@@ -446,7 +468,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             finally
             {
                 await RaisePropertyChanged(() => AgentsPins);
-                _loadingAgentsLocations = false;
+                _isLoadingAgentsLocations = false;
             }
         }
 
@@ -501,20 +523,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                var cultureInfo = CultureInfo.GetCultureInfo("en-US");
-                var uri = Device.RuntimePlatform switch
-                {
-                    Device.Android => "https://www.google.com/maps/search/?api=1&query=" +
-                                      $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(cultureInfo)}," +
-                                      $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(cultureInfo)}",
-                    Device.iOS => "https://maps.apple.com/?ll=" +
-                                  $"{SelectedWasabeePin.Pin.Position.Latitude.ToString(cultureInfo)}," +
-                                  $"{SelectedWasabeePin.Pin.Position.Longitude.ToString(cultureInfo)}",
-                    _ => throw new ArgumentOutOfRangeException(Device.RuntimePlatform)
-                };
-
-                if (await Launcher.CanOpenAsync(uri))
-                    await Launcher.OpenAsync(uri);
+                var location = new Location(SelectedWasabeePin.Pin.Position.Latitude, SelectedWasabeePin.Pin.Position.Longitude);
+                await Xamarin.Essentials.Map.OpenAsync(location);
             }
             catch (Exception e)
             {

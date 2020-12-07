@@ -13,71 +13,79 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <TableView Intent="Settings" HasUnevenRows="True">
-            <TableRoot>
+        <ScrollView>
+            <StackLayout>
+                <TableView Intent="Settings" HasUnevenRows="True">
+                    <TableRoot>
 
-                <TableSection Title="Permissions" TextColor="{DynamicResource PrimaryGreen}">
-                    <TextCell Text="Open app system settings" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenApplicationSettingsCommand}"/>
-                </TableSection>
+                        <TableSection Title="Permissions" TextColor="{DynamicResource PrimaryGreen}">
+                            <TextCell Text="Open app system settings" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenApplicationSettingsCommand}"/>
+                        </TableSection>
 
-                <TableSection Title="Application" TextColor="{DynamicResource PrimaryGreen}">
-                    <ViewCell Tapped="AnalyticsCell_OnTapped">
-                        <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                        <TableSection Title="Application" TextColor="{DynamicResource PrimaryGreen}">
+                            <ViewCell Tapped="AnalyticsCell_OnTapped">
+                                <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Text="Enable Anonymous Analytics" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
-                            <Switch Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" OnColor="{DynamicResource PrimaryGreenDark}"
-                                    ThumbColor="{Binding IsAnonymousAnalyticsEnabled, Converter={StaticResource BoolToColorConverter}}"
-                                    IsToggled="{Binding IsAnonymousAnalyticsEnabled}"
-                                    HorizontalOptions="EndAndExpand" Margin="0, 0, 10, 0"/>
+                                    <Label Grid.Row="0" Grid.Column="0" Text="Enable Anonymous Analytics" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
+                                    <Switch Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" OnColor="{DynamicResource PrimaryGreenDark}"
+                                            ThumbColor="{Binding IsAnonymousAnalyticsEnabled, Converter={StaticResource BoolToColorConverter}}"
+                                            IsToggled="{Binding IsAnonymousAnalyticsEnabled}"
+                                            HorizontalOptions="EndAndExpand" Margin="0, 0, 10, 0"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" Text="(this helps the developers improve Wasabee)" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Text="(this helps the developers improve Wasabee)" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
 
-                        </Grid>
-                    </ViewCell>
-                    <TextCell Text="Send logs" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="{DynamicResource SecondaryTextColor}"/>
-                    <TextCell Text="Refresh FCM token" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
-                    <TextCell Text="Switch light/dark theme" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
-                </TableSection>
+                                </Grid>
+                            </ViewCell>
+                            <TextCell Text="Send logs" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="{DynamicResource SecondaryTextColor}"/>
+                            <TextCell Text="Refresh FCM token" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
+                            <TextCell Text="Switch light/dark theme" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
+                        </TableSection>
 
-                <TableSection Title="Misc." TextColor="{DynamicResource PrimaryGreen}">
-                    <ViewCell Tapped="AgentsOnMapCell_OnTapped">
-                        <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                        <TableSection Title="Misc." TextColor="{DynamicResource PrimaryGreen}">
+                            <ViewCell Tapped="AgentsOnMapCell_OnTapped">
+                                <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Text="Show Agents from any team on Map" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
-                            <Switch Grid.Column="1" Grid.RowSpan="2" OnColor="{DynamicResource PrimaryGreenDark}"
-                                    ThumbColor="{Binding ShowAgentsFromAnyTeam, Converter={StaticResource BoolToColorConverter}}"
-                                    IsToggled="{Binding ShowAgentsFromAnyTeam}"
-                                    HorizontalOptions="EndAndExpand" Margin="0, 0, 10, 0"/>
-                        </Grid>
-                    </ViewCell>
-                </TableSection>
-                
-                <TableSection Title="About" TextColor="{DynamicResource PrimaryGreen}">
-                    <ViewCell>
-                        <Label TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 10" LineBreakMode="WordWrap">
-                            <Label.Text>
-Wasabee mobile application is still under huge development process. Bugs and crashes are possible.
-If you're a C# / Xamarin.Forms developer and interested in helping us, reach us through Telegram.
-                            </Label.Text>
-                        </Label>
-                    </ViewCell>
-                    <TextCell Text="Wasabee Webpage" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeWebpageCommand}" />
-                    <TextCell Text="Telegram Chat" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeTelegramChatCommand}" />
-                    <TextCell Text="Version" TextColor="{DynamicResource PrimaryTextColor}" Detail="{Binding Version}" DetailColor="{DynamicResource SecondaryTextColor}" Command="{Binding VersionTappedCommand}"/>
-                </TableSection>
-            </TableRoot>
-        </TableView>
+                                    <Label Grid.Column="0" Text="Show Agents from any team on Map" TextColor="{DynamicResource PrimaryTextColor}"
+                                           FontSize="Small" Padding="15,0,0,0" LineBreakMode="WordWrap" VerticalOptions="Center"/>
+                                    <Switch Grid.Column="1" OnColor="{DynamicResource PrimaryGreenDark}"
+                                            ThumbColor="{Binding ShowAgentsFromAnyTeam, Converter={StaticResource BoolToColorConverter}}"
+                                            IsToggled="{Binding ShowAgentsFromAnyTeam}"
+                                            HorizontalOptions="EndAndExpand" Margin="0,4,10,0" VerticalOptions="Center"/>
+                                </Grid>
+                            </ViewCell>
+                        </TableSection>
+                        
+                        <TableSection Title="About" TextColor="{DynamicResource PrimaryGreen}">
+                            <ViewCell>
+                                <Label TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 10" TextType="Html">
+                                    <Label.Text>
+                                        <![CDATA[
+                                        Wasabee mobile application is still under huge development process. Bugs and crashes are possible.
+                                        <br>
+                                        If you're a C# / Xamarin.Forms developer and interested in helping us, reach us through Telegram.
+                                        ]]>
+                                    </Label.Text>
+                                </Label>
+                            </ViewCell>
+                            <TextCell Text="Wasabee Webpage" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeWebpageCommand}" />
+                            <TextCell Text="Telegram Chat" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeTelegramChatCommand}" />
+                            <TextCell Text="Version" TextColor="{DynamicResource PrimaryTextColor}" Detail="{Binding Version}" DetailColor="{DynamicResource SecondaryTextColor}" Command="{Binding VersionTappedCommand}"/>
+                        </TableSection>
+                    </TableRoot>
+                </TableView>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </views:BaseContentPage>

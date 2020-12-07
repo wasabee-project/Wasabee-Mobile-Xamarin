@@ -64,8 +64,8 @@
         <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
-    <Style TargetType="Button" x:Key="WasabeeStyleAcceptButton" BasedOn="{StaticResource WasabeeStyleValidateButton}">
-        <Setter Property="Text" Value="✓   Accept"/>
+    <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningNextButton" BasedOn="{StaticResource WasabeeStyleValidateButton}">
+        <Setter Property="Text" Value="✓   Next"/>
     </Style>
     <!--Annuler-->
     <Style TargetType="Button" x:Key="WasabeeStyleCancelButton" >
@@ -77,8 +77,8 @@
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
     <!--Refuser-->
-    <Style TargetType="Button" x:Key="WasabeeStyleDenyButton" >
-        <Setter Property="Text" Value="✗   Deny"/>
+    <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningCancelButton" >
+        <Setter Property="Text" Value="✗   Cancel"/>
         <Setter Property="TextColor" Value="White"/>
         <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}"/>
         <Setter Property="CornerRadius" Value="5"/>

@@ -25,7 +25,7 @@
     <ContentPage.Content>
 
         <Frame BackgroundColor="{DynamicResource DialogsBackgroundColor}" CornerRadius="5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0" Margin="20">
-            <Grid>
+            <Grid RowSpacing="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -38,7 +38,7 @@
                     <Label Text="Attention please" TextColor="White" FontSize="Large" FontAttributes="Bold"/>
                 </StackLayout>
 
-                <ScrollView Grid.Row="1" Margin="10, 5, 10, 10">
+                <ScrollView Grid.Row="1" Padding="10,10,10,0">
                     <StackLayout>
 
                         <Label Text="Why do I see this message ?" FontAttributes="Bold"/>
@@ -67,16 +67,16 @@
                     </StackLayout>
                 </ScrollView>
 
-                <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                    <Button Style="{DynamicResource WasabeeStyleDenyButton}" Command="{Binding DenyCommand}" />
-                    <Button Style="{DynamicResource WasabeeStyleAcceptButton}" Command="{Binding AcceptCommand}" />
-                </StackLayout>
-
-                <StackLayout Grid.Row="3" Orientation="Horizontal">
+                <StackLayout Grid.Row="2" Orientation="Horizontal" Padding="0" Margin="0">
                     <Label Text="Never show again" HorizontalTextAlignment="End" VerticalTextAlignment="Center" HorizontalOptions="FillAndExpand"/>
                     <Switch OnColor="{DynamicResource PrimaryGreenDark}" Scale="1.2" Margin="10"
                             ThumbColor="{Binding NeverShowAgain, Converter={StaticResource BoolToColorConverter}}"
                             IsToggled="{Binding NeverShowAgain}"/>
+                </StackLayout>
+
+                <StackLayout Grid.Row="3" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,10">
+                    <Button Style="{DynamicResource WasabeeStyleLocationWarningCancelButton}" Command="{Binding DenyCommand}" HorizontalOptions="StartAndExpand" />
+                    <Button Style="{DynamicResource WasabeeStyleLocationWarningNextButton}" Command="{Binding AcceptCommand}" HorizontalOptions="End" />
                 </StackLayout>
             </Grid>
 
