@@ -1,0 +1,59 @@
+# Xamarin.Android
+# Build a Xamarin.Android project.
+# Add steps that test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
+
+name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+
+steps:
+
+- task: DownloadSecureFile@1
+  name: GoogleServicesJson 
+  inputs:
+    secureFile: 'google-services.json'
+    
+- script: |
+    echo Copying google-services.json to project folder
+    cp $(GoogleServicesJson.secureFilePath) $(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android
+    echo End of copy task
+
+- task: PowerShell@2
+  inputs:
+    filePath: '_Builds/AndroidManifestUpdater.ps1'
+    arguments: '-filePath "$(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android/Properties/AndroidManifest.xml" -package "$(PackageName)" -versionName "$(Build.BuildNumber)" -label "$(AppLabel)" -icon "$(IconName)"'
+
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/Rocks.Wasabee.Mobile.sln'
+
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/Rocks.Wasabee.Mobile.Android.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/bin/*.apk'
+    apksignerKeystoreFile: 'WasabeeAndroid.Keystore'
+    apksignerKeystorePassword: '$(KeystorePassword)'
+    apksignerKeystoreAlias: '$(KeystoreAlias)'
+    apksignerKeyPassword: '$(KeystorePassword)'
+    apksignerArguments: '--out $(Build.ArtifactStagingDirectory)/signed.apk'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
