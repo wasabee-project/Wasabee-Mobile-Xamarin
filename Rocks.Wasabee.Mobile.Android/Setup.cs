@@ -2,6 +2,7 @@
 using Android.Runtime;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
+using MvvmCross.Platforms.Android;
 using MvvmCross.Platforms.Android.Presenters;
 using MvvmCross.ViewModels;
 using Plugin.CurrentActivity;
@@ -10,11 +11,37 @@ using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Droid.Infra.Firebase;
+using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
     public class Setup : MvxFormsAndroidSetup<CoreApp, App>
     {
+        private Application _formsApplication;
+        public override Application FormsApplication
+        {
+            get
+            {
+                if (!Xamarin.Forms.Forms.IsInitialized)
+                {
+                    var activity = Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>()?.Activity ?? ApplicationContext;
+                    var asmb = activity.GetType().Assembly;
+                    
+                    Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
+                    Xamarin.Forms.Forms.Init(activity, null, ExecutableAssembly ?? asmb);
+                }
+                if (_formsApplication == null)
+                {
+                    _formsApplication = CreateFormsApplication();
+                }
+                if (Application.Current != _formsApplication)
+                {
+                    Application.Current = _formsApplication;
+                }
+                return _formsApplication;
+            }
+        }
+
         protected override IMvxApplication CreateApp()
         {
             UserDialogs.Init(() => CrossCurrentActivity.Current.Activity);
