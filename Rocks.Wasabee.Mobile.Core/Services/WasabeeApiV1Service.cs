@@ -53,6 +53,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Put("/team/{teamId}/rename")]
         Task<ApiResponse<string>> Teams_RenameTeam(string teamId, [AliasAs("teamname")] string name);
 
+        [Delete("/team/{teamId}")]
+        Task<ApiResponse<string>> Teams_DeleteTeam(string teamId);
+
         #endregion
 
         #region Operations
@@ -163,6 +166,12 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         public async Task<bool> Teams_RenameTeam(string teamId, string name)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_RenameTeam(teamId, name), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        public async Task<bool> Teams_DeleteTeam(string teamId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_DeleteTeam(teamId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
