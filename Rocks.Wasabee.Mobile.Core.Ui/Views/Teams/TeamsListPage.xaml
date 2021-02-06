@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="teams:TeamsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -45,7 +45,7 @@
                                             </Grid.RowDefinitions>
 
                                             <BoxView CornerRadius="10,0,10,0" BackgroundColor="{DynamicResource PrimaryBlue}"/>
-                                            <iconize:IconImage Icon="mdi-pencil" IconSize="24" IconColor="{DynamicResource PrimaryTextColor}"/>
+                                            <iconize:IconImage Icon="mdi-pencil" IconSize="24" IconColor="White"/>
                                         </Grid>
                                     </SwipeItemView>
                                 </SwipeView.LeftItems>
@@ -60,7 +60,7 @@
                                             </Grid.RowDefinitions>
 
                                             <BoxView CornerRadius="0,10,0,10" BackgroundColor="{DynamicResource PrimaryRed}"/>
-                                            <iconize:IconImage Icon="mdi-trash-can-outline" IconSize="24" IconColor="{DynamicResource PrimaryTextColor}"/>
+                                            <iconize:IconImage Icon="mdi-trash-can-outline" IconSize="24" IconColor="White"/>
                                         </Grid>
                                     </SwipeItemView>
                                 </SwipeView.RightItems>
