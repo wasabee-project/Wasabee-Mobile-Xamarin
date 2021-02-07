@@ -35,10 +35,6 @@
                         <DataTemplate>
                             <SwipeView>
 
-                                <SwipeView.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
-                                </SwipeView.GestureRecognizers>
-
                                 <SwipeView.LeftItems>
                                     <SwipeItemView Command="{Binding ViewModel.EditTeamNameCommand, Source={x:Reference Page}}"
                                                    CommandParameter="{Binding .}"
@@ -75,6 +71,10 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
+                                        </Grid.GestureRecognizers>
 
                                         <iconize:IconImage Icon="mdi-crown" IconColor="{DynamicResource SecondaryTextColor}" IconSize="10" HorizontalOptions="Start"
                                                            IsVisible="{Binding IsOwner}"

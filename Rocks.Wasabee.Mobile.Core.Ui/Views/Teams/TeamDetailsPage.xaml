@@ -41,10 +41,6 @@
                         <DataTemplate>
                             <SwipeView>
 
-                                <SwipeView.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
-                                </SwipeView.GestureRecognizers>
-
                                 <SwipeView.RightItems>
                                     <SwipeItemView Command="{Binding ViewModel.RemoveAgentCommand, Source={x:Reference Page}}"
                                                    CommandParameter="{Binding .}"
@@ -71,6 +67,10 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
+                                        </Grid.GestureRecognizers>
 
                                         <ffimageloading:CachedImage Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
                                                                     WidthRequest="50" HeightRequest="50"
