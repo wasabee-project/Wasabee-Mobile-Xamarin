@@ -62,6 +62,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         {
             await base.Initialize();
 
+            // force PropertyChanged as UI not updated when done in Prepare()
+            await RaisePropertyChanged(() => IsOwner);
+
             if (string.IsNullOrWhiteSpace(_teamId))
                 return;
 
@@ -167,7 +170,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 else
                     _userDialogs.Toast("Agent not found or already in team");
             }
-
         }
 
         public IMvxCommand EditTeamNameCommand => new MvxCommand(EditTeamNameExecuted);
@@ -192,7 +194,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 else
                     _userDialogs.Toast("Rename failed");
             }
-
         }
 
         #endregion

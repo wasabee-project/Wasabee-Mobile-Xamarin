@@ -96,21 +96,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
             }
         }
 
-        private void AgentsList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            ViewModel.IsAddingAgent = false;
-
-            if (e.SelectedItem == null)
-                return;
-
-            if (e.SelectedItem is TeamAgentModel item)
-            {
-                ViewModel.ShowAgentCommand.Execute(item);
-            }
-
-            AgentsList.SelectedItem = null;
-        }
-
         private async void ScanQrCodeButton_OnClicked(object sender, EventArgs e)
         {
             ViewModel.IsAddingAgent = false;
@@ -135,6 +120,18 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
         private void PanelBackground_OnTapped(object sender, EventArgs e)
         {
             ViewModel.IsAddingAgent = false;
+        }
+
+        private async void TapGestureRecognizer_OnTapped(object sender, EventArgs e)
+        {
+            ViewModel.IsAddingAgent = false;
+
+            AgentsList.SelectedItem = null;
+
+            if (sender is BindableObject { BindingContext: TeamAgentModel agent })
+            {
+                await ViewModel.ShowAgentCommand.ExecuteAsync(agent);
+            }
         }
     }
 }
