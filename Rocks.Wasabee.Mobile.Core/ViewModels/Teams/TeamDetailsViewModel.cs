@@ -85,6 +85,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxCommand RefreshCommand => new MvxCommand(async () => await RefreshExecuted());
         private async Task RefreshExecuted()
         {
+            LoggingService.Trace("Executing TeamDetailsViewModel.RefreshCommand");
+
             if (IsRefreshing)
                 return;
 
@@ -110,6 +112,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxAsyncCommand<TeamAgentModel> ShowAgentCommand => new MvxAsyncCommand<TeamAgentModel>(ShowAgentExecuted);
         private async Task ShowAgentExecuted(TeamAgentModel agent)
         {
+            LoggingService.Trace("Executing TeamDetailsViewModel.ShowAgentCommand");
+
             IsAddingAgent = false;
 
             if (IsBusy)
@@ -123,9 +127,31 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             IsBusy = false;
         }
 
+        public IMvxAsyncCommand<TeamAgentModel> RemoveAgentCommand => new MvxAsyncCommand<TeamAgentModel>(RemoveAgentExecuted);
+        private async Task RemoveAgentExecuted(TeamAgentModel agent)
+        {
+            LoggingService.Trace("Executing TeamDetailsViewModel.RemoveAgentCommand");
+
+            IsAddingAgent = false;
+
+            if (IsBusy)
+                return;
+
+            if (await _userDialogs.ConfirmAsync($"Remove '{agent.Name}' from the team ?", string.Empty, "Yes", "Cancel"))
+            {
+                var result = await _wasabeeApiV1Service.Teams_RemoveAgentFromTeam(Team.Id, agent.Id);
+                if (result)
+                    RefreshCommand.Execute();
+                else
+                    _userDialogs.Toast("Error removing agent");
+            }
+        }
+
         public IMvxCommand<string> AddAgentFromQrCodeCommand => new MvxCommand<string>(async (qrCodeData) => await AddAgentFromQrCodeExecuted(qrCodeData));
         private async Task AddAgentFromQrCodeExecuted(string qrCodeData)
         {
+            LoggingService.Trace("Executing TeamDetailsViewModel.AddAgentFromQrCodeCommand");
+
             IsAddingAgent = false;
 
             if (string.IsNullOrEmpty(qrCodeData))
@@ -152,6 +178,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxCommand PromptAddUserAgentCommand => new MvxCommand(PromptAddUserAgentExecuted);
         private async void PromptAddUserAgentExecuted()
         {
+            LoggingService.Trace("Executing TeamDetailsViewModel.PromptAddUserAgentCommand");
+
             IsAddingAgent = false;
 
             var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
@@ -175,6 +203,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         public IMvxCommand EditTeamNameCommand => new MvxCommand(EditTeamNameExecuted);
         private async void EditTeamNameExecuted()
         {
+            LoggingService.Trace("Executing TeamDetailsViewModel.EditTeamNameCommand");
+
             var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
             {
                 InputType = InputType.Name,

@@ -46,14 +46,16 @@
                                 </SwipeView.GestureRecognizers>
 
                                 <SwipeView.RightItems>
-                                    <SwipeItemView IsVisible="{Binding ViewModel.IsOwner, Source={x:Reference Page}}">
+                                    <SwipeItemView Command="{Binding ViewModel.RemoveAgentCommand, Source={x:Reference Page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   IsVisible="{Binding ViewModel.IsOwner, Source={x:Reference Page}}">
                                         <Grid WidthRequest="60">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="*"/>
                                             </Grid.RowDefinitions>
 
                                             <BoxView CornerRadius="0,10,0,10" BackgroundColor="{DynamicResource PrimaryRed}"/>
-                                            <iconize:IconImage Icon="mdi-trash-can-outline" IconSize="24" IconColor="White"/>
+                                            <iconize:IconImage Icon="mdi-account-remove-outline" IconSize="24" IconColor="White"/>
                                         </Grid>
                                     </SwipeItemView>
                                 </SwipeView.RightItems>
