@@ -141,7 +141,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             LoggingService.Trace("Executing TeamsListViewModel.ShowTeamDetailCommand");
 
             await _navigationService.Navigate<TeamDetailsViewModel, TeamDetailsNavigationParameter>(
-                new TeamDetailsNavigationParameter(team.Id, team.IsOwner));
+                new TeamDetailsNavigationParameter(team.Id, team.Name, team.IsOwner));
         }
 
         public IMvxAsyncCommand<Team> EditTeamNameCommand => new MvxAsyncCommand<Team>(EditTeamNameExecuted);

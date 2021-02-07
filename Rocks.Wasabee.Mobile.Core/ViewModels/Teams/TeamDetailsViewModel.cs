@@ -16,11 +16,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
     public class TeamDetailsNavigationParameter
     {
         public string TeamId { get; }
+        public string TeamName { get; }
         public bool IsOwner { get; }
 
-        public TeamDetailsNavigationParameter(string teamId, bool isOwner)
+        public TeamDetailsNavigationParameter(string teamId, string teamName, bool isOwner)
         {
             TeamId = teamId;
+            TeamName = teamName;
             IsOwner = isOwner;
         }
     }
@@ -49,6 +51,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         {
             if (string.IsNullOrWhiteSpace(parameter.TeamId))
                 return;
+
+            Title = parameter.TeamName;
 
             _teamId = parameter.TeamId;
             IsOwner = parameter.IsOwner;
@@ -96,6 +100,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                     Team = localData;
             }
 
+            Title = Team.Name;
             IsRefreshing = false;
         }
 

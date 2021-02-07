@@ -125,7 +125,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
             IsBusy = true;
 
             await _navigationService.Navigate<TeamDetailsViewModel, TeamDetailsNavigationParameter>(
-                new TeamDetailsNavigationParameter(team.Id, team.IsOwner));
+                new TeamDetailsNavigationParameter(team.Id, team.Name, team.IsOwner));
 
             IsBusy = false;
         }
