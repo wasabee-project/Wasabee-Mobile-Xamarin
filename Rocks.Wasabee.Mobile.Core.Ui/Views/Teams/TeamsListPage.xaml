@@ -20,12 +20,12 @@
 
             <RefreshView IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
                          Command="{Binding RefreshCommand}"
-                         VerticalOptions="FillAndExpand">
+                         VerticalOptions="FillAndExpand"
+                         RefreshColor="{DynamicResource PrimaryGreenDark}">
 
                 <CollectionView x:Name="TeamsList"
                                 ItemsSource="{Binding TeamsCollection}"
-                                SelectionMode="Single"
-                                SelectionChanged="TeamsList_OnSelectionChanged">
+                                SelectionMode="None">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout VerticalItemSpacing="10"
                                          Span="1"
@@ -34,6 +34,10 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView>
+
+                                <SwipeView.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
+                                </SwipeView.GestureRecognizers>
 
                                 <SwipeView.LeftItems>
                                     <SwipeItemView Command="{Binding ViewModel.EditTeamNameCommand, Source={x:Reference Page}}"
