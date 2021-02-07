@@ -43,15 +43,18 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Get("/team/{teamId}")]
         Task<ApiResponse<Models.Teams.TeamModel>> Teams_GetTeam(string teamId);
 
-        [Post("/team/{teamId}/{key}")]
-        Task<ApiResponse<string>> Teams_AddAgentToTeam(string teamId, string key);
+        [Post("/team/{teamId}/{agentId}")]
+        Task<ApiResponse<string>> Teams_AddAgentToTeam(string teamId, string agentId);
 
-        [Delete("/team/{teamId}/{key}")]
-        Task<ApiResponse<string>> Teams_RemoveAgentFromTeam(string teamId, string key);
+        [Delete("/team/{teamId}/{agentId}")]
+        Task<ApiResponse<string>> Teams_RemoveAgentFromTeam(string teamId, string agentId);
 
         [Multipart]
         [Put("/team/{teamId}/rename")]
         Task<ApiResponse<string>> Teams_RenameTeam(string teamId, [AliasAs("teamname")] string name);
+
+        [Delete("/team/{teamId}")]
+        Task<ApiResponse<string>> Teams_DeleteTeam(string teamId);
 
         #endregion
 
@@ -148,21 +151,27 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             return result.IsSuccessStatusCode ? result.Content : null;
         }
 
-        public async Task<bool> Teams_AddAgentToTeam(string teamId, string key)
+        public async Task<bool> Teams_AddAgentToTeam(string teamId, string agentId)
         {
-            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_AddAgentToTeam(teamId, key), new CancellationToken()).ConfigureAwait(false);
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_AddAgentToTeam(teamId, agentId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
-        public async Task<bool> Teams_RemoveAgentFromTeam(string teamId, string key)
+        public async Task<bool> Teams_RemoveAgentFromTeam(string teamId, string agentId)
         {
-            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_RemoveAgentFromTeam(teamId, key), new CancellationToken()).ConfigureAwait(false);
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_RemoveAgentFromTeam(teamId, agentId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 
         public async Task<bool> Teams_RenameTeam(string teamId, string name)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_RenameTeam(teamId, name), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
+        }
+
+        public async Task<bool> Teams_DeleteTeam(string teamId)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_DeleteTeam(teamId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content.Contains("\"status\":\"ok\"");
         }
 

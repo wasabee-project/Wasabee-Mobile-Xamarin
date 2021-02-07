@@ -10,6 +10,7 @@ using Android.Views;
 using AndroidX.AppCompat.App;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
+using MvvmCross.Forms.Views;
 using MvvmCross.Plugin.Messenger;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
@@ -22,6 +23,8 @@ using Rocks.Wasabee.Mobile.Core.Ui.Themes;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 using Orientation = Rocks.Wasabee.Mobile.Core.Messages.Orientation;
@@ -160,9 +163,13 @@ namespace Rocks.Wasabee.Mobile.Droid
             {
                 await PopupNavigation.Instance.PopAsync();
             }
-            else if (Xamarin.Forms.Application.Current.MainPage.Navigation.ModalStack.Count > 0)
+            else if (App.Current.MainPage.Navigation.ModalStack.Count > 0)
             {
-                await Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync(true);
+                await App.Current.MainPage.Navigation.PopModalAsync(true);
+            }
+            else if (App.Current.MainPage is NavigationPage {CurrentPage: MvxMasterDetailPage {Detail: NavigationPage detailNavigationPage}} && detailNavigationPage.Pages.Count() > 1)
+            {
+                await detailNavigationPage.Navigation.PopAsync(true);
             }
             else
             {

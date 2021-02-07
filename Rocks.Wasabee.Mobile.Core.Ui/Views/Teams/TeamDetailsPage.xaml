@@ -9,7 +9,8 @@
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamDetailsPage"
-                       Title="{Binding Team.Name}"
+                       x:Name="Page"
+                       Title="{Binding Title}"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Resources>
@@ -19,61 +20,90 @@
 
     <ContentPage.Content>
         <RelativeLayout>
-            <ListView x:Name="AgentsList"
-                      RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
-                      RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
-                      HasUnevenRows="True"
-                      IsPullToRefreshEnabled="True"
-                      CachingStrategy="RecycleElement"
-                      ItemSelected="AgentsList_OnItemSelected"
-                      RefreshControlColor="{DynamicResource PrimaryGreenDark}"
-                      ItemsSource="{Binding Team.Agents}"
-                      RefreshCommand="{Binding RefreshCommand}"
-                      IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid Padding="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+            <RefreshView IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+                         Command="{Binding RefreshCommand}"
+                         VerticalOptions="FillAndExpand"
+                         RefreshColor="{DynamicResource PrimaryGreenDark}"
+                         Padding="10">
 
-                                <ffimageloading:CachedImage Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
-                                                            WidthRequest="50" HeightRequest="50"
-                                                            Margin="0,0,20,0"
-                                                            Source="{Binding Pic}" Aspect="AspectFit">
-                                    <ffimageloading:CachedImage.Transformations>
-                                        <fftransformations:RoundedTransformation Radius="500"/>
-                                    </ffimageloading:CachedImage.Transformations>
-                                </ffimageloading:CachedImage>
+                <CollectionView x:Name="AgentsList"
+                                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+                                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
+                                ItemsSource="{Binding Team.Agents}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout VerticalItemSpacing="10"
+                                         Span="1"
+                                         Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
 
-                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Name}" FontAttributes="Bold"/>
-                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding Squad}"/>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
 
-                                <StackLayout Orientation="Horizontal" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
-                                    <iconize:IconLabel Text="{Binding State, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
-                                                       TextColor="{Binding State, Converter={StaticResource BoolToColorConverter}}"
-                                                       BackgroundColor="Transparent"
-                                                       FontSize="30"
-                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                <SwipeView.RightItems>
+                                    <SwipeItemView Command="{Binding ViewModel.RemoveAgentCommand, Source={x:Reference Page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   IsVisible="{Binding ViewModel.IsOwner, Source={x:Reference Page}}">
+                                        <Grid WidthRequest="60">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
 
-                                    <iconize:IconLabel Text="{Binding ShareWD, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-shield-key|mdi-shield-key-outline}"
-                                                       TextColor="{Binding ShareWD, Converter={StaticResource BoolToColorConverter}}"
-                                                       BackgroundColor="Transparent"
-                                                       FontSize="30"
-                                                       HorizontalOptions="Center" VerticalOptions="Center" />
-                                </StackLayout>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                            <BoxView CornerRadius="0,10,0,10" BackgroundColor="{DynamicResource PrimaryRed}"/>
+                                            <iconize:IconImage Icon="mdi-account-remove-outline" IconSize="24" IconColor="White"/>
+                                        </Grid>
+                                    </SwipeItemView>
+                                </SwipeView.RightItems>
+
+                                <Frame Padding="10" Margin="0" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+                                    <Grid RowSpacing="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
+                                        </Grid.GestureRecognizers>
+
+                                        <ffimageloading:CachedImage Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
+                                                                    WidthRequest="50" HeightRequest="50"
+                                                                    Margin="0,0,20,0"
+                                                                    Source="{Binding Pic}" Aspect="AspectFit">
+                                            <ffimageloading:CachedImage.Transformations>
+                                                <fftransformations:RoundedTransformation Radius="500"/>
+                                            </ffimageloading:CachedImage.Transformations>
+                                        </ffimageloading:CachedImage>
+
+                                        <Label Grid.Column="1" Grid.Row="0" Text="{Binding Name}" FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                        <Label Grid.Column="1" Grid.Row="1" Text="{Binding Squad}" LineBreakMode="TailTruncation" MaxLines="1"/>
+
+                                        <StackLayout Orientation="Horizontal" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
+                                            <iconize:IconLabel Text="{Binding State, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
+                                                               TextColor="{Binding State, Converter={StaticResource BoolToColorConverter}}"
+                                                               BackgroundColor="Transparent"
+                                                               FontSize="30"
+                                                               HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                            <iconize:IconLabel Text="{Binding ShareWD, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-shield-key|mdi-shield-key-outline}"
+                                                               TextColor="{Binding ShareWD, Converter={StaticResource BoolToColorConverter}}"
+                                                               BackgroundColor="Transparent"
+                                                               FontSize="30"
+                                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                        </StackLayout>
+                                    </Grid>
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
 
             <Frame x:Name="PanelBackground" IsVisible="False" BackgroundColor="Transparent" BorderColor="Transparent" CornerRadius="0" Margin="0" HasShadow="False"
                    RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"

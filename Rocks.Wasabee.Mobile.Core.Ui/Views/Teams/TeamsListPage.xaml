@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="teams:TeamsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -16,49 +16,104 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <StackLayout>
-            <ListView
-                x:Name="TeamsList"
-                ItemsSource="{Binding TeamsCollection}"
-                HasUnevenRows="True"
-                IsPullToRefreshEnabled="True"
-                RefreshCommand="{Binding RefreshCommand}"
-                IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
-                RefreshControlColor="{DynamicResource PrimaryGreenDark}"
-                ItemSelected="TeamsList_OnItemSelected">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid Margin="10" ColumnSpacing="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+        <StackLayout Padding="10">
 
-                                <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center"/>
-                                
-                                <iconize:IconButton Grid.Column="1"
-                                                    Text="{Binding IsEnabled, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
-                                                    TextColor="{Binding IsEnabled, Converter={StaticResource BoolToColorConverter}}"
-                                                    BackgroundColor="{DynamicResource BackgroundColorLevel1}"
-                                                    Command="{Binding ViewModel.SwitchTeamStateCommand, Source={x:Reference Page}}"
-                                                    CommandParameter="{Binding .}"
-                                                    FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
-                                                    BorderColor="{DynamicResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
+            <RefreshView IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+                         Command="{Binding RefreshCommand}"
+                         VerticalOptions="FillAndExpand"
+                         RefreshColor="{DynamicResource PrimaryGreenDark}">
 
-                                <iconize:IconButton Grid.Column="2"
-                                                    Text="mdi-chevron-right"
-                                                    Command="{Binding ViewModel.ShowTeamDetailCommand, Source={x:Reference Page}}"
-                                                    CommandParameter="{Binding .}"
-                                                    BackgroundColor="Transparent"
-                                                    FontSize="30"
-                                                    WidthRequest="50" HeightRequest="50" Padding="0" />
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                <CollectionView x:Name="TeamsList"
+                                ItemsSource="{Binding TeamsCollection}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout VerticalItemSpacing="10"
+                                         Span="1"
+                                         Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+
+                                <SwipeView.LeftItems>
+                                    <SwipeItemView Command="{Binding ViewModel.EditTeamNameCommand, Source={x:Reference Page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   IsVisible="{Binding IsOwner}">
+                                        <Grid WidthRequest="60">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <BoxView CornerRadius="10,0,10,0" BackgroundColor="{DynamicResource PrimaryBlue}"/>
+                                            <iconize:IconImage Icon="mdi-pencil" IconSize="24" IconColor="White"/>
+                                        </Grid>
+                                    </SwipeItemView>
+                                </SwipeView.LeftItems>
+
+                                <SwipeView.RightItems>
+                                    <SwipeItemView Command="{Binding ViewModel.DeleteTeamCommand, Source={x:Reference Page}}"
+                                                   CommandParameter="{Binding .}"
+                                                   IsVisible="{Binding IsOwner}">
+                                        <Grid WidthRequest="60">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <BoxView CornerRadius="0,10,0,10" BackgroundColor="{DynamicResource PrimaryRed}"/>
+                                            <iconize:IconImage Icon="mdi-trash-can-outline" IconSize="24" IconColor="White"/>
+                                        </Grid>
+                                    </SwipeItemView>
+                                </SwipeView.RightItems>
+
+                                <Frame Padding="0" Margin="0" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"/>
+                                        </Grid.GestureRecognizers>
+
+                                        <iconize:IconImage Icon="mdi-crown" IconColor="{DynamicResource SecondaryTextColor}" IconSize="10" HorizontalOptions="Start"
+                                                           IsVisible="{Binding IsOwner}"
+                                                           Margin="4,15,0,0"
+                                                           Rotation="-25"/>
+
+                                        <Grid Grid.RowSpan="2" Margin="12,5,10,5" ColumnSpacing="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center"/>
+                                            
+                                            <iconize:IconButton Grid.Column="1"
+                                                                Text="{Binding IsEnabled, Converter={StaticResource BoolToTextConverter}, ConverterParameter=mdi-map-marker|mdi-map-marker-off}"
+                                                                TextColor="{Binding IsEnabled, Converter={StaticResource BoolToColorConverter}}"
+                                                                BackgroundColor="{DynamicResource BackgroundColorLevel1}"
+                                                                Command="{Binding ViewModel.SwitchTeamStateCommand, Source={x:Reference Page}}"
+                                                                CommandParameter="{Binding .}"
+                                                                FontSize="20" WidthRequest="40" HeightRequest="40" CornerRadius="20" BorderWidth="1"
+                                                                BorderColor="{DynamicResource PrimaryGray}" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                            <iconize:IconButton Grid.Column="2"
+                                                                Text="mdi-chevron-right"
+                                                                Command="{Binding ViewModel.ShowTeamDetailCommand, Source={x:Reference Page}}"
+                                                                CommandParameter="{Binding .}"
+                                                                BackgroundColor="Transparent"
+                                                                FontSize="30"
+                                                                WidthRequest="50" HeightRequest="50" Padding="0" />
+                                        </Grid>
+                                    </Grid>
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </StackLayout>
     </ContentPage.Content>
 </views:BaseContentPage>

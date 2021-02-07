@@ -141,10 +141,71 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             LoggingService.Trace("Executing TeamsListViewModel.ShowTeamDetailCommand");
 
             await _navigationService.Navigate<TeamDetailsViewModel, TeamDetailsNavigationParameter>(
-                new TeamDetailsNavigationParameter(team.Id, team.IsOwner));
+                new TeamDetailsNavigationParameter(team.Id, team.Name, team.IsOwner));
+        }
+
+        public IMvxAsyncCommand<Team> EditTeamNameCommand => new MvxAsyncCommand<Team>(EditTeamNameExecuted);
+        private async Task EditTeamNameExecuted(Team team)
+        {
+            var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
+            {
+                InputType = InputType.Name,
+                OkText = "Ok",
+                CancelText = "Cancel",
+                Title = "Change team name",
+            });
+
+            if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
+            {
+                var result = await _wasabeeApiV1Service.Teams_RenameTeam(team.Id, promptResult.Text);
+                if (result)
+                {
+                    RefreshCommand.Execute();
+                }
+                else
+                    _userDialogs.Toast("Rename failed");
+            }
+
+        }
+
+        public IMvxAsyncCommand<Team> DeleteTeamCommand => new MvxAsyncCommand<Team>(DeleteTeamExecuted);
+        private async Task DeleteTeamExecuted(Team team)
+        {
+            LoggingService.Trace("Executing TeamsListViewModel.DeleteTeamCommand");
+
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
+            if (team.IsOwner is false)
+                return;
+
+            if (await _userDialogs.ConfirmAsync($"You're going to delete the team '{team.Name}'. Are you sure ?", "Danger zone", "Yes", "Cancel"))
+            {
+                if (await _userDialogs.ConfirmAsync("Are you REALLY sure ?", string.Empty, "Yes!", "Cancel"))
+                {
+                    if (await _userDialogs.ConfirmAsync("Please confirm one last time before deletion", string.Empty, "Delete", "Cancel"))
+                    {
+                        var result = await _wasabeeApiV1Service.Teams_DeleteTeam(team.Id);
+                        _userDialogs.Toast(result ? $"Successfully deleted team '{team.Id}'" : "An error occured, team not deleted");
+
+                        if (result)
+                        {
+                            await _teamsDatabase.DeleteTeam(team.Id);
+
+                            TeamsCollection.Remove(team);
+                            await RaisePropertyChanged(() => TeamsCollection); 
+                        }
+                    }
+                }
+            }
+
+            IsBusy = false;
         }
 
         #endregion
+
     }
 
     public class Team : MvxNotifyPropertyChanged

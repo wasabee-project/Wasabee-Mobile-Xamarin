@@ -108,7 +108,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         public async Task<List<TeamModel>> GetTeamsForAgent(string agentId)
         {
-            LoggingService.Trace("Querying TeamsDatabase.GetTeams");
+            LoggingService.Trace("Querying TeamsDatabase.GetTeamsForAgent");
 
             var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -125,9 +125,30 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
-                LoggingService.Error(e, "Error Querying TeamsDatabase.GetTeam");
+                LoggingService.Error(e, "Error Querying TeamsDatabase.GetTeamsForAgent");
 
                 return new List<TeamModel>();
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+        }
+
+        public async Task<int> DeleteTeam(string teamId)
+        {
+            LoggingService.Trace("Querying TeamsDatabase.DeleteTeam");
+
+            var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+            try {
+                return databaseConnection.GetConnection().Delete<TeamDatabaseModel>(teamId);
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying TeamsDatabase.DeleteTeam");
+
+                return -1;
             }
             finally
             {

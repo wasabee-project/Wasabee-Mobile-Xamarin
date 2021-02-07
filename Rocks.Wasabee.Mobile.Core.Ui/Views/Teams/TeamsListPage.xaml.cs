@@ -1,5 +1,6 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,11 +15,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
             InitializeComponent();
         }
 
-        private async void TeamsList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void TapGestureRecognizer_OnTapped(object sender, EventArgs e)
         {
             TeamsList.SelectedItem = null;
 
-            if (e.SelectedItem != null && e.SelectedItem is Team team)
+            if (sender is BindableObject { BindingContext: Team team })
             {
                 await ViewModel.ShowTeamDetailCommand.ExecuteAsync(team);
             }
