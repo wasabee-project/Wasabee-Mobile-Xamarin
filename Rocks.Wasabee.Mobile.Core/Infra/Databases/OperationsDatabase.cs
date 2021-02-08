@@ -27,6 +27,35 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return await databaseConnection.DeleteAllAsync<OperationDatabaseModel>().ConfigureAwait(false);
         }
 
+        public async Task<int> DeleteAllExceptOwnedBy(string ownerId)
+        {
+            LoggingService.Trace("Querying OperationsDatabase.DeleteAllExceptOwnedBy");
+
+            var result = 0;
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+            try
+            {
+                var operations = await this.GetOperationModels();
+
+                foreach (var op in operations.Where(x => x.Creator.Equals(ownerId) is false))
+                {
+                    result += databaseConnection.GetConnection().Delete<OperationDatabaseModel>(op.Id);
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.DeleteAllExceptOwnedBy");
+                return -1;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+
+            return result;
+        }
+
         public async Task<OperationModel?> GetOperationModel(string operationId)
         {
             LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
