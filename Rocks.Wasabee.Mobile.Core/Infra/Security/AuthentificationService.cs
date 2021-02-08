@@ -1,7 +1,10 @@
-﻿using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+﻿using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
 
@@ -42,6 +45,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _preferences.Remove(UserSettingsKeys.SavedServerChoice);
 
             await ClearUserTokenAndCookie(_loginProvider);
+            await ClearDatabases();
         }
 
         public async Task<GoogleToken?> RefreshTokenAsync(string refreshToken)
@@ -57,6 +61,22 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             await loginProvider.RemoveTokenFromSecureStore();
             loginProvider.ClearCookie();
+        }
+
+        private async Task ClearDatabases()
+        {
+            _loggingService.Trace("Executing AuthentificationService.ClearDatabases");
+
+            try
+            {
+                await Mvx.IoCProvider.Resolve<UsersDatabase>().DeleteAllData();
+                await Mvx.IoCProvider.Resolve<TeamsDatabase>().DeleteAllData();
+                await Mvx.IoCProvider.Resolve<OperationsDatabase>().DeleteAllData();
+            }
+            catch (Exception e)
+            {
+                _loggingService.Error(e, "Error Executing AuthentificationService.ClearDatabases");
+            }
         }
     }
 }

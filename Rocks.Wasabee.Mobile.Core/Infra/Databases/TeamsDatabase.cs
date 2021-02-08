@@ -164,7 +164,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string Name { get; set; }
 
-            [ManyToMany(typeof(TeamAgent), CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
+            [ManyToMany(typeof(TeamAgent), CascadeOperations = CascadeOperation.All)]
             public List<TeamAgentsDatabase.TeamAgentDatabaseModel> Agents { get; set; }
 
             public DateTime DownloadedAt { get; set; }
