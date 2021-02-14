@@ -57,7 +57,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly TeamAgentsDatabase _teamAgentsDatabase;
 
         private bool _working = false;
-        private GoogleToken? _googleToken;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
 
         private SplashScreenNavigationParameter? _parameter;
@@ -199,10 +198,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 return;
             }
 
-            _googleToken = await _authentificationService.GoogleLoginAsync();
-            if (_googleToken != null)
+            var token = await _authentificationService.GoogleLoginAsync();
+            if (token != null)
             {
-                await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, JsonConvert.SerializeObject(_googleToken));
+                await SaveGoogleToken(token);
 
                 LoadingStepLabel = "Google login success...";
                 await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
@@ -317,7 +316,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task ConnectWasabee()
         {
-            if (_googleToken == null)
+            var token = await GetGoogleToken();
+                
+            if (token is null)
             {
                 ErrorMessage = "Internal error";
                 IsAuthInError = true;
@@ -329,7 +330,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsLoading = true;
             LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
 
-            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(_googleToken);
+            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(token);
             if (wasabeeUserModel != null)
             {
                 if (RememberServerChoice)
@@ -409,32 +410,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     // force relogin using saved googleToken if exist. If google token is expired, it will refresh it
                     try
                     {
-                        var rawGoogleToken = await _secureStorage.GetAsync(SecureStorageConstants.GoogleToken);
-                        if (!string.IsNullOrWhiteSpace(rawGoogleToken))
-                        {
-                            var googleToken = JsonConvert.DeserializeObject<GoogleToken>(rawGoogleToken);
-                            if (googleToken.CreatedAt.AddSeconds(double.Parse(googleToken.ExpiresIn)) <= DateTime.Now)
-                            {
-                                var refreshedToken = await _authentificationService.RefreshTokenAsync(googleToken.RefreshToken);
-                                if (refreshedToken != null)
-                                {
-                                    _googleToken = new GoogleToken()
-                                    {
-                                        AccessToken = refreshedToken.AccessToken,
-                                        ExpiresIn = refreshedToken.ExpiresIn,
-                                        Idtoken = refreshedToken.Idtoken,
-                                        Scope = refreshedToken.Scope,
-                                        TokenType = refreshedToken.Scope,
-                                        RefreshToken = googleToken.RefreshToken
-                                    };
+                        var token = await GetGoogleToken();
+                        await SaveGoogleToken(token);
 
-                                    await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, JsonConvert.SerializeObject(_googleToken));
-                                    await ConnectWasabee();
-                                }
-                            }
-                            else
-                                await ConnectWasabee();
-                        }
+                        await ConnectWasabee();
                     }
                     catch (Exception e)
                     {
@@ -571,6 +550,40 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
             }
+        }
+
+        private async Task<GoogleToken?> GetGoogleToken()
+        {
+            var rawGoogleToken = await _secureStorage.GetAsync(SecureStorageConstants.GoogleToken);
+            if (!string.IsNullOrWhiteSpace(rawGoogleToken))
+            {
+                var googleToken = JsonConvert.DeserializeObject<GoogleToken>(rawGoogleToken);
+                if (googleToken.CreatedAt.AddSeconds(double.Parse(googleToken.ExpiresIn)) <= DateTime.Now)
+                {
+                    var refreshedToken = await _authentificationService.RefreshTokenAsync(googleToken.RefreshToken);
+                    if (refreshedToken != null)
+                    {
+                        googleToken = new GoogleToken()
+                        {
+                            AccessToken = refreshedToken.AccessToken,
+                            ExpiresIn = refreshedToken.ExpiresIn,
+                            Idtoken = refreshedToken.Idtoken,
+                            Scope = refreshedToken.Scope,
+                            TokenType = refreshedToken.Scope,
+                            RefreshToken = googleToken.RefreshToken
+                        };
+                    }
+                }
+
+                return googleToken;
+            }
+
+            return null;
+        }
+
+        private async Task SaveGoogleToken(GoogleToken? token)
+        {
+            await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, token is not null ? JsonConvert.SerializeObject(token) : string.Empty);
         }
 
         #endregion
