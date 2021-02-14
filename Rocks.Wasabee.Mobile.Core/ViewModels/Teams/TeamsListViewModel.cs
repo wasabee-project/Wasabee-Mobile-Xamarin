@@ -10,6 +10,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -21,12 +22,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private readonly IMvxMessenger _messenger;
         private readonly UsersDatabase _usersDatabase;
         private readonly TeamsDatabase _teamsDatabase;
+        private readonly OperationsDatabase _operationsDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
         private readonly MvxSubscriptionToken _token;
 
         public TeamsListViewModel(IUserDialogs userDialogs, IUserSettingsService userSettingsService, IMvxNavigationService navigationService, IMvxMessenger messenger,
-            UsersDatabase usersDatabase, TeamsDatabase teamsDatabase, WasabeeApiV1Service wasabeeApiV1Service)
+            UsersDatabase usersDatabase, TeamsDatabase teamsDatabase, OperationsDatabase operationsDatabase, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _userDialogs = userDialogs;
             _userSettingsService = userSettingsService;
@@ -34,6 +36,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             _messenger = messenger;
             _usersDatabase = usersDatabase;
             _teamsDatabase = teamsDatabase;
+            _operationsDatabase = operationsDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
 
             _token = _messenger.Subscribe<MessageFor<TeamsListViewModel>>(msg => RefreshCommand.Execute());
@@ -65,6 +68,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             if (IsRefreshing)
                 return;
 
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                _userDialogs.Toast("No Internet, please verify your network access");
+                return;
+            }
+
             try
             {
                 IsRefreshing = true;
@@ -73,13 +82,31 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 if (userModel != null)
                 {
                     await _usersDatabase.SaveUserModel(userModel);
-                    TeamsCollection = new MvxObservableCollection<Team>(userModel.Teams.Select(x =>
-                        new Team(x.Name, x.Id)
+                    if (userModel.Teams != null && userModel.Teams.Any())
+                    {
+                        TeamsCollection = new MvxObservableCollection<Team>(userModel.Teams.Select(x =>
+                            new Team(x.Name, x.Id)
+                            {
+                                IsEnabled = x.State.Equals("On"),
+                                IsOwner = x.Owner.Equals(_userSettingsService.GetLoggedUserGoogleId())
+                            }
+                        ));
+                    }
+                    else
+                    {
+                        TeamsCollection.Clear();
+                        await RaisePropertyChanged(() => TeamsCollection);
+
+                        await _operationsDatabase.DeleteAllExceptOwnedBy(_userSettingsService.GetLoggedUserGoogleId());
+
+                        var operationsCount = await _operationsDatabase.CountLocalOperations();
+                        if (operationsCount == 0)
                         {
-                            IsEnabled = x.State.Equals("On"),
-                            IsOwner = x.Owner.Equals(_userSettingsService.GetLoggedUserGoogleId())
+                            // Leaves app
+                            await _navigationService.Navigate<SplashScreenViewModel, SplashScreenNavigationParameter>(
+                                new SplashScreenNavigationParameter(doDataRefreshOnly: true));
                         }
-                    ));
+                    }
                 }
             }
             catch (Exception e)
