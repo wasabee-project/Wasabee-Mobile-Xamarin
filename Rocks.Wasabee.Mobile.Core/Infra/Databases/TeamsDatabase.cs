@@ -141,7 +141,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
-            try {
+            try
+            {
                 return databaseConnection.GetConnection().Delete<TeamDatabaseModel>(teamId);
             }
             catch (Exception e)
@@ -149,6 +150,30 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 LoggingService.Error(e, "Error Querying TeamsDatabase.DeleteTeam");
 
                 return -1;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+        }
+
+        public async Task<int> CountTeams()
+        {
+            LoggingService.Trace("Querying TeamsDatabase.CountTeams");
+
+            var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+
+            try
+            {
+                var result = databaseConnection.GetConnection().Table<TeamDatabaseModel>().Count();
+                return result;
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying TeamsDatabase.DeleteTeam");
+
+                return 0;
             }
             finally
             {
@@ -164,7 +189,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string Name { get; set; }
 
-            [ManyToMany(typeof(TeamAgent), CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
+            [ManyToMany(typeof(TeamAgent), CascadeOperations = CascadeOperation.All)]
             public List<TeamAgentsDatabase.TeamAgentDatabaseModel> Agents { get; set; }
 
             public DateTime DownloadedAt { get; set; }

@@ -27,6 +27,35 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             return await databaseConnection.DeleteAllAsync<OperationDatabaseModel>().ConfigureAwait(false);
         }
 
+        public async Task<int> DeleteAllExceptOwnedBy(string ownerId)
+        {
+            LoggingService.Trace("Querying OperationsDatabase.DeleteAllExceptOwnedBy");
+
+            var result = 0;
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+            try
+            {
+                var operations = await this.GetOperationModels();
+
+                foreach (var op in operations.Where(x => x.Creator.Equals(ownerId) is false))
+                {
+                    result += databaseConnection.GetConnection().Delete<OperationDatabaseModel>(op.Id);
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.DeleteAllExceptOwnedBy");
+                return -1;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+
+            return result;
+        }
+
         public async Task<OperationModel?> GetOperationModel(string operationId)
         {
             LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
@@ -138,6 +167,51 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
         }
 
+        public async Task<int> CountLocalOperations()
+        {
+            LoggingService.Trace("Querying OperationsDatabase.CountLocalOperations");
+
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+
+            try
+            {
+                var count = databaseConnection.GetConnection().Table<OperationDatabaseModel>().Count();
+                return count;
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.CountLocalOperations");
+
+                return 0;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+        }
+        
+        public async Task<int> DeleteLocalOperation(string operationId)
+        {
+            LoggingService.Trace("Querying OperationsDatabase.DeleteLocalOperation");
+
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+
+            try
+            {
+                return databaseConnection.GetConnection().Delete<OperationDatabaseModel>(operationId);
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.DeleteLocalOperation");
+                return 0;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+        }
 #nullable disable
         internal class OperationDatabaseModel
         {

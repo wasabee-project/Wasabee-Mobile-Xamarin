@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [MvxContentPagePresentation(Animated = false)]
+    [MvxContentPagePresentation(Animated = false, NoHistory = true)]
     public partial class SplashScreenPage : BaseContentPage<SplashScreenViewModel>
     {
         public SplashScreenPage()
