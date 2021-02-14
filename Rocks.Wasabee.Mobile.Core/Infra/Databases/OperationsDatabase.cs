@@ -167,6 +167,51 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
         }
 
+        public async Task<int> CountLocalOperations()
+        {
+            LoggingService.Trace("Querying OperationsDatabase.CountLocalOperations");
+
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+
+            try
+            {
+                var count = databaseConnection.GetConnection().Table<OperationDatabaseModel>().Count();
+                return count;
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.CountLocalOperations");
+
+                return 0;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+        }
+        
+        public async Task<int> DeleteLocalOperation(string operationId)
+        {
+            LoggingService.Trace("Querying OperationsDatabase.DeleteLocalOperation");
+
+            var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+
+            try
+            {
+                return databaseConnection.GetConnection().Delete<OperationDatabaseModel>(operationId);
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying OperationsDatabase.DeleteLocalOperation");
+                return 0;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+        }
 #nullable disable
         internal class OperationDatabaseModel
         {

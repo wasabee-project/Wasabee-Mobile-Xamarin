@@ -10,6 +10,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -67,6 +68,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             if (IsRefreshing)
                 return;
 
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                _userDialogs.Toast("No Internet, please verify your network access");
+                return;
+            }
+
             try
             {
                 IsRefreshing = true;
@@ -92,8 +99,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
                         await _operationsDatabase.DeleteAllExceptOwnedBy(_userSettingsService.GetLoggedUserGoogleId());
 
-                        var hasOperations = await _operationsDatabase.GetOperationModels();
-                        if (hasOperations.Any() is false)
+                        var operationsCount = await _operationsDatabase.CountLocalOperations();
+                        if (operationsCount == 0)
                         {
                             // Leaves app
                             await _navigationService.Navigate<SplashScreenViewModel, SplashScreenNavigationParameter>(
