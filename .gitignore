@@ -366,3 +366,5 @@ google-services.json
 
 # Generated files
 lp/
+
+.DS_Store

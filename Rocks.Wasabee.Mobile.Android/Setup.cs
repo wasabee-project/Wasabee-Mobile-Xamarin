@@ -22,13 +22,13 @@ namespace Rocks.Wasabee.Mobile.Droid
         {
             get
             {
-                if (!Xamarin.Forms.Forms.IsInitialized)
+                if (!Forms.IsInitialized)
                 {
                     var activity = Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>()?.Activity ?? ApplicationContext;
                     var asmb = activity.GetType().Assembly;
                     
-                    Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
-                    Xamarin.Forms.Forms.Init(activity, null, ExecutableAssembly ?? asmb);
+                    Forms.SetFlags("SwipeView_Experimental");
+                    Forms.Init(activity, null, ExecutableAssembly ?? asmb);
                 }
                 if (_formsApplication == null)
                 {

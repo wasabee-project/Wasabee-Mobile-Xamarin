@@ -7,7 +7,7 @@
         public ProdAppSettings()
         {
             AndroidAppCenterKey = "bde7e1b2-e40a-4bcf-9398-8b4cdba9634f";
-            IosAppCenterKey = string.Empty;
+            IosAppCenterKey = "bdf1ed19-1f4c-45f6-b0ce-6f5048065422";
         }
     }
 }

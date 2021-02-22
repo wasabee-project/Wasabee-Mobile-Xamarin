@@ -36,9 +36,11 @@ namespace Rocks.Wasabee.Mobile.Core
             var versionTracking = Mvx.IoCProvider.Resolve<IVersionTracking>();
             
             var lastVersion = preferences.Get(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
-            if (Version.Parse(versionTracking.CurrentVersion) > Version.Parse(lastVersion))
+            if (Version.TryParse(versionTracking.CurrentVersion, out var currentVersion) && 
+                Version.TryParse(lastVersion, out var lastVersionParsed) && currentVersion > lastVersionParsed)
             {
                 // App has updated
+                preferences.Set(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
                 preferences.Set(UserSettingsKeys.DevModeActivated, false);
             }
 
@@ -47,9 +49,9 @@ namespace Rocks.Wasabee.Mobile.Core
 #endif
 
             AppCenter.Start(
-                $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};"
-                // TODO + "ios={Your iOS App secret here}"
-                , typeof(Crashes), typeof(Analytics));
+                $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};" + 
+                $"ios={Mvx.IoCProvider.Resolve<IAppSettings>().IosAppCenterKey}",
+                typeof(Crashes), typeof(Analytics));
 
             var analyticsEnabled =
                 Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.AnalyticsEnabled, false);
