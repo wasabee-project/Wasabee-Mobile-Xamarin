@@ -1,4 +1,6 @@
-﻿using MvvmCross;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
@@ -13,6 +15,46 @@ using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core
 {
+    public class FakeSecureStorage : ISecureStorage
+    {
+        private static readonly Dictionary<string, string> Storage = new Dictionary<string, string>();
+
+        public Task<string> GetAsync(string key)
+        {
+            if (Storage.ContainsKey(key))
+                return Task.FromResult(Storage[key]);
+
+            return Task.FromResult(string.Empty);
+        }
+
+        public Task SetAsync(string key, string value)
+        {
+            if (Storage.ContainsKey(key))
+                Storage.Remove(key);
+
+            Storage.Add(key, value);
+
+            return Task.CompletedTask;
+        }
+
+        public bool Remove(string key)
+        {
+            if (Storage.ContainsKey(key))
+            {
+                Storage.Remove(key);
+                return true;
+            }
+
+            return false;
+        }
+
+        public void RemoveAll()
+        {
+            Storage.Clear();
+        }
+
+    }
+
     public static class Bootstrapper
     {
         public static void SetupCrossPlugins()
@@ -21,7 +63,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<IConnectivity>(() => new ConnectivityImplementation());
             Mvx.IoCProvider.RegisterSingleton<IPermissions>(() => new PermissionsImplementation());
             Mvx.IoCProvider.RegisterSingleton<IVersionTracking>(() => new VersionTrackingImplementation());
-            Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
+            Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new FakeSecureStorage());
             Mvx.IoCProvider.RegisterSingleton<IFileSystem>(() => new FileSystemImplementation());
             Mvx.IoCProvider.RegisterSingleton<IGeolocation>(() => new GeolocationImplementation());
 
