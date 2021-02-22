@@ -1,4 +1,5 @@
 ﻿using System;
+using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 {
@@ -10,8 +11,14 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
                                        $"redirect_uri={RedirectUrl}&client_id={ClientId}";
         public string GoogleTokenUrl { get; } = "https://oauth2.googleapis.com/token";
 
-        public string ClientId { get; set; } = "269534461245-ltpks4ofjh9epvida0ct965829i4cfsi.apps.googleusercontent.com";
-        public string BaseRedirectUrl { get; set; } = "com.googleusercontent.apps.269534461245-ltpks4ofjh9epvida0ct965829i4cfsi";
+        public string ClientId { get; set; } = Device.RuntimePlatform == Device.Android ? 
+            "269534461245-ltpks4ofjh9epvida0ct965829i4cfsi.apps.googleusercontent.com" :
+            "269534461245-kp961iiqgl661nsd20p5i74n6grhstq8.apps.googleusercontent.com";
+
+        public string BaseRedirectUrl { get; set; } = Device.RuntimePlatform == Device.Android ? 
+            "com.googleusercontent.apps.269534461245-ltpks4ofjh9epvida0ct965829i4cfsi" :
+            "com.googleusercontent.apps.269534461245-kp961iiqgl661nsd20p5i74n6grhstq8";
+
         public string RedirectUrl => $"{BaseRedirectUrl}:wasabee";
 
         private WasabeeServer _server = WasabeeServer.Undefined;
