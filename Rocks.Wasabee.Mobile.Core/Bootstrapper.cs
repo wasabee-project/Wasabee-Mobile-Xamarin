@@ -63,7 +63,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<IConnectivity>(() => new ConnectivityImplementation());
             Mvx.IoCProvider.RegisterSingleton<IPermissions>(() => new PermissionsImplementation());
             Mvx.IoCProvider.RegisterSingleton<IVersionTracking>(() => new VersionTrackingImplementation());
-            Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new FakeSecureStorage());
+            Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
             Mvx.IoCProvider.RegisterSingleton<IFileSystem>(() => new FileSystemImplementation());
             Mvx.IoCProvider.RegisterSingleton<IGeolocation>(() => new GeolocationImplementation());
 
