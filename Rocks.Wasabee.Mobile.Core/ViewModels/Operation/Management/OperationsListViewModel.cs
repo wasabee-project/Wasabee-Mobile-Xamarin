@@ -79,7 +79,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
             if (Connectivity.NetworkAccess == NetworkAccess.Internet)
             {
                 var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
-                if (userModel?.Ops is not null && userModel.Ops.Any())
+                if (userModel?.Ops != null && userModel.Ops.Any())
                 {
                     if (localOperations.Count != userModel.Ops.Count)
                     {
@@ -98,7 +98,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
                             continue;
                         
                         var remoteOp = await _wasabeeApiV1Service.Operations_GetOperation(op.Id);
-                        if (remoteOp is not null)
+                        if (remoteOp != null)
                         {
                             await _operationsDatabase.SaveOperationModel(remoteOp);
                             hasUpdatedLocalOps = true;
