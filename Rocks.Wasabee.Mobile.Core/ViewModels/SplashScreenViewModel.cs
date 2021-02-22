@@ -583,7 +583,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task SaveGoogleToken(GoogleToken? token)
         {
-            await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, token is not null ? JsonConvert.SerializeObject(token) : string.Empty);
+            await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, token != null ? JsonConvert.SerializeObject(token) : string.Empty);
         }
 
         #endregion
