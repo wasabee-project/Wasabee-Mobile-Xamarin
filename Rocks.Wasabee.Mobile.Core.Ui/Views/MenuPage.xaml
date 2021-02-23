@@ -52,7 +52,8 @@
                     </BindableLayout.ItemTemplate>
                 </StackLayout>
 
-                <StackLayout Orientation="Horizontal" Margin="10" HorizontalOptions="Center">
+                <StackLayout Orientation="Horizontal" Margin="10" HorizontalOptions="Center"
+                             IsVisible="{OnPlatform Android=True, iOS=False}">
                     <Label Text="Location sharing :" VerticalTextAlignment="Center" Style="{DynamicResource WasabeeStyleInfoDivers}"/>
                     <Switch OnColor="{DynamicResource PrimaryGreenDark}" Scale="1.5" Margin="10, 0"
                             ThumbColor="{Binding IsLiveLocationSharingEnabled, Converter={StaticResource BoolToColorConverter}}"
@@ -70,8 +71,8 @@
                     <Button Text="Change" Clicked="ChangeOp_Clicked" Margin="10"
                             Style="{DynamicResource WasabeeStyleMenuButton}"/>
                 </StackLayout>
+
                 <StackLayout IsVisible="{Binding HasLocalOps, Converter={StaticResource BoolNegateConverter}}">
-                    
                     <Label Text="You don't have any local OP's stored" HorizontalOptions="Center"
                            Style="{DynamicResource WasabeeStyleAlertText}"/>
                     

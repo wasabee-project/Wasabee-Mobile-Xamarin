@@ -15,15 +15,19 @@ variables:
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
 
 steps:
+
+# Install signing cert and provisioning profile
 - task: InstallAppleCertificate@2
   inputs:
     certSecureFile: '$(P12File)'
     certPwd: '$(P12Password)'
     keychain: 'temp'
+    deleteCert: true
 - task: InstallAppleProvisioningProfile@1
   inputs:
     provisioningProfileLocation: 'secureFiles'
     provProfileSecureFile: '$(ProvisioningProfile)'
+    removeProfile: true
 
 # To manually select a Xamarin SDK version on the Microsoft-hosted macOS agent,
 # configure this task with the *Mono* version that is associated with the
@@ -33,12 +37,23 @@ steps:
   displayName: 'Select the Xamarin SDK version'
   enabled: false
 
+# NuGet Tool install
 - task: NuGetToolInstaller@1
 
+# NuGet packages restore
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '**/Build.iOS.sln'
 
+# Bump iOS version
+- task: ios-bundle-version@1
+  inputs:
+    sourcePath: '$(build.SourcesDirectory)/Rocks.Wasabee.Mobile.iOS/Info.plist'
+    versionCodeOption: 'timestamp'
+    versionName: '$(Build.BuildNumber)'
+    printFile: true
+
+# Build Xamarin.iOS app
 - task: XamariniOS@2
   inputs:
     solutionFile: '**/Build.iOS.sln'
@@ -48,6 +63,7 @@ steps:
     signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
     signingProvisioningProfileID: '$(APPLE_PROV_PROFILE_UUID)'
 
+# Copy .ipa to Artifacts
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(build.SourcesDirectory)'
@@ -57,6 +73,7 @@ steps:
     OverWrite: true
     flattenFolders: true
 
+# Publish artifact
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
