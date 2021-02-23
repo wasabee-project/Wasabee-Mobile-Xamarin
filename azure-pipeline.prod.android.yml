@@ -16,33 +16,39 @@ variables:
 
 steps:
 
+# Download and place Google Services JSON file to solution folder
 - task: DownloadSecureFile@1
   name: GoogleServicesJson 
   inputs:
     secureFile: 'google-services.json'
-    
 - script: |
     echo Copying google-services.json to project folder
     cp $(GoogleServicesJson.secureFilePath) $(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android
     echo End of copy task
 
+# ManifestUpdater powershell
+# changes PackageName, Version name, App label and icon
 - task: PowerShell@2
   inputs:
     filePath: '_Builds/AndroidManifestUpdater.ps1'
     arguments: '-filePath "$(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android/Properties/AndroidManifest.xml" -package "$(PackageName)" -versionName "$(Build.BuildNumber)" -label "$(AppLabel)" -icon "$(IconName)"'
 
+# NuGet Tool install
 - task: NuGetToolInstaller@1
 
+# NuGet packages restore
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '**/Rocks.Wasabee.Mobile.sln'
 
+# Build Xamarin.Android app
 - task: XamarinAndroid@1
   inputs:
     projectFile: '**/Rocks.Wasabee.Mobile.Android.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
 
+# Sign Android .apk
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/bin/*.apk'
@@ -52,6 +58,7 @@ steps:
     apksignerKeyPassword: '$(KeystorePassword)'
     apksignerArguments: '--out $(Build.ArtifactStagingDirectory)/signed.apk'
 
+# Publish artifact
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
