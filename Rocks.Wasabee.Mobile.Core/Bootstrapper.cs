@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MvvmCross;
 using MvvmCross.IoC;
@@ -12,6 +12,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
+using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core
 {
@@ -63,7 +64,12 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<IConnectivity>(() => new ConnectivityImplementation());
             Mvx.IoCProvider.RegisterSingleton<IPermissions>(() => new PermissionsImplementation());
             Mvx.IoCProvider.RegisterSingleton<IVersionTracking>(() => new VersionTrackingImplementation());
-            Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
+            
+            if (Device.RuntimePlatform == Device.iOS)
+                Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new FakeSecureStorage());
+            else
+                Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
+            
             Mvx.IoCProvider.RegisterSingleton<IFileSystem>(() => new FileSystemImplementation());
             Mvx.IoCProvider.RegisterSingleton<IGeolocation>(() => new GeolocationImplementation());
 
