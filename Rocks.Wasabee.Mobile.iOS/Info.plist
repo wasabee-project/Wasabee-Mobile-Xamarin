@@ -44,7 +44,6 @@
 	<string>We don't access your Calendar events, but we use a SDK that can help us implement features for this. This sentance is required by Apple.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>iconize-material.ttf</string>
 		<string>iconize-materialdesignicons.ttf</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
