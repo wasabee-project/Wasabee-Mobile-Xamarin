@@ -4,6 +4,9 @@ using MvvmCross.Forms.Platforms.Ios.Core;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using System;
+using System.Threading.Tasks;
+using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using UIKit;
 using UserNotifications;
 
@@ -21,6 +24,9 @@ namespace Rocks.Wasabee.Mobile.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+
             Rg.Plugins.Popup.Popup.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             
@@ -61,6 +67,21 @@ namespace Rocks.Wasabee.Mobile.iOS
             UIApplication.SharedApplication.RegisterForRemoteNotifications();*/
  
             return base.FinishedLaunching(app, options);
+        }
+
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception exception)
+            {
+                Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(exception, "[CurrentDomain] Fatal error occured");
+                throw exception;
+            }
+        }
+
+        private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(e.Exception, "[TaskScheduler] Fatal error occured");
+            throw e.Exception;
         }
 
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
