@@ -31,18 +31,19 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
-	<string>Rocks.Wasabee.Mobile.Touch</string>
+	<string>rocks.wasabee.mobile.touch</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Can we use your location at all times?</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Can we use your location when your application is being used?</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Can we use your location at all times?</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Can we use your camera ?</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>We don't access your Calendar events, but we use a SDK that can help us implement features for this. This sentance is required by Apple.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>iconize-material.ttf</string>
 		<string>iconize-materialdesignicons.ttf</string>
 	</array>
 	<key>UIMainStoryboardFile</key>

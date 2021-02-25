@@ -29,6 +29,17 @@ steps:
     provProfileSecureFile: '$(ProvisioningProfile)'
     removeProfile: true
 
+# Download and place MapsKey.cs file in Solution root folder, referenced in native project properties
+# This file contains the GoogleMaps API key informations
+- task: DownloadSecureFile@1
+  name: MapsKeyFile 
+  inputs:
+    secureFile: 'MapsKey.cs'
+- script: |
+    echo Copying MapsKey.cs to project folder
+    cp $(MapsKeyFile.secureFilePath) $(Build.SourcesDirectory)
+    echo End of copy task
+
 # To manually select a Xamarin SDK version on the Microsoft-hosted macOS agent,
 # configure this task with the *Mono* version that is associated with the
 # Xamarin SDK version that you need, and set the "enabled" property to true.

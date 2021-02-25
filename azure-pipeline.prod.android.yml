@@ -26,6 +26,17 @@ steps:
     cp $(GoogleServicesJson.secureFilePath) $(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android
     echo End of copy task
 
+# Download and place MapsKey.cs file in Solution root folder, referenced in native project properties
+# This file contains the GoogleMaps API key informations
+- task: DownloadSecureFile@1
+  name: MapsKeyFile 
+  inputs:
+    secureFile: 'MapsKey.cs'
+- script: |
+    echo Copying MapsKey.cs to project folder
+    cp $(MapsKeyFile.secureFilePath) $(Build.SourcesDirectory)
+    echo End of copy task
+
 # ManifestUpdater powershell
 # changes PackageName, Version name, App label and icon
 - task: PowerShell@2

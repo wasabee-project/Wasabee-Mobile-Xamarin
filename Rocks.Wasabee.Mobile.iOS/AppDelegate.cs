@@ -26,7 +26,7 @@ namespace Rocks.Wasabee.Mobile.iOS
             
 
             //var platformConfig = new PlatformConfig() { ImageFactory = new WasabeeImageFactory() };
-            Xamarin.FormsGoogleMaps.Init("AIzaSyDu0L3OHriWOEEx_Mby9HRk0r5DmgK8n-8");
+            Xamarin.FormsGoogleMaps.Init(MapsKey.Value);
             
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageSourceHandler();

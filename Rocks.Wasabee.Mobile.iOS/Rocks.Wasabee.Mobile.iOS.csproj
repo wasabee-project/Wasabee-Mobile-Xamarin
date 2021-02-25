@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -81,6 +81,9 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\MapsKey.cs">
+      <Link>Properties\MapsKey.cs</Link>
+    </Compile>
     <Compile Include="Infra\Firebase\FirebaseService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
@@ -165,12 +168,6 @@
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>2.0.0.7</Version>
-    </PackageReference>
-    <PackageReference Include="Xam.Plugin.Iconize">
-      <Version>3.5.0.129</Version>
-    </PackageReference>
-    <PackageReference Include="Xam.Plugin.Iconize.MaterialDesignIcons">
-      <Version>3.5.0.129</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Build.Download">
       <Version>0.10.0</Version>
