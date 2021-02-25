@@ -84,6 +84,18 @@ steps:
     OverWrite: true
     flattenFolders: true
 
+# Copy dSYM files to Artifacts
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(build.SourcesDirectory)'
+    Contents: |
+              **/*.dSYM
+              **/*.dSYM/**
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/dSYMs'
+    CleanTargetFolder: false
+    OverWrite: true
+    flattenFolders: false
+
 # Publish artifact
 - task: PublishBuildArtifacts@1
   inputs:
