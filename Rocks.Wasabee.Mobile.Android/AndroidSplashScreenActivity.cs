@@ -1,4 +1,4 @@
-﻿using Android.App;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
@@ -172,12 +172,16 @@ namespace Rocks.Wasabee.Mobile.Droid
             if ((availability.Equals(UpdateAvailability.UpdateAvailable) || availability.Equals(UpdateAvailability.DeveloperTriggeredUpdateInProgress)) && info.IsUpdateTypeAllowed(AppUpdateType.Immediate))
             {
                 // Start an update
+                Mvx.IoCProvider.Resolve<ILoggingService>().Info("[In-App Update] STARTING UPDATE");
+                Toast.MakeText(_splashActivity, "Update available, started !", ToastLength.Short)?.Show();
                 _appUpdateManager.StartUpdateFlowForResult(info, AppUpdateType.Immediate, _splashActivity, _updateRequest);
             }
 
             if (availability.Equals(UpdateAvailability.UpdateNotAvailable) || availability.Equals(UpdateAvailability.Unknown))
             {
                 // No update available, continue app start
+                Mvx.IoCProvider.Resolve<ILoggingService>().Info("[In-App Update] No update available, continue app start");
+                Toast.MakeText(_splashActivity, "No update available", ToastLength.Short)?.Show();
                 _splashActivity.StartActivity(_intent);
                 _splashActivity.Finish();
             }
