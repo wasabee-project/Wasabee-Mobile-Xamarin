@@ -21,7 +21,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>14.3</string>
+	<string>10.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>Wasabee</string>
 	<key>CFBundleIdentifier</key>
