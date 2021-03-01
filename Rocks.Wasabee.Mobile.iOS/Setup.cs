@@ -1,12 +1,14 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
+using MvvmCross.IoC;
 using MvvmCross.Platforms.Ios.Presenters;
 using MvvmCross.ViewModels;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
@@ -39,6 +41,8 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         protected override IMvxApplication CreateApp()
         {
+            SetupAppSettings();
+
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
 
@@ -46,6 +50,18 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
 
             return new CoreApp();
+        }
+
+        private static void SetupAppSettings()
+        {
+#if DEBUG
+            Mvx.IoCProvider.RegisterSingleton<IAppSettings>(new DevAppSettings());
+#else
+            Mvx.IoCProvider.RegisterSingleton<IAppSettings>(new ProdAppSettings());
+#endif
+            Mvx.IoCProvider.Resolve<IAppSettings>().ClientId = OAuthClient.Id;
+            Mvx.IoCProvider.Resolve<IAppSettings>().BaseRedirectUrl = OAuthClient.Redirect;
+            Mvx.IoCProvider.Resolve<IAppSettings>().AppCenterKey = AppCenterKeys.Value;
         }
 
         protected override void InitializeFirstChance()

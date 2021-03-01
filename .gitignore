@@ -363,10 +363,11 @@ FodyWeavers.xsd
 
 # Google - Firebase auth file
 google-services.json
+GoogleService-Info.plist
 
 # Generated files
 lp/
 
+# Custom ignored files and folders
 .DS_Store
-
-MapsKey.cs
+ApiKeys.cs

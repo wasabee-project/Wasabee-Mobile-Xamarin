@@ -194,8 +194,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\MapsKey.cs">
-      <Link>Properties\MapsKey.cs</Link>
+    <Compile Include="..\ApiKeys.cs">
+      <Link>Properties\ApiKeys.cs</Link>
     </Compile>
     <Compile Include="AndroidMainActivity.cs" />
     <Compile Include="AndroidSplashScreenActivity.cs" />

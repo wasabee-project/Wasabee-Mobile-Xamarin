@@ -9,11 +9,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.iOS", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocks.Wasabee.Mobile.Core", "Rocks.Wasabee.Mobile.Core\Rocks.Wasabee.Mobile.Core.csproj", "{75F10E66-DB35-4B37-B806-43AA8BEA1E19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Mobile.Core.Ui", "Rocks.Wasabee.Mobile.Core.Ui\Rocks.Wasabee.Mobile.Core.Ui.csproj", "{E2CCE709-1C5E-4066-921B-AACA003CF693}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocks.Wasabee.Mobile.Core.Ui", "Rocks.Wasabee.Mobile.Core.Ui\Rocks.Wasabee.Mobile.Core.Ui.csproj", "{E2CCE709-1C5E-4066-921B-AACA003CF693}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1_Applications", "1_Applications", "{A0C5FE97-08DD-4C95-BD04-7C1CCB5C3633}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2_Core", "2_Core", "{8F49D342-6961-4B96-A7A7-31433A8AA80B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Builds", "_Builds", "{627EF7ED-34DC-44FC-A9C3-C1F9D2CBAD4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{B004C9B5-B935-4601-9788-30BB8FFEC718}"
+	ProjectSection(SolutionItems) = preProject
+		_Builds\AndroidManifestUpdater.ps1 = _Builds\AndroidManifestUpdater.ps1
+		azure-pipeline.prod.android.yml = azure-pipeline.prod.android.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iOS", "iOS", "{ED35CF01-3FF3-4083-902E-51000970DC3B}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.prod.ios.yml = azure-pipelines.prod.ios.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +113,8 @@ Global
 		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA} = {A0C5FE97-08DD-4C95-BD04-7C1CCB5C3633}
 		{75F10E66-DB35-4B37-B806-43AA8BEA1E19} = {8F49D342-6961-4B96-A7A7-31433A8AA80B}
 		{E2CCE709-1C5E-4066-921B-AACA003CF693} = {8F49D342-6961-4B96-A7A7-31433A8AA80B}
+		{B004C9B5-B935-4601-9788-30BB8FFEC718} = {627EF7ED-34DC-44FC-A9C3-C1F9D2CBAD4D}
+		{ED35CF01-3FF3-4083-902E-51000970DC3B} = {627EF7ED-34DC-44FC-A9C3-C1F9D2CBAD4D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61C77F91-C306-472D-A022-F91696CC55EA}

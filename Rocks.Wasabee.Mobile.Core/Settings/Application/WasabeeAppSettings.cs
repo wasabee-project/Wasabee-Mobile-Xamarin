@@ -10,15 +10,8 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
         public string GoogleAuthUrl => "https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&" +
                                        $"redirect_uri={RedirectUrl}&client_id={ClientId}";
         public string GoogleTokenUrl { get; } = "https://oauth2.googleapis.com/token";
-
-        public string ClientId { get; set; } = Device.RuntimePlatform == Device.Android ? 
-            "269534461245-ltpks4ofjh9epvida0ct965829i4cfsi.apps.googleusercontent.com" :
-            "269534461245-kp961iiqgl661nsd20p5i74n6grhstq8.apps.googleusercontent.com";
-
-        public string BaseRedirectUrl { get; set; } = Device.RuntimePlatform == Device.Android ? 
-            "com.googleusercontent.apps.269534461245-ltpks4ofjh9epvida0ct965829i4cfsi" :
-            "com.googleusercontent.apps.269534461245-kp961iiqgl661nsd20p5i74n6grhstq8";
-
+        public string ClientId { get; set; } = string.Empty;
+        public string BaseRedirectUrl { get; set; } = string.Empty;
         public string RedirectUrl => $"{BaseRedirectUrl}:wasabee";
 
         private WasabeeServer _server = WasabeeServer.Undefined;
@@ -37,8 +30,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
         public string WasabeeBaseUrl { get; private set; } = string.Empty;
         public string WasabeeTokenUrl { get; private set; } = string.Empty;
 
-        public string AndroidAppCenterKey { get; set; } = string.Empty;
-        public string IosAppCenterKey { get; set; } = string.Empty;
+        public string AppCenterKey { get; set; } = string.Empty;
 
         private void UpdateWasabeeUrls()
         {

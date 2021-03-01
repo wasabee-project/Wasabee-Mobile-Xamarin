@@ -95,15 +95,6 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.Resolve<IPreferences>().Set(ApplicationSettingsConstants.AppEnvironnement, environnement);
         }
 
-        public static void SetupAppSettings()
-        {
-#if DEBUG
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAppSettings, DevAppSettings>();
-#else
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAppSettings, ProdAppSettings>();
-#endif
-        }
-
         public static void SetupDatabases()
         {
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new UsersDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
