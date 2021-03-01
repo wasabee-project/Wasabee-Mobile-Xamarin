@@ -285,6 +285,201 @@
       <SubType>Designer</SubType>
     </BundleResource>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\wasabee_player_marker.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_capture_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_capture_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_capture_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_capture_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_decay_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_decay_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_decay_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_decay_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_destroy_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_destroy_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_destroy_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_destroy_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_exclude_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_exclude_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_exclude_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_exclude_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_farm_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_farm_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_farm_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_farm_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_goto_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_goto_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_goto_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_goto_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_key_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_key_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_key_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_key_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_link_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_link_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_link_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_link_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_other_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_other_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_other_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_other_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_recharge_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_recharge_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_recharge_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_recharge_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_virus_acknowledge.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_virus_assigned.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_virus_done.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\wasabee_markers_virus_pending.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_black.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_blue.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_fuschia.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_green.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_lime.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_magenta.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_orange.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_purple.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_red.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_tan.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_teal.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_yellow.svg" />
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties TriggeredFromHotReload="False" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" />
