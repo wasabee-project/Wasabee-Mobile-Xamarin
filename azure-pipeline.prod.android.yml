@@ -69,6 +69,6 @@ steps:
 # Publish artifact
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(outputDirectory)\*.aab'
+    PathtoPublish: '$(outputDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
