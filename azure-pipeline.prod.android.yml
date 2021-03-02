@@ -37,6 +37,12 @@ steps:
     cp $(ApiKeysFile.secureFilePath) $(Build.SourcesDirectory)
     echo End of copy task
 
+# Download signing Keystore file
+- task: DownloadSecureFile@1
+  name: Keystore 
+  inputs:
+    secureFile: 'WasabeeAndroid.Keystore'
+
 # ManifestUpdater powershell
 # changes PackageName, Version name, App label and icon
 - task: PowerShell@2
@@ -52,26 +58,17 @@ steps:
   inputs:
     restoreSolution: '**/Rocks.Wasabee.Mobile.sln'
 
-# Build Xamarin.Android app
+# Build Xamarin.Android app bundle
 - task: XamarinAndroid@1
   inputs:
     projectFile: '**/Rocks.Wasabee.Mobile.Android.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-
-# Sign Android .apk
-- task: AndroidSigning@3
-  inputs:
-    apkFiles: '**/bin/*.apk'
-    apksignerKeystoreFile: 'WasabeeAndroid.Keystore'
-    apksignerKeystorePassword: '$(KeystorePassword)'
-    apksignerKeystoreAlias: '$(KeystoreAlias)'
-    apksignerKeyPassword: '$(KeystorePassword)'
-    apksignerArguments: '--out $(Build.ArtifactStagingDirectory)/signed.apk'
+    msbuildArguments: '-p:AndroidPackageFormat=aab -t:SignAndroidPackage -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=$(Keystore.secureFilePath) -p:AndroidSigningStorePass=$(KeystorePassword) -p:AndroidSigningKeyAlias=$(KeystoreAlias) -p:AndroidSigningKeyPass=$(KeystorePassword)'
 
 # Publish artifact
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(outputDirectory)\*.aab*'
     ArtifactName: 'drop'
     publishLocation: 'Container'
