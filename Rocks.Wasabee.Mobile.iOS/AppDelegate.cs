@@ -9,6 +9,7 @@ using MvvmCross;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using UIKit;
 using UserNotifications;
+using Xamarin.Forms.GoogleMaps.iOS;
 
 namespace Rocks.Wasabee.Mobile.iOS
 {
@@ -31,8 +32,8 @@ namespace Rocks.Wasabee.Mobile.iOS
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             
 
-            //var platformConfig = new PlatformConfig() { ImageFactory = new WasabeeImageFactory() };
-            Xamarin.FormsGoogleMaps.Init(MapsKey.Value);
+            var platformConfig = new PlatformConfig() { ImageFactory = new WasabeeImageFactory() };
+            Xamarin.FormsGoogleMaps.Init(MapsKey.Value, platformConfig);
             
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageSourceHandler();
