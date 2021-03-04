@@ -40,6 +40,16 @@ steps:
     cp $(ApiKeysFile.secureFilePath) $(Build.SourcesDirectory)
     echo End of copy task
 
+# Download and place GoogleService-Info.plist file in iOS project folder
+- task: DownloadSecureFile@1
+  name: GoogleServiceInfoFile 
+  inputs:
+    secureFile: 'GoogleService-Info.plist'
+- script: |
+    echo Copying GoogleService-Info.plist to project folder
+    cp $(GoogleServiceInfoFile.secureFilePath) $(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.iOS
+    echo End of copy task
+
 # To manually select a Xamarin SDK version on the Microsoft-hosted macOS agent,
 # configure this task with the *Mono* version that is associated with the
 # Xamarin SDK version that you need, and set the "enabled" property to true.
