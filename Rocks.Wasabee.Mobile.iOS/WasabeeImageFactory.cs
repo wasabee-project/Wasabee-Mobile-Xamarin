@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using Foundation;
 using UIKit;
 using Xamarin;
@@ -9,148 +11,86 @@ namespace Rocks.Wasabee.Mobile.iOS
 {
     public class WasabeeImageFactory : IImageFactory
     {
+        private static readonly Dictionary<string, UIImage> ImagesCache = new Dictionary<string, UIImage>();
+
         public UIImage ToUIImage(BitmapDescriptor descriptor)
         {
             if (descriptor.Id.Equals("wasabee_player_marker"))
             {
-                return CreateMarker("wasabee_player_marker.svg");
+                return CreateMarker("markers/player.png");
             }
-
-            string fileName;
+            
             if (descriptor.Id.Contains('|'))
             {
+                var fileName = "markers/";
+
                 var descriptors = descriptor.Id.Split('|');
-                fileName = "markers." + descriptors[0] switch
+                fileName += descriptors[0] switch
                 {
-                    "DestroyPortalAlert" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_destroy_pending",
-                        "acknowledged" => "wasabee_markers_destroy_acknowledge",
-                        "completed" => "wasabee_markers_destroy_done",
-                        "assigned" => "wasabee_markers_destroy_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "UseVirusPortalAlert" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_virus_pending",
-                        "acknowledged" => "wasabee_markers_virus_acknowledge",
-                        "completed" => "wasabee_markers_virus_done",
-                        "assigned" => "wasabee_markers_virus_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "CapturePortalMarker" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_capture_pending",
-                        "acknowledged" => "wasabee_markers_capture_acknowledge",
-                        "completed" => "wasabee_markers_capture_done",
-                        "assigned" => "wasabee_markers_capture_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "FarmPortalMarker" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_farm_pending",
-                        "acknowledged" => "wasabee_markers_farm_acknowledge",
-                        "completed" => "wasabee_markers_farm_done",
-                        "assigned" => "wasabee_markers_farm_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "LetDecayPortalAlert" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_decay_pending",
-                        "acknowledged" => "wasabee_markers_decay_acknowledge",
-                        "completed" => "wasabee_markers_decay_done",
-                        "assigned" => "wasabee_markers_decay_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "MeetAgentPortalMarker" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_meetagent_pending",
-                        "acknowledged" => "wasabee_markers_meetagent_acknowledge",
-                        "completed" => "wasabee_markers_meetagent_done",
-                        "assigned" => "wasabee_markers_meetagent_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "OtherPortalAlert" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_other_pending",
-                        "acknowledged" => "wasabee_markers_other_acknowledge",
-                        "completed" => "wasabee_markers_other_done",
-                        "assigned" => "wasabee_markers_other_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "RechargePortalAlert" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_recharge_pending",
-                        "acknowledged" => "wasabee_markers_recharge_acknowledge",
-                        "completed" => "wasabee_markers_recharge_done",
-                        "assigned" => "wasabee_markers_recharge_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "UpgradePortalAlert" => descriptors[1] switch
-                    {
-                        "pending" => "wasabee_markers_upgrade_pending",
-                        "acknowledged" => "wasabee_markers_upgrade_acknowledge",
-                        "completed" => "wasabee_markers_upgrade_done",
-                        "assigned" => "wasabee_markers_upgrade_assigned",
-                        _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                    },
-                    "CreateLinkAlert" =>
-                        descriptors[1] switch
-                        {
-                            "pending" => "wasabee_markers_link_pending",
-                            "acknowledged" => "wasabee_markers_link_acknowledge",
-                            "completed" => "wasabee_markers_link_done",
-                            "assigned" => "wasabee_markers_link_assigned",
-                            _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                        },
-                    "ExcludeMarker" =>
-                        descriptors[1] switch
-                        {
-                            "pending" => "wasabee_markers_exclude_pending",
-                            "acknowledged" => "wasabee_markers_exclude_acknowledge",
-                            "completed" => "wasabee_markers_exclude_done",
-                            "assigned" => "wasabee_markers_exclude_assigned",
-                            _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                        },
-                    "GetKeyPortalMarker" =>
-                        descriptors[1] switch
-                        {
-                            "pending" => "wasabee_markers_key_pending",
-                            "acknowledged" => "wasabee_markers_key_acknowledge",
-                            "completed" => "wasabee_markers_key_done",
-                            "assigned" => "wasabee_markers_key_assigned",
-                            _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                        },
-                    "GotoPortalMarker" =>
-                        descriptors[1] switch
-                        {
-                            "pending" => "wasabee_markers_goto_pending",
-                            "acknowledged" => "wasabee_markers_goto_acknowledge",
-                            "completed" => "wasabee_markers_goto_done",
-                            "assigned" => "wasabee_markers_goto_assigned",
-                            _ => throw new ArgumentOutOfRangeException(descriptors[1])
-                        },
+                    "DestroyPortalAlert" => "destroy",
+                    "UseVirusPortalAlert" => "virus",
+                    "CapturePortalMarker" => "capture",
+                    "FarmPortalMarker" => "farm",
+                    "LetDecayPortalAlert" => "decay",
+                    "MeetAgentPortalMarker" => "meetagent",
+                    "OtherPortalAlert" => "other",
+                    "RechargePortalAlert" => "recharge",
+                    "UpgradePortalAlert" => "upgrade",
+                    "CreateLinkAlert" => "link",
+                    "ExcludeMarker" => "exclude",
+                    "GetKeyPortalMarker" => "key",
+                    "GotoPortalMarker" => "goto",
                     _ => throw new ArgumentOutOfRangeException(descriptors[0])
-                } + ".svg";
+                } + $"/{descriptors[1]}.png";
 
                 return CreateMarker(fileName);
             }
-            else
-            {
-                fileName = descriptor.Id;
-                return CreatePin($"pins.{fileName}.svg");
-            }
+
+            return CreatePin($"pins/{descriptor.Id}.png");
         }
         
-        private static UIImage CreatePin(string resourcePath) => CreateUiImageFromSvgStream(resourcePath, 60, 120);
-        private static UIImage CreateMarker(string resourcePath) => CreateUiImageFromSvgStream(resourcePath, 70, 120);
-
-        private static UIImage CreateUiImageFromSvgStream(string resourcePath, int width, int height)
+        private static UIImage CreatePin(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 30, 60);
+        private static UIImage CreateMarker(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 35, 60);
+        private static UIImage CreateImageFromBundleName(string bundleFilePath, int width, int height)
         {
-            if (string.IsNullOrWhiteSpace(resourcePath))
+            if (string.IsNullOrWhiteSpace(bundleFilePath))
                 return Google.Maps.Marker.MarkerImage(UIColor.Red);
 
-            return UIImage.FromBundle(resourcePath);
+            if (ImagesCache.ContainsKey(bundleFilePath))
+                return ImagesCache[bundleFilePath];
+
+            var image = ResizeImage(UIImage.FromBundle(bundleFilePath), width, height);
+            if (image is null)
+                return Google.Maps.Marker.MarkerImage(UIColor.Red);
+
+            ImagesCache.Add(bundleFilePath, image);
+
+            return image;
+        }
+
+        // resize the image to be contained within a maximum width and height, keeping aspect ratio
+        private static UIImage ResizeImage(UIImage sourceImage, float maxWidth, float maxHeight)
+        {
+            if (sourceImage is null)
+                return null;
+
+            var sourceSize = sourceImage.Size;
+            var maxResizeFactor = Math.Max(maxWidth / sourceSize.Width, maxHeight / sourceSize.Height);
+
+            if (maxResizeFactor > 1)
+                return sourceImage;
+
+            var width = (float) (maxResizeFactor * sourceSize.Width);
+            var height = (float) (maxResizeFactor * sourceSize.Height);
+
+            UIGraphics.BeginImageContext(new SizeF(width, height));
+
+            sourceImage.Draw(new RectangleF(0, 0, width, height));
+            var resultImage = UIGraphics.GetImageFromCurrentImageContext();
+
+            UIGraphics.EndImageContext();
+
+            return resultImage;
         }
     }
 }

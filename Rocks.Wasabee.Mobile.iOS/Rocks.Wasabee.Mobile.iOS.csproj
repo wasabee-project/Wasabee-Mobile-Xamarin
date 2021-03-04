@@ -286,199 +286,199 @@
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee_player_marker.svg" />
+    <BundleResource Include="Resources\markers\virus\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_capture_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\virus\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_capture_assigned.svg" />
+    <BundleResource Include="Resources\markers\virus\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_capture_done.svg" />
+    <BundleResource Include="Resources\markers\virus\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_capture_pending.svg" />
+    <BundleResource Include="Resources\markers\upgrade\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_decay_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\upgrade\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_decay_assigned.svg" />
+    <BundleResource Include="Resources\markers\upgrade\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_decay_done.svg" />
+    <BundleResource Include="Resources\markers\upgrade\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_decay_pending.svg" />
+    <BundleResource Include="Resources\markers\recharge\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_destroy_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\recharge\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_destroy_assigned.svg" />
+    <BundleResource Include="Resources\markers\recharge\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_destroy_done.svg" />
+    <BundleResource Include="Resources\markers\recharge\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_destroy_pending.svg" />
+    <BundleResource Include="Resources\markers\other\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_exclude_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\other\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_exclude_assigned.svg" />
+    <BundleResource Include="Resources\markers\other\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_exclude_done.svg" />
+    <BundleResource Include="Resources\markers\other\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_exclude_pending.svg" />
+    <BundleResource Include="Resources\markers\meetagent\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_farm_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\meetagent\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_farm_assigned.svg" />
+    <BundleResource Include="Resources\markers\meetagent\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_farm_done.svg" />
+    <BundleResource Include="Resources\markers\meetagent\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_farm_pending.svg" />
+    <BundleResource Include="Resources\markers\link\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_goto_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\link\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_goto_assigned.svg" />
+    <BundleResource Include="Resources\markers\link\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_goto_done.svg" />
+    <BundleResource Include="Resources\markers\link\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_goto_pending.svg" />
+    <BundleResource Include="Resources\markers\key\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_key_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\key\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_key_assigned.svg" />
+    <BundleResource Include="Resources\markers\key\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_key_done.svg" />
+    <BundleResource Include="Resources\markers\key\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_key_pending.svg" />
+    <BundleResource Include="Resources\markers\goto\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_link_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\goto\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_link_assigned.svg" />
+    <BundleResource Include="Resources\markers\goto\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_link_done.svg" />
+    <BundleResource Include="Resources\markers\goto\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_link_pending.svg" />
+    <BundleResource Include="Resources\markers\farm\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\farm\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_assigned.svg" />
+    <BundleResource Include="Resources\markers\farm\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_done.svg" />
+    <BundleResource Include="Resources\markers\farm\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_meetagent_pending.svg" />
+    <BundleResource Include="Resources\markers\exclude\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_other_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\exclude\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_other_assigned.svg" />
+    <BundleResource Include="Resources\markers\exclude\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_other_done.svg" />
+    <BundleResource Include="Resources\markers\exclude\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_other_pending.svg" />
+    <BundleResource Include="Resources\markers\destroy\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_recharge_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\destroy\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_recharge_assigned.svg" />
+    <BundleResource Include="Resources\markers\destroy\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_recharge_done.svg" />
+    <BundleResource Include="Resources\markers\destroy\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_recharge_pending.svg" />
+    <BundleResource Include="Resources\markers\decay\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\decay\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_assigned.svg" />
+    <BundleResource Include="Resources\markers\decay\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_done.svg" />
+    <BundleResource Include="Resources\markers\decay\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_upgrade_pending.svg" />
+    <BundleResource Include="Resources\markers\capture\pending.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_virus_acknowledge.svg" />
+    <BundleResource Include="Resources\markers\capture\completed.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_virus_assigned.svg" />
+    <BundleResource Include="Resources\markers\capture\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_virus_done.svg" />
+    <BundleResource Include="Resources\markers\capture\acknowledge.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\markers\wasabee_markers_virus_pending.svg" />
+    <BundleResource Include="Resources\markers\player.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_black.svg" />
+    <BundleResource Include="Resources\pins\pin_black.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_blue.svg" />
+    <BundleResource Include="Resources\pins\pin_blue.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_fuschia.svg" />
+    <BundleResource Include="Resources\pins\pin_fuschia.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_green.svg" />
+    <BundleResource Include="Resources\pins\pin_green.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_lime.svg" />
+    <BundleResource Include="Resources\pins\pin_lime.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_magenta.svg" />
+    <BundleResource Include="Resources\pins\pin_magenta.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_orange.svg" />
+    <BundleResource Include="Resources\pins\pin_orange.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_purple.svg" />
+    <BundleResource Include="Resources\pins\pin_purple.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_red.svg" />
+    <BundleResource Include="Resources\pins\pin_red.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_tan.svg" />
+    <BundleResource Include="Resources\pins\pin_tan.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_teal.svg" />
+    <BundleResource Include="Resources\pins\pin_teal.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\pins\pin_yellow.svg" />
+    <BundleResource Include="Resources\pins\pin_yellow.png" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
