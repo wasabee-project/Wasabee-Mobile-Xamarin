@@ -31,7 +31,6 @@ namespace Rocks.Wasabee.Mobile.iOS
             Rg.Plugins.Popup.Popup.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             
-
             var platformConfig = new PlatformConfig() { ImageFactory = new WasabeeImageFactory() };
             Xamarin.FormsGoogleMaps.Init(MapsKey.Value, platformConfig);
             

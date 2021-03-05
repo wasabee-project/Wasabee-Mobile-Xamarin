@@ -92,6 +92,7 @@
     <Compile Include="Infra\Firebase\FirebaseService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Renderers\PageRenderer.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="WasabeeImageFactory.cs" />
     <None Include="Entitlements.plist" />
@@ -479,6 +480,15 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\pins\pin_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu%403x.png" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
