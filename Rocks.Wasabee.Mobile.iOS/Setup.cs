@@ -1,7 +1,6 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
-using MvvmCross.IoC;
 using MvvmCross.Platforms.Ios.Presenters;
 using MvvmCross.ViewModels;
 using Rg.Plugins.Popup.Contracts;
@@ -12,6 +11,9 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
+using UIKit;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.iOS;
 
 namespace Rocks.Wasabee.Mobile.iOS
 {
@@ -22,10 +24,12 @@ namespace Rocks.Wasabee.Mobile.iOS
         {
             get
             {
-                if (!Xamarin.Forms.Forms.IsInitialized)
+                if (!Forms.IsInitialized)
                 {
-                    Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
-                    Xamarin.Forms.Forms.Init();
+                    Forms.SetFlags("SwipeView_Experimental");
+                    Forms.Init();
+
+                    UINavigationBar.Appearance.TintColor = Color.FromHex("#3BA345").ToUIColor(); // Green
                 }
                 if (_formsApplication == null)
                 {

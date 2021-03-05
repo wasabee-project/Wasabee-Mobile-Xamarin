@@ -59,9 +59,5 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
-	<key>UIUserInterfaceStyle</key>
-	<string>light</string>
 </dict>
 </plist>
