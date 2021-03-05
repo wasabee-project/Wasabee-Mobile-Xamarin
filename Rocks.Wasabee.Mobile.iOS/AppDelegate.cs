@@ -69,6 +69,16 @@ namespace Rocks.Wasabee.Mobile.iOS
             return base.FinishedLaunching(app, options);
         }
 
+        public override void DidEnterBackground (UIApplication application)
+        {
+            Console.WriteLine ("App entering background state.");
+        }
+
+        public override void WillEnterForeground (UIApplication application)
+        {
+            Console.WriteLine ("App will enter foreground");
+        }
+
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
