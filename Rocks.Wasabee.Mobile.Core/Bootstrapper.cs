@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MvvmCross;
 using MvvmCross.IoC;
-using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
@@ -12,7 +11,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core
 {
@@ -33,8 +31,6 @@ namespace Rocks.Wasabee.Mobile.Core
 
         public static void SetupCrossConcerns()
         {
-            Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
-
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
         }
 

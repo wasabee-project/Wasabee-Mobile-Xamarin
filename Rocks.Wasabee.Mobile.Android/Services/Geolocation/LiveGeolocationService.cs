@@ -32,8 +32,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
     }
 
     [Service(DirectBootAware = false, Enabled = true, Exported = false, ForegroundServiceType = ForegroundService.TypeLocation)]
-    public class LiveGeolocationService : Service {
-
+    public class LiveGeolocationService : Service
+    {
         private static readonly int MinimalUpdateTimespan = 60; // in seconds
 
         private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
@@ -220,7 +220,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 .SetAutoCancel(false)
                 .SetTicker("Wasabee location sharing")
                 .SetContentTitle("Wasabee")
-                .SetContentText($"Wasabee is sharing your location.\r\nLast update at {_lastUpdateTime:T}")
+                .SetContentText($"Sharing your location.\r\nLast update at {_lastUpdateTime:T}")
                 .SetChannelId(ChannelId)
                 .SetSound(null)
                 .Build();

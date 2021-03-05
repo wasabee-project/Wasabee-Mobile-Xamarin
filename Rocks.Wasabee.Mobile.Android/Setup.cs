@@ -5,6 +5,7 @@ using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.IoC;
 using MvvmCross.Platforms.Android;
 using MvvmCross.Platforms.Android.Presenters;
+using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Plugin.CurrentActivity;
 using Rocks.Wasabee.Mobile.Core;
@@ -52,6 +53,8 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
+
+            Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
 
             AndroidEnvironment.UnhandledExceptionRaiser += UnhandledExceptionHandler;
 
