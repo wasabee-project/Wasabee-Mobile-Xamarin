@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage
     x:TypeArguments="viewModels:MenuViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -8,7 +8,8 @@
     xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
     x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.MenuPage"
     x:Name="Page"
-    Title="Wasabee"
+    Title="Menu"
+    IconImageSource="{OnPlatform iOS='navbar/menu.png'}"
     BackgroundColor="{DynamicResource MasterMenuBackgroundColor}">
 
     <ContentPage.Resources>
@@ -19,7 +20,7 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <ScrollView>
+        <ScrollView Margin="{OnPlatform Default='0', iOS='0,30'}">
             <StackLayout Margin="10">
                 <StackLayout
                     x:Name="MenuList"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -481,9 +481,18 @@
   <ItemGroup>
     <BundleResource Include="Resources\pins\pin_yellow.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu%403x.png" />
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" TriggeredFromHotReload="False" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
