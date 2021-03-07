@@ -15,6 +15,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.User
         public static string NeverShowLiveLocationWarningAgain => "NEVER_SHOW_LIVE_LOCATION_WARNING_AGAIN";
         public static string ShowAgentsFromAnyTeam => "SHOW_AGENTS_FROM_ANY_TEAM";
         public static string LastLaunchedVersion => "LAST_LAUNCHED_VERSION";
+        public static string ShowDebugToasts => "SHOW_DEBUG_TOASTS";
 
     }
 }

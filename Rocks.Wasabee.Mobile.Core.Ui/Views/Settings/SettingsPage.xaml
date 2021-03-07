@@ -65,6 +65,21 @@
                                             HorizontalOptions="EndAndExpand" Margin="0,4,10,0" VerticalOptions="Center"/>
                                 </Grid>
                             </ViewCell>
+                            <ViewCell Tapped="ShowDebugToastsCell_OnTapped">
+                                <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Column="0" Text="Show debug toasts" TextColor="{DynamicResource PrimaryTextColor}"
+                                           FontSize="Small" Padding="15,0,0,0" LineBreakMode="WordWrap" VerticalOptions="Center"/>
+                                    <Switch Grid.Column="1" OnColor="{DynamicResource PrimaryGreenDark}"
+                                            ThumbColor="{Binding ShowDebugToasts, Converter={StaticResource BoolToColorConverter}}"
+                                            IsToggled="{Binding ShowDebugToasts}"
+                                            HorizontalOptions="EndAndExpand" Margin="0,4,10,0" VerticalOptions="Center"/>
+                                </Grid>
+                            </ViewCell>
                         </TableSection>
                         
                         <TableSection Title="About" TextColor="{DynamicResource PrimaryGreen}">
