@@ -23,5 +23,10 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Settings
         {
             ViewModel.ShowAgentsFromAnyTeam = !ViewModel.ShowAgentsFromAnyTeam;
         }
+
+        private void ShowDebugToastsCell_OnTapped(object sender, EventArgs e)
+        {
+            ViewModel.ShowDebugToasts = !ViewModel.ShowDebugToasts;
+        }
     }
 }

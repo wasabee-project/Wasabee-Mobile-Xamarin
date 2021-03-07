@@ -7,10 +7,12 @@ using CoreLocation;
 using MvvmCross;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
+using Plugin.Permissions;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using UIKit;
+using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
@@ -19,9 +21,11 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
     {
         private static readonly int MinimalUpdateTimespan = 60; // in seconds
 
-        private WasabeeApiV1Service? _wasabeeApiV1Service;
-        private ILoggingService? _loggingService;
-        private IPreferences? _preferences;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly ILoggingService _loggingService;
+        private readonly IPreferences _preferences;
+        private readonly IPermissions _permissions;
+        private readonly IUserDialogs _userDialogs;
 
         private Timer _forceSendTimer = new Timer(MinimalUpdateTimespan * 1000) { AutoReset = true };
         private bool _isRunning;
@@ -48,6 +52,14 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             {
                 LocMgr.AllowsBackgroundLocationUpdates = true;
             }
+
+            _wasabeeApiV1Service = Mvx.IoCProvider.Resolve<WasabeeApiV1Service>();
+            _preferences = Mvx.IoCProvider.Resolve<IPreferences>();
+            _loggingService = Mvx.IoCProvider.Resolve<ILoggingService>();
+            _permissions = Mvx.IoCProvider.Resolve<IPermissions>();
+            _userDialogs = Mvx.IoCProvider.Resolve<IUserDialogs>();
+
+            _loggingService.Trace("LocationManager Initialized");
         }
 
         public async Task StartLocationUpdates()
@@ -55,12 +67,24 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             if (_isRunning)
                 return;
 
+            if (await EnsureHasPermissions() is false)
+            {
+                _loggingService.Trace("Can't Execute LocationManager.StartLocationUpdates, no permissions");
+                
+                if (_preferences.Get(UserSettingsKeys.ShowDebugToasts, false) is true)
+                    _userDialogs.Toast("Can't start location sharing, no permissions");
+    
+                return;
+            }
+
+            _loggingService.Trace("Executing LocationManager.StartLocationUpdates");
+
             try
             {
-                _isRunning = true;
+                if (_preferences.Get(UserSettingsKeys.ShowDebugToasts, false) is true)
+                    _userDialogs.Toast("Live Location Sharing has started");
 
-                _wasabeeApiV1Service ??= Mvx.IoCProvider.Resolve<WasabeeApiV1Service>();
-                _preferences ??= Mvx.IoCProvider.Resolve<IPreferences>();
+                _isRunning = true;
 
                 if (Geolocator.IsListening)
                 {
@@ -94,9 +118,7 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
                             }
                             catch (Exception ex)
                             {
-                                _loggingService ??= Mvx.IoCProvider.Resolve<ILoggingService>();
-                                _loggingService.Error(ex,
-                                    "Error Executing LiveGeolocationService._forceSendTimer.Elapsed");
+                                _loggingService.Error(ex, "Error Executing LocationManager._forceSendTimer.Elapsed");
                             }
                         }
                     };
@@ -113,20 +135,34 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
                         "Geolocation Disabled", "OK");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
-                throw;
+                _loggingService.Error(ex, "Error Executing LocationManager.StartLocationUpdates");
             }
         }
-        
+
+        private async Task<bool> EnsureHasPermissions()
+        {
+            _loggingService.Trace("Executing LocationManager.EnsureHasPermissions");
+
+            var locAlwaysPermission = await _permissions.CheckStatusAsync<Permissions.LocationAlways>();
+            if (locAlwaysPermission != PermissionStatus.Granted)
+                locAlwaysPermission = await _permissions.RequestAsync<Permissions.LocationAlways>();
+
+            if (locAlwaysPermission != PermissionStatus.Granted)
+                return false;
+
+            return true;
+        }
+
         private async void Geolocator_PositionChanged(object sender, PositionEventArgs e)
         {
             if (!_isRunning)
                 return;
+
+            _loggingService.Trace("Executing LocationManager.Geolocator_PositionChanged");
             
-            _preferences ??= Mvx.IoCProvider.Resolve<IPreferences>();
-            if (_preferences!.Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
+            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
             {
                 await StopLocationUpdates();
                 return;
@@ -141,8 +177,7 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             }
             catch (Exception ex)
             {
-                _loggingService ??= Mvx.IoCProvider.Resolve<ILoggingService>();
-                _loggingService!.Error(ex, "Error Executing LiveGeolocationService.Geolocator_PositionChanged");
+                _loggingService.Error(ex, "Error Executing LocationManager.Geolocator_PositionChanged");
             }
         }
 
@@ -157,20 +192,25 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
                     Geolocator.PositionChanged -= Geolocator_PositionChanged;
                     _isRunning = false;
                     
-                    _preferences ??= Mvx.IoCProvider.Resolve<IPreferences>();
-                    _preferences!.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
+                    _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
+                    _loggingService.Trace("Executing LocationManager.StopLocationUpdates");
                 }
             }
         }
 
         private async Task UpdateLocation(Position position)
         {
+            _loggingService.Trace("Executing LocationManager.UpdateLocation");
             var result = await _wasabeeApiV1Service!.User_UpdateLocation(position.Latitude.ToString(Culture), position.Longitude.ToString(Culture));
             if (result)
             {
                 _lastUpdateTime = DateTime.Now;
+                
+                if (_preferences.Get(UserSettingsKeys.ShowDebugToasts, false) is true)
+                    _userDialogs.Toast("Location updated", TimeSpan.FromMilliseconds(750));
             }
+            else
+                _loggingService.Trace("Failed Executing LocationManager.UpdateLocation");
         }
-
     }
 }

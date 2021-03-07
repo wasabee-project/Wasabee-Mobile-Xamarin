@@ -80,6 +80,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             set => ToggleAgentsFromAnyTeamCommand.Execute(value);
         }
 
+        private bool _showDebugToasts;
+        public bool ShowDebugToasts
+        {
+            get => _showDebugToasts;
+            set => ToggleShowDebugToastsCommand.Execute(value);
+        }
+
         #endregion
 
         #region Commands
@@ -280,6 +287,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             {
                 SetProperty(ref _showAgentsFromAnyTeam, false);
                 _preferences.Remove(UserSettingsKeys.ShowAgentsFromAnyTeam);
+            }
+        }
+
+        public IMvxCommand<bool> ToggleShowDebugToastsCommand => new MvxCommand<bool>(ToggleShowDebugToastsExecuted);
+        private void ToggleShowDebugToastsExecuted(bool value)
+        {
+            LoggingService.Trace($"Executing SettingsViewModel.ToggleShowDebugToastsCommand({value})");
+
+            if (value)
+            {
+                SetProperty(ref _showDebugToasts, true);
+                _preferences.Set(UserSettingsKeys.ShowDebugToasts, true);
+            }
+            else
+            {
+                SetProperty(ref _showDebugToasts, false);
+                _preferences.Remove(UserSettingsKeys.ShowDebugToasts);
             }
         }
 

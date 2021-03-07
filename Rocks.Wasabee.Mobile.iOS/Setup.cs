@@ -7,6 +7,7 @@ using MvvmCross.ViewModels;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
@@ -22,6 +23,7 @@ namespace Rocks.Wasabee.Mobile.iOS
 {
     public class Setup : MvxFormsIosSetup<CoreApp, App>
     {
+        private ILoggingService _loggingService;
         private MvxSubscriptionToken _token;
         private LocationManager _locationManager;
 
@@ -70,6 +72,13 @@ namespace Rocks.Wasabee.Mobile.iOS
         {
             _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
             {
+                _loggingService ??= Mvx.IoCProvider.Resolve<ILoggingService>();
+
+                _loggingService.Trace("MvxMessengerHub - LiveGeolocationTrackingMessage received" +
+                                      (msg.Action == Action.Start ? 
+                                          "Start LocationManager" : 
+                                          "Stop LocationManager"));
+
                 if (msg.Action == Action.Start)
                 {
                     _locationManager ??= new LocationManager();
