@@ -47,7 +47,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             IsBusy = true;
             _userDialogs.ShowLoading();
 
-
+            _messenger.Publish(new RefreshAllAgentsLocationsMessage(this));
+            
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
             if (string.IsNullOrWhiteSpace(selectedOpId))
                 return;
@@ -79,8 +80,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 {
                     _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this));
                 }
-
-                _messenger.Publish(new RefreshAllAgentsLocationsMessage(this));
             }
         }
 

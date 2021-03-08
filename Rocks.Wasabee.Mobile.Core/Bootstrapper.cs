@@ -1,10 +1,11 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MvvmCross;
 using MvvmCross.IoC;
+using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using Rocks.Wasabee.Mobile.Core.Infra.Navigation;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;

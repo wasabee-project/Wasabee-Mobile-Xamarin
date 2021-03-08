@@ -40,11 +40,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        private readonly MvxSubscriptionToken _token;
-        private readonly MvxSubscriptionToken _tokenReload;
-        private readonly MvxSubscriptionToken _tokenLiveLocation;
-        private readonly MvxSubscriptionToken _tokenMarkerUpdated;
-        private readonly MvxSubscriptionToken _tokenRefreshAllAgentsLocations;
+        private MvxSubscriptionToken? _token;
+        private MvxSubscriptionToken? _tokenReload;
+        private MvxSubscriptionToken? _tokenLiveLocation;
+        private MvxSubscriptionToken? _tokenMarkerUpdated;
+        private MvxSubscriptionToken? _tokenRefreshAllAgentsLocations;
 
         private bool _isLoadingAgentsLocations;
 
@@ -126,6 +126,22 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             {
                 LoggingService.Error(e, "Error MapViewModel requesing permission LocationWhenInUse");
             }
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            
+            _token?.Dispose();
+            _token = null;
+            _tokenReload?.Dispose();
+            _tokenReload = null;
+            _tokenLiveLocation?.Dispose();
+            _tokenLiveLocation = null;
+            _tokenMarkerUpdated?.Dispose();
+            _tokenMarkerUpdated = null;
+            _tokenRefreshAllAgentsLocations?.Dispose();
+            _tokenRefreshAllAgentsLocations = null;
         }
 
         #region Properties

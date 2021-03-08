@@ -18,12 +18,13 @@ namespace Rocks.Wasabee.Mobile.Core
 
         public static Theme AppTheme { get; set; } = Theme.Light;
 
-        public override async void Initialize() {
+        public override async void Initialize()
+        {
             CreatableTypes()
                 .EndingWith("ViewModel")
                 .Except(typeof(BaseViewModel))
                 .AsTypes()
-                .RegisterAsLazySingleton();
+                .RegisterAsDynamic();
 
             Bootstrapper.SetupCrossPlugins();
             Bootstrapper.SetupCrossConcerns();

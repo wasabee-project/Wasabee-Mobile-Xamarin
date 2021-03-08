@@ -1,4 +1,6 @@
-﻿using MvvmCross;
+﻿using System;
+using MvvmCross;
+using MvvmCross.Logging;
 using MvvmCross.ViewModels;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
@@ -6,7 +8,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
-    public abstract class BaseViewModel : MvxViewModel
+    public abstract class BaseViewModel : MvxViewModel, IDisposable
     {
         protected static IGeolocator Geolocator => CrossGeolocator.Current;
         protected static ILoggingService LoggingService => Mvx.IoCProvider.Resolve<ILoggingService>();
@@ -29,5 +31,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
 
         #endregion
+
+        public virtual void Dispose()
+        {
+            Mvx.IoCProvider.Resolve<IMvxLog>()?.Trace(this.GetType() + " : **** Disposed ****");
+        }
     }
 }

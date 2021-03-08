@@ -62,4 +62,8 @@
     <PackageReference Include="Xamarin.Forms.GoogleMaps" Version="3.3.0" />  
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infra\Navigation\" />
+  </ItemGroup>
 </Project>
