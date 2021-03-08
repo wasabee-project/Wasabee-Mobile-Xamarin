@@ -44,6 +44,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly MvxSubscriptionToken _tokenReload;
         private readonly MvxSubscriptionToken _tokenLiveLocation;
         private readonly MvxSubscriptionToken _tokenMarkerUpdated;
+        private readonly MvxSubscriptionToken _tokenRefreshAllAgentsLocations;
 
         private bool _isLoadingAgentsLocations;
 
@@ -66,6 +67,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _tokenReload = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
             _tokenMarkerUpdated = messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
+            _tokenRefreshAllAgentsLocations = messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
         }
 
         public override async Task Initialize()
@@ -348,12 +350,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     {
                         userTeamsIds.Clear();
                         _isLoadingAgentsLocations = false;
+
+                        LoggingService.Trace($"Nothing to refresh, teamId set to '{teamId}', Setting showFromAnyTeams is set to {showFromAnyTeams}");
+
                         return;
                     }
                 }
 
                 if (!userTeamsIds.Any())
+                {
+                    LoggingService.Trace("Nothing to refresh, teams contains no elements");
                     return;
+                }
 
                 var updatedTeams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(userTeamsIds));
                 if (updatedTeams.Any())
@@ -361,7 +369,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                 var agents = await _teamAgentsDatabase.GetAgentsInTeams(updatedTeams.Select(x => x.Id));
                 if (agents.IsNullOrEmpty())
+                {
+                    LoggingService.Trace("Nothing to refresh, teams agents contains no elements");
                     return;
+                }
 
                 var wasabeeAgentPins = new List<WasabeeAgentPin>();
                 foreach (var agent in agents.Where(a => a.State && a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Id))
