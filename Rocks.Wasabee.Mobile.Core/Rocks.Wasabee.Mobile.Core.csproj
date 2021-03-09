@@ -46,6 +46,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="refit" Version="6.0.24" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="6.0.24" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.10" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
