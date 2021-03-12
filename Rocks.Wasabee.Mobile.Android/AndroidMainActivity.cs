@@ -73,7 +73,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
 
-                Rg.Plugins.Popup.Popup.Init(this, bundle);
+                Rg.Plugins.Popup.Popup.Init(this);
                 ZXing.Net.Mobile.Forms.Android.Platform.Init();
                 ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
 

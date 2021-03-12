@@ -11,6 +11,8 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
@@ -78,6 +80,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         {
             get => _showAgentsFromAnyTeam;
             set => ToggleAgentsFromAnyTeamCommand.Execute(value);
+        }
+
+        private bool _showDebugToasts;
+        public bool ShowDebugToasts
+        {
+            get => _showDebugToasts;
+            set => ToggleShowDebugToastsCommand.Execute(value);
         }
 
         #endregion
@@ -162,7 +171,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
             try
             {
-                var zip = CreateZipFile();
+                var zip = await CreateZipFile();
 
                 IsBusy = false;
 
@@ -283,6 +292,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             }
         }
 
+        public IMvxCommand<bool> ToggleShowDebugToastsCommand => new MvxCommand<bool>(ToggleShowDebugToastsExecuted);
+        private void ToggleShowDebugToastsExecuted(bool value)
+        {
+            LoggingService.Trace($"Executing SettingsViewModel.ToggleShowDebugToastsCommand({value})");
+
+            if (value)
+            {
+                SetProperty(ref _showDebugToasts, true);
+                _preferences.Set(UserSettingsKeys.ShowDebugToasts, true);
+            }
+            else
+            {
+                SetProperty(ref _showDebugToasts, false);
+                _preferences.Remove(UserSettingsKeys.ShowDebugToasts);
+            }
+        }
+
         #endregion
 
         #region Private methods
@@ -309,7 +335,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             }
         }
 
-        private string CreateZipFile()
+        private async Task<string> CreateZipFile()
         {
             var zipFilename = string.Empty;
             if (NLog.LogManager.IsLoggingEnabled())
@@ -321,10 +347,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     _ => throw new Exception("Could not show log: Platform undefined.")
                 };
 
+                var result = await _userDialogs.ConfirmAsync("Include local DB copy ? This will include ALL your teams and OPS related data, please take care !", "#OpSec Warning !",
+                    "Ok, include it !", "Don't include !");
+
                 //Delete old zipfiles (housekeeping)
+                var logFolder = Path.Combine(folder, "logs");
                 try
                 {
-                    foreach (var fileName in Directory.GetFiles(folder, "*.zip"))
+                    foreach (var fileName in Directory.GetFiles(logFolder, "*.zip"))
                     {
                         File.Delete(fileName);
                     }
@@ -334,12 +364,34 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     LoggingService.Error(e, "Error deleting old zip files");
                 }
 
-                var logFolder = Path.Combine(folder, "logs");
                 if (Directory.Exists(logFolder))
                 {
                     var filesCount = Directory.GetFiles(logFolder, "*.csv").Length;
                     if (filesCount > 0)
                     {
+
+                        if (result)
+                        {
+                            // Include local DB copy
+                            try
+                            {
+                                var fileSystem = Mvx.IoCProvider.Resolve<IFileSystem>();
+                                var databaseFullPathName = Path.Combine(fileSystem.AppDataDirectory, BaseDatabase.Name);
+
+                                var destinationPath = Path.Combine(logFolder, "database");
+                                if (Directory.Exists(destinationPath) is false)
+                                    Directory.CreateDirectory(destinationPath);
+
+                                var destinationFullPathName = Path.Combine(destinationPath, BaseDatabase.Name);
+
+                                File.Copy(databaseFullPathName, destinationFullPathName);
+                            }
+                            catch (Exception e)
+                            {
+                                LoggingService.Error(e, "Error importing local DB copy");
+                            }
+                        }
+
                         zipFilename = $"{folder}/{DateTime.Now:yyyyMMdd-HHmmss}.zip";
                         if (!QuickZip(logFolder, zipFilename))
                             zipFilename = string.Empty;

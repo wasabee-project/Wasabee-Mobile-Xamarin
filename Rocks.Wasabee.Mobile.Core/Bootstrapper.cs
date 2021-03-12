@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MvvmCross;
 using MvvmCross.IoC;
-using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
@@ -12,50 +11,9 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core
 {
-    public class FakeSecureStorage : ISecureStorage
-    {
-        private static readonly Dictionary<string, string> Storage = new Dictionary<string, string>();
-
-        public Task<string> GetAsync(string key)
-        {
-            if (Storage.ContainsKey(key))
-                return Task.FromResult(Storage[key]);
-
-            return Task.FromResult(string.Empty);
-        }
-
-        public Task SetAsync(string key, string value)
-        {
-            if (Storage.ContainsKey(key))
-                Storage.Remove(key);
-
-            Storage.Add(key, value);
-
-            return Task.CompletedTask;
-        }
-
-        public bool Remove(string key)
-        {
-            if (Storage.ContainsKey(key))
-            {
-                Storage.Remove(key);
-                return true;
-            }
-
-            return false;
-        }
-
-        public void RemoveAll()
-        {
-            Storage.Clear();
-        }
-
-    }
-
     public static class Bootstrapper
     {
         public static void SetupCrossPlugins()
@@ -64,12 +22,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<IConnectivity>(() => new ConnectivityImplementation());
             Mvx.IoCProvider.RegisterSingleton<IPermissions>(() => new PermissionsImplementation());
             Mvx.IoCProvider.RegisterSingleton<IVersionTracking>(() => new VersionTrackingImplementation());
-            
-            if (Device.RuntimePlatform == Device.iOS)
-                Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new FakeSecureStorage());
-            else
-                Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
-            
+            Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
             Mvx.IoCProvider.RegisterSingleton<IFileSystem>(() => new FileSystemImplementation());
             Mvx.IoCProvider.RegisterSingleton<IGeolocation>(() => new GeolocationImplementation());
 
@@ -78,8 +31,6 @@ namespace Rocks.Wasabee.Mobile.Core
 
         public static void SetupCrossConcerns()
         {
-            Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
-
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
         }
 
@@ -93,15 +44,6 @@ namespace Rocks.Wasabee.Mobile.Core
 #endif
 
             Mvx.IoCProvider.Resolve<IPreferences>().Set(ApplicationSettingsConstants.AppEnvironnement, environnement);
-        }
-
-        public static void SetupAppSettings()
-        {
-#if DEBUG
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAppSettings, DevAppSettings>();
-#else
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAppSettings, ProdAppSettings>();
-#endif
         }
 
         public static void SetupDatabases()

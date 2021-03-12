@@ -28,7 +28,6 @@ namespace Rocks.Wasabee.Mobile.Core
             Bootstrapper.SetupCrossPlugins();
             Bootstrapper.SetupCrossConcerns();
             Bootstrapper.SetupEnvironment();
-            Bootstrapper.SetupAppSettings();
             Bootstrapper.SetupDatabases();
             Bootstrapper.SetupServices();
 
@@ -47,14 +46,10 @@ namespace Rocks.Wasabee.Mobile.Core
 #if DEBUG
             preferences.Set(UserSettingsKeys.DevModeActivated, true);
 #endif
-
-            AppCenter.Start(
-                $"android={Mvx.IoCProvider.Resolve<IAppSettings>().AndroidAppCenterKey};" + 
-                $"ios={Mvx.IoCProvider.Resolve<IAppSettings>().IosAppCenterKey}",
+            AppCenter.Start($"{Xamarin.Forms.Device.RuntimePlatform.ToLowerInvariant()}={Mvx.IoCProvider.Resolve<IAppSettings>().AppCenterKey}",
                 typeof(Crashes), typeof(Analytics));
 
-            var analyticsEnabled =
-                Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.AnalyticsEnabled, false);
+            var analyticsEnabled = preferences.Get(UserSettingsKeys.AnalyticsEnabled, false);
             if (!analyticsEnabled) {
                 await Crashes.SetEnabledAsync(false);
                 await Analytics.SetEnabledAsync(false);

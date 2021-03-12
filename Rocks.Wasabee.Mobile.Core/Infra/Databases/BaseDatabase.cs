@@ -14,6 +14,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
     /// </summary>
     public abstract class BaseDatabase
     {
+        public static string Name => $"{nameof(Wasabee)}.db3";
+
         protected readonly ILoggingService LoggingService;
 
         protected BaseDatabase(IFileSystem fileSystem, ILoggingService loggingService, TimeSpan expiresAt)
@@ -21,7 +23,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             LoggingService = loggingService;
             ExpiresAt = expiresAt;
 
-            var databasePath = Path.Combine(fileSystem.AppDataDirectory, $"{nameof(Wasabee)}.db3");
+            var databasePath = Path.Combine(fileSystem.AppDataDirectory, BaseDatabase.Name);
             DatabaseConnection = new SQLiteAsyncConnection(databasePath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
         }
 

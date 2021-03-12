@@ -42,7 +42,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private async Task RefreshOperationExecuted()
         {
             if (IsBusy) return;
-            LoggingService.Trace("Executing MapViewModel.RefreshOperationCommand");
+            LoggingService.Trace("Executing OperationRootTabbedViewModel.RefreshOperationCommand");
 
             IsBusy = true;
             _userDialogs.ShowLoading();
@@ -66,7 +66,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             catch (Exception e)
             {
-                LoggingService.Error(e, "Error Executing MapViewModel.RefreshOperationCommand");
+                LoggingService.Error(e, "Error Executing OperationRootTabbedViewModel.RefreshOperationCommand");
             }
             finally
             {
@@ -79,8 +79,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 {
                     _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this));
                 }
-            }
 
+                _messenger.Publish(new RefreshAllAgentsLocationsMessage(this));
+            }
         }
 
 

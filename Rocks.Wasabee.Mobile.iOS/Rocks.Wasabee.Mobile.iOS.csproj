@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -25,10 +25,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>x86_64</MtouchArch>
-    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
     <LangVersion>8.0</LangVersion>
-    <MtouchSdkVersion>14.3</MtouchSdkVersion>
+    <MtouchSdkVersion>
+    </MtouchSdkVersion>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -45,6 +46,8 @@
     <MtouchArch>x86_64</MtouchArch>
     <LangVersion>8.0</LangVersion>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchSdkVersion>
+    </MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,13 +58,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>Apple Distribution: Sebastien Foray (27PTB28433)</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
     <LangVersion>8.0</LangVersion>
-    <CodesignProvision>Wasabee AppStore</CodesignProvision>
+    <CodesignProvision>
+    </CodesignProvision>
+    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -80,16 +85,40 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Network Logs|iPhoneSimulator'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\iPhoneSimulator\Debug Network Logs\</OutputPath>
+    <DefineConstants>__IOS__;__MOBILE__;__UNIFIED__;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Network Logs|iPhone'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\iPhone\Debug Network Logs\</OutputPath>
+    <DefineConstants>__IOS__;__MOBILE__;__UNIFIED__;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\MapsKey.cs">
-      <Link>Properties\MapsKey.cs</Link>
+    <Compile Include="..\ApiKeys.cs">
+      <Link>Properties\ApiKeys.cs</Link>
     </Compile>
     <Compile Include="Infra\Firebase\FirebaseService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Renderers\PageRenderer.cs" />
+    <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
+    <Compile Include="Services\Geolocation\LocationManager.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="WasabeeImageFactory.cs" />
     <None Include="Entitlements.plist" />
+    <BundleResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <BundleResource Include="NLog.config" />
@@ -167,7 +196,10 @@
       <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
-      <Version>2.0.0.7</Version>
+      <Version>2.0.0.10</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugin.Geolocator">
+      <Version>4.5.0.6</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Build.Download">
       <Version>0.10.0</Version>
@@ -175,7 +207,7 @@
     <PackageReference Include="Xamarin.Firebase.iOS.CloudMessaging">
       <Version>4.7.1</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="Xamarin.Forms.GoogleMaps">
       <Version>3.3.0</Version>
@@ -279,9 +311,214 @@
       <SubType>Designer</SubType>
     </BundleResource>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\virus\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\virus\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\virus\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\virus\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\upgrade\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\upgrade\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\upgrade\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\upgrade\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\recharge\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\recharge\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\recharge\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\recharge\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\other\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\other\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\other\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\other\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\meetagent\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\meetagent\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\meetagent\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\meetagent\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\link\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\link\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\link\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\link\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\key\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\key\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\key\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\key\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\goto\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\goto\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\goto\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\goto\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\farm\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\farm\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\farm\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\farm\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\exclude\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\exclude\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\exclude\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\exclude\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\destroy\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\destroy\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\destroy\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\destroy\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\decay\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\decay\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\decay\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\decay\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\capture\pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\capture\completed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\capture\assigned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\capture\acknowledge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\markers\player.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_fuschia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_lime.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_magenta.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_orange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_purple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_tan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_teal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pins\pin_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\navbar\menu%403x.png" />
+  </ItemGroup>
+  <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

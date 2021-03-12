@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Rocks.Wasabee.Mobile.Core.Services
 {
@@ -91,10 +93,11 @@ namespace Rocks.Wasabee.Mobile.Core.Services
     {
         private readonly IAppSettings _appSettings;
 
-        private Lazy<IWasabeeApiV1> _wasabeeApiClient => new Lazy<IWasabeeApiV1>(() => RestService.For<IWasabeeApiV1>(CreateHttpClient($"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.BaseRoute}")));
-
+        private Lazy<IWasabeeApiV1> _wasabeeApiClient => new Lazy<IWasabeeApiV1>(() => RestService.For<IWasabeeApiV1>(CreateHttpClient($"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.BaseRoute}"), GetNewtonsoftJsonRefitSettings()));
         private IWasabeeApiV1 WasabeeApiClient => _wasabeeApiClient.Value;
 
+        private static RefitSettings GetNewtonsoftJsonRefitSettings() => new(new NewtonsoftJsonContentSerializer(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+        
         public WasabeeApiV1Service(IAppSettings appSettings)
         {
             _appSettings = appSettings;

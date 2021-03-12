@@ -9,6 +9,7 @@ using MvvmCross;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using UIKit;
 using UserNotifications;
+using Xamarin.Forms.GoogleMaps.iOS;
 
 namespace Rocks.Wasabee.Mobile.iOS
 {
@@ -30,9 +31,8 @@ namespace Rocks.Wasabee.Mobile.iOS
             Rg.Plugins.Popup.Popup.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             
-
-            //var platformConfig = new PlatformConfig() { ImageFactory = new WasabeeImageFactory() };
-            Xamarin.FormsGoogleMaps.Init(MapsKey.Value);
+            var platformConfig = new PlatformConfig() { ImageFactory = new WasabeeImageFactory() };
+            Xamarin.FormsGoogleMaps.Init(MapsKey.Value, platformConfig);
             
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageSourceHandler();
@@ -67,6 +67,16 @@ namespace Rocks.Wasabee.Mobile.iOS
             UIApplication.SharedApplication.RegisterForRemoteNotifications();*/
  
             return base.FinishedLaunching(app, options);
+        }
+
+        public override void DidEnterBackground (UIApplication application)
+        {
+            Console.WriteLine ("App entering background state.");
+        }
+
+        public override void WillEnterForeground (UIApplication application)
+        {
+            Console.WriteLine ("App will enter foreground");
         }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)

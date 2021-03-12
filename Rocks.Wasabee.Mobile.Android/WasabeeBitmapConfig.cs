@@ -2,6 +2,7 @@
 using SkiaSharp;
 using SkiaSharp.Views.Android;
 using System;
+using System.Collections.Generic;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.Android.Factories;
 using AndroidBitmapDescriptor = Android.Gms.Maps.Model.BitmapDescriptor;
@@ -11,6 +12,8 @@ namespace Rocks.Wasabee.Mobile.Droid
 {
     public sealed class WasabeeBitmapConfig : IBitmapDescriptorFactory
     {
+        private static Dictionary<int, AndroidBitmapDescriptor> BitmapCache = new Dictionary<int, AndroidBitmapDescriptor>();
+
         public AndroidBitmapDescriptor ToNative(BitmapDescriptor descriptor)
         {
             int iconId;
@@ -162,16 +165,22 @@ namespace Rocks.Wasabee.Mobile.Droid
 
         private static AndroidBitmapDescriptor CreateBitmapFromSvgStream(int iconId, int width, int height)
         {
+            if (BitmapCache.ContainsKey(iconId))
+                return BitmapCache[iconId];
+
             var svgStream = Application.Context.Resources?.OpenRawResource(iconId);
             var svg = new SkiaSharp.Extended.Svg.SKSvg();
             var picture = svg.Load(svgStream);
 
 
-            return AndroidBitmapDescriptorFactory.FromBitmap(
+            var bitmap = AndroidBitmapDescriptorFactory.FromBitmap(
                 SKBitmap.FromImage(
                         SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)))
                     .Resize(new SKSizeI(width, height), SKFilterQuality.None)
                     .ToBitmap());
+
+            BitmapCache.Add(iconId, bitmap);
+            return bitmap;
         }
     }
 }
