@@ -83,14 +83,14 @@ namespace Rocks.Wasabee.Mobile.iOS
         {
             if (e.ExceptionObject is Exception exception)
             {
-                Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(exception, "[CurrentDomain] Fatal error occured");
+                Mvx.IoCProvider?.Resolve<ILoggingService>()?.Fatal(exception, "[CurrentDomain] Fatal error occured");
                 throw exception;
             }
         }
 
         private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(e.Exception, "[TaskScheduler] Fatal error occured");
+            Mvx.IoCProvider?.Resolve<ILoggingService>()?.Fatal(e.Exception, "[TaskScheduler] Fatal error occured");
             throw e.Exception;
         }
 
