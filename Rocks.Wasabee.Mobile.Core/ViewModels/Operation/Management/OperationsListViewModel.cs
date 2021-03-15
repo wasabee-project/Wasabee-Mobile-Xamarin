@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
@@ -38,6 +39,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
+
             await base.Initialize();
 
             RefreshCommand.Execute(false);
