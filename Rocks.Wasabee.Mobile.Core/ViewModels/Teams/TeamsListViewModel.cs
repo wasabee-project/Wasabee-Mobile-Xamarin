@@ -10,6 +10,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
@@ -44,6 +45,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
+
             await base.Initialize();
 
             LoggingService.Trace("Navigated to TeamsListViewModel");

@@ -7,6 +7,8 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Logs
 {
@@ -21,6 +23,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Logs
                 LogsCollection.Add(new LogLine($"{DateTime.Now:T}: {msg.Message}", msg.Data));
                 RaisePropertyChanged(() => LogsCollection);
             });
+        }
+
+        public override Task Initialize()
+        {
+            Analytics.TrackEvent(GetType().Name);
+
+            return base.Initialize();
         }
 
         public MvxObservableCollection<LogLine> LogsCollection { get; set; } = new MvxObservableCollection<LogLine>();

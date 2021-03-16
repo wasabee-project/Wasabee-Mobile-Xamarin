@@ -8,6 +8,7 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
 {
@@ -48,6 +49,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
+
             await base.Initialize();
 
             if (_parameter == null || string.IsNullOrWhiteSpace(_parameter.OpId))

@@ -61,6 +61,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             var showAgentsFromAnyTeamSetting = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
             SetProperty(ref _showAgentsFromAnyTeam, showAgentsFromAnyTeamSetting);
 
+            var showDebugToastsSetting = _preferences.Get(UserSettingsKeys.ShowDebugToasts, false);
+            SetProperty(ref _showDebugToasts, showDebugToastsSetting);
+
             return base.Initialize();
         }
 
@@ -96,7 +99,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand OpenApplicationSettingsCommand => new MvxCommand(OpenApplicationSettingsExecuted);
         private void OpenApplicationSettingsExecuted()
         {
-            LoggingService.Trace($"Executing SettingsViewModel.OpenApplicationSettingsCommand");
+            LoggingService.Trace("Executing SettingsViewModel.OpenApplicationSettingsCommand");
 
             if (IsBusy) return;
             IsBusy = true;
@@ -109,7 +112,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand OpenWasabeeTelegramChatCommand => new MvxCommand(OpenWasabeeTelegramChatExecuted);
         private async void OpenWasabeeTelegramChatExecuted()
         {
-            LoggingService.Trace($"Executing SettingsViewModel.OpenWasabeeTelegramChatCommand");
+            LoggingService.Trace("Executing SettingsViewModel.OpenWasabeeTelegramChatCommand");
 
             if (IsBusy) return;
             IsBusy = true;
@@ -122,7 +125,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand OpenWasabeeWebpageCommand => new MvxCommand(OpenWasabeeWebpageExecuted);
         private async void OpenWasabeeWebpageExecuted()
         {
-            LoggingService.Trace($"Executing SettingsViewModel.OpenWasabeeWebpageCommand");
+            LoggingService.Trace("Executing SettingsViewModel.OpenWasabeeWebpageCommand");
 
             if (IsBusy) return;
             IsBusy = true;
@@ -313,7 +316,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
         #region Private methods
 
-        bool QuickZip(string directoryToZip, string destinationZipFullPath)
+        private bool QuickZip(string directoryToZip, string destinationZipFullPath)
         {
             try
             {

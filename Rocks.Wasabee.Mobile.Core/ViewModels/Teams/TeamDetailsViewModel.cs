@@ -10,6 +10,7 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -60,6 +61,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
         public override async Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
+
             await base.Initialize();
 
             // force PropertyChanged as UI not updated when done in Prepare()

@@ -1,4 +1,3 @@
-using Firebase.CloudMessaging;
 using Foundation;
 using MvvmCross.Forms.Platforms.Ios.Core;
 using Rocks.Wasabee.Mobile.Core;
@@ -14,7 +13,7 @@ using Xamarin.Forms.GoogleMaps.iOS;
 namespace Rocks.Wasabee.Mobile.iOS
 {
     [Register("AppDelegate")]
-    public partial class AppDelegate : MvxFormsApplicationDelegate<Setup, CoreApp, App>, IUNUserNotificationCenterDelegate, IMessagingDelegate
+    public partial class AppDelegate : MvxFormsApplicationDelegate<Setup, CoreApp, App>, IUNUserNotificationCenterDelegate
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -37,34 +36,6 @@ namespace Rocks.Wasabee.Mobile.iOS
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageSourceHandler();
 
-            // Use Firebase library to configure APIs
-            /*Firebase.Core.App.Configure();
- 
-            //In iOS you must request permission to show local / remote notifications first since it is a user interrupting action.
-            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
-            {
-                // Request Permissions
-                UNUserNotificationCenter.Current.RequestAuthorization(UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound, 
-                    (granted, error) =>
-                    {
-                        // Do something if needed
-                    });
- 
-                // For iOS 10 display notification (sent via APNS)
-                UNUserNotificationCenter.Current.Delegate = this;
- 
-                // For iOS 10 data message (sent via FCM)
-                Messaging.SharedInstance.Delegate = this;
-            }
-            else
-            {
-                // iOS 9 or before
-                var allNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound;
-                var settings = UIUserNotificationSettings.GetSettingsForTypes(allNotificationTypes, null);
-                UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
-            }
- 
-            UIApplication.SharedApplication.RegisterForRemoteNotifications();*/
  
             return base.FinishedLaunching(app, options);
         }
@@ -83,15 +54,21 @@ namespace Rocks.Wasabee.Mobile.iOS
         {
             if (e.ExceptionObject is Exception exception)
             {
-                Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(exception, "[CurrentDomain] Fatal error occured");
-                throw exception;
+                if (Mvx.IoCProvider.CanResolve<ILoggingService>())
+                {
+                    Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(exception, "[CurrentDomain] Fatal error occured");
+                    throw exception;
+                }
             }
         }
 
         private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(e.Exception, "[TaskScheduler] Fatal error occured");
-            throw e.Exception;
+            if (Mvx.IoCProvider.CanResolve<ILoggingService>())
+            {
+                Mvx.IoCProvider.Resolve<ILoggingService>().Fatal(e.Exception, "[TaskScheduler] Fatal error occured");
+                throw e.Exception;
+            }
         }
 
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
@@ -102,20 +79,29 @@ namespace Rocks.Wasabee.Mobile.iOS
             return base.OpenUrl(app, url, options);
         }
 
-        [Export ("messaging:didReceiveRegistrationToken:")]
-        public void DidReceiveRegistrationToken (Messaging messaging, string fcmToken)
-        {
-            Console.WriteLine ($"Firebase registration token: {fcmToken}");
- 
-            // TODO: If necessary send token to application server.
-            // Note: This callback is fired at each app startup and whenever a new token is generated.
-        }
-        
-        //Handle data messages in foregrounded apps
-        [Export("messaging:didReceiveMessage:")]
-        public void DidReceiveMessage(Messaging messaging, RemoteMessage remoteMessage)
-        {
-            //Handle here your notification
-        }
+		// You'll need this method if you set "FirebaseAppDelegateProxyEnabled": NO in GoogleService-Info.plist
+		//public override void RegisteredForRemoteNotifications (UIApplication application, NSData deviceToken)
+		//{
+		//	Messaging.SharedInstance.ApnsToken = deviceToken;
+		//}
+
+		public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
+		{
+			// If you are receiving a notification message while your app is in the background,
+			// this callback will not be fired till the user taps on the notification launching the application.
+			// TODO: Handle data of notification
+
+			// With swizzling disabled you must let Messaging know about the message, for Analytics
+			//Messaging.SharedInstance.AppDidReceiveMessage (userInfo);
+            
+            // TODO Handle message
+
+			// Print full message.
+			LogInformation (nameof (DidReceiveRemoteNotification), userInfo);
+
+			completionHandler (UIBackgroundFetchResult.NewData);
+		}
+
+		void LogInformation(string methodName, object information) => Console.WriteLine ($"\nMethod name: {methodName}\nInformation: {information}");
     }
 }

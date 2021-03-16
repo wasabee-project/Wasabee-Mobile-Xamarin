@@ -7,7 +7,6 @@ using CoreLocation;
 using MvvmCross;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
-using Plugin.Permissions;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -27,7 +26,8 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
         private readonly IPermissions _permissions;
         private readonly IUserDialogs _userDialogs;
 
-        private Timer _forceSendTimer = new Timer(MinimalUpdateTimespan * 1000) { AutoReset = true };
+        private readonly Timer _forceSendTimer = new Timer(MinimalUpdateTimespan * 1000) { AutoReset = true };
+
         private bool _isRunning;
         private DateTime _lastUpdateTime;
         
@@ -170,6 +170,10 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
 
             try
             {
+                // Prevent server spam, location updates interval is at least 15 seconds when moving
+                if (DateTime.Now - _lastUpdateTime < TimeSpan.FromSeconds(15))
+                    return;
+
                 _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
 
                 var position = new Position(e.Position.Latitude, e.Position.Longitude);
