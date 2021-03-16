@@ -4,7 +4,6 @@ using MoreLinq;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
-using Plugin.Permissions;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -20,8 +19,6 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms.GoogleMaps;
-using ICrossPermissions = Plugin.Permissions.Abstractions.IPermissions;
-using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
@@ -34,7 +31,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly TeamAgentsDatabase _teamAgentsDatabase;
         private readonly UsersDatabase _usersDatabase;
         private readonly IPreferences _preferences;
-        private readonly ICrossPermissions _crossPermissions;
         private readonly IMvxMessenger _messenger;
         private readonly IUserDialogs _userDialogs;
         private readonly IUserSettingsService _userSettingsService;
@@ -49,7 +45,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private bool _isLoadingAgentsLocations;
 
         public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase,
-            UsersDatabase usersDatabase, IPreferences preferences, ICrossPermissions crossPermissions, IMvxMessenger messenger,
+            UsersDatabase usersDatabase, IPreferences preferences, IMvxMessenger messenger,
             IUserDialogs userDialogs, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _operationsDatabase = operationsDatabase;
@@ -57,7 +53,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _teamAgentsDatabase = teamAgentsDatabase;
             _usersDatabase = usersDatabase;
             _preferences = preferences;
-            _crossPermissions = crossPermissions;
             _messenger = messenger;
             _userDialogs = userDialogs;
             _userSettingsService = userSettingsService;
@@ -90,44 +85,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             await base.Initialize();
 
+            IsLocationAvailable = await CheckAndAskForLocationPermissions();
+
             await LoadOperationCommand.ExecuteAsync();
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
         }
-
-        public override async void ViewAppeared()
-        {
-            base.ViewAppeared();
-
-            try
-            {
-                var status = await _crossPermissions.CheckPermissionStatusAsync<LocationWhenInUsePermission>();
-                if (status != PermissionStatus.Granted && status != PermissionStatus.Restricted)
-                {
-                    LoggingService.Info("MapViewModel - Requesting WhenInUse geolocation permissions");
-
-                    status = await _crossPermissions.RequestPermissionAsync<LocationWhenInUsePermission>();
-                    if (status != PermissionStatus.Granted && status != PermissionStatus.Restricted)
-                    {
-                        LoggingService.Info("MapViewModel - User has not granted permissions");
-                        _userDialogs.Alert("Geolocation permission is required to show your position !");
-                    }
-                    else
-                    {
-                        LoggingService.Info("MapViewModel - User has granted WhenInUse geolocation permissions");
-                        IsLocationAvailable = true;
-                    }
-                }
-                else
-                {
-                    IsLocationAvailable = true;
-                }
-            }
-            catch (Exception e)
-            {
-                LoggingService.Error(e, "Error MapViewModel requesing permission LocationWhenInUse");
-            }
-        }
-
+        
         #region Properties
 
         public bool IsLoading { get; set; }
@@ -546,6 +509,44 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         #endregion
 
         #region Private methods
+        
+        private async Task<bool> CheckAndAskForLocationPermissions()
+        {
+            LoggingService.Trace("MapViewModel - Checking location permissions");
+            
+            var statusLocationAlways = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+            LoggingService.Trace($"Permissions Status : LocationWhenInUse={statusLocationAlways}");
+
+            if (statusLocationAlways == PermissionStatus.Granted)
+                return true;
+            
+            var requestPermission = true;
+            var showRationale = Permissions.ShouldShowRationale<Permissions.LocationWhenInUse>();
+            if (showRationale)
+                requestPermission = await _userDialogs.ConfirmAsync(
+                    "To show your position on the map, please set the permission to 'When in use'.",
+                    "Permissions required",
+                    "Ok", "Cancel");
+
+            if (!requestPermission)
+                return false;
+
+            LoggingService.Trace("Requesting location permissions");
+            statusLocationAlways = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+            LoggingService.Trace($"Permissions Status : LocationWhenInUse={statusLocationAlways}");
+
+            if (statusLocationAlways != PermissionStatus.Granted)
+            {
+                LoggingService.Trace("User didn't granted geolocation permissions");
+
+                _userDialogs.Alert("Geolocation permission is required !");
+                return false;
+            }
+
+            LoggingService.Info("User has granted geolocation permissions");
+            return true;
+        }
 
         private WasabeeAgentPin CreateAgentPin(Models.Teams.TeamAgentModel agent)
         {

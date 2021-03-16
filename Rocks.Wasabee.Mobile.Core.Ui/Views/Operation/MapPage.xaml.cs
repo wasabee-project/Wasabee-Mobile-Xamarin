@@ -58,8 +58,6 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             if (e.PropertyName == "SelectedWasabeePin")
                 AnimateDetailPanel();
-            else if (e.PropertyName == "IsLocationAvailable")
-                Map.MyLocationEnabled = ViewModel.IsLocationAvailable;
             else if (e.PropertyName == "VisibleRegion")
                 Map.MoveToRegion(ViewModel.VisibleRegion);
             else if (e.PropertyName == "AgentsPins")
