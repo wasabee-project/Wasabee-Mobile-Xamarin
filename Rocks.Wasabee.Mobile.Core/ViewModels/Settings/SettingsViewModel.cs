@@ -387,7 +387,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
                                 var destinationFullPathName = Path.Combine(destinationPath, BaseDatabase.Name);
 
-                                File.Copy(databaseFullPathName, destinationFullPathName);
+                                File.Copy(databaseFullPathName, destinationFullPathName, true);
                             }
                             catch (Exception e)
                             {
