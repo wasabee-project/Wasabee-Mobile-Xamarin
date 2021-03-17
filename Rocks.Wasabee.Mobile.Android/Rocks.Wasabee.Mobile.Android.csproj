@@ -284,7 +284,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_capture_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_capture_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_capture_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_capture_pending.svg" />
@@ -296,7 +296,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_decay_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_decay_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_decay_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_decay_pending.svg" />
@@ -308,7 +308,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_pending.svg" />
@@ -320,7 +320,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_pending.svg" />
@@ -332,7 +332,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_farm_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_farm_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_farm_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_farm_pending.svg" />
@@ -344,7 +344,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_goto_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_goto_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_goto_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_goto_pending.svg" />
@@ -356,7 +356,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_key_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_key_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_key_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_key_pending.svg" />
@@ -368,7 +368,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_link_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_link_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_link_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_link_pending.svg" />
@@ -380,7 +380,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_pending.svg" />
@@ -392,7 +392,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_other_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_other_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_other_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_other_pending.svg" />
@@ -404,7 +404,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_pending.svg" />
@@ -416,7 +416,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_pending.svg" />
@@ -428,7 +428,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_virus_assigned.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_virus_done.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_virus_completed.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_virus_pending.svg" />
@@ -512,6 +512,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\eye.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\wasabee_player_marker_gray.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\wasabee_player_marker_self.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

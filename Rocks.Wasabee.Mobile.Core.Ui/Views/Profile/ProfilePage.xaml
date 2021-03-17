@@ -54,7 +54,8 @@
                                         Text="mdi-qrcode" TextColor="{DynamicResource PrimaryTextColor}" FontSize="28"
                                         HorizontalOptions="Center" VerticalOptions="Center"
                                         BackgroundColor="Transparent"
-                                        Command="{Binding ShowQrCodeCommand}"/>
+                                        Command="{Binding ShowQrCodeCommand}"
+                                        IsVisible="{Binding IsQrCodeEnabled}"/>
                         </Grid>
                     </Grid>
 

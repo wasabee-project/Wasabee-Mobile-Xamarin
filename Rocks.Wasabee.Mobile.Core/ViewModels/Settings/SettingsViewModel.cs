@@ -61,6 +61,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             var showAgentsFromAnyTeamSetting = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
             SetProperty(ref _showAgentsFromAnyTeam, showAgentsFromAnyTeamSetting);
 
+            var showDebugToastsSetting = _preferences.Get(UserSettingsKeys.ShowDebugToasts, false);
+            SetProperty(ref _showDebugToasts, showDebugToastsSetting);
+
             return base.Initialize();
         }
 
@@ -96,7 +99,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         public IMvxCommand OpenApplicationSettingsCommand => new MvxCommand(OpenApplicationSettingsExecuted);
         private void OpenApplicationSettingsExecuted()
         {
-            LoggingService.Trace($"Executing SettingsViewModel.OpenApplicationSettingsCommand");
+            LoggingService.Trace("Executing SettingsViewModel.OpenApplicationSettingsCommand");
 
             if (IsBusy) return;
             IsBusy = true;
@@ -106,23 +109,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             IsBusy = false;
         }
 
-        public IMvxCommand OpenWasabeeTelegramChatCommand => new MvxCommand(OpenWasabeeTelegramChatExecuted);
-        private async void OpenWasabeeTelegramChatExecuted()
-        {
-            LoggingService.Trace($"Executing SettingsViewModel.OpenWasabeeTelegramChatCommand");
-
-            if (IsBusy) return;
-            IsBusy = true;
-
-            await Launcher.OpenAsync("tg://join?invite=FSaGrFWGdrf87xdKQXWsPw");
-
-            IsBusy = false;
-        }
-
         public IMvxCommand OpenWasabeeWebpageCommand => new MvxCommand(OpenWasabeeWebpageExecuted);
         private async void OpenWasabeeWebpageExecuted()
         {
-            LoggingService.Trace($"Executing SettingsViewModel.OpenWasabeeWebpageCommand");
+            LoggingService.Trace("Executing SettingsViewModel.OpenWasabeeWebpageCommand");
 
             if (IsBusy) return;
             IsBusy = true;
@@ -197,7 +187,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                 if (!hasSent)
                 {
                     await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
-                    await Share.RequestAsync(new ShareFileRequest(new ShareFile(zip)));
+                    await Share.RequestAsync(new ShareFileRequest(zip, new ShareFile(zip)));
                 }
             }
             catch (Exception e)
@@ -313,7 +303,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
         #region Private methods
 
-        bool QuickZip(string directoryToZip, string destinationZipFullPath)
+        private bool QuickZip(string directoryToZip, string destinationZipFullPath)
         {
             try
             {
@@ -369,6 +359,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     var filesCount = Directory.GetFiles(logFolder, "*.csv").Length;
                     if (filesCount > 0)
                     {
+                        var destinationPath = Path.Combine(logFolder, "database");
 
                         if (result)
                         {
@@ -378,17 +369,28 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                                 var fileSystem = Mvx.IoCProvider.Resolve<IFileSystem>();
                                 var databaseFullPathName = Path.Combine(fileSystem.AppDataDirectory, BaseDatabase.Name);
 
-                                var destinationPath = Path.Combine(logFolder, "database");
                                 if (Directory.Exists(destinationPath) is false)
                                     Directory.CreateDirectory(destinationPath);
 
                                 var destinationFullPathName = Path.Combine(destinationPath, BaseDatabase.Name);
 
-                                File.Copy(databaseFullPathName, destinationFullPathName);
+                                File.Copy(databaseFullPathName, destinationFullPathName, true);
                             }
                             catch (Exception e)
                             {
                                 LoggingService.Error(e, "Error importing local DB copy");
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                if (Directory.Exists(destinationPath))
+                                    Directory.Delete(destinationPath, true);
+                            }
+                            catch (Exception e)
+                            {
+                                LoggingService.Error(e, "Error deleting old local DB copy");
                             }
                         }
 

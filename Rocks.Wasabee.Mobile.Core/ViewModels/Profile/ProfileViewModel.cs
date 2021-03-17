@@ -7,6 +7,7 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Threading.Tasks;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
@@ -58,6 +59,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
                 QrCodeValue = _parameter.UserGoogleId;
 
+                VerifyQrCode();
+
                 await LoadAgentProfileCommand.ExecuteAsync(_parameter.UserGoogleId);
                 return;
             }
@@ -74,6 +77,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
                 QrCodeValue = googleId;
                 await LoadAgentProfileCommand.ExecuteAsync(googleId);
             }
+
+            VerifyQrCode();
         }
 
         #region Properties
@@ -81,6 +86,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         public UserModel? User { get; set; }
         public bool IsSelfProfile { get; set; } = true;
         public bool IsQrCodeVisible { get; set; }
+        public bool IsQrCodeEnabled { get; set; }
 
         private string _qrCodeValue = string.Empty;
         public string QrCodeValue
@@ -186,6 +192,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         private void ShowQrCodeExecuted()
         {
             IsQrCodeVisible = !IsQrCodeVisible;
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void VerifyQrCode()
+        {
+            if (QrCodeValue.IsNullOrEmpty())
+            {
+                QrCodeValue = "QRCODE_ERROR";
+                IsQrCodeEnabled = false;
+            }
         }
 
         #endregion

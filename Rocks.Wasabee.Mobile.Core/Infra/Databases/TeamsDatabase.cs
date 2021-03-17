@@ -1,4 +1,4 @@
-﻿using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
