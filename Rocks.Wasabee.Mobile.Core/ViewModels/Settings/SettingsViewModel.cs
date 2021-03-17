@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross.Commands;
@@ -372,6 +372,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     var filesCount = Directory.GetFiles(logFolder, "*.csv").Length;
                     if (filesCount > 0)
                     {
+                        var destinationPath = Path.Combine(logFolder, "database");
 
                         if (result)
                         {
@@ -381,7 +382,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                                 var fileSystem = Mvx.IoCProvider.Resolve<IFileSystem>();
                                 var databaseFullPathName = Path.Combine(fileSystem.AppDataDirectory, BaseDatabase.Name);
 
-                                var destinationPath = Path.Combine(logFolder, "database");
                                 if (Directory.Exists(destinationPath) is false)
                                     Directory.CreateDirectory(destinationPath);
 
@@ -392,6 +392,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                             catch (Exception e)
                             {
                                 LoggingService.Error(e, "Error importing local DB copy");
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                if (Directory.Exists(destinationPath))
+                                    Directory.Delete(destinationPath, true);
+                            }
+                            catch (Exception e)
+                            {
+                                LoggingService.Error(e, "Error deleting old local DB copy");
                             }
                         }
 
