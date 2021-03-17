@@ -200,7 +200,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                 if (!hasSent)
                 {
                     await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
-                    await Share.RequestAsync(new ShareFileRequest(new ShareFile(zip)));
+                    await Share.RequestAsync(new ShareFileRequest(zip, new ShareFile(zip)));
                 }
             }
             catch (Exception e)
