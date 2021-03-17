@@ -1,4 +1,4 @@
-using Acr.UserDialogs;
+﻿using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross.Commands;
@@ -105,19 +105,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             IsBusy = true;
 
             AppInfo.ShowSettingsUI();
-
-            IsBusy = false;
-        }
-
-        public IMvxCommand OpenWasabeeTelegramChatCommand => new MvxCommand(OpenWasabeeTelegramChatExecuted);
-        private async void OpenWasabeeTelegramChatExecuted()
-        {
-            LoggingService.Trace("Executing SettingsViewModel.OpenWasabeeTelegramChatCommand");
-
-            if (IsBusy) return;
-            IsBusy = true;
-
-            await Launcher.OpenAsync("tg://join?invite=FSaGrFWGdrf87xdKQXWsPw");
 
             IsBusy = false;
         }

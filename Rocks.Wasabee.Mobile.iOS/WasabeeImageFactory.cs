@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Foundation;
 using UIKit;
-using Xamarin;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.iOS.Factories;
 
