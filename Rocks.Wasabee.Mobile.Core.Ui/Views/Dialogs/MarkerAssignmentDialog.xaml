@@ -20,7 +20,7 @@
 
     <ContentPage.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter" />
-        <converters:MarkerDataToSvgFilenameConverter x:Key="MarkerDataToSvgFilenameConverter" />
+        <converters:MarkerDataToResourceFilePathConverter x:Key="MarkerDataToResourceFilePathConverter" />
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -34,7 +34,7 @@
                         <StackLayout Orientation="Horizontal" Spacing="10">
 
                             <ffimageloadingsvg:SvgCachedImage HeightRequest="50" Margin="5, 0"
-                                                              Source="{Binding Marker, Converter={StaticResource MarkerDataToSvgFilenameConverter}}"/>
+                                                              Source="{Binding Marker, Converter={StaticResource MarkerDataToResourceFilePathConverter}}"/>
 
                             <StackLayout VerticalOptions="Center" Spacing="0">
                                 <Label Text="{Binding MarkerAssignment.PortalName}" FontAttributes="Bold" MaxLines="5" WidthRequest="250" />

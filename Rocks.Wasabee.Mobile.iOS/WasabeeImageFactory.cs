@@ -17,12 +17,12 @@ namespace Rocks.Wasabee.Mobile.iOS
         {
             if (descriptor.Id.Equals("wasabee_player_marker"))
             {
-                return CreateMarker("markers/player.png");
+                return CreateMarker("wasabee/markers/player.png");
             }
             
             if (descriptor.Id.Contains('|'))
             {
-                var fileName = "markers/";
+                var fileName = "wasabee/markers/";
 
                 var descriptors = descriptor.Id.Split('|');
                 fileName += descriptors[0] switch
@@ -46,7 +46,7 @@ namespace Rocks.Wasabee.Mobile.iOS
                 return CreateMarker(fileName);
             }
 
-            return CreatePin($"pins/{descriptor.Id}.png");
+            return CreatePin($"wasabee/pins/{descriptor.Id}.png");
         }
         
         private static UIImage CreatePin(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 30, 60);

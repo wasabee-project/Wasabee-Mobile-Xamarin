@@ -14,7 +14,7 @@
     <ContentPage.Resources>
 
         <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
-        <converters:MarkerDataToSvgFilenameConverter x:Key="MarkerDataToSvgFilenameConverter"/>
+        <converters:MarkerDataToResourceFilePathConverter x:Key="MarkerDataToResourceFilePathConverter"/>
 
         <ResourceDictionary>
             <DataTemplate x:Key="LinkTemplate">
@@ -69,7 +69,7 @@
 
                         <ffimageloadingsvg:SvgCachedImage Grid.Column="1"
                                                           HeightRequest="50" Margin="5, 0"
-                                                          Source="{Binding Marker, Converter={StaticResource MarkerDataToSvgFilenameConverter}}"/>
+                                                          Source="{Binding Marker, Converter={StaticResource MarkerDataToResourceFilePathConverter}}"/>
 
                         <StackLayout Grid.Column="2" Spacing="0" Margin="10, 0, 0, 0" Padding="0">
                             <Label Text="{Binding PortalName}" FontSize="16" LineBreakMode="TailTruncation" />
