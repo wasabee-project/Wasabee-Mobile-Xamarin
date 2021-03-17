@@ -21,6 +21,16 @@ namespace Rocks.Wasabee.Mobile.Droid
             {
                 return CreateMarker(Resource.Drawable.wasabee_player_marker);
             }
+            
+            if (descriptor.Id.Equals("wasabee_player_marker_self"))
+            {
+                return CreateMarker(Resource.Drawable.wasabee_player_marker_self);
+            }
+            
+            if (descriptor.Id.Equals("wasabee_player_marker_gray"))
+            {
+                return CreateMarker(Resource.Drawable.wasabee_player_marker_gray);
+            }
 
             if (descriptor.Id.Contains('|'))
             {

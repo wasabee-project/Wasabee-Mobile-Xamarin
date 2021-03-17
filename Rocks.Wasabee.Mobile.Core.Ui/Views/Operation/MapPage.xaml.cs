@@ -5,9 +5,11 @@ using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
@@ -27,6 +29,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         private static int zIndexForAnchors = 1;
         private static int zIndexForMarkers = 2;
         private static int zIndexForPlayers = 3;
+
+        private List<Pin> _cachedAgentsPins = new List<Pin>();
 
         public MapPage()
         {
@@ -197,17 +201,33 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshAgentsLayer()
         {
+            if (ViewModel.AgentsPins.IsNullOrEmpty())
+            {
+                foreach (var pin in _cachedAgentsPins)
+                {
+                    var hasRemoved = Map.Pins.Remove(pin);
+                }
+
+                _cachedAgentsPins.Clear();
+
+                return;
+            }
+
             foreach (var agentPin in ViewModel.AgentsPins)
             {
-                while (Map.Pins.Any(x => x.Label.Contains(agentPin.AgentName)))
+                while (_cachedAgentsPins.Any(x => x.Label.Contains(agentPin.AgentName)))
                 {
-                    var toRemove = Map.Pins.First(x => x.Label.Contains(agentPin.AgentName));
+                    var toRemove = _cachedAgentsPins.First(x => x.Label.Contains(agentPin.AgentName));
+                    _cachedAgentsPins.Remove(toRemove);
+
                     Map.Pins.Remove(toRemove);
                 }
 
                 if (ViewModel.IsLayerAgentsActivated)
                 {
                     agentPin.Pin.ZIndex = zIndexForPlayers;
+                    _cachedAgentsPins.Add(agentPin.Pin);
+
                     Map.Pins.Add(agentPin.Pin);
                 }
             }

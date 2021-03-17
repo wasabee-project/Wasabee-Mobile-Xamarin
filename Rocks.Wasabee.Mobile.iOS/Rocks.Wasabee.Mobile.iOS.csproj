@@ -539,10 +539,15 @@
   <ItemGroup>
     <BundleResource Include="Resources\navbar\menu%403x.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BundleResource Include="Resources\wasabee\markers\player_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\wasabee\markers\player_self.png" />
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" TriggeredFromHotReload="False" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

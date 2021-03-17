@@ -58,7 +58,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
 
-            _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await LoadOperationCommand.ExecuteAsync());
+            _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg =>
+            {
+                await LoadOperationCommand.ExecuteAsync();
+
+                if (_preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) is false)
+                {
+                    // Force refresh agents pins to only show current OP agents
+                    AgentsPins.Clear();
+                    await RaisePropertyChanged(() => AgentsPins);
+                }
+
+                await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
+            });
             _tokenReload = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
             _tokenMarkerUpdated = messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
@@ -284,6 +296,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand<string> RefreshTeamsMembersPositionsCommand => new MvxAsyncCommand<string>(RefreshTeamsMembersPositionsExecuted);
         private async Task RefreshTeamsMembersPositionsExecuted(string teamId)
         {
+            if (Operation is null)
+                return;
+
             if (_isLoadingAgentsLocations)
                 return;
 
@@ -293,18 +308,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) || Operation == null;
+                var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
 
                 // Get all teams by default
                 var userTeamsIds = showFromAnyTeams ?
                     (await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId())).Select(x => x.Id).ToList() :
-                    Operation!.TeamList.Select(x => x.TeamId).ToList();
+                    Operation.TeamList.Select(x => x.TeamId).ToList();
 
                 // If teamId is specified, refresh only this one
                 if (!string.IsNullOrWhiteSpace(teamId))
                 {
                     // but only if Operation is assigned to the team or showFromAnyTeams is true from Settings
-                    if (Operation!.TeamList.Any(x => x.TeamId.Equals(teamId)) || showFromAnyTeams)
+                    if (Operation.TeamList.Any(x => x.TeamId.Equals(teamId)) || showFromAnyTeams)
                     {
                         userTeamsIds.Clear();
                         userTeamsIds.Add(teamId);
@@ -330,7 +345,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (updatedTeams.Any())
                     await _teamsDatabase.SaveTeamsModels(updatedTeams);
 
-                var agents = await _teamAgentsDatabase.GetAgentsInTeams(updatedTeams.Select(x => x.Id));
+                var agents = updatedTeams
+                    .SelectMany(x => x.Agents)
+                    .Where(a => a.State && a.Lat != 0 && a.Lng != 0)
+                    .DistinctBy(a => a.Id)
+                    .ToList();
+
                 if (agents.IsNullOrEmpty())
                 {
                     LoggingService.Trace("Nothing to refresh, teams agents contains no elements");
@@ -338,12 +358,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 }
 
                 var wasabeeAgentPins = new List<WasabeeAgentPin>();
-                foreach (var agent in agents.Where(a => a.State && a.Lat != 0 && a.Lng != 0).DistinctBy(a => a.Id))
+                var loggedUserId = _userSettingsService.GetLoggedUserGoogleId();
+                var opTeamsIds = Operation.TeamList.Select(x => x.TeamId);
+                foreach (var agent in agents)
                 {
                     if (wasabeeAgentPins.Any(a => a.AgentId.Equals(agent.Id)))
                         continue;
 
-                    var updatedAgentPin = CreateAgentPin(agent);
+                    var agentTeams = updatedTeams.Where(t => t.Agents.Any(a => a.Id.Equals(agent.Id)));
+                    var isAgentAssignedToOperation = agentTeams.Any(x => opTeamsIds.Any(tId => tId.Equals(x.Id)));
+                    var isCurrentUser = agent.Id.Equals(loggedUserId);
+
+                    var updatedAgentPin = CreateAgentPin(agent, isAgentAssignedToOperation, isCurrentUser);
                     wasabeeAgentPins.Add(updatedAgentPin);
                 }
 
@@ -384,6 +410,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
+                // Refresh the whole team
                 if (string.IsNullOrEmpty(message.UserId))
                 {
                     _isLoadingAgentsLocations = false;
@@ -392,14 +419,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     return;
                 }
 
+                // Refresh only agent
                 var agentId = message.UserId;
                 var agentTeams = await _teamsDatabase.GetTeamsForAgent(agentId);
                 if (!agentTeams.Any())
                     return;
 
                 var showFromAnyTeams = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
-                if (!agentTeams.Any(x => x.Id.Equals(message.TeamId)) && !showFromAnyTeams)
-                    return;
+                var opTeamsIds = Operation.TeamList.Select(x => x.TeamId);
+
+                var isAgentAssignedToOperation = agentTeams.Any(x => opTeamsIds.Any(tId => tId.Equals(x.Id)));
+
+                // Do not refresh agent if he's in a team not assigned to Operation and setting ShowAgentsFromAnyTeam is false
+                // but refresh if it's current user
+                var loggedUserId = _userSettingsService.GetLoggedUserGoogleId();
+                var isCurrentUser = agentId.Equals(loggedUserId);
+                if (isAgentAssignedToOperation is false && showFromAnyTeams is false)
+                {
+                    if (isCurrentUser is false)
+                        return;
+                }
 
                 var agent = await _teamAgentsDatabase.GetTeamAgent(agentId);
                 if (agent == null)
@@ -426,7 +465,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (updatedAgent == null || (updatedAgent.Lat == 0 && updatedAgent.Lng == 0))
                     return;
 
-                var updatedAgentPin = CreateAgentPin(updatedAgent);
+                var updatedAgentPin = CreateAgentPin(updatedAgent, isAgentAssignedToOperation, isCurrentUser);
                 var toRemove = AgentsPins.FirstOrDefault(a => a.AgentId.Equals(updatedAgentPin.AgentId));
                 if (toRemove != null)
                     AgentsPins.Remove(toRemove);
@@ -548,13 +587,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return true;
         }
 
-        private WasabeeAgentPin CreateAgentPin(Models.Teams.TeamAgentModel agent)
+        private WasabeeAgentPin CreateAgentPin(Models.Teams.TeamAgentModel agent, bool isAgentAssignedToOperation, bool isCurrentUser = false)
         {
             var pin = new Pin()
             {
                 Label = agent.Name,
                 Position = new Position(agent.Lat, agent.Lng),
-                Icon = BitmapDescriptorFactory.FromBundle("wasabee_player_marker")
+                Icon = BitmapDescriptorFactory.FromBundle(isCurrentUser ? "wasabee_player_marker_self" :
+                    isAgentAssignedToOperation ? "wasabee_player_marker" : "wasabee_player_marker_gray")
             };
             var playerPin = new WasabeeAgentPin(pin) { AgentId = agent.Id, AgentName = agent.Name };
 

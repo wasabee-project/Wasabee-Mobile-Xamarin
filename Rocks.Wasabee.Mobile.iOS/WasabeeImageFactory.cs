@@ -17,6 +17,16 @@ namespace Rocks.Wasabee.Mobile.iOS
             {
                 return CreateMarker("wasabee/markers/player.png");
             }
+
+            if (descriptor.Id.Equals("wasabee_player_marker_self"))
+            {
+                return CreateMarker("wasabee/markers/player_self.png");
+            }
+
+            if (descriptor.Id.Equals("wasabee_player_marker_gray"))
+            {
+                return CreateMarker("wasabee/markers/player_gray.png");
+            }
             
             if (descriptor.Id.Contains('|'))
             {
@@ -43,7 +53,10 @@ namespace Rocks.Wasabee.Mobile.iOS
 
                 return CreateMarker(fileName);
             }
-
+            
+            if (descriptor.Id.Contains("#"))
+                return CreatePin($"wasabee/pins/pin_green.png");
+            
             return CreatePin($"wasabee/pins/{descriptor.Id}.png");
         }
         
