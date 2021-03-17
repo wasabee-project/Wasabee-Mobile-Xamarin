@@ -109,19 +109,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             IsBusy = false;
         }
 
-        public IMvxCommand OpenWasabeeTelegramChatCommand => new MvxCommand(OpenWasabeeTelegramChatExecuted);
-        private async void OpenWasabeeTelegramChatExecuted()
-        {
-            LoggingService.Trace("Executing SettingsViewModel.OpenWasabeeTelegramChatCommand");
-
-            if (IsBusy) return;
-            IsBusy = true;
-
-            await Launcher.OpenAsync("tg://join?invite=FSaGrFWGdrf87xdKQXWsPw");
-
-            IsBusy = false;
-        }
-
         public IMvxCommand OpenWasabeeWebpageCommand => new MvxCommand(OpenWasabeeWebpageExecuted);
         private async void OpenWasabeeWebpageExecuted()
         {
@@ -200,7 +187,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                 if (!hasSent)
                 {
                     await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
-                    await Share.RequestAsync(new ShareFileRequest(new ShareFile(zip)));
+                    await Share.RequestAsync(new ShareFileRequest(zip, new ShareFile(zip)));
                 }
             }
             catch (Exception e)
@@ -372,6 +359,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     var filesCount = Directory.GetFiles(logFolder, "*.csv").Length;
                     if (filesCount > 0)
                     {
+                        var destinationPath = Path.Combine(logFolder, "database");
 
                         if (result)
                         {
@@ -381,17 +369,28 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                                 var fileSystem = Mvx.IoCProvider.Resolve<IFileSystem>();
                                 var databaseFullPathName = Path.Combine(fileSystem.AppDataDirectory, BaseDatabase.Name);
 
-                                var destinationPath = Path.Combine(logFolder, "database");
                                 if (Directory.Exists(destinationPath) is false)
                                     Directory.CreateDirectory(destinationPath);
 
                                 var destinationFullPathName = Path.Combine(destinationPath, BaseDatabase.Name);
 
-                                File.Copy(databaseFullPathName, destinationFullPathName);
+                                File.Copy(databaseFullPathName, destinationFullPathName, true);
                             }
                             catch (Exception e)
                             {
                                 LoggingService.Error(e, "Error importing local DB copy");
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                if (Directory.Exists(destinationPath))
+                                    Directory.Delete(destinationPath, true);
+                            }
+                            catch (Exception e)
+                            {
+                                LoggingService.Error(e, "Error deleting old local DB copy");
                             }
                         }
 

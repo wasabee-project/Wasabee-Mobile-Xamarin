@@ -89,13 +89,12 @@
                                         <![CDATA[
                                         Wasabee mobile application is still under huge development process. Bugs and crashes are possible.
                                         <br>
-                                        If you're a C# / Xamarin.Forms developer and interested in helping us, reach us through Telegram.
+                                        If you're a C# / Xamarin.Forms developer and interested in helping us, reach us through Telegram (@fisher01).
                                         ]]>
                                     </Label.Text>
                                 </Label>
                             </ViewCell>
                             <TextCell Text="Wasabee Webpage" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeWebpageCommand}" />
-                            <TextCell Text="Telegram Chat" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeTelegramChatCommand}" />
                             <TextCell Text="Version" TextColor="{DynamicResource PrimaryTextColor}" Detail="{Binding Version}" DetailColor="{DynamicResource SecondaryTextColor}" Command="{Binding VersionTappedCommand}"/>
                         </TableSection>
                     </TableRoot>
