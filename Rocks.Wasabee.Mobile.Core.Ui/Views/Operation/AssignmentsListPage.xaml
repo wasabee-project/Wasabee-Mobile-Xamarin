@@ -19,9 +19,10 @@
         <ResourceDictionary>
             <DataTemplate x:Key="LinkTemplate">
                 <ViewCell>
-                    <Grid Padding="10" RowSpacing="0" ColumnSpacing="0">
+                    <Grid Padding="10" RowSpacing="0" ColumnSpacing="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -30,18 +31,29 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,0,10,0"
+                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
                                VerticalTextAlignment="Center" HorizontalTextAlignment="End"
                                Text="{Binding Link.ThrowOrderPos, StringFormat='{0}.'}" FontSize="16" />
 
-                        <Label Grid.Column="1" Grid.Row="0" Text="{Binding FromPortalName}" FontSize="16" />
-                        <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Spacing="0">
-                            <iconize:IconLabel Text="mdi-arrow-right-bold" TextColor="{Binding Color}" FontSize="23" Margin="5, 0" />
+                        <iconize:IconLabel Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
+                                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                                           FontSize="24" Text="mdi-progress-clock" TextColor="{DynamicResource PrimaryOrange}">
+                            <iconize:IconLabel.Triggers>
+                                <DataTrigger TargetType="iconize:IconLabel" Binding="{Binding Link.Completed}" Value="True">
+                                    <Setter Property="Text" Value="mdi-check-circle-outline"/>
+                                    <Setter Property="TextColor" Value="{DynamicResource PrimaryGreen}"/>
+                                </DataTrigger>
+                            </iconize:IconLabel.Triggers>
+                        </iconize:IconLabel>
+
+                        <Label Grid.Column="2" Grid.Row="0" Text="{Binding FromPortalName}" FontSize="16" />
+                        <StackLayout Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Spacing="5">
+                            <iconize:IconLabel Text="mdi-arrow-right-bold" TextColor="{Binding Color}" FontSize="23" />
                             <Label Text="{Binding ToPortalName}" FontSize="16" />
                         </StackLayout>
 
                         <pancakeView:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel1}"
-                            Grid.Column="1" Grid.Row="2" Padding="5" Margin="5"
+                            Grid.Column="2" Grid.Row="2" Padding="5" Margin="5"
                             CornerRadius="0, 4, 4, 4" HorizontalOptions="Start"
                             IsVisible="{Binding Link.Description, Converter={StaticResource StringToBoolNegateConverter}}">
                             <StackLayout Orientation="Horizontal" Padding="0" Margin="0" Spacing="5">
@@ -50,6 +62,11 @@
                             </StackLayout>
                         </pancakeView:PancakeView>
 
+                        <Grid.Triggers>
+                            <DataTrigger TargetType="Grid" Binding="{Binding Link.Completed}" Value="True">
+                                <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColorLevel1}"></Setter>
+                            </DataTrigger>
+                        </Grid.Triggers>
                     </Grid>
                 </ViewCell>
             </DataTemplate>
