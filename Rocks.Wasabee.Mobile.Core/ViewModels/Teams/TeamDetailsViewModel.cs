@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -123,9 +124,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 return;
 
             IsBusy = true;
-
-            await _navigationService.Navigate<ProfileViewModel, ProfileViewModelNavigationParameter>(
-                new ProfileViewModelNavigationParameter(agent.Id));
+            
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<ProfileViewModel>(), new ProfileViewModelNavigationParameter(agent.Id));
 
             IsBusy = false;
         }

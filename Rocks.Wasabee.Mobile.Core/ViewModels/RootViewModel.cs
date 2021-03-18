@@ -2,6 +2,7 @@
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System.Threading.Tasks;
+using MvvmCross;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
@@ -36,12 +37,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task ShowMenuViewModel()
         {
-            await _navigationService.Navigate<MenuViewModel>();
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<MenuViewModel>());
         }
 
         private async Task ShowOperationRootTabbedViewModel()
         {
-            await _navigationService.Navigate<OperationRootTabbedViewModel>();
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<OperationRootTabbedViewModel>());
         }
     }
 }

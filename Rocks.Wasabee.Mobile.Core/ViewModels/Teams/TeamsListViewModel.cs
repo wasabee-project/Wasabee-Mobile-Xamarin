@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
@@ -106,8 +107,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                         if (operationsCount == 0)
                         {
                             // Leaves app
-                            await _navigationService.Navigate<SplashScreenViewModel, SplashScreenNavigationParameter>(
-                                new SplashScreenNavigationParameter(doDataRefreshOnly: true));
+                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>(), new SplashScreenNavigationParameter(doDataRefreshOnly: true));
                         }
                     }
                 }
@@ -169,9 +169,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private async Task ShowTeamDetailExecuted(Team team)
         {
             LoggingService.Trace("Executing TeamsListViewModel.ShowTeamDetailCommand");
-
-            await _navigationService.Navigate<TeamDetailsViewModel, TeamDetailsNavigationParameter>(
-                new TeamDetailsNavigationParameter(team.Id, team.Name, team.IsOwner));
+            
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<TeamDetailsViewModel>(), new TeamDetailsNavigationParameter(team.Id, team.Name, team.IsOwner));
         }
 
         public IMvxAsyncCommand<Team> EditTeamNameCommand => new MvxAsyncCommand<Team>(EditTeamNameExecuted);

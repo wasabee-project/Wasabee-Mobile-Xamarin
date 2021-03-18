@@ -21,6 +21,7 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MvvmCross;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
@@ -196,13 +197,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         }
 
         public IMvxCommand<MenuItem> SelectedMenuItemChangedCommand => new MvxCommand<MenuItem>(SelectedMenuItemChangedExecuted);
-        private void SelectedMenuItemChangedExecuted(MenuItem menuItem)
+        private async void SelectedMenuItemChangedExecuted(MenuItem menuItem)
         {
             LoggingService.Trace($"Executing MenuViewModel.SelectedMenuItemChangedCommand({menuItem.Title})");
 
             if (menuItem.ViewModelType == null) return;
-
-            _navigationService.Navigate(menuItem.ViewModelType);
+            
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve(menuItem.ViewModelType) as IMvxViewModel);
         }
 
         public IMvxAsyncCommand LogoutCommand => new MvxAsyncCommand(Logout);
@@ -217,7 +218,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsLiveLocationSharingEnabled = false;
 
             await _authentificationService.LogoutAsync();
-            await _navigationService.Navigate<SplashScreenViewModel>();
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>());
 
             IsBusy = false;
         }
@@ -229,8 +230,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (IsBusy) return;
             IsBusy = true;
-
-            await _navigationService.Navigate<SplashScreenViewModel, SplashScreenNavigationParameter>(new SplashScreenNavigationParameter(doDataRefreshOnly: true));
+            
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>(), new SplashScreenNavigationParameter(doDataRefreshOnly: true));
 
             IsBusy = false;
         }

@@ -9,6 +9,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MvvmCross;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
@@ -90,8 +91,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             var tasks = new List<Task>
             {
-                _navigationService.Navigate<MapViewModel>(),
-                _navigationService.Navigate<AssignmentsListViewModel>()
+                _navigationService.Navigate(Mvx.IoCProvider.Resolve<MapViewModel>()),
+                _navigationService.Navigate(Mvx.IoCProvider.Resolve<AssignmentsListViewModel>())
             };
             await Task.WhenAll(tasks);
         }

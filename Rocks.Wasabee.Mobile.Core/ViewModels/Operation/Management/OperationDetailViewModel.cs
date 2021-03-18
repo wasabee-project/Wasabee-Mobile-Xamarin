@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
 {
@@ -127,8 +128,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
 
             IsBusy = true;
 
-            await _navigationService.Navigate<TeamDetailsViewModel, TeamDetailsNavigationParameter>(
-                new TeamDetailsNavigationParameter(team.Id, team.Name, team.IsOwner));
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<TeamDetailsViewModel>(), new TeamDetailsNavigationParameter(team.Id, team.Name, team.IsOwner));
 
             IsBusy = false;
         }

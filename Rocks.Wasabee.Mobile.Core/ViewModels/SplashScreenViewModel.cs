@@ -19,6 +19,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MvvmCross;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
@@ -468,8 +469,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     await PullDataFromServer(userModel)
                         .ContinueWith(async task =>
                         {
-                            await _navigationService.Navigate<RootViewModel>();
-                            await _navigationService.Close(this);
+                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
                         });
 
                 }
