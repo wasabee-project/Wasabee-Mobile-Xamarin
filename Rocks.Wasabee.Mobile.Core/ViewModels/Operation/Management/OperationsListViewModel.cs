@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
@@ -135,8 +136,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
                 if (teamsCount == 0)
                 {
                     // Leaves app
-                    await _navigationService.Navigate<SplashScreenViewModel, SplashScreenNavigationParameter>(
-                        new SplashScreenNavigationParameter(doDataRefreshOnly: true));
+                    await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>(), new SplashScreenNavigationParameter(doDataRefreshOnly: true));
                 }
             }
 
@@ -193,15 +193,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
             IsBusy = true;
 
             LoggingService.Trace("Executing OperationsListViewModel.ShowOperationDetailCommand");
-
-            await _navigationService.Navigate<OperationDetailViewModel, OperationDetailNavigationParameter>(
-                new OperationDetailNavigationParameter(op.Id));
+            
+            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<OperationDetailViewModel>(), new OperationDetailNavigationParameter(op.Id));
 
             IsBusy = false;
         }
 
         #endregion
-
 
         #region Private Methods
 

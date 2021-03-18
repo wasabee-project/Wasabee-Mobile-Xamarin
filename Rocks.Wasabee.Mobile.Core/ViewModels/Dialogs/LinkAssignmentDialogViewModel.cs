@@ -6,7 +6,10 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -14,10 +17,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 {
     public class LinkAssignmentDialogViewModel : BaseDialogViewModel, IMvxViewModel<LinkAssignmentData>
     {
+
+        private readonly IUserDialogs _userDialogs;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
+        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs,
+            WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
         {
+            _userDialogs = userDialogs;
             _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
@@ -74,51 +81,47 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                string uri;
+                var culture = CultureInfo.GetCultureInfo("en-US");
+                string coordinates;
+                Location location;
+
                 switch (fromOrToPortal)
                 {
                     case "From":
                         if (LinkAssignment.FromPortal == null)
                             return;
+                        
+                        coordinates = $"{LinkAssignment.FromPortal.Lat},{LinkAssignment.FromPortal.Lng}";
 
-                        uri = Device.RuntimePlatform switch
-                        {
-                            Device.Android => "https://www.google.com/maps/search/?api=1&query=" +
-                                              $"{LinkAssignment.FromPortal.Lat}," +
-                                              $"{LinkAssignment.FromPortal.Lng}",
-
-                            Device.iOS => "https://maps.apple.com/?ll=" +
-                                          $"{LinkAssignment.FromPortal.Lat}," +
-                                          $"{LinkAssignment.FromPortal.Lng}",
-                            _ => throw new ArgumentOutOfRangeException(Device.RuntimePlatform)
-                        };
+                        double.TryParse(LinkAssignment.FromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
+                        double.TryParse(LinkAssignment.FromPortal.Lng, NumberStyles.Float, culture, out var fromLng);
+                        
+                        location = new Location(fromLat, fromLng);
                         break;
                     case "To":
                         if (LinkAssignment.ToPortal == null)
                             return;
+                        
+                        coordinates = $"{LinkAssignment.ToPortal.Lat},{LinkAssignment.ToPortal.Lng}";
 
-                        uri = Device.RuntimePlatform switch
-                        {
-                            Device.Android => "https://www.google.com/maps/search/?api=1&query=" +
-                                              $"{LinkAssignment.ToPortal.Lat}," +
-                                              $"{LinkAssignment.ToPortal.Lng}",
-
-                            Device.iOS => "https://maps.apple.com/?ll=" +
-                                          $"{LinkAssignment.ToPortal.Lat}," +
-                                          $"{LinkAssignment.ToPortal.Lng}",
-                            _ => throw new ArgumentOutOfRangeException(Device.RuntimePlatform)
-                        };
+                        double.TryParse(LinkAssignment.ToPortal.Lat, NumberStyles.Float, culture, out var toLat);
+                        double.TryParse(LinkAssignment.ToPortal.Lng, NumberStyles.Float, culture, out var toLng);
+                        
+                        location = new Location(toLat, toLng);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(fromOrToPortal), fromOrToPortal,
                             "Incorrect value");
                 }
 
-                if (string.IsNullOrWhiteSpace(uri))
-                    return;
-
-                if (await Launcher.CanOpenAsync(uri))
-                    await Launcher.OpenAsync(uri);
+                if (coordinates.IsNullOrEmpty() is false)
+                {
+                    await Clipboard.SetTextAsync(coordinates);
+                    if (Clipboard.HasText)
+                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                }
+                
+                await Map.OpenAsync(location);
             }
             catch (Exception e)
             {

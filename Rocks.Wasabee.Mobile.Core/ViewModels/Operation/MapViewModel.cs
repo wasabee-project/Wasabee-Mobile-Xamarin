@@ -205,11 +205,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         double.TryParse(toPortal.Lat, NumberStyles.Float, culture, out var toLat);
                         double.TryParse(toPortal.Lng, NumberStyles.Float, culture, out var toLng);
 
+                        var baseLinkColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color);
+                        if (link.Completed)
+                            baseLinkColor = baseLinkColor.MultiplyAlpha(0.5);
+
                         Links.Add(
                             new Polyline()
                             {
-                                StrokeColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color),
-                                StrokeWidth = 2,
+                                StrokeColor = baseLinkColor,
+                                StrokeWidth = link.Completed ? 1 : 2,
                                 Positions =
                                 {
                                     new Position(fromLat, fromLng),

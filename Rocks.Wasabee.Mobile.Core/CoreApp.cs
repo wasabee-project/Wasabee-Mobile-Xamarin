@@ -10,15 +10,18 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
 using System;
+using MvvmCross.Navigation;
+using MvvmCross.Navigation.EventArguments;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core
 {
-    public class CoreApp : MvxApplication {
-
+    public class CoreApp : MvxApplication
+    {
         public static Theme AppTheme { get; set; } = Theme.Light;
 
-        public override async void Initialize() {
+        public override async void Initialize()
+        {
             CreatableTypes()
                 .EndingWith("ViewModel")
                 .Except(typeof(BaseViewModel))
@@ -60,6 +63,5 @@ namespace Rocks.Wasabee.Mobile.Core
 
             RegisterAppStart<SplashScreenViewModel>();
         }
-
     }
 }
