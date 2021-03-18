@@ -3,7 +3,6 @@
 # Add steps that test, sign, and distribute an app, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
-name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
 trigger:
 - master
 
@@ -11,8 +10,13 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  buildConfiguration: 'Release'
-  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+- group: Android
+- name: buildConfiguration
+  value: 'Release'
+- name: outputDirectory
+  value: '$(build.binariesDirectory)/$(buildConfiguration)'
+
+name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
 
 steps:
 

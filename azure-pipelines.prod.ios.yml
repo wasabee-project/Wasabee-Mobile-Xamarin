@@ -3,7 +3,6 @@
 # Add steps that install certificates, test, sign, and distribute an app, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
-name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
 trigger:
 - master
 
@@ -11,8 +10,11 @@ pool:
   vmImage: 'macos-latest'
 
 variables:
-  buildConfiguration: 'Release'
-  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+- group: iOS
+- name: buildConfiguration
+  value: 'Release'
+
+name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
 
 steps:
 
