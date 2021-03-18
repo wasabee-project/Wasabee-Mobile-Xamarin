@@ -9,6 +9,7 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -18,14 +19,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
     {
         private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IMvxMessenger _messenger;
+        private readonly IUserDialogs _userDialogs;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly MarkersDatabase _markersDatabase;
 
-        public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger, WasabeeApiV1Service wasabeeApiV1Service, MarkersDatabase markersDatabase)
-            : base(dialogNavigationService)
+        public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger, IUserDialogs userDialogs,
+            WasabeeApiV1Service wasabeeApiV1Service, MarkersDatabase markersDatabase) : base(dialogNavigationService)
         {
             _dialogNavigationService = dialogNavigationService;
             _messenger = messenger;
+            _userDialogs = userDialogs;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _markersDatabase = markersDatabase;
         }
@@ -142,20 +145,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
+                var coordinates = $"{MarkerAssignment.Portal.Lat},{MarkerAssignment.Portal.Lng}";
                 var uri = Device.RuntimePlatform switch
                 {
-                    Device.Android => "https://www.google.com/maps/search/?api=1&query=" +
-                                      $"{MarkerAssignment.Portal.Lat}," +
-                                      $"{MarkerAssignment.Portal.Lng}",
-
-                    Device.iOS => "https://maps.apple.com/?ll=" +
-                                  $"{MarkerAssignment.Portal.Lat}," +
-                                  $"{MarkerAssignment.Portal.Lng}",
+                    Device.Android => $"https://www.google.com/maps/search/?api=1&query={coordinates}", 
+                    Device.iOS => "https://maps.apple.com/?ll={coordinates}",
                     _ => throw new ArgumentOutOfRangeException(Device.RuntimePlatform)
                 };
 
                 if (string.IsNullOrWhiteSpace(uri))
                     return;
+
+                await Clipboard.SetTextAsync(coordinates);
+                _userDialogs.Toast("Coordinates copied to clipboard.");
 
                 if (await Launcher.CanOpenAsync(uri))
                     await Launcher.OpenAsync(uri);
