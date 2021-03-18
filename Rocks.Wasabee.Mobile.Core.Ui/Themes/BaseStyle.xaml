@@ -4,17 +4,6 @@
                     xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                     x:Class="Rocks.Wasabee.Mobile.Core.Ui.Themes.BaseStyle">
 
-    <!--
-    <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
-    <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
-    <converters:AgentVerificationBoolToStringConverter x:Key="AgentVerificationBoolToStringConverter"/>
-    <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
-    <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
-    <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
-    <converters:TextToGridVisibilityConverter x:Key="TextToGridVisibilityConverter"/>
-    <converters:MarkerDataToSvgFilenameConverter x:Key="MarkerDataToSvgFilenameConverter"/>
-    -->
-
     <!-- COLORS -->
     <Color x:Key="PrimaryBlue">#3788D8</Color>
     <Color x:Key="PrimaryOrange">#F59100</Color>

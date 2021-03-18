@@ -246,7 +246,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 {
                     MapThemeEnum.GoogleLight => MapThemeEnum.Enlightened,
                     MapThemeEnum.Enlightened => MapThemeEnum.IntelDefault,
-                    MapThemeEnum.IntelDefault => MapThemeEnum.GoogleLight,
+                    MapThemeEnum.IntelDefault => MapThemeEnum.RedIntel,
+                    MapThemeEnum.RedIntel => MapThemeEnum.GoogleLight,
                     _ => MapThemeEnum.GoogleLight
                 });
             RefreshMapTheme();
@@ -277,6 +278,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                     MapThemeEnum.GoogleLight => "Rocks.Wasabee.Mobile.Core.Ui.GoogleRoads.MapStyle.json",
                     MapThemeEnum.Enlightened => "Rocks.Wasabee.Mobile.Core.Ui.Greenlightened.MapStyle.json",
                     MapThemeEnum.IntelDefault => "Rocks.Wasabee.Mobile.Core.Ui.Intel.MapStyle.json",
+                    MapThemeEnum.RedIntel => "Rocks.Wasabee.Mobile.Core.Ui.RedIntel.MapStyle.json",
                     _ => throw new ArgumentOutOfRangeException(ViewModel.MapTheme.ToString())
                 };
                 var assembly = typeof(MapPage).GetTypeInfo().Assembly;

@@ -12,11 +12,21 @@
 
     <Color x:Key="PrimaryRed">#CC0000</Color>
 
+    <Color x:Key="NavBarsBackgroundColor">#3BA345</Color>
+
     <Color x:Key="MasterMenuBackgroundColor">#4E5B59</Color>
     <Color x:Key="DialogsBackgroundColor">#FFF</Color>
 
     <Color x:Key="PrimaryTextColor">Black</Color>
     <Color x:Key="SecondaryTextColor">Gray</Color>
+
+    <Color x:Key="SelectedTabColor">White</Color>
+
+    <!-- NavigationPage and TabbedPage -->
+    <Style TargetType="NavigationPage">
+        <Setter Property="BarBackgroundColor" Value="{StaticResource NavBarsBackgroundColor}" />
+        <Setter Property="BarTextColor" Value="White" />
+    </Style>
 
     <!--Containers-->
     <Style TargetType="ContentPage">

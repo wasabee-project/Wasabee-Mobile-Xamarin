@@ -86,6 +86,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             {
                 nameof(MapThemeEnum.Enlightened) => MapThemeEnum.Enlightened,
                 nameof(MapThemeEnum.IntelDefault) => MapThemeEnum.IntelDefault,
+                nameof(MapThemeEnum.RedIntel) => MapThemeEnum.RedIntel,
                 _ => MapThemeEnum.GoogleLight
             };
             MapType = _preferences.Get(UserSettingsKeys.MapType, nameof(MapType.Street)) switch
@@ -506,6 +507,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 case MapThemeEnum.IntelDefault:
                     _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.IntelDefault));
                     break;
+                case MapThemeEnum.RedIntel:
+                    _preferences.Set(UserSettingsKeys.MapTheme, nameof(MapThemeEnum.RedIntel));
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mapTheme), mapTheme, null);
             }
@@ -734,7 +738,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
     {
         GoogleLight,
         Enlightened,
-        IntelDefault
+        IntelDefault,
+        RedIntel
     }
 
     internal class DistanceCalculation
