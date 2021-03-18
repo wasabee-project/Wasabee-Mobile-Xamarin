@@ -13,7 +13,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 
         protected BaseDialogPage() : base()
         {
-            CloseWhenBackgroundIsClicked = false;
+
         }
 
         internal static void ViewModelChanged(BindableObject bindable, object oldvalue, object newvalue)
