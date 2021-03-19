@@ -24,7 +24,7 @@ namespace Rocks.Wasabee.Mobile.Core
                 .EndingWith("ViewModel")
                 .Except(typeof(BaseViewModel))
                 .AsTypes()
-                .RegisterAsLazySingleton();
+                .RegisterAsDynamic();
 
             Bootstrapper.SetupCrossPlugins();
             Bootstrapper.SetupCrossConcerns();
