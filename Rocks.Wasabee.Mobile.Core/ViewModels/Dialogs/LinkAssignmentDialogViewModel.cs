@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Acr.UserDialogs;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Xamarin.Essentials;
-using Xamarin.Forms;
+using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 {
@@ -19,12 +19,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
     {
 
         private readonly IUserDialogs _userDialogs;
+        private readonly IClipboard _clipboard;
+        private readonly IMap _map;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
         public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs,
-            WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
+            IClipboard clipboard, IMap map, WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
         {
             _userDialogs = userDialogs;
+            _clipboard = clipboard;
+            _map = map;
             _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
@@ -116,12 +120,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
                 if (coordinates.IsNullOrEmpty() is false)
                 {
-                    await Clipboard.SetTextAsync(coordinates);
-                    if (Clipboard.HasText)
+                    await _clipboard.SetTextAsync(coordinates);
+                    if (_clipboard.HasText)
                         _userDialogs.Toast("Coordinates copied to clipboartd.");
                 }
                 
-                await Map.OpenAsync(location);
+                await _map.OpenAsync(location);
             }
             catch (Exception e)
             {

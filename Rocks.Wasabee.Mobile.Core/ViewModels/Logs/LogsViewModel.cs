@@ -14,15 +14,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Logs
 {
     public class LogsViewModel : BaseViewModel
     {
-        private MvxSubscriptionToken _token;
+        private readonly IMvxMessenger _messenger;
 
-        public LogsViewModel(IMvxMessenger mvxMessenger)
+        private MvxSubscriptionToken? _token;
+
+        public LogsViewModel(IMvxMessenger messenger)
         {
-            _token = mvxMessenger.Subscribe<NotificationMessage>(msg =>
-            {
-                LogsCollection.Add(new LogLine($"{DateTime.Now:T}: {msg.Message}", msg.Data));
-                RaisePropertyChanged(() => LogsCollection);
-            });
+            _messenger = messenger;
         }
 
         public override Task Initialize()
@@ -30,6 +28,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Logs
             Analytics.TrackEvent(GetType().Name);
 
             return base.Initialize();
+        }
+
+        public override void ViewAppeared()
+        {
+            base.ViewAppeared();
+            
+            _token ??= _messenger.Subscribe<NotificationMessage>(msg =>
+            {
+                LogsCollection.Add(new LogLine($"{DateTime.Now:T}: {msg.Message}", msg.Data));
+                RaisePropertyChanged(() => LogsCollection);
+            });
+        }
+
+        public override void ViewDisappeared()
+        {
+            base.ViewDisappeared();
+
+            _token?.Dispose();
+            _token = null;
         }
 
         public MvxObservableCollection<LogLine> LogsCollection { get; set; } = new MvxObservableCollection<LogLine>();

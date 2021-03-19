@@ -23,11 +23,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly OperationsDatabase _operationsDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        private MvxSubscriptionToken _token;
+        private MvxSubscriptionToken? _token;
 
         public OperationRootTabbedViewModel(IMvxNavigationService navigationService, IUserDialogs userDialogs,
-            IPreferences preferences, IMvxMessenger messenger,
-            OperationsDatabase operationsDatabase, WasabeeApiV1Service wasabeeApiV1Service)
+            IPreferences preferences, IMvxMessenger messenger, OperationsDatabase operationsDatabase,
+            WasabeeApiV1Service wasabeeApiV1Service)
         {
             _navigationService = navigationService;
             _userDialogs = userDialogs;
@@ -35,9 +35,24 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _messenger = messenger;
             _operationsDatabase = operationsDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
-
-            _token = messenger.Subscribe<OperationDataChangedMessage>(mgs => messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this)));
         }
+
+        public override void ViewAppearing()
+        {
+            base.ViewAppearing();
+
+            _token ??= _messenger.Subscribe<OperationDataChangedMessage>(mgs => _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this)));
+        }
+
+        public override void ViewDisappeared()
+        {
+            base.ViewDisappeared();
+
+            _token?.Dispose();
+            _token = null;
+        }
+
+        #region Commands
 
         public IMvxCommand RefreshOperationCommand => new MvxCommand(async () => await RefreshOperationExecuted());
         private async Task RefreshOperationExecuted()
@@ -85,7 +100,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-
         public IMvxAsyncCommand ShowInitialViewModelsCommand => new MvxAsyncCommand(ShowInitialViewModels);
         private async Task ShowInitialViewModels()
         {
@@ -96,5 +110,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             };
             await Task.WhenAll(tasks);
         }
+
+        #endregion
     }
 }

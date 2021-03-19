@@ -6,9 +6,8 @@
                      xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.OperationRootTabbedPage"
                      android:TabbedPage.ToolbarPlacement="Bottom"
-                     BarBackgroundColor="{DynamicResource PrimaryGreenDark}"
-                     BarTextColor="White"
-                     SelectedTabColor="White"
+                     BarBackgroundColor="{StaticResource NavBarsBackgroundColor}"
+                     SelectedTabColor="{DynamicResource SelectedTabColor}"
                      Title="Operation">
 
     <views:MvxTabbedPage.ToolbarItems>

@@ -10,7 +10,7 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Threading.Tasks;
 using Acr.UserDialogs;
-using Xamarin.Essentials;
+using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
@@ -20,15 +20,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IMvxMessenger _messenger;
         private readonly IUserDialogs _userDialogs;
+        private readonly IClipboard _clipboard;
+        private readonly ILauncher _launcher;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly MarkersDatabase _markersDatabase;
 
         public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger, IUserDialogs userDialogs,
-            WasabeeApiV1Service wasabeeApiV1Service, MarkersDatabase markersDatabase) : base(dialogNavigationService)
+            IClipboard clipboard, ILauncher launcher, WasabeeApiV1Service wasabeeApiV1Service, MarkersDatabase markersDatabase) : base(dialogNavigationService)
         {
             _dialogNavigationService = dialogNavigationService;
             _messenger = messenger;
             _userDialogs = userDialogs;
+            _clipboard = clipboard;
+            _launcher = launcher;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _markersDatabase = markersDatabase;
         }
@@ -156,11 +160,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (string.IsNullOrWhiteSpace(uri))
                     return;
 
-                await Clipboard.SetTextAsync(coordinates);
+                await _clipboard.SetTextAsync(coordinates);
                 _userDialogs.Toast("Coordinates copied to clipboard.");
 
-                if (await Launcher.CanOpenAsync(uri))
-                    await Launcher.OpenAsync(uri);
+                if (await _launcher.CanOpenAsync(uri))
+                    await _launcher.OpenAsync(uri);
             }
             catch (Exception e)
             {

@@ -10,8 +10,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
 using System;
-using MvvmCross.Navigation;
-using MvvmCross.Navigation.EventArguments;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core
