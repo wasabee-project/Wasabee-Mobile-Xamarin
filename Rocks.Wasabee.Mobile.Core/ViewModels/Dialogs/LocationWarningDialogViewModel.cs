@@ -81,7 +81,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         public override void ViewDestroy(bool viewFinishing = true)
         {
-            if (viewFinishing && CloseCompletionSource is not null && !CloseCompletionSource.Task.IsCompleted && !CloseCompletionSource.Task.IsFaulted)
+            if (viewFinishing && CloseCompletionSource != null && !CloseCompletionSource.Task.IsCompleted && !CloseCompletionSource.Task.IsFaulted)
                 CloseCompletionSource!.TrySetCanceled();
 
             base.ViewDestroy(viewFinishing);
