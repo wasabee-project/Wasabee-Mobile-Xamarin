@@ -23,6 +23,9 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<ISecureStorage>(() => new SecureStorageImplementation());
             Mvx.IoCProvider.RegisterSingleton<IFileSystem>(() => new FileSystemImplementation());
             Mvx.IoCProvider.RegisterSingleton<IGeolocation>(() => new GeolocationImplementation());
+            Mvx.IoCProvider.RegisterSingleton<IClipboard>(() => new ClipboardImplementation());
+            Mvx.IoCProvider.RegisterSingleton<IMap>(() => new MapImplementation());
+            Mvx.IoCProvider.RegisterSingleton<ILauncher>(() => new LauncherImplementation());
 
             Mvx.IoCProvider.RegisterSingleton<Plugin.Permissions.Abstractions.IPermissions>(Plugin.Permissions.CrossPermissions.Current);
         }

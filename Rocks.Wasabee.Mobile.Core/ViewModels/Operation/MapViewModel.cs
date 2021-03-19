@@ -32,20 +32,22 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly UsersDatabase _usersDatabase;
         private readonly IPreferences _preferences;
         private readonly IMvxMessenger _messenger;
+        private readonly IClipboard _clipboard;
+        private readonly IMap _map;
         private readonly IUserDialogs _userDialogs;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        private readonly MvxSubscriptionToken _token;
-        private readonly MvxSubscriptionToken _tokenReload;
-        private readonly MvxSubscriptionToken _tokenLiveLocation;
-        private readonly MvxSubscriptionToken _tokenMarkerUpdated;
-        private readonly MvxSubscriptionToken _tokenRefreshAllAgentsLocations;
+        private MvxSubscriptionToken? _token;
+        private MvxSubscriptionToken? _tokenReload;
+        private MvxSubscriptionToken? _tokenLiveLocation;
+        private MvxSubscriptionToken? _tokenMarkerUpdated;
+        private MvxSubscriptionToken? _tokenRefreshAllAgentsLocations;
 
         private bool _isLoadingAgentsLocations;
 
         public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase,
-            UsersDatabase usersDatabase, IPreferences preferences, IMvxMessenger messenger,
+            UsersDatabase usersDatabase, IPreferences preferences, IMvxMessenger messenger, IClipboard clipboard, IMap map,
             IUserDialogs userDialogs, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service)
         {
             _operationsDatabase = operationsDatabase;
@@ -54,27 +56,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _usersDatabase = usersDatabase;
             _preferences = preferences;
             _messenger = messenger;
+            _clipboard = clipboard;
+            _map = map;
             _userDialogs = userDialogs;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
-
-            _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg =>
-            {
-                await LoadOperationCommand.ExecuteAsync();
-
-                if (_preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) is false)
-                {
-                    // Force refresh agents pins to only show current OP agents
-                    AgentsPins.Clear();
-                    await RaisePropertyChanged(() => AgentsPins);
-                }
-
-                await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
-            });
-            _tokenReload = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
-            _tokenLiveLocation = messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
-            _tokenMarkerUpdated = messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
-            _tokenRefreshAllAgentsLocations = messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
         }
 
         public override async Task Initialize()
@@ -89,6 +75,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 nameof(MapThemeEnum.RedIntel) => MapThemeEnum.RedIntel,
                 _ => MapThemeEnum.GoogleLight
             };
+
             MapType = _preferences.Get(UserSettingsKeys.MapType, nameof(MapType.Street)) switch
             {
                 nameof(MapType.Street) => MapType.Street,
@@ -96,14 +83,55 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _ => MapType.Street
             };
 
+            IsStylingAvailable = MapType == MapType.Street;
+
             await base.Initialize();
 
             IsLocationAvailable = await CheckAndAskForLocationPermissions();
+        }
 
+        public override async void ViewAppearing()
+        {
+            base.ViewAppearing();
+
+            _token = _messenger.Subscribe<SelectedOpChangedMessage>(async msg =>
+            {
+                await LoadOperationCommand.ExecuteAsync();
+
+                if (_preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) is false)
+                {
+                    // Force refresh agents pins to only show current OP agents
+                    AgentsPins.Clear();
+                    await RaisePropertyChanged(() => AgentsPins);
+                }
+
+                await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
+            });
+            _tokenReload ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
+            _tokenLiveLocation ??= _messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
+            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
+            _tokenRefreshAllAgentsLocations ??= _messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
+            
             await LoadOperationCommand.ExecuteAsync();
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
         }
-        
+
+        public override void ViewDisappeared()
+        {
+            base.ViewDisappeared();
+
+            _token?.Dispose();
+            _token = null;
+            _tokenReload?.Dispose();
+            _tokenReload = null;
+            _tokenLiveLocation?.Dispose();
+            _tokenLiveLocation = null;
+            _tokenMarkerUpdated?.Dispose();
+            _tokenMarkerUpdated = null;
+            _tokenRefreshAllAgentsLocations?.Dispose();
+            _tokenRefreshAllAgentsLocations = null;
+        }
+
         #region Properties
 
         public bool IsLoading { get; set; }
@@ -544,8 +572,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
+                var coordinates = $"{SelectedWasabeePin.Pin.Position.Latitude},{SelectedWasabeePin.Pin.Position.Longitude}";
                 var location = new Location(SelectedWasabeePin.Pin.Position.Latitude, SelectedWasabeePin.Pin.Position.Longitude);
-                await Xamarin.Essentials.Map.OpenAsync(location);
+
+                if (coordinates.IsNullOrEmpty() is false)
+                {
+                    await _clipboard.SetTextAsync(coordinates);
+                    if (_clipboard.HasText)
+                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                }
+
+                await _map.OpenAsync(location);
             }
             catch (Exception e)
             {

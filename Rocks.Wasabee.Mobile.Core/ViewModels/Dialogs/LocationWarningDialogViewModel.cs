@@ -4,7 +4,7 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
+using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 {
@@ -23,10 +23,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
     public class LocationWarningDialogViewModel : BaseDialogViewModel, IMvxViewModelResult<LocationWarningDialogResult>
     {
         private readonly IAppSettings _appSettings;
+        private readonly ILauncher _launcher;
 
-        public LocationWarningDialogViewModel(IDialogNavigationService dialogNavigationService, IAppSettings appSettings) : base(dialogNavigationService)
+        public LocationWarningDialogViewModel(IDialogNavigationService dialogNavigationService,
+            IAppSettings appSettings, ILauncher launcher) : base(dialogNavigationService)
         {
             _appSettings = appSettings;
+            _launcher = launcher;
         }
 
         public override void ViewAppeared()
@@ -49,7 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private async void DenyExecuted()
         {
             var result = new LocationWarningDialogResult(false, false);
-            CloseCompletionSource.SetResult(result);
+            CloseCompletionSource?.SetResult(result);
 
             await DialogNavigationService.Close(this, true, result);
         }
@@ -58,7 +61,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private async void AcceptExecuted()
         {
             var result = new LocationWarningDialogResult(true, NeverShowAgain);
-            CloseCompletionSource.SetResult(result);
+            CloseCompletionSource?.SetResult(result);
 
             await DialogNavigationService.Close(this, true, result);
         }
@@ -67,19 +70,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private async Task OpenPrivacyPolicyExecuted()
         {
             var uri = _appSettings.WasabeeBaseUrl + "/privacy";
-            await Launcher.OpenAsync(new Uri(uri));
+            await _launcher.OpenAsync(new Uri(uri));
         }
 
         #endregion
 
         #region IMvxViewModelResult<TResult> implementation
 
-        public TaskCompletionSource<object> CloseCompletionSource { get; set; } = new TaskCompletionSource<object>();
+        public TaskCompletionSource<object>? CloseCompletionSource { get; set; } = new TaskCompletionSource<object>();
 
         public override void ViewDestroy(bool viewFinishing = true)
         {
-            if (viewFinishing && !CloseCompletionSource.Task.IsCompleted && !CloseCompletionSource.Task.IsFaulted)
-                CloseCompletionSource?.TrySetCanceled();
+            if (viewFinishing && CloseCompletionSource is not null && !CloseCompletionSource.Task.IsCompleted && !CloseCompletionSource.Task.IsFaulted)
+                CloseCompletionSource!.TrySetCanceled();
 
             base.ViewDestroy(viewFinishing);
         }

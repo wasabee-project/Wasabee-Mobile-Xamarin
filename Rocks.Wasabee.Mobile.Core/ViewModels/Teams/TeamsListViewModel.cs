@@ -27,7 +27,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
         private readonly OperationsDatabase _operationsDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        private readonly MvxSubscriptionToken _token;
+        private MvxSubscriptionToken? _token;
 
         public TeamsListViewModel(IUserDialogs userDialogs, IUserSettingsService userSettingsService, IMvxNavigationService navigationService, IMvxMessenger messenger,
             UsersDatabase usersDatabase, TeamsDatabase teamsDatabase, OperationsDatabase operationsDatabase, WasabeeApiV1Service wasabeeApiV1Service)
@@ -40,8 +40,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             _teamsDatabase = teamsDatabase;
             _operationsDatabase = operationsDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
-
-            _token = _messenger.Subscribe<MessageFor<TeamsListViewModel>>(msg => RefreshCommand.Execute());
         }
 
         public override async Task Initialize()
@@ -51,8 +49,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             await base.Initialize();
 
             LoggingService.Trace("Navigated to TeamsListViewModel");
+        }
+
+        public override void ViewAppeared()
+        {
+            base.ViewAppeared();
+
+            _token ??= _messenger.Subscribe<MessageFor<TeamsListViewModel>>(msg => RefreshCommand.Execute());
 
             RefreshCommand.Execute();
+        }
+
+        public override void ViewDisappeared()
+        {
+            base.ViewDisappeared();
+
+            _token?.Dispose();
+            _token = null;
         }
 
         #region Properties

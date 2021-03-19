@@ -30,9 +30,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly IUserDialogs _userDialogs;
 
-        private readonly MvxSubscriptionToken _token;
-        private readonly MvxSubscriptionToken _tokenFromMap;
-        private readonly MvxSubscriptionToken _tokenRefresh;
+        private MvxSubscriptionToken? _token;
+        private MvxSubscriptionToken? _tokenFromMap;
+        private MvxSubscriptionToken? _tokenRefresh;
 
         public AssignmentsListViewModel(OperationsDatabase operationsDatabase, IPreferences preferences,
             IUserSettingsService userSettingsService, IMvxMessenger messenger, IDialogNavigationService dialogNavigationService,
@@ -46,17 +46,29 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _navigationService = navigationService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _userDialogs = userDialogs;
-
-            _token = messenger.Subscribe<SelectedOpChangedMessage>(async msg => await RefreshCommand.ExecuteAsync());
-            _tokenFromMap = messenger.Subscribe<MessageFor<AssignmentsListViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
-            _tokenRefresh = messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
         }
-
-        public override async Task Initialize()
+        
+        public override async void ViewAppearing()
         {
-            await base.Initialize();
+            base.ViewAppearing();
+            
+            _token ??= _messenger.Subscribe<SelectedOpChangedMessage>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenFromMap ??= _messenger.Subscribe<MessageFor<AssignmentsListViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenRefresh ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
 
             await RefreshCommand.ExecuteAsync();
+        }
+
+        public override void ViewDisappeared()
+        {
+            base.ViewDisappeared();
+
+            _token?.Dispose();
+            _token = null;
+            _tokenFromMap?.Dispose();
+            _tokenFromMap = null;
+            _tokenRefresh?.Dispose();
+            _tokenRefresh = null;
         }
 
         #region Properties

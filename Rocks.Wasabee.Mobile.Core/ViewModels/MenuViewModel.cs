@@ -40,9 +40,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly OperationsDatabase _operationsDatabase;
         private readonly IDialogNavigationService _dialogNavigationService;
 
-        private readonly MvxSubscriptionToken _token;
-        private readonly MvxSubscriptionToken _tokenDebug;
-        private readonly MvxSubscriptionToken _tokenOps;
+        private MvxSubscriptionToken? _token;
+        private MvxSubscriptionToken? _tokenDebug;
+        private MvxSubscriptionToken? _tokenOps;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
@@ -59,20 +59,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _dialogNavigationService = dialogNavigationService;
 
             BuildMenu();
-
-            _token = messenger.Subscribe<NewOpAvailableMessage>(msg => RefreshAvailableOpsCommand.Execute());
-            _tokenDebug = messenger.SubscribeOnMainThread<MessageFrom<SettingsViewModel>>(msg =>
-            {
-                if (MenuItems.Any(x => x.ViewModelType == typeof(LogsViewModel)))
-                    return;
-
-                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) });
-                RaisePropertyChanged(() => MenuItems);
-
-                _preferences.Set(UserSettingsKeys.DevModeActivated, true);
-            });
-
-            _tokenOps = messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());
         }
 
         public override async void Prepare()
@@ -98,12 +84,38 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 await RaisePropertyChanged(() => IsLiveLocationSharingEnabled);
             }
         }
-
-        public override async Task Initialize()
+        
+        public override void ViewAppeared()
         {
-            await base.Initialize();
+            base.ViewAppeared();
+
+            _token ??= _messenger.Subscribe<NewOpAvailableMessage>(msg => RefreshAvailableOpsCommand.Execute());
+            _tokenDebug ??= _messenger.SubscribeOnMainThread<MessageFrom<SettingsViewModel>>(msg =>
+            {
+                if (MenuItems.Any(x => x.ViewModelType == typeof(LogsViewModel)))
+                    return;
+
+                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) });
+                RaisePropertyChanged(() => MenuItems);
+
+                _preferences.Set(UserSettingsKeys.DevModeActivated, true);
+            });
+
+            _tokenOps ??= _messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());
 
             RefreshAvailableOpsCommand.Execute();
+        }
+
+        public override void ViewDisappeared()
+        {
+            base.ViewDisappeared();
+
+            _token?.Dispose();
+            _token = null;
+            _tokenDebug?.Dispose();
+            _tokenDebug = null;
+            _tokenOps?.Dispose();
+            _tokenOps = null;
         }
 
         #region Properties
