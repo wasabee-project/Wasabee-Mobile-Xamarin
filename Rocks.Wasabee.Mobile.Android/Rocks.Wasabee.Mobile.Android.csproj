@@ -278,7 +278,7 @@
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_capture_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_capture_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_capture_assigned.svg" />
@@ -290,7 +290,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_capture_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_decay_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_decay_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_decay_assigned.svg" />
@@ -302,7 +302,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_decay_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_assigned.svg" />
@@ -314,7 +314,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_destroy_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_assigned.svg" />
@@ -326,7 +326,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_exclude_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_farm_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_farm_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_farm_assigned.svg" />
@@ -338,7 +338,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_farm_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_goto_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_goto_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_goto_assigned.svg" />
@@ -350,7 +350,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_goto_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_key_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_key_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_key_assigned.svg" />
@@ -362,7 +362,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_key_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_link_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_link_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_link_assigned.svg" />
@@ -374,7 +374,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_link_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_assigned.svg" />
@@ -386,7 +386,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_meetagent_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_other_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_other_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_other_assigned.svg" />
@@ -398,7 +398,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_other_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_assigned.svg" />
@@ -410,7 +410,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_recharge_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_assigned.svg" />
@@ -422,7 +422,7 @@
     <AndroidResource Include="Resources\drawable\wasabee_markers_upgrade_pending.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\wasabee_markers_virus_acknowledge.svg" />
+    <AndroidResource Include="Resources\drawable\wasabee_markers_virus_acknowledged.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wasabee_markers_virus_assigned.svg" />
