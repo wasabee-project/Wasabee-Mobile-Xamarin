@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-- group: Android
+- group: VersionNumbers
 - name: buildConfiguration
   value: 'Release'
 - name: outputDirectory
