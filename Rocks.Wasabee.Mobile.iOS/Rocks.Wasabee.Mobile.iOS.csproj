@@ -330,7 +330,7 @@
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\todolist.png">
+    <BundleResource Include="Resources\checklist.png">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </BundleResource>
@@ -545,9 +545,12 @@
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\player_self.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\warning.png" />
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" TriggeredFromHotReload="False" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
