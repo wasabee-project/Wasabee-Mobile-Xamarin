@@ -70,14 +70,14 @@
                         <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
 
                         <StackLayout>
-                            <Label Text="{Binding LinkAssignment.Link.Completed, StringFormat='Completed ? : {0}'}"/>
+                            <Label Text="{Binding Link.Completed, StringFormat='Completed ? : {0}'}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                 <Button Text="Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}"
                                         Command="{Binding CompleteCommand}"
-                                        IsVisible="{Binding LinkAssignment.Link.Completed, Converter={StaticResource BoolNegateConverter}}"/>
+                                        IsVisible="{Binding Link.Completed, Converter={StaticResource BoolNegateConverter}}"/>
                                 <Button Text="Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}"
                                         Command="{Binding IncompleteCommand}"
-                                        IsVisible="{Binding LinkAssignment.Link.Completed}"/>
+                                        IsVisible="{Binding Link.Completed}"/>
                             </StackLayout>
                         </StackLayout>
                     </StackLayout>

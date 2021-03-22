@@ -345,7 +345,7 @@
     <BundleResource Include="Resources\wasabee\markers\virus\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\virus\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\virus\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\upgrade\pending.png" />
@@ -357,7 +357,7 @@
     <BundleResource Include="Resources\wasabee\markers\upgrade\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\upgrade\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\upgrade\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\recharge\pending.png" />
@@ -369,7 +369,7 @@
     <BundleResource Include="Resources\wasabee\markers\recharge\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\recharge\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\recharge\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\other\pending.png" />
@@ -381,7 +381,7 @@
     <BundleResource Include="Resources\wasabee\markers\other\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\other\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\other\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\meetagent\pending.png" />
@@ -393,7 +393,7 @@
     <BundleResource Include="Resources\wasabee\markers\meetagent\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\meetagent\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\meetagent\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\link\pending.png" />
@@ -405,7 +405,7 @@
     <BundleResource Include="Resources\wasabee\markers\link\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\link\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\link\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\key\pending.png" />
@@ -417,7 +417,7 @@
     <BundleResource Include="Resources\wasabee\markers\key\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\key\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\key\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\goto\pending.png" />
@@ -429,7 +429,7 @@
     <BundleResource Include="Resources\wasabee\markers\goto\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\goto\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\goto\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\farm\pending.png" />
@@ -441,7 +441,7 @@
     <BundleResource Include="Resources\wasabee\markers\farm\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\farm\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\farm\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\exclude\pending.png" />
@@ -453,7 +453,7 @@
     <BundleResource Include="Resources\wasabee\markers\exclude\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\exclude\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\exclude\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\destroy\pending.png" />
@@ -465,7 +465,7 @@
     <BundleResource Include="Resources\wasabee\markers\destroy\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\destroy\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\destroy\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\decay\pending.png" />
@@ -477,7 +477,7 @@
     <BundleResource Include="Resources\wasabee\markers\decay\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\decay\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\decay\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\capture\pending.png" />
@@ -489,7 +489,7 @@
     <BundleResource Include="Resources\wasabee\markers\capture\assigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\wasabee\markers\capture\acknowledge.png" />
+    <BundleResource Include="Resources\wasabee\markers\capture\acknowledged.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\wasabee\markers\player.png" />
@@ -547,7 +547,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" />
+      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarRocksWasabeeMobileiOSHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionRocksWasabeeMobileiOSHideInfoBar="True" TriggeredFromHotReload="False" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

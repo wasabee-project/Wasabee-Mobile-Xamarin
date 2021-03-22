@@ -24,7 +24,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "DestroyPortalAlert" => state switch
                         {
                             "pending" => "wasabee_markers_destroy_pending.svg",
-                            "acknowledged" => "wasabee_markers_destroy_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_destroy_acknowledged.svg",
                             "completed" => "wasabee_markers_destroy_completed.svg",
                             "assigned" => "wasabee_markers_destroy_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -32,7 +32,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "UseVirusPortalAlert" => state switch
                         {
                             "pending" => "wasabee_markers_virus_pending.svg",
-                            "acknowledged" => "wasabee_markers_virus_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_virus_acknowledged.svg",
                             "completed" => "wasabee_markers_virus_completed.svg",
                             "assigned" => "wasabee_markers_virus_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -40,7 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "CapturePortalMarker" => state switch
                         {
                             "pending" => "wasabee_markers_capture_pending.svg",
-                            "acknowledged" => "wasabee_markers_capture_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_capture_acknowledged.svg",
                             "completed" => "wasabee_markers_capture_completed.svg",
                             "assigned" => "wasabee_markers_capture_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -48,7 +48,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "FarmPortalMarker" => state switch
                         {
                             "pending" => "wasabee_markers_farm_pending.svg",
-                            "acknowledged" => "wasabee_markers_farm_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_farm_acknowledged.svg",
                             "completed" => "wasabee_markers_farm_completed.svg",
                             "assigned" => "wasabee_markers_farm_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -56,7 +56,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "LetDecayPortalAlert" => state switch
                         {
                             "pending" => "wasabee_markers_decay_pending.svg",
-                            "acknowledged" => "wasabee_markers_decay_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_decay_acknowledged.svg",
                             "completed" => "wasabee_markers_decay_completed.svg",
                             "assigned" => "wasabee_markers_decay_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -64,7 +64,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "MeetAgentPortalMarker" => state switch
                         {
                             "pending" => "wasabee_markers_meetagent_pending.svg",
-                            "acknowledged" => "wasabee_markers_meetagent_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_meetagent_acknowledged.svg",
                             "completed" => "wasabee_markers_meetagent_completed.svg",
                             "assigned" => "wasabee_markers_meetagent_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -72,7 +72,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "OtherPortalAlert" => state switch
                         {
                             "pending" => "wasabee_markers_other_pending.svg",
-                            "acknowledged" => "wasabee_markers_other_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_other_acknowledged.svg",
                             "completed" => "wasabee_markers_other_completed.svg",
                             "assigned" => "wasabee_markers_other_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -80,7 +80,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "RechargePortalAlert" => state switch
                         {
                             "pending" => "wasabee_markers_recharge_pending.svg",
-                            "acknowledged" => "wasabee_markers_recharge_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_recharge_acknowledged.svg",
                             "completed" => "wasabee_markers_recharge_completed.svg",
                             "assigned" => "wasabee_markers_recharge_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -88,7 +88,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "UpgradePortalAlert" => state switch
                         {
                             "pending" => "wasabee_markers_upgrade_pending.svg",
-                            "acknowledged" => "wasabee_markers_upgrade_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_upgrade_acknowledged.svg",
                             "completed" => "wasabee_markers_upgrade_completed.svg",
                             "assigned" => "wasabee_markers_upgrade_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -96,7 +96,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "CreateLinkAlert" => state switch
                         {
                             "pending" => "wasabee_markers_link_pending.svg",
-                            "acknowledged" => "wasabee_markers_link_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_link_acknowledged.svg",
                             "completed" => "wasabee_markers_link_completed.svg",
                             "assigned" => "wasabee_markers_link_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -104,7 +104,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "ExcludeMarker" => state switch
                         {
                             "pending" => "wasabee_markers_exclude_pending.svg",
-                            "acknowledged" => "wasabee_markers_exclude_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_exclude_acknowledged.svg",
                             "completed" => "wasabee_markers_exclude_completed.svg",
                             "assigned" => "wasabee_markers_exclude_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -112,7 +112,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "GetKeyPortalMarker" => state switch
                         {
                             "pending" => "wasabee_markers_key_pending.svg",
-                            "acknowledged" => "wasabee_markers_key_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_key_acknowledged.svg",
                             "completed" => "wasabee_markers_key_completed.svg",
                             "assigned" => "wasabee_markers_key_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)
@@ -120,7 +120,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                         "GotoPortalMarker" => state switch
                         {
                             "pending" => "wasabee_markers_goto_pending.svg",
-                            "acknowledged" => "wasabee_markers_goto_acknowledge.svg",
+                            "acknowledged" => "wasabee_markers_goto_acknowledged.svg",
                             "completed" => "wasabee_markers_goto_completed.svg",
                             "assigned" => "wasabee_markers_goto_assigned.svg",
                             _ => throw new ArgumentOutOfRangeException(state)

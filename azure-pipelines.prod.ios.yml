@@ -10,7 +10,7 @@ pool:
   vmImage: 'macos-latest'
 
 variables:
-- group: iOS
+- group: VersionNumbers
 - name: buildConfiguration
   value: 'Release'
 

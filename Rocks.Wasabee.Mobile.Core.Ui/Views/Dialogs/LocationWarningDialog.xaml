@@ -74,10 +74,15 @@
                             IsToggled="{Binding NeverShowAgain}"/>
                 </StackLayout>
 
-                <StackLayout Grid.Row="3" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="10,0,10,10">
-                    <Button Style="{DynamicResource WasabeeStyleLocationWarningCancelButton}" Command="{Binding DenyCommand}" HorizontalOptions="StartAndExpand" />
-                    <Button Style="{DynamicResource WasabeeStyleLocationWarningNextButton}" Command="{Binding AcceptCommand}" HorizontalOptions="End" />
-                </StackLayout>
+                <Grid Grid.Row="3" HorizontalOptions="CenterAndExpand" Margin="10,0,10,10" Padding="0" ColumnSpacing="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleLocationWarningCancelButton}" Command="{Binding DenyCommand}" HorizontalOptions="Start" WidthRequest="100" />
+                    <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleLocationWarningNextButton}" Command="{Binding AcceptCommand}" HorizontalOptions="End" WidthRequest="100" />
+                </Grid>
             </Grid>
 
         </Frame>

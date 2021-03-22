@@ -12,6 +12,7 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +34,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private MvxSubscriptionToken? _token;
         private MvxSubscriptionToken? _tokenFromMap;
         private MvxSubscriptionToken? _tokenRefresh;
+
+        private int _pendingRefreshCount = 0;
 
         public AssignmentsListViewModel(OperationsDatabase operationsDatabase, IPreferences preferences,
             IUserSettingsService userSettingsService, IMvxMessenger messenger, IDialogNavigationService dialogNavigationService,
@@ -87,9 +90,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private async Task RefreshExecuted()
         {
             if (IsLoading)
+            {
+                _pendingRefreshCount++;
                 return;
+            }
 
             IsLoading = true;
+            _pendingRefreshCount = 0;
 
             LoggingService.Trace("Executing AssignmentsListViewModel.RefreshCommand");
 
@@ -107,11 +114,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (string.IsNullOrWhiteSpace(userGid))
                     return;
 
-                Assignments.Clear();
-
+                var assignedLinks = new List<LinkAssignmentData>();
+                var assignedMarkers = new List<MarkerAssignmentData>();
                 if (!Operation.Links.IsNullOrEmpty())
                 {
-                    var links = Operation.Links.Where(l => l.AssignedTo.Equals(userGid))
+                    assignedLinks = Operation.Links.Where(l => l.AssignedTo.Equals(userGid))
                         .Select(l => new LinkAssignmentData(Operation.Id)
                         {
                             Link = l,
@@ -119,24 +126,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                             ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.ToPortalId)),
                             Color = WasabeeColorsHelper.GetColorFromWasabeeName(l.Color, Operation.Color)
                         }).OrderBy(x => x.Link!.ThrowOrderPos).ToList();
-
-                    if (!links.IsNullOrEmpty())
-                        Assignments.AddRange(links);
                 }
 
                 if (!Operation.Markers.IsNullOrEmpty())
                 {
-                    var markers = Operation.Markers.Where(m => m.AssignedTo.Equals(userGid))
+                    assignedMarkers = Operation.Markers.Where(m => m.AssignedTo.Equals(userGid))
                         .Select(m => new MarkerAssignmentData(Operation.Id)
                         {
                             Marker = m,
                             Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(m.PortalId))
                         }).OrderBy(x => x.Marker!.Order).ToList();
-
-
-                    if (!markers.IsNullOrEmpty())
-                        Assignments.AddRange(markers);
                 }
+
+                
+                Assignments.Clear();
+
+                if (!assignedLinks.IsNullOrEmpty())
+                    Assignments.AddRange(assignedLinks);
+                if (!assignedMarkers.IsNullOrEmpty())
+                    Assignments.AddRange(assignedMarkers);
             }
             catch (Exception e)
             {
@@ -147,6 +155,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 await RaisePropertyChanged(() => Assignments);
 
                 IsLoading = false;
+
+                if (_pendingRefreshCount > 0)
+                    await RefreshCommand.ExecuteAsync().ConfigureAwait(false);
             }
         }
 

@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-- group: Android
+- group: VersionNumbers
 - name: buildConfiguration
   value: 'Release'
 - name: outputDirectory
@@ -52,7 +52,7 @@ steps:
 - task: PowerShell@2
   inputs:
     filePath: '_Builds/AndroidManifestUpdater.ps1'
-    arguments: '-filePath "$(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android/Properties/AndroidManifest.xml" -package "$(PackageName)" -versionName "$(Build.BuildNumber)" -label "$(AppLabel)" -icon "$(IconName)"'
+    arguments: '-filePath "$(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android/Properties/AndroidManifest.xml" -package "$(PackageName)" -versionName "$(Build.BuildNumber)" -label "$(AppLabel)"'
 
 # NuGet Tool install
 - task: NuGetToolInstaller@1

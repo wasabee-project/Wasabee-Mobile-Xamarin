@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Operation.MapElements;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -41,6 +42,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private MvxSubscriptionToken? _token;
         private MvxSubscriptionToken? _tokenReload;
         private MvxSubscriptionToken? _tokenLiveLocation;
+        private MvxSubscriptionToken? _tokenLinkUpdated;
         private MvxSubscriptionToken? _tokenMarkerUpdated;
         private MvxSubscriptionToken? _tokenRefreshAllAgentsLocations;
 
@@ -109,7 +111,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             });
             _tokenReload ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenLiveLocation ??= _messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
-            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(msg => UpdateMarker(msg));
+            _tokenLinkUpdated ??= _messenger.Subscribe<LinkDataChangedMessage>(UpdateLink);
+            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(UpdateMarker);
             _tokenRefreshAllAgentsLocations ??= _messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
             
             await LoadOperationCommand.ExecuteAsync();
@@ -126,6 +129,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _tokenReload = null;
             _tokenLiveLocation?.Dispose();
             _tokenLiveLocation = null;
+            _tokenLinkUpdated?.Dispose();
+            _tokenLinkUpdated = null;
             _tokenMarkerUpdated?.Dispose();
             _tokenMarkerUpdated = null;
             _tokenRefreshAllAgentsLocations?.Dispose();
@@ -151,7 +156,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public OperationModel? Operation { get; set; }
         public WasabeePin? SelectedWasabeePin { get; set; }
 
-        public MvxObservableCollection<Polyline> Links { get; set; } = new MvxObservableCollection<Polyline>();
+        public MvxObservableCollection<WasabeeLink> Links { get; set; } = new MvxObservableCollection<WasabeeLink>();
         public MvxObservableCollection<WasabeePin> Anchors { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeePin> Markers { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeeAgentPin> AgentsPins { get; set; } = new MvxObservableCollection<WasabeeAgentPin>();
@@ -223,33 +228,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 {
                     try
                     {
-                        var fromPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(link.FromPortalId));
-                        var toPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(link.ToPortalId));
-
-                        if (fromPortal == null || toPortal == null)
-                            continue;
-
-                        double.TryParse(fromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
-                        double.TryParse(fromPortal.Lng, NumberStyles.Float, culture, out var fromLng);
-                        double.TryParse(toPortal.Lat, NumberStyles.Float, culture, out var toLat);
-                        double.TryParse(toPortal.Lng, NumberStyles.Float, culture, out var toLng);
-
-                        var baseLinkColor = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color);
-                        if (link.Completed)
-                            baseLinkColor = baseLinkColor.MultiplyAlpha(0.5);
-
-                        Links.Add(
-                            new Polyline()
-                            {
-                                StrokeColor = baseLinkColor,
-                                StrokeWidth = link.Completed ? 1 : 2,
-                                Positions =
-                                {
-                                    new Position(fromLat, fromLng),
-                                    new Position(toLat, toLng)
-                                }
-                            });
-
+                        var newLink = CreateWasabeeLink(link);
+                        if (newLink is null)
+                            return;
+                        
+                        Links.Add(newLink);
                     }
                     catch (Exception e)
                     {
@@ -632,6 +615,47 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return true;
         }
 
+        private WasabeeLink? CreateWasabeeLink(LinkModel linkModel)
+        {
+            if (Operation is null)
+                return null;
+            
+            var culture = CultureInfo.GetCultureInfo("en-US");
+
+            var fromPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(linkModel.FromPortalId));
+            var toPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(linkModel.ToPortalId));
+
+            if (fromPortal == null || toPortal == null)
+                return null;
+
+            double.TryParse(fromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
+            double.TryParse(fromPortal.Lng, NumberStyles.Float, culture, out var fromLng);
+            double.TryParse(toPortal.Lat, NumberStyles.Float, culture, out var toLat);
+            double.TryParse(toPortal.Lng, NumberStyles.Float, culture, out var toLng);
+
+            var baseLinkColor = WasabeeColorsHelper.GetColorFromWasabeeName(linkModel.Color, Operation.Color);
+            if (linkModel.Completed)
+                baseLinkColor = baseLinkColor.MultiplyAlpha(0.5);
+
+            var wasabeeLink = new WasabeeLink(
+                new Polyline() 
+                {
+                    StrokeColor = baseLinkColor,
+                    StrokeWidth = linkModel.Completed ? 1 : 2,
+                    Positions =
+                    {
+                        new Position(fromLat, fromLng),
+                        new Position(toLat, toLng)
+                    }
+                }
+            )
+            {
+                LinkId = linkModel.Id
+            };
+
+            return wasabeeLink;
+        }
+
         private WasabeeAgentPin CreateAgentPin(Models.Teams.TeamAgentModel agent, bool isAgentAssignedToOperation, bool isCurrentUser = false)
         {
             var pin = new Pin()
@@ -705,6 +729,32 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
             else
                 OperationMapRegion = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5000));
+        }
+
+        private void UpdateLink(LinkDataChangedMessage updateMessage)
+        {
+            if (Operation == null)
+                return;
+
+            if (!updateMessage.OperationId.Equals(Operation.Id))
+                return;
+            
+            var oldLink = Links.FirstOrDefault(x => x.LinkId.Equals(updateMessage.LinkData.Id));
+            if (oldLink != null)
+            {
+                var newLink = CreateWasabeeLink(updateMessage.LinkData);
+                if (newLink is null)
+                    return;
+
+                Links.Remove(oldLink);
+                Links.Add(newLink);
+
+                _messenger.Publish(new MessageFrom<MapViewModel>(this));
+
+                // If assigned to current user
+                if (updateMessage.LinkData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
+                    _messenger.Publish(new MessageFor<AssignmentsListViewModel>(this));
+            }
         }
 
         private void UpdateMarker(MarkerDataChangedMessage updateMessage)

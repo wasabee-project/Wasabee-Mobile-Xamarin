@@ -55,7 +55,7 @@ namespace Rocks.Wasabee.Mobile.iOS
             }
             
             if (descriptor.Id.Contains("#"))
-                return CreatePin($"wasabee/pins/pin_green.png");
+                return CreatePin("wasabee/pins/pin_green.png");
             
             return CreatePin($"wasabee/pins/{descriptor.Id}.png");
         }

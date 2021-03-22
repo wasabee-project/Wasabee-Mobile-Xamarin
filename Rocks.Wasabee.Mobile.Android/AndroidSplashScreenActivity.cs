@@ -23,11 +23,8 @@ namespace Rocks.Wasabee.Mobile.Droid
 {
     [Activity(
         Theme = "@style/Theme.Splash",
-#if DEBUG
-        Icon = "@drawable/wasabeedev",
-#else
-        Icon = "@drawable/wasabee",
-#endif
+        Icon = "@mipmap/ic_launcher",
+        RoundIcon = "@mipmap/ic_launcher_round",
         ResizeableActivity = true,
         MainLauncher = true,
         WindowSoftInputMode = SoftInput.AdjustPan,
