@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using MvvmCross;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
+using Xamarin.Forms;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
@@ -198,6 +199,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
                 _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
                 _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+
+                if (Device.RuntimePlatform == Device.Android)
+                    _messenger.Publish(new PromptAndroidRunInBackgroundMessage(this));
             }
 
             void StopLiveLocation()

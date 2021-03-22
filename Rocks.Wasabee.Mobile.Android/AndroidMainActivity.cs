@@ -1,4 +1,4 @@
-﻿using Android.App;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
@@ -43,6 +43,7 @@ namespace Rocks.Wasabee.Mobile.Droid
         private MvxSubscriptionToken _token;
         private MvxSubscriptionToken _tokenTheme;
         private MvxSubscriptionToken _tokenOrientation;
+        private MvxSubscriptionToken _tokenPromptBackground;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -111,6 +112,24 @@ namespace Rocks.Wasabee.Mobile.Droid
                         RequestedOrientation = ScreenOrientation.Unspecified;
                 });
 
+                _tokenPromptBackground = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<PromptAndroidRunInBackgroundMessage>(msg =>
+                {
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                    {
+                        try
+                        {
+                            var dozeIntent = new Intent();
+                            dozeIntent.SetAction(Settings.ActionRequestIgnoreBatteryOptimizations);
+                            dozeIntent.SetData(Android.Net.Uri.Parse("package:" + Plugin.CurrentActivity.CrossCurrentActivity.Current.AppContext.PackageName));
+                            StartActivity(dozeIntent);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                    }
+                });
+
 #if DEBUG
                 if (System.Diagnostics.Debugger.IsAttached)
                 {
@@ -123,21 +142,6 @@ namespace Rocks.Wasabee.Mobile.Droid
                     Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
                 }
 #endif
-
-                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
-                {
-                    try
-                    {
-                        var dozeIntent = new Intent();
-                        dozeIntent.SetAction(Settings.ActionRequestIgnoreBatteryOptimizations);
-                        dozeIntent.SetData(Android.Net.Uri.Parse("package:" + Plugin.CurrentActivity.CrossCurrentActivity.Current.AppContext.PackageName));
-                        StartActivity(dozeIntent);
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
             }
         }
 
