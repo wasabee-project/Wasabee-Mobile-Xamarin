@@ -22,15 +22,15 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
     {
         private MvxSubscriptionToken _token;
 
-        private bool _hasLoaded = false;
-        private bool _isDetailPanelVisible = false;
+        private bool _hasLoaded;
+        private bool _isDetailPanelVisible;
 
         private static int zIndexForLinks = 0;
         private static int zIndexForAnchors = 1;
         private static int zIndexForMarkers = 2;
         private static int zIndexForPlayers = 3;
 
-        private List<Pin> _cachedAgentsPins = new List<Pin>();
+        private readonly List<Pin> _cachedAgentsPins = new List<Pin>();
 
         public MapPage()
         {
@@ -83,7 +83,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
             {
                 _hasLoaded = false;
-                RefreshMapView(msg.Data != null && msg.Data is bool data && data);
+                RefreshMapView(msg.Data is bool data && data);
             });
 
             AnimateDetailPanel();
@@ -143,13 +143,13 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 return;
             }
 
-            foreach (var link in ViewModel.Links)
+            foreach (var polyline in ViewModel.Links.Select(x => x.Polyline))
             {
-                if (Map.Polylines.Any(x => x.Equals(link)))
+                if (Map.Polylines.Any(x => x.Equals(polyline)))
                     continue;
 
-                link.ZIndex = zIndexForLinks;
-                Map.Polylines.Add(link);
+                polyline.ZIndex = zIndexForLinks;
+                Map.Polylines.Add(polyline);
             }
         }
 
@@ -205,7 +205,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             {
                 foreach (var pin in _cachedAgentsPins)
                 {
-                    var hasRemoved = Map.Pins.Remove(pin);
+                    Map.Pins.Remove(pin);
                 }
 
                 _cachedAgentsPins.Clear();
@@ -283,6 +283,9 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 };
                 var assembly = typeof(MapPage).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(resourceName);
+
+                if (stream is null)
+                    return;
 
                 string styleFile;
                 using (var reader = new System.IO.StreamReader(stream))

@@ -10,6 +10,8 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Acr.UserDialogs;
 using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
@@ -21,26 +23,32 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IUserDialogs _userDialogs;
         private readonly IClipboard _clipboard;
         private readonly IMap _map;
+        private readonly IMvxMessenger _messenger;
+        private readonly LinksDatabase _linksDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
-        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs,
-            IClipboard clipboard, IMap map, WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
+        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs, IClipboard clipboard,
+            IMap map, IMvxMessenger messenger, LinksDatabase linksDatabase, WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
         {
             _userDialogs = userDialogs;
             _clipboard = clipboard;
             _map = map;
+            _messenger = messenger;
+            _linksDatabase = linksDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
         public void Prepare(LinkAssignmentData parameter)
         {
             LinkAssignment = parameter;
+            Link = LinkAssignment.Link;
         }
 
         #region Properties
 
         public string ButtonText { get; set; } = string.Empty;
         public LinkAssignmentData? LinkAssignment { get; set; }
+        public LinkModel? Link { get; set; }
 
         #endregion
 
@@ -57,13 +65,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             {
                 case "From":
                     if (LinkAssignment?.FromPortal != null)
-                        Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowPortalOnMapMessage(this, LinkAssignment.FromPortal));
+                        _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.FromPortal));
 
                     CloseCommand.Execute();
                     break;
                 case "To":
                     if (LinkAssignment?.ToPortal != null)
-                        Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowPortalOnMapMessage(this, LinkAssignment.ToPortal));
+                        _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.ToPortal));
 
                     CloseCommand.Execute();
                     break;
@@ -152,9 +160,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                var result = await _wasabeeApiV1Service.Operation_Link_Complete(LinkAssignment.OpId, LinkAssignment.Link.Id);
-                if (result)
-                    LinkAssignment.Link.Completed = !LinkAssignment.Link.Completed;
+                if (await _wasabeeApiV1Service.Operation_Link_Complete(LinkAssignment.OpId, LinkAssignment.Link.Id))
+                    await UpdateLinkAndNotify();
             }
             catch (Exception e)
             {
@@ -181,9 +188,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                var result = await _wasabeeApiV1Service.Operation_Link_Incomplete(LinkAssignment.OpId, LinkAssignment.Link.Id);
-                if (result)
-                    LinkAssignment.Link.Completed = !LinkAssignment.Link.Completed;
+                if (await _wasabeeApiV1Service.Operation_Link_Incomplete(LinkAssignment.OpId, LinkAssignment.Link.Id))
+                    await UpdateLinkAndNotify();
             }
             catch (Exception e)
             {
@@ -195,6 +201,29 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             }
         }
 
+        #endregion
+
+        #region Private methods
+        
+        /// <summary>
+        /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
+        /// </summary>
+        /// <returns></returns>
+        private async Task UpdateLinkAndNotify()
+        {
+            if (LinkAssignment != null && Link != null)
+            {
+                var updated = await _wasabeeApiV1Service.Operations_GetLink(LinkAssignment.OpId, Link.Id);
+                if (updated != null)
+                {
+                    Link = updated;
+                    await _linksDatabase.SaveLinkModel(Link, LinkAssignment.OpId);
+
+                    _messenger.Publish(new LinkDataChangedMessage(this, Link, LinkAssignment.OpId));
+                }
+            }
+        }
+        
         #endregion
     }
 }

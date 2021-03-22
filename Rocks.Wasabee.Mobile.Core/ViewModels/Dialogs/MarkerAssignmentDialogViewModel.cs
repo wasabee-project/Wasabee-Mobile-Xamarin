@@ -179,7 +179,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         #endregion
 
         #region Private methods
-
+        
+        /// <summary>
+        /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
+        /// </summary>
+        /// <returns></returns>
         private async Task UpdateMarkerAndNotify()
         {
             if (MarkerAssignment != null && Marker != null)
@@ -191,7 +195,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     UpdateButtonsState();
 
                     await _markersDatabase.SaveMarkerModel(Marker, MarkerAssignment.OpId);
-                    _messenger.Publish(new OperationDataChangedMessage(this));
+
+                    _messenger.Publish(new MarkerDataChangedMessage(this, Marker, MarkerAssignment.OpId));
                 }
             }
         }
