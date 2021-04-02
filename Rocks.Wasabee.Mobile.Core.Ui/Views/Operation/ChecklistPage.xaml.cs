@@ -1,5 +1,6 @@
-﻿using MvvmCross.Forms.Presenters.Attributes;
+using MvvmCross.Forms.Presenters.Attributes;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
@@ -11,6 +12,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         public ChecklistPage()
         {
             InitializeComponent();
+        }
+
+        private void ElementsListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            ElementsListView.SelectedItem = null;
         }
     }
 }
