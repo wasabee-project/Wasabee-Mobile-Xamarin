@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage x:TypeArguments="viewModels:ChecklistViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.ChecklistPage"
+                       Title="Checklist"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+
+    <ContentPage.Content>
+
+        <ListView x:Name="ElementsListView" HasUnevenRows="True" Margin="0" CachingStrategy="RecycleElement"
+                  IsPullToRefreshEnabled="True"
+                  RefreshCommand="{Binding RefreshCommand}"
+                  IsRefreshing="{Binding IsLoading, Mode=OneWay}"
+                  ItemsSource="{Binding Elements}"
+                  ItemTemplate="{DynamicResource AssignmentsListDataTemplateSelector}"
+                  ItemSelected="ElementsListView_OnItemSelected" />
+
+    </ContentPage.Content>
+</views:BaseContentPage>

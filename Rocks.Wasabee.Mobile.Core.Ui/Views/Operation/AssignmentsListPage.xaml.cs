@@ -6,7 +6,7 @@ using Xamarin.Forms.Xaml;
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true, Icon = "todolist.png")]
+    [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true, Icon = "warning.png")]
     public partial class AssignmentsListPage : BaseContentPage<AssignmentsListViewModel>
     {
         public AssignmentsListPage()
