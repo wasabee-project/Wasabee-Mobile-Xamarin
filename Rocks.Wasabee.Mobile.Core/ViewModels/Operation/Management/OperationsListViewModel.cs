@@ -1,4 +1,6 @@
-﻿using MvvmCross.Commands;
+﻿using Microsoft.AppCenter.Analytics;
+using MvvmCross;
+using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
@@ -11,12 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AppCenter.Analytics;
-using MvvmCross;
 using Xamarin.Essentials;
 
-namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
-{
+namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management {
     public class OperationsListViewModel : BaseViewModel
     {
         private readonly IUserSettingsService _userSettingsService;
@@ -122,10 +121,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
             if (localOperations.Any())
             {
                 if (!ShowHiddenOps)
-                    localOperations = localOperations.Where(x => !x.IsHiddenLocally).OrderBy(x => x.Name).ToList();
+                    localOperations = localOperations.Where(x => !x.IsHiddenLocally).ToList();
 
                 OperationsCollection = new MvxObservableCollection<Operation>(
-                    localOperations.Select(x => new Operation(x.Id, x.Name) { IsHiddenLocally = x.IsHiddenLocally }));
+                    localOperations.Select(x => new Operation(x.Id, x.Name)
+                    {
+                        IsHiddenLocally = x.IsHiddenLocally
+                    })
+                    .OrderBy(x => x.Name));
             }
             else
             {
