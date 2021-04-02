@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -8,6 +8,7 @@ using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
@@ -119,7 +120,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (!Operation.Links.IsNullOrEmpty())
                 {
                     assignedLinks = Operation.Links.Where(l => l.AssignedTo.Equals(userGid))
-                        .Select(l => new LinkAssignmentData(Operation.Id)
+                        .Select(l => new LinkAssignmentData(Operation.Id, l.ThrowOrderPos)
                         {
                             Link = l,
                             FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.FromPortalId)),
@@ -131,20 +132,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (!Operation.Markers.IsNullOrEmpty())
                 {
                     assignedMarkers = Operation.Markers.Where(m => m.AssignedTo.Equals(userGid))
-                        .Select(m => new MarkerAssignmentData(Operation.Id)
+                        .Select(m => new MarkerAssignmentData(Operation.Id, m.Order)
                         {
                             Marker = m,
                             Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(m.PortalId))
                         }).OrderBy(x => x.Marker!.Order).ToList();
                 }
-
+                
+                var orderedAssignments = new List<AssignmentData>();
+                if (!assignedLinks.IsNullOrEmpty())
+                    orderedAssignments.AddRange(assignedLinks);
+                if (!assignedMarkers.IsNullOrEmpty())
+                    orderedAssignments.AddRange(assignedMarkers);
                 
                 Assignments.Clear();
 
-                if (!assignedLinks.IsNullOrEmpty())
-                    Assignments.AddRange(assignedLinks);
-                if (!assignedMarkers.IsNullOrEmpty())
-                    Assignments.AddRange(assignedMarkers);
+                if (!orderedAssignments.IsNullOrEmpty())
+                {
+                    orderedAssignments = orderedAssignments.OrderBy(x => x.Order).ToList();
+                    Assignments.AddRange(orderedAssignments);
+                }
+
             }
             catch (Exception e)
             {
@@ -173,21 +181,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         #endregion
     }
 
-    public class AssignmentData
+    public abstract class AssignmentData
     {
-        public AssignmentData(string opId)
+        public string OpId { get; }
+        public int Order { get; }
+
+        protected AssignmentData(string opId, int order)
         {
             OpId = opId;
+            Order = order;
         }
 
-        public string OpId { get; set; }
         public LinkModel? Link { get; set; }
         public MarkerModel? Marker { get; set; }
+
+        public TeamAgentModel? AssignedAgent { get; set; }
+        public bool ShowAssignee { get; set; } = false;
     }
 
     public class LinkAssignmentData : AssignmentData
     {
-        public LinkAssignmentData(string opId) : base(opId)
+        public LinkAssignmentData(string opId, int order) : base(opId, order)
         {
 
         }
@@ -203,7 +217,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
     public class MarkerAssignmentData : AssignmentData
     {
-        public MarkerAssignmentData(string opId) : base(opId)
+        public MarkerAssignmentData(string opId, int order) : base(opId, order)
         {
 
         }

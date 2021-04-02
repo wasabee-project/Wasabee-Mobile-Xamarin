@@ -106,7 +106,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             var tasks = new List<Task>
             {
                 _navigationService.Navigate(Mvx.IoCProvider.Resolve<MapViewModel>()),
-                _navigationService.Navigate(Mvx.IoCProvider.Resolve<AssignmentsListViewModel>())
+                _navigationService.Navigate(Mvx.IoCProvider.Resolve<AssignmentsListViewModel>()),
+                _navigationService.Navigate(Mvx.IoCProvider.Resolve<ChecklistViewModel>())
             };
             await Task.WhenAll(tasks);
         }

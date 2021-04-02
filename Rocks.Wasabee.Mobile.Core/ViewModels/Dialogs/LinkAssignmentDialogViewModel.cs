@@ -1,17 +1,17 @@
-﻿using MvvmCross;
+using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Acr.UserDialogs;
-using Rocks.Wasabee.Mobile.Core.Helpers;
-using Rocks.Wasabee.Mobile.Core.Infra.Databases;
-using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
@@ -26,9 +26,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IMvxMessenger _messenger;
         private readonly LinksDatabase _linksDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly IUserSettingsService _userSettingsService;
 
         public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs, IClipboard clipboard,
-            IMap map, IMvxMessenger messenger, LinksDatabase linksDatabase, WasabeeApiV1Service wasabeeApiV1Service) : base(dialogNavigationService)
+            IMap map, IMvxMessenger messenger, LinksDatabase linksDatabase, WasabeeApiV1Service wasabeeApiV1Service, IUserSettingsService userSettingsService) : base(dialogNavigationService)
         {
             _userDialogs = userDialogs;
             _clipboard = clipboard;
@@ -36,17 +37,21 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             _messenger = messenger;
             _linksDatabase = linksDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+            _userSettingsService = userSettingsService;
         }
 
         public void Prepare(LinkAssignmentData parameter)
         {
             LinkAssignment = parameter;
             Link = LinkAssignment.Link;
+            
+            IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link?.AssignedTo);
         }
 
         #region Properties
+        
+        public bool IsSelfAssignment { get; set; }
 
-        public string ButtonText { get; set; } = string.Empty;
         public LinkAssignmentData? LinkAssignment { get; set; }
         public LinkModel? Link { get; set; }
 
@@ -58,9 +63,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private void ShowOnMapExecuted(string fromOrToPortal)
         {
             if (IsBusy) return;
-
-            IsBusy = true;
-
+            
             switch (fromOrToPortal)
             {
                 case "From":
@@ -76,8 +79,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     CloseCommand.Execute();
                     break;
             }
-
-            IsBusy = false;
         }
 
         public IMvxCommand<string> OpenInNavigationAppCommand => new MvxCommand<string>(OpenInNavigationAppExecuted);
@@ -148,7 +149,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public IMvxAsyncCommand CompleteCommand => new MvxAsyncCommand(CompleteExecuted);
         private async Task CompleteExecuted()
         {
-            if (IsBusy)
+            if (IsBusy || !IsSelfAssignment)
                 return;
 
             if (LinkAssignment?.Link == null)
@@ -176,7 +177,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public IMvxAsyncCommand IncompleteCommand => new MvxAsyncCommand(IncompleteExecuted);
         private async Task IncompleteExecuted()
         {
-            if (IsBusy)
+            if (IsBusy || !IsSelfAssignment)
                 return;
 
             if (LinkAssignment?.Link == null)

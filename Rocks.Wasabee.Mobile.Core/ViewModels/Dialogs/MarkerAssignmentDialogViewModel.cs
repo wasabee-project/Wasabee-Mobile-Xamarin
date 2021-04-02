@@ -1,46 +1,52 @@
-﻿using MvvmCross;
+using Acr.UserDialogs;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
-using Acr.UserDialogs;
+using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 {
     public class MarkerAssignmentDialogViewModel : BaseDialogViewModel, IMvxViewModel<MarkerAssignmentData>
     {
-        private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IMvxMessenger _messenger;
         private readonly IUserDialogs _userDialogs;
+        private readonly IMap _map;
         private readonly IClipboard _clipboard;
-        private readonly ILauncher _launcher;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly MarkersDatabase _markersDatabase;
+        private readonly IUserSettingsService _userSettingsService;
 
-        public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger, IUserDialogs userDialogs,
-            IClipboard clipboard, ILauncher launcher, WasabeeApiV1Service wasabeeApiV1Service, MarkersDatabase markersDatabase) : base(dialogNavigationService)
+        public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger,
+            IUserDialogs userDialogs, IMap map, IClipboard clipboard, WasabeeApiV1Service wasabeeApiV1Service,
+            MarkersDatabase markersDatabase, IUserSettingsService userSettingsService) : base(dialogNavigationService)
         {
-            _dialogNavigationService = dialogNavigationService;
             _messenger = messenger;
             _userDialogs = userDialogs;
+            _map = map;
             _clipboard = clipboard;
-            _launcher = launcher;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _markersDatabase = markersDatabase;
+            _userSettingsService = userSettingsService;
         }
 
         public void Prepare(MarkerAssignmentData parameter)
         {
             MarkerAssignment = parameter;
             Marker = MarkerAssignment.Marker;
+
+            IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker?.AssignedTo);
         }
 
         public override Task Initialize()
@@ -53,6 +59,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         }
 
         #region Properties
+
+        public bool IsSelfAssignment { get; set; }
 
         public bool AcknowledgedEnabled { get; set; }
         public bool CompletedEnabled { get; set; }
@@ -70,7 +78,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public IMvxAsyncCommand AckCommand => new MvxAsyncCommand(AckExecuted, () => AcknowledgedEnabled);
         private async Task AckExecuted()
         {
-            if (IsBusy) return;
+            if (IsBusy || !IsSelfAssignment)
+                return;
 
             if (MarkerAssignment != null && Marker != null)
             {
@@ -88,7 +97,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public IMvxAsyncCommand DoneCommand => new MvxAsyncCommand(DoneExecuted, () => CompletedEnabled);
         private async Task DoneExecuted()
         {
-            if (IsBusy) return;
+            if (IsBusy || !IsSelfAssignment)
+                return;
 
             if (MarkerAssignment != null && Marker != null)
             {
@@ -106,7 +116,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public IMvxAsyncCommand IncompleteCommand => new MvxAsyncCommand(IncompleteExecuted, () => IncompleteEnabled);
         private async Task IncompleteExecuted()
         {
-            if (IsBusy) return;
+            if (IsBusy || !IsSelfAssignment)
+                return;
 
             if (MarkerAssignment != null && Marker != null)
             {
@@ -130,10 +141,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             if (Marker != null)
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowMarkerOnMapMessage(this, Marker));
-
-            CloseCommand.Execute();
-
+            
             IsBusy = false;
+            CloseCommand.Execute();
         }
 
         public IMvxCommand<string> OpenInNavigationAppCommand => new MvxCommand<string>(OpenInNavigationAppExecuted);
@@ -149,22 +159,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                var coordinates = $"{MarkerAssignment.Portal.Lat},{MarkerAssignment.Portal.Lng}";
-                var uri = Device.RuntimePlatform switch
-                {
-                    Device.Android => $"https://www.google.com/maps/search/?api=1&query={coordinates}", 
-                    Device.iOS => "https://maps.apple.com/?ll={coordinates}",
-                    _ => throw new ArgumentOutOfRangeException(Device.RuntimePlatform)
-                };
-
-                if (string.IsNullOrWhiteSpace(uri))
+                if (MarkerAssignment.Portal == null)
                     return;
+                        
+                var culture = CultureInfo.GetCultureInfo("en-US");
+                string coordinates = $"{MarkerAssignment.Portal.Lat},{MarkerAssignment.Portal.Lng}";
 
-                await _clipboard.SetTextAsync(coordinates);
-                _userDialogs.Toast("Coordinates copied to clipboard.");
+                double.TryParse(MarkerAssignment.Portal.Lat, NumberStyles.Float, culture, out var lat);
+                double.TryParse(MarkerAssignment.Portal.Lng, NumberStyles.Float, culture, out var lng);
+                        
+                Location location = new Location(lat, lng);
 
-                if (await _launcher.CanOpenAsync(uri))
-                    await _launcher.OpenAsync(uri);
+                if (coordinates.IsNullOrEmpty() is false)
+                {
+                    await _clipboard.SetTextAsync(coordinates);
+                    if (_clipboard.HasText)
+                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                }
+                
+                await _map.OpenAsync(location);
             }
             catch (Exception e)
             {
