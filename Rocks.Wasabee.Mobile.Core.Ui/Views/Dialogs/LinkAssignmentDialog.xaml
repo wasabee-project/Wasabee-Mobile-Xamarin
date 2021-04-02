@@ -67,9 +67,9 @@
                             </StackLayout>
                         </StackLayout>
 
-                        <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
+                        <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSelfAssignment}" />
 
-                        <StackLayout>
+                        <StackLayout IsVisible="{Binding IsSelfAssignment}">
                             <Label Text="{Binding Link.Completed, StringFormat='Completed ? : {0}'}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                 <Button Text="Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}"

@@ -1,4 +1,4 @@
-﻿using MvvmCross;
+using MvvmCross;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using MvvmCross.Plugin.Messenger;
@@ -46,7 +46,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             try
             {
                 CurrentPage = Children[0];
-                if (Children[0].BindingContext is MapViewModel mapViewModel)
+                if (CurrentPage.BindingContext is MapViewModel mapViewModel)
                 {
                     mapViewModel.SelectedWasabeePin = mapViewModel.Anchors.FirstOrDefault(x => x.Portal.Id.Equals(msg.Portal.Id));
                     if (mapViewModel.SelectedWasabeePin != null)
@@ -64,7 +64,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             try
             {
                 CurrentPage = Children[0];
-                if (Children[0].BindingContext is MapViewModel mapViewModel)
+                if (CurrentPage.BindingContext is MapViewModel mapViewModel)
                 {
                     mapViewModel.SelectedWasabeePin = mapViewModel.Markers.FirstOrDefault(x => x.Marker.Id.Equals(msg.Marker.Id));
                     if (mapViewModel.SelectedWasabeePin != null)

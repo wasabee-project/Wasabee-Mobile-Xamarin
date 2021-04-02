@@ -16,6 +16,9 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void ElementsListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
+            if (e.SelectedItem is AssignmentData data)
+                ViewModel.SelectElementCommand.ExecuteAsync(data);
+
             ElementsListView.SelectedItem = null;
         }
     }

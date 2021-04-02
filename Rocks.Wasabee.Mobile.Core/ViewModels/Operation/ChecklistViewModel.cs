@@ -1,4 +1,3 @@
-using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
@@ -9,6 +8,7 @@ using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,26 +22,21 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamAgentsDatabase _teamAgentsDatabase;
         private readonly IMvxMessenger _messenger;
-        private readonly IUserDialogs _userDialogs;
-        private readonly IUserSettingsService _userSettingsService;
+        private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IPreferences _preferences;
-        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         
         private MvxSubscriptionToken? _tokenRefresh;
 
         private int _pendingRefreshCount = 0;
 
         public ChecklistViewModel(OperationsDatabase operationsDatabase, TeamAgentsDatabase teamAgentsDatabase,
-            IMvxMessenger messenger, IUserDialogs userDialogs, IUserSettingsService userSettingsService,
-            IPreferences preferences, WasabeeApiV1Service wasabeeApiV1Service)
+            IMvxMessenger messenger, IDialogNavigationService dialogNavigationService, IPreferences preferences)
         {
             _operationsDatabase = operationsDatabase;
             _teamAgentsDatabase = teamAgentsDatabase;
             _messenger = messenger;
-            _userDialogs = userDialogs;
-            _userSettingsService = userSettingsService;
+            _dialogNavigationService = dialogNavigationService;
             _preferences = preferences;
-            _wasabeeApiV1Service = wasabeeApiV1Service;
         }
 
         public override Task Initialize()
@@ -160,6 +155,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (_pendingRefreshCount > 0)
                     await RefreshCommand.ExecuteAsync().ConfigureAwait(false);
             }
+        }
+
+        public IMvxAsyncCommand<AssignmentData> SelectElementCommand => new MvxAsyncCommand<AssignmentData>(SelectAssignmentExecuted);
+        private async Task SelectAssignmentExecuted(AssignmentData data)
+        {
+            if (data is LinkAssignmentData linkAssignmentData)
+                await _dialogNavigationService.Navigate<LinkAssignmentDialogViewModel, LinkAssignmentData>(linkAssignmentData);
+            else if (data is MarkerAssignmentData markerAssignmentData)
+                await _dialogNavigationService.Navigate<MarkerAssignmentDialogViewModel, MarkerAssignmentData>(markerAssignmentData);
         }
 
         #endregion
