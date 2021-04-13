@@ -34,9 +34,9 @@ namespace Rocks.Wasabee.Mobile.Core
 
             var preferences = Mvx.IoCProvider.Resolve<IPreferences>();
             var versionTracking = Mvx.IoCProvider.Resolve<IVersionTracking>();
-
+            
             var lastVersion = preferences.Get(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
-            if (Version.TryParse(versionTracking.CurrentVersion, out var currentVersion) &&
+            if (Version.TryParse(versionTracking.CurrentVersion, out var currentVersion) && 
                 Version.TryParse(lastVersion, out var lastVersionParsed) && currentVersion > lastVersionParsed)
             {
                 // App has updated
@@ -50,15 +50,8 @@ namespace Rocks.Wasabee.Mobile.Core
             AppCenter.Start($"{Xamarin.Forms.Device.RuntimePlatform.ToLowerInvariant()}={Mvx.IoCProvider.Resolve<IAppSettings>().AppCenterKey}",
                 typeof(Crashes), typeof(Analytics));
 
-            // temporary change, will be removed after next build
-            preferences.Set(UserSettingsKeys.AnalyticsEnabled, true);
-            await Crashes.SetEnabledAsync(true);
-            await Analytics.SetEnabledAsync(true);
-            // --------------------------------------------------
-
             var analyticsEnabled = preferences.Get(UserSettingsKeys.AnalyticsEnabled, false);
-            if (!analyticsEnabled)
-            {
+            if (!analyticsEnabled) {
                 await Crashes.SetEnabledAsync(false);
                 await Analytics.SetEnabledAsync(false);
             }
