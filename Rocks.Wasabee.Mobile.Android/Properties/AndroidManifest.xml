@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1000" android:versionName="0.3" package="rocks.wasabee.mobile" android:installLocation="auto">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1000" android:versionName="0.3" package="rocks.wasabee.mobile" android:installLocation="internalOnly">
 	<uses-sdk android:minSdkVersion="23" android:targetSdkVersion="30" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
