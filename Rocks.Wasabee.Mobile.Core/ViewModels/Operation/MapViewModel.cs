@@ -254,7 +254,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         Anchors.Add(new WasabeePin(new Pin()
                         {
                             Position = new Position(portalLat, portalLng),
-                            Icon = BitmapDescriptorFactory.FromBundle($"pin_{WasabeeColorsHelper.GetPinColorNameFromHex(Operation.Color)}")
+                            Icon = BitmapDescriptorFactory.FromBundle($"pin_{Operation.Color}")
                         })
                         {
                             Portal = portal

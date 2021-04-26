@@ -1,33 +1,32 @@
-﻿using System;
+using Rocks.Wasabee.Mobile.Core.Ui.Resources.Pins;
+using SkiaSharp;
+using SkiaSharp.Views.iOS;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using UIKit;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.iOS.Factories;
 
-namespace Rocks.Wasabee.Mobile.iOS
-{
+namespace Rocks.Wasabee.Mobile.iOS {
     public class WasabeeImageFactory : IImageFactory
     {
         private static readonly Dictionary<string, UIImage> ImagesCache = new Dictionary<string, UIImage>();
 
         public UIImage ToUIImage(BitmapDescriptor descriptor)
         {
-            if (descriptor.Id.Equals("wasabee_player_marker"))
+            switch (descriptor.Id)
             {
-                return CreateMarker("wasabee/markers/player.png");
+                case "wasabee_player_marker":
+                    return CreateMarker("wasabee/markers/player.png");
+                case "wasabee_player_marker_self":
+                    return CreateMarker("wasabee/markers/player_self.png");
+                case "wasabee_player_marker_gray":
+                    return CreateMarker("wasabee/markers/player_gray.png");
             }
 
-            if (descriptor.Id.Equals("wasabee_player_marker_self"))
-            {
-                return CreateMarker("wasabee/markers/player_self.png");
-            }
-
-            if (descriptor.Id.Equals("wasabee_player_marker_gray"))
-            {
-                return CreateMarker("wasabee/markers/player_gray.png");
-            }
-            
             if (descriptor.Id.Contains('|'))
             {
                 var fileName = "wasabee/markers/";
@@ -53,14 +52,15 @@ namespace Rocks.Wasabee.Mobile.iOS
 
                 return CreateMarker(fileName);
             }
-            
-            if (descriptor.Id.Contains("#"))
-                return CreatePin("wasabee/pins/pin_green.png");
-            
-            return CreatePin($"wasabee/pins/{descriptor.Id}.png");
+
+            var pinColor = descriptor.Id.StartsWith("pin_") ? 
+                descriptor.Id.Substring(4) : 
+                "#DD3D45"; // default goes to RED
+
+            return CreatePin(pinColor);
         }
         
-        private static UIImage CreatePin(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 30, 60);
+        private static UIImage CreatePin(string color) => CreateImageFromWasabeePinSvg(color, 50, 60);
         private static UIImage CreateMarker(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 35, 60);
         private static UIImage CreateImageFromBundleName(string bundleFilePath, int width, int height)
         {
@@ -77,6 +77,26 @@ namespace Rocks.Wasabee.Mobile.iOS
             ImagesCache.Add(bundleFilePath, image);
 
             return image;
+        }
+
+        private static UIImage CreateImageFromWasabeePinSvg(string color, int width, int height)
+        {
+            if (ImagesCache.ContainsKey(color))
+                return ImagesCache[color];
+
+            SKPicture picture;
+            var pin = new WasabeePinSvg(color);
+
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(pin.RawData)))
+                picture = new SkiaSharp.Extended.Svg.SKSvg().Load(stream);
+
+            var image = SKImage.FromPicture(picture, new SKSizeI((int) picture.CullRect.Size.Width, (int) picture.CullRect.Size.Height)).ToUIImage();
+            var resizedImage = ResizeImage(image, width, height);
+            if (resizedImage is null)
+                return Google.Maps.Marker.MarkerImage(UIColor.Red);
+
+            ImagesCache.Add(color, resizedImage);
+            return resizedImage;
         }
 
         // resize the image to be contained within a maximum width and height, keeping aspect ratio
