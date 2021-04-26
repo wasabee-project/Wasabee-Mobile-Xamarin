@@ -1,42 +1,39 @@
-﻿using Android.App;
+using Rocks.Wasabee.Mobile.Core.Ui.Resources.Pins;
 using SkiaSharp;
 using SkiaSharp.Views.Android;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using Xamarin.Essentials;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.Android.Factories;
 using AndroidBitmapDescriptor = Android.Gms.Maps.Model.BitmapDescriptor;
 using AndroidBitmapDescriptorFactory = Android.Gms.Maps.Model.BitmapDescriptorFactory;
+using Application = Android.App.Application;
 
-namespace Rocks.Wasabee.Mobile.Droid
-{
+namespace Rocks.Wasabee.Mobile.Droid {
     public sealed class WasabeeBitmapConfig : IBitmapDescriptorFactory
     {
-        private static Dictionary<int, AndroidBitmapDescriptor> BitmapCache = new Dictionary<int, AndroidBitmapDescriptor>();
+        private static readonly Dictionary<int, AndroidBitmapDescriptor> BitmapCache = new Dictionary<int, AndroidBitmapDescriptor>();
 
         public AndroidBitmapDescriptor ToNative(BitmapDescriptor descriptor)
         {
-            int iconId;
-            if (descriptor.Id.Equals("wasabee_player_marker"))
+            switch (descriptor.Id)
             {
-                return CreateMarker(Resource.Drawable.wasabee_player_marker);
-            }
-            
-            if (descriptor.Id.Equals("wasabee_player_marker_self"))
-            {
-                return CreateMarker(Resource.Drawable.wasabee_player_marker_self);
-            }
-            
-            if (descriptor.Id.Equals("wasabee_player_marker_gray"))
-            {
-                return CreateMarker(Resource.Drawable.wasabee_player_marker_gray);
+                case "wasabee_player_marker":
+                    return CreateMarker(Resource.Drawable.wasabee_player_marker);
+                case "wasabee_player_marker_self":
+                    return CreateMarker(Resource.Drawable.wasabee_player_marker_self);
+                case "wasabee_player_marker_gray":
+                    return CreateMarker(Resource.Drawable.wasabee_player_marker_gray);
             }
 
             if (descriptor.Id.Contains('|'))
             {
                 var descriptors = descriptor.Id.Split('|');
 
-                iconId = descriptors[0] switch
+                var iconId = descriptors[0] switch
                 {
                     "DestroyPortalAlert" => descriptors[1] switch
                     {
@@ -152,25 +149,14 @@ namespace Rocks.Wasabee.Mobile.Droid
                 return CreateMarker(iconId);
             }
 
-            if (descriptor.Id.Contains("#"))
-                iconId = Resource.Drawable.pin_green;
-            else
-                iconId = descriptor.Id switch
-                {
-                    "pin_orange" => Resource.Drawable.pin_orange,
-                    "pin_yellow" => Resource.Drawable.pin_yellow,
-                    "pin_tan" => Resource.Drawable.pin_tan,
-                    "pin_purple" => Resource.Drawable.pin_purple,
-                    "pin_teal" => Resource.Drawable.pin_teal,
-                    "pin_fuschia" => Resource.Drawable.pin_fuschia,
-                    "pin_red" => Resource.Drawable.pin_red,
-                    _ => Resource.Drawable.pin_lime
-                };
+            var pinColor = descriptor.Id.StartsWith("pin_") ? 
+                descriptor.Id.Substring(4) : 
+                "#DD3D45"; // default goes to RED
 
-            return CreatePin(iconId);
+            return CreatePin(pinColor);
         }
 
-        private static AndroidBitmapDescriptor CreatePin(int iconId) => CreateBitmapFromSvgStream(iconId, 60, 120);
+        private static AndroidBitmapDescriptor CreatePin(string color) => CreateBitmapFromWasabeePinSvg(color, 110, 130);
         private static AndroidBitmapDescriptor CreateMarker(int iconId) => CreateBitmapFromSvgStream(iconId, 70, 120);
 
         private static AndroidBitmapDescriptor CreateBitmapFromSvgStream(int iconId, int width, int height)
@@ -182,14 +168,35 @@ namespace Rocks.Wasabee.Mobile.Droid
             var svg = new SkiaSharp.Extended.Svg.SKSvg();
             var picture = svg.Load(svgStream);
 
+            var bitmap = AndroidBitmapDescriptorFactory.FromBitmap(
+                SKBitmap.FromImage(
+                        SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)))
+                    .Resize(new SKSizeI(width, height), SKFilterQuality.High)
+                    .ToBitmap());
+
+            BitmapCache.Add(iconId, bitmap);
+            return bitmap;
+        }
+
+        private static AndroidBitmapDescriptor CreateBitmapFromWasabeePinSvg(string color, int width, int height)
+        {
+            var colorValue = ColorConverters.FromHex(color).ToArgb();
+            if (BitmapCache.ContainsKey(colorValue))
+                return BitmapCache[colorValue];
+
+            SKPicture picture;
+            var pin = new WasabeePinSvg(color);
+
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(pin.RawData)))
+                picture = new SkiaSharp.Extended.Svg.SKSvg().Load(stream);
 
             var bitmap = AndroidBitmapDescriptorFactory.FromBitmap(
                 SKBitmap.FromImage(
                         SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)))
-                    .Resize(new SKSizeI(width, height), SKFilterQuality.None)
+                    .Resize(new SKSizeI(width, height), SKFilterQuality.High)
                     .ToBitmap());
 
-            BitmapCache.Add(iconId, bitmap);
+            BitmapCache.Add(colorValue, bitmap);
             return bitmap;
         }
     }

@@ -1,4 +1,4 @@
-﻿using Xamarin.Forms;
+using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core.Helpers
 {
@@ -12,27 +12,13 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
             return wasabeeColorName switch
             {
                 "main" => GetColorFromWasabeeName(defaultColorName, string.Empty),
-                "groupa" => Color.FromHex("#f60"),
-                "groupb" => Color.FromHex("#f90"),
-                "groupc" => Color.FromHex("#b90"),
-                "groupd" => Color.FromHex("#b2c"),
-                "groupe" => Color.FromHex("#3cc"),
-                "groupf" => Color.FromHex("#f5f"),
-                _ => Color.FromHex("f00")
-            };
-        }
-
-        public static string GetPinColorNameFromHex(string hexColor)
-        {
-            return hexColor.ToUpper() switch
-            {
-                "#FF6600" => "orange",
-                "#FF9900" => "yellow",
-                "#BB9900" => "tan",
-                "#BB22CC" => "purple",
-                "#33CCCC" => "teal",
-                "#FF55FF" => "fuschia",
-                _ => "red"
+                "groupa" => Color.FromHex("#FF6600"),
+                "groupb" => Color.FromHex("#FF9900"),
+                "groupc" => Color.FromHex("#BB9900"),
+                "groupd" => Color.FromHex("#BB22CC"),
+                "groupe" => Color.FromHex("#33CCCC"),
+                "groupf" => Color.FromHex("#FF55FF"),
+                _ => Color.FromHex("#FF0000")
             };
         }
     }

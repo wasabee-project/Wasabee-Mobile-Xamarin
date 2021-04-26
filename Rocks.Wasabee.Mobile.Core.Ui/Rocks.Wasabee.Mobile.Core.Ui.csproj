@@ -15,10 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="GoogleRoads.MapStyle.json" />
-    <EmbeddedResource Include="RedIntel.MapStyle.json" />
-    <EmbeddedResource Include="Intel.MapStyle.json" />
-    <EmbeddedResource Include="Greenlightened.MapStyle.json" />
+    <EmbeddedResource Include="Resources\MapStyles\GoogleRoads.json" />
+    <EmbeddedResource Include="Resources\MapStyles\RedIntel.json" />
+    <EmbeddedResource Include="Resources\MapStyles\Intel.json" />
+    <EmbeddedResource Include="Resources\MapStyles\Greenlightened.json" />
   </ItemGroup>
 
   <ItemGroup>

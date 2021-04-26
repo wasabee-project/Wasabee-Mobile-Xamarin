@@ -1,6 +1,7 @@
-﻿using MvvmCross;
+using MvvmCross;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Plugin.Messenger;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using Rocks.Wasabee.Mobile.Core.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
@@ -273,12 +273,13 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             try
             {
+                const string basePath = "Rocks.Wasabee.Mobile.Core.Ui.Resources.MapStyles";
                 var resourceName = ViewModel.MapTheme switch
                 {
-                    MapThemeEnum.GoogleLight => "Rocks.Wasabee.Mobile.Core.Ui.GoogleRoads.MapStyle.json",
-                    MapThemeEnum.Enlightened => "Rocks.Wasabee.Mobile.Core.Ui.Greenlightened.MapStyle.json",
-                    MapThemeEnum.IntelDefault => "Rocks.Wasabee.Mobile.Core.Ui.Intel.MapStyle.json",
-                    MapThemeEnum.RedIntel => "Rocks.Wasabee.Mobile.Core.Ui.RedIntel.MapStyle.json",
+                    MapThemeEnum.GoogleLight => $"{basePath}.GoogleRoads.json",
+                    MapThemeEnum.Enlightened => $"{basePath}.Greenlightened.json",
+                    MapThemeEnum.IntelDefault => $"{basePath}.Intel.json",
+                    MapThemeEnum.RedIntel => $"{basePath}.RedIntel.json",
                     _ => throw new ArgumentOutOfRangeException(ViewModel.MapTheme.ToString())
                 };
                 var assembly = typeof(MapPage).GetTypeInfo().Assembly;
