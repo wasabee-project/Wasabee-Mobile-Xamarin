@@ -65,6 +65,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public bool AcknowledgedEnabled { get; set; }
         public bool CompletedEnabled { get; set; }
         public bool IncompleteEnabled { get; set; }
+        public bool ClaimEnabled{ get; set; }
+        public bool RejectEnabled { get; set; }
 
         public string Goal { get; set; } = string.Empty;
 
@@ -94,15 +96,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             }
         }
 
-        public IMvxAsyncCommand DoneCommand => new MvxAsyncCommand(DoneExecuted, () => CompletedEnabled);
-        private async Task DoneExecuted()
+        public IMvxAsyncCommand CompleteCommand => new MvxAsyncCommand(CompleteExecuted, () => CompletedEnabled);
+        private async Task CompleteExecuted()
         {
             if (IsBusy || !IsSelfAssignment)
                 return;
 
             if (MarkerAssignment != null && Marker != null)
             {
-                LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.DoneCommand");
+                LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.CompleteCommand");
 
                 IsBusy = true;
 
@@ -127,6 +129,48 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
                 if (await _wasabeeApiV1Service.Operation_Marker_Incomplete(MarkerAssignment.OpId, Marker.Id))
                     await UpdateMarkerAndNotify();
+
+                IsBusy = false;
+            }
+        }
+
+        public IMvxAsyncCommand ClaimCommand => new MvxAsyncCommand(ClaimExecuted, () => ClaimEnabled);
+        private async Task ClaimExecuted()
+        {
+            if (IsBusy || !IsSelfAssignment)
+                return;
+
+            if (MarkerAssignment != null && Marker != null)
+            {
+                LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.ClaimCommand");
+
+                IsBusy = true;
+
+                if (await _wasabeeApiV1Service.Operation_Marker_Claim(MarkerAssignment.OpId, Marker.Id))
+                    await UpdateMarkerAndNotify();
+
+                IsBusy = false;
+            }
+        }
+
+        public IMvxAsyncCommand RejectCommand => new MvxAsyncCommand(RejectExecuted, () => RejectEnabled);
+        private async Task RejectExecuted()
+        {
+            if (IsBusy || !IsSelfAssignment)
+                return;
+
+            if (MarkerAssignment != null && Marker != null)
+            {
+                LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.RejectCommand");
+
+                IsBusy = true;
+
+                if (await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id))
+                {
+                    _userDialogs.Toast("Assignment removed");
+
+                    await UpdateMarkerAndNotify();
+                }
 
                 IsBusy = false;
             }
@@ -226,19 +270,34 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     AcknowledgedEnabled = false;
                     CompletedEnabled = false;
                     IncompleteEnabled = true;
+                    RejectEnabled = false;
+                    ClaimEnabled = false;
                     break;
                 case "assigned":
                     AcknowledgedEnabled = true;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
+                    RejectEnabled = true;
+                    ClaimEnabled = false;
                     break;
                 case "acknowledged":
                     AcknowledgedEnabled = false;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
+                    RejectEnabled = true;
+                    ClaimEnabled = false;
                     break;
                 default:
                     break;
+            }
+
+            if (!IsSelfAssignment)
+            {
+                AcknowledgedEnabled = false;
+                CompletedEnabled = false;
+                IncompleteEnabled = false;
+                RejectEnabled = false;
+                ClaimEnabled = true;
             }
         }
 

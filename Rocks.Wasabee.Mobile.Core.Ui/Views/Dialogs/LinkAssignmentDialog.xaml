@@ -72,13 +72,26 @@
                         <StackLayout IsVisible="{Binding IsSelfAssignment}">
                             <Label Text="{Binding Link.Completed, StringFormat='Completed ? : {0}'}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                <Button Text="Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}"
+                                <Button Text="✓   Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
                                         Command="{Binding CompleteCommand}"
-                                        IsVisible="{Binding Link.Completed, Converter={StaticResource BoolNegateConverter}}"/>
-                                <Button Text="Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}"
+                                        IsVisible="{Binding CompletedEnabled}"/>
+                                <Button Text="✗   Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
                                         Command="{Binding IncompleteCommand}"
-                                        IsVisible="{Binding Link.Completed}"/>
+                                        IsVisible="{Binding IncompleteEnabled}"/>
                             </StackLayout>
+
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                <Button Text="⚠   Reject" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
+                                        Command="{Binding RejectCommand}"
+                                        IsVisible="{Binding RejectEnabled}"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                        <StackLayout IsVisible="{Binding IsSelfAssignment, Converter={StaticResource BoolNegateConverter}}"
+                                     Orientation="Horizontal" HorizontalOptions="Center">
+                            <Button Text="✓   Claim" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
+                                    Command="{Binding ClaimCommand}"
+                                    IsVisible="{Binding ClaimEnabled}"/>
                         </StackLayout>
                     </StackLayout>
 
