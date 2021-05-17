@@ -46,8 +46,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             Link = LinkAssignment.Link;
             
             IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link?.AssignedTo);
-
-            UpdateButtonsState();
         }
 
         #region Properties
@@ -286,6 +284,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Link = updated;
+                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link.AssignedTo);
+
                     UpdateButtonsState();
 
                     await _linksDatabase.SaveLinkModel(Link, LinkAssignment.OpId);

@@ -45,8 +45,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             MarkerAssignment = parameter;
             Marker = MarkerAssignment.Marker;
-
+            
             IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker?.AssignedTo);
+            UpdateButtonsState();
         }
 
         public override Task Initialize()
@@ -249,6 +250,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Marker = updated;
+                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker.AssignedTo);
+                    
                     UpdateButtonsState();
 
                     await _markersDatabase.SaveMarkerModel(Marker, MarkerAssignment.OpId);
@@ -286,8 +289,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     IncompleteEnabled = false;
                     RejectEnabled = true;
                     ClaimEnabled = false;
-                    break;
-                default:
                     break;
             }
 
