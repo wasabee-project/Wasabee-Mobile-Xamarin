@@ -1,4 +1,4 @@
-﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -15,7 +15,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
-namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management {
+namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
+{
     public class OperationsListViewModel : BaseViewModel
     {
         private readonly IUserSettingsService _userSettingsService;
@@ -48,7 +49,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management {
 
         #region Properties
 
-        public MvxObservableCollection<Operation> OperationsCollection { get; set; } = new MvxObservableCollection<Operation>();
+        public MvxObservableCollection<OperationItemSubViewModel> OperationsCollection { get; set; } = new MvxObservableCollection<OperationItemSubViewModel>();
         public bool IsRefreshing { get; set; }
 
         private bool _showHiddenOps = false;
@@ -123,8 +124,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management {
                 if (!ShowHiddenOps)
                     localOperations = localOperations.Where(x => !x.IsHiddenLocally).ToList();
 
-                OperationsCollection = new MvxObservableCollection<Operation>(
-                    localOperations.Select(x => new Operation(x.Id, x.Name)
+                OperationsCollection = new MvxObservableCollection<OperationItemSubViewModel>(
+                    localOperations.Select(x => new OperationItemSubViewModel(x.Id, x.Name)
                     {
                         IsHiddenLocally = x.IsHiddenLocally
                     })
@@ -146,8 +147,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management {
             IsRefreshing = false;
         }
 
-        public IMvxAsyncCommand<Operation> HideOperationCommand => new MvxAsyncCommand<Operation>(HideOperationExecuted);
-        private async Task HideOperationExecuted(Operation op)
+        public IMvxAsyncCommand<OperationItemSubViewModel> HideOperationCommand => new MvxAsyncCommand<OperationItemSubViewModel>(HideOperationExecuted);
+        private async Task HideOperationExecuted(OperationItemSubViewModel op)
         {
             if (IsBusy)
                 return;
@@ -187,8 +188,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management {
             }
         }
 
-        public IMvxCommand<Operation> ShowOperationDetailCommand => new MvxCommand<Operation>(ShowOperationDetailExecuted);
-        private async void ShowOperationDetailExecuted(Operation op)
+        public IMvxCommand<OperationItemSubViewModel> ShowOperationDetailCommand => new MvxCommand<OperationItemSubViewModel>(ShowOperationDetailExecuted);
+        private async void ShowOperationDetailExecuted(OperationItemSubViewModel op)
         {
             if (IsBusy)
                 return;
@@ -211,12 +212,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management {
         #endregion
     }
 
-    public class Operation : MvxViewModel
+    public class OperationItemSubViewModel : MvxViewModel
     {
         public string Id { get; }
         public string Name { get; }
 
-        public Operation(string id, string name)
+        public OperationItemSubViewModel(string id, string name)
         {
             Id = id;
             Name = name;
