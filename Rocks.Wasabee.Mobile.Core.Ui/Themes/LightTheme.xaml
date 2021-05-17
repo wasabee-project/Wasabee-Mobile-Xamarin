@@ -24,7 +24,7 @@
 
     <!-- NavigationPage and TabbedPage -->
     <Style TargetType="NavigationPage">
-        <Setter Property="BarBackgroundColor" Value="{StaticResource NavBarsBackgroundColor}" />
+        <Setter Property="BarBackgroundColor" Value="{DynamicResource NavBarsBackgroundColor}" />
         <Setter Property="BarTextColor" Value="White" />
     </Style>
 

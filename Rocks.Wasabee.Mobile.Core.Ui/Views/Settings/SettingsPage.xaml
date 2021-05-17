@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="settings:SettingsViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       x:DataType="settings:SettingsViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:settings="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Settings;assembly=Rocks.Wasabee.Mobile.Core"

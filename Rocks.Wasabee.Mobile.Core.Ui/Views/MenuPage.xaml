@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<views:BaseContentPage
-    x:TypeArguments="viewModels:MenuViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
-    xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
-    xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-    xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-    x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.MenuPage"
-    x:Name="Page"
-    Title="Menu"
-    IconImageSource="{OnPlatform iOS='navbar/menu.png'}"
-    BackgroundColor="{DynamicResource MasterMenuBackgroundColor}">
+<views:BaseContentPage x:TypeArguments="viewModels:MenuViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       x:DataType="viewModels:MenuViewModel"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:vm="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.MenuPage"
+                       x:Name="Page"
+                       Title="Menu"
+                       BackgroundColor="{DynamicResource MasterMenuBackgroundColor}">
+
+    <views:BaseContentPage.IconImageSource>
+        <OnPlatform x:TypeArguments="ImageSource">
+            <On Platform="iOS" Value="navbar/menu.png"/>
+        </OnPlatform>
+    </views:BaseContentPage.IconImageSource>
 
     <ContentPage.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
@@ -20,16 +26,21 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <ScrollView Margin="{OnPlatform Default='0', iOS='0,30'}">
+        <ScrollView>
+            <ScrollView.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="iOS" Value="0, 30"/>
+                </OnPlatform>
+            </ScrollView.Margin>
+
             <StackLayout Margin="10">
-                <StackLayout
-                    x:Name="MenuList"
-                    VerticalOptions="FillAndExpand"
-                    Style="{DynamicResource WasabeeMasterDetailMenuStyle}"
-                    BindableLayout.ItemsSource="{Binding MenuItems}"
-                    Margin="10">
+                <StackLayout x:Name="MenuList"
+                             VerticalOptions="FillAndExpand"
+                             Style="{DynamicResource WasabeeMasterDetailMenuStyle}"
+                             BindableLayout.ItemsSource="{Binding MenuItems}"
+                             Margin="10">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="vm:MenuItem">
                             <Grid Margin="10" RowSpacing="0" ColumnSpacing="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="40"/>
