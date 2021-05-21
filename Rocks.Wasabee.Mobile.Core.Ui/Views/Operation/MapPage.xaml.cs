@@ -5,6 +5,7 @@ using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Operation.MapElements;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private bool _hasLoaded;
         private bool _isDetailPanelVisible;
+        private bool _isAgentListPanelVisible;
 
         private static int zIndexForLinks = 0;
         private static int zIndexForAnchors = 1;
@@ -64,7 +66,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 AnimateDetailPanel();
             else if (e.PropertyName == "VisibleRegion")
                 Map.MoveToRegion(ViewModel.VisibleRegion);
-            else if (e.PropertyName == "AgentsPins")
+            else if (e.PropertyName == "Agents")
                 RefreshAgentsLayer();
             else if (e.PropertyName == "IsLayerLinksActivated")
                 RefreshLinksLayer();
@@ -74,6 +76,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 RefreshMarkersLayer();
             else if (e.PropertyName == "IsLayerAgentsActivated")
                 RefreshAgentsLayer();
+            else if (e.PropertyName == "IsAgentListVisible")
+                AnimateAgentListPanel();
         }
 
         protected override void OnAppearing()
@@ -87,6 +91,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             });
 
             AnimateDetailPanel();
+            AnimateAgentListPanel();
             RefreshMapTheme();
 
             RefreshMapView();
@@ -113,6 +118,24 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             {
                 _isDetailPanelVisible = false;
                 await DetailPanel.TranslateTo(0, 180, 150); // Hide
+            }
+        }
+
+        private async void AnimateAgentListPanel()
+        {
+            if (ViewModel.IsAgentListVisible)
+            {
+                if (_isAgentListPanelVisible) return;
+
+                _isAgentListPanelVisible = true;
+                AgentListPanel.IsVisible = true;
+                await AgentListPanel.TranslateTo(0, 0, 150); // Show
+            }
+            else
+            {
+                await AgentListPanel.TranslateTo(180, 0, 150); // Hide
+                _isAgentListPanelVisible = false;
+                AgentListPanel.IsVisible = false;
             }
         }
 
@@ -201,7 +224,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshAgentsLayer()
         {
-            if (ViewModel.AgentsPins.IsNullOrEmpty())
+            if (ViewModel.Agents.IsNullOrEmpty())
             {
                 foreach (var pin in _cachedAgentsPins)
                 {
@@ -213,7 +236,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 return;
             }
 
-            foreach (var agentPin in ViewModel.AgentsPins)
+            foreach (var agentPin in ViewModel.Agents)
             {
                 while (_cachedAgentsPins.Any(x => x.Label.Contains(agentPin.AgentName)))
                 {
@@ -237,6 +260,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             ViewModel.CloseDetailPanelCommand.Execute();
             ViewModel.IsLayerChooserVisible = false;
+            ViewModel.IsAgentListVisible = false;
         }
 
         private void StyleButton_OnClicked(object sender, EventArgs e)
@@ -267,6 +291,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         private void LayerChooserButton_OnClicked(object sender, EventArgs e)
         {
             ViewModel.IsLayerChooserVisible = !ViewModel.IsLayerChooserVisible;
+        }
+
+        private void AgentListButton_OnClicked(object sender, EventArgs e)
+        {
+            ViewModel.IsAgentListVisible = !ViewModel.IsAgentListVisible;
         }
 
         private void RefreshMapTheme()
@@ -301,5 +330,15 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 Mvx.IoCProvider.Resolve<ILoggingService>().Error(e, $"Error Executing MapPage.RefreshMapTheme({ViewModel.MapTheme})");
             }
         }
+
+        private void AgentsListView_OnItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item is WasabeeAgentPin agent)
+            {
+                ViewModel.SelectedAgentPin = agent;
+                ViewModel.MoveToAgentCommand.Execute(agent);
+            }
+        }
+
     }
 }

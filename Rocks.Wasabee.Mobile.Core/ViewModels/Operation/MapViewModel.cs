@@ -103,8 +103,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (_preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) is false)
                 {
                     // Force refresh agents pins to only show current OP agents
-                    AgentsPins.Clear();
-                    await RaisePropertyChanged(() => AgentsPins);
+                    Agents.Clear();
+                    await RaisePropertyChanged(() => Agents);
                 }
 
                 await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
@@ -155,11 +155,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         public OperationModel? Operation { get; set; }
         public WasabeePin? SelectedWasabeePin { get; set; }
+        public WasabeeAgentPin? SelectedAgentPin { get; set; }
 
         public MvxObservableCollection<WasabeeLink> Links { get; set; } = new MvxObservableCollection<WasabeeLink>();
         public MvxObservableCollection<WasabeePin> Anchors { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeePin> Markers { get; set; } = new MvxObservableCollection<WasabeePin>();
-        public MvxObservableCollection<WasabeeAgentPin> AgentsPins { get; set; } = new MvxObservableCollection<WasabeeAgentPin>();
+        public MvxObservableCollection<WasabeeAgentPin> Agents { get; set; } = new MvxObservableCollection<WasabeeAgentPin>();
 
         public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
@@ -177,6 +178,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLayerAnchorsActivated { get; set; } = true;
         public bool IsLayerAgentsActivated { get; set; } = true;
 
+        public bool IsAgentListVisible { get; set; }
+
         #endregion
 
         #region Commands
@@ -192,6 +195,21 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 return;
 
             var region = MapSpan.FromCenterAndRadius(SelectedWasabeePin.Pin.Position, Distance.FromMeters(100));
+            if (VisibleRegion == region)
+                RaisePropertyChanged(() => VisibleRegion);
+            else
+                VisibleRegion = region;
+        }
+
+        public IMvxCommand MoveToAgentCommand => new MvxCommand(MoveToAgentExecuted);
+        private void MoveToAgentExecuted()
+        {
+            LoggingService.Trace("Executing MapViewModel.MoveToAgentCommand");
+
+            if (SelectedAgentPin == null)
+                return;
+
+            var region = MapSpan.FromCenterAndRadius(SelectedAgentPin.Pin.Position, Distance.FromMeters(100));
             if (VisibleRegion == region)
                 RaisePropertyChanged(() => VisibleRegion);
             else
@@ -390,13 +408,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 }
 
                 foreach (var toRemove in from agentPin in wasabeeAgentPins
-                                         where AgentsPins.Any(a => a.AgentId.Equals(agentPin.AgentId))
-                                         select AgentsPins.First(a => a.AgentId.Equals(agentPin.AgentId)))
+                                         where Agents.Any(a => a.AgentId.Equals(agentPin.AgentId))
+                                         select Agents.First(a => a.AgentId.Equals(agentPin.AgentId)))
                 {
-                    AgentsPins.Remove(toRemove);
+                    Agents.Remove(toRemove);
                 }
 
-                AgentsPins.AddRange(wasabeeAgentPins);
+                Agents.AddRange(wasabeeAgentPins);
             }
             catch (Exception e)
             {
@@ -404,7 +422,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             finally
             {
-                await RaisePropertyChanged(() => AgentsPins);
+                await RaisePropertyChanged(() => Agents);
                 _isLoadingAgentsLocations = false;
             }
         }
@@ -482,11 +500,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     return;
 
                 var updatedAgentPin = CreateAgentPin(updatedAgent, isAgentAssignedToOperation, isCurrentUser);
-                var toRemove = AgentsPins.FirstOrDefault(a => a.AgentId.Equals(updatedAgentPin.AgentId));
+                var toRemove = Agents.FirstOrDefault(a => a.AgentId.Equals(updatedAgentPin.AgentId));
                 if (toRemove != null)
-                    AgentsPins.Remove(toRemove);
+                    Agents.Remove(toRemove);
 
-                AgentsPins.Add(updatedAgentPin);
+                Agents.Add(updatedAgentPin);
 
                 await _teamAgentsDatabase.SaveTeamAgentModel(updatedAgent);
             }
@@ -496,7 +514,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             finally
             {
-                await RaisePropertyChanged(() => AgentsPins);
+                await RaisePropertyChanged(() => Agents);
                 _isLoadingAgentsLocations = false;
             }
         }

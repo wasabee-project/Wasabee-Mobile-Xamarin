@@ -4,18 +4,20 @@ using Polly;
 using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
 
-namespace Rocks.Wasabee.Mobile.Core.Services
-{
+#if DEBUG_NETWORK_LOGS
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http.Headers;
+#endif
+
+namespace Rocks.Wasabee.Mobile.Core.Services {
     public abstract class BaseApiService
     {
         protected static Task<T> AttemptAndRetry<T>(Func<Task<T>> action, CancellationToken cancellationToken, int numRetries = 3)
@@ -50,11 +52,13 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             var httpHandler = new HttpClientHandler() { CookieContainer = new CookieContainer() };
             httpHandler.CookieContainer.Add(cookie);
 #endif
-
+            var appVersion = Mvx.IoCProvider.Resolve<IVersionTracking>().CurrentVersion;
+            var device = Mvx.IoCProvider.Resolve<IDeviceInfo>();
             var client = new HttpClient(httpHandler)
             {
                 Timeout = TimeSpan.FromSeconds(5),
                 BaseAddress = new Uri(url),
+                DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" } }
             };
 
             return client;

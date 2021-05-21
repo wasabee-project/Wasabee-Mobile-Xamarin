@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
@@ -15,19 +15,27 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
-namespace Rocks.Wasabee.Mobile.Core.Infra.Security
-{
+#if DEBUG_NETWORK_LOGS
+using Rocks.Wasabee.Mobile.Core.Services;
+#endif
+
+namespace Rocks.Wasabee.Mobile.Core.Infra.Security {
     public class LoginProvider : ILoginProvider
     {
         private readonly IAppSettings _appSettings;
         private readonly ISecureStorage _secureStorage;
         private readonly ILoggingService _loggingService;
+        private readonly IDeviceInfo _deviceInfo;
+        private readonly IVersionTracking _versionTracking;
 
-        public LoginProvider(IAppSettings appSettings, ISecureStorage secureStorage, ILoggingService loggingService)
+        public LoginProvider(IAppSettings appSettings, ISecureStorage secureStorage, ILoggingService loggingService,
+            IDeviceInfo deviceInfo, IVersionTracking versionTracking)
         {
             _appSettings = appSettings;
             _secureStorage = secureStorage;
             _loggingService = loggingService;
+            _deviceInfo = deviceInfo;
+            _versionTracking = versionTracking;
         }
 
         /// <summary>
@@ -103,8 +111,17 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             HttpResponseMessage response;
             var cookieContainer = new CookieContainer();
-            using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            using var client = new HttpClient(handler);
+
+#if DEBUG_NETWORK_LOGS
+            var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
+#else
+            var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
+#endif
+
+            using var client = new HttpClient(httpHandler)
+            {
+                DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{_versionTracking.CurrentVersion} ({_deviceInfo.Platform} {_deviceInfo.VersionString})" } }
+            };
 
             try
             {
