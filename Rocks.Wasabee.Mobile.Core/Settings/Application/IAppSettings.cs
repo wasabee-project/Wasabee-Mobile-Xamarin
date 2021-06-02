@@ -12,6 +12,7 @@
         WasabeeServer Server { get; set; }
         string WasabeeBaseUrl { get; }
         string WasabeeTokenUrl { get; }
+        string WasabeeOneTimeTokenUrl { get; }
 
         string AppCenterKey { get; set; }
     }

@@ -51,7 +51,7 @@
             </StackLayout>
             
             
-            <!-- Login button if user aborted process -->
+            <!-- Login buttons -->
             <StackLayout
                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
@@ -65,6 +65,7 @@
                        Margin="10"
                        Padding="1"
                        HasShadow="false"
+                       WidthRequest="270"
                        IsVisible="{Binding IsGButtonVisible}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -75,7 +76,7 @@
                             <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
 
-                        <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="0"
+                        <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="2"
                                HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
                                BackgroundColor="White" HeightRequest="50" WidthRequest="50">
                             <Image Source="g_logo.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -85,6 +86,38 @@
 
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ConnectUserCommand}" />
+                        </Grid.GestureRecognizers>    
+                    </Grid>
+                </Frame>
+
+                <Frame CornerRadius="2"
+                       HorizontalOptions="CenterAndExpand" 
+                       VerticalOptions="EndAndExpand"
+                       BackgroundColor="#3BA345" 
+                       Margin="10"
+                       Padding="1"
+                       HasShadow="false"
+                       WidthRequest="270"
+                       IsVisible="{Binding IsOTTButtonVisible}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+
+                        <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="2"
+                               HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                               BackgroundColor="White" HeightRequest="50" WidthRequest="50">
+                            <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label Text="Use One Time Token" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
+                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" TextColor="White" FontAttributes="Bold" />
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding UseOneTimeTokenCommand}" />
                         </Grid.GestureRecognizers>    
                     </Grid>
                 </Frame>
@@ -104,6 +137,23 @@
                     TextColor="{DynamicResource AccentColor}" />
             </StackLayout>
             
+            <!-- One Time Token input -->
+            <StackLayout
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=100}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                IsVisible="{Binding IsEnteringToken}">
+                <Label
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Text="Enter the token :"
+                    FontSize="Large"/>
+
+                <Entry Text="{Binding OneTimeToken}"/>
+                <Button Style="{DynamicResource WasabeeStyleValidateButton}"
+                        Command="{Binding ValidateOneTimeTokenCommand}"/>
+            </StackLayout>
             
             <!-- Server selection -->
             <StackLayout

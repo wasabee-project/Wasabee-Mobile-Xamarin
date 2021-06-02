@@ -1,5 +1,6 @@
 using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -19,7 +20,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using MvvmCross;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
@@ -59,6 +59,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private bool _working = false;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
+        private bool _isUsingOneTimeToken = false;
 
         private SplashScreenNavigationParameter? _parameter;
 
@@ -136,6 +137,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public bool IsConnected { get; set; }
         public bool IsLoginVisible { get; set; }
         public bool IsGButtonVisible { get; set; } = true;
+        public bool IsOTTButtonVisible { get; set; } = true;
+        public bool IsEnteringToken { get; set; }
         public bool IsAuthInError { get; set; }
         public bool IsSelectingServer { get; set; }
         public bool RememberServerChoice { get; set; }
@@ -144,6 +147,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public string AppEnvironnement { get; set; } = string.Empty;
         public string DisplayVersion { get; set; } = string.Empty;
         public string ErrorMessage { get; set; } = string.Empty;
+        public string OneTimeToken { get; set; } = string.Empty;
 
         private ServerItem _selectedServerItem = ServerItem.Undefined;
         public ServerItem SelectedServerItem
@@ -226,6 +230,87 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsLoading = false;
         }
 
+        public IMvxCommand UseOneTimeTokenCommand => new MvxCommand(UseOneTimeToken);
+        private void UseOneTimeToken()
+        {
+            LoggingService.Trace("Executing SplashScreenViewModel.UseOneTimeTokenCommand()");
+
+            IsAuthInError = false;
+            IsLoginVisible = false;
+
+            if (SelectedServerItem != ServerItem.Undefined)
+            {
+                IsEnteringToken = true;
+            }
+            else
+            {
+                _isUsingOneTimeToken = true;
+                
+                IsEnteringToken = false;
+
+                LoadingStepLabel = "Choose token's server :";
+                IsSelectingServer = true;
+            }
+        }
+
+        public IMvxAsyncCommand ValidateOneTimeTokenCommand => new MvxAsyncCommand(ValidateOneTimeToken);
+        private async Task ValidateOneTimeToken()
+        {
+            LoggingService.Trace("Executing SplashScreenViewModel.ValidateOneTimeTokenCommand()");
+
+            if (string.IsNullOrWhiteSpace(OneTimeToken))
+                return;
+
+            if (SelectedServerItem == ServerItem.Undefined)
+            {
+                _isUsingOneTimeToken = true;
+
+                LoadingStepLabel = "Choose token's server :";
+                IsLoginVisible = false;
+                IsSelectingServer = true;
+            }
+            else
+            {
+                IsEnteringToken = false;
+                IsSelectingServer = false;
+                
+                IsLoading = true;
+                LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
+
+                var wasabeeUserModel = await _authentificationService.WasabeeOneTimeTokenLoginAsync(OneTimeToken);
+                if (wasabeeUserModel != null)
+                {
+                    _preferences.Set(UserSettingsKeys.LoggedInWithOneTimeToken, true);
+
+                    if (RememberServerChoice)
+                    {
+                        _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
+                        _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
+                    }
+
+                    await _usersDatabase.SaveUserModel(wasabeeUserModel);
+
+                    _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
+                    _userSettingsService.SaveIngressName(wasabeeUserModel.IngressName);
+
+                    await FinishLogin(wasabeeUserModel);
+                }
+                else
+                {
+                    _isUsingOneTimeToken = false;
+                    
+                    ErrorMessage = "Wasabee login failed !";
+                    IsAuthInError = true;
+                    IsLoading = false;
+                    IsLoginVisible = true;
+
+                    OneTimeToken = string.Empty;
+                    RememberServerChoice = false;
+                    SelectedServerItem = ServerItem.Undefined;
+                }
+            }
+        }
+
         public IMvxAsyncCommand<ServerItem> ChooseServerCommand => new MvxAsyncCommand<ServerItem>(ChooseServer);
         private async Task ChooseServer(ServerItem serverItem)
         {
@@ -240,6 +325,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 _isBypassingGoogleAndWasabeeLogin = false;
                 await BypassGoogleAndWasabeeLogin();
+            }
+            else if (_isUsingOneTimeToken)
+            {
+                UseOneTimeTokenCommand.Execute();
             }
             else
                 await ConnectWasabee();
@@ -312,13 +401,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 return;
             }
 
-            await ConnectUserCommand.ExecuteAsync();
+            if (IsSelectingServer)
+                ChangeServer();
+            else
+                IsLoginVisible = true;
         }
 
         private async Task ConnectWasabee()
         {
             var token = await GetGoogleToken();
-                
             if (token is null)
             {
                 ErrorMessage = "Internal error";
@@ -334,6 +425,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(token);
             if (wasabeeUserModel != null)
             {
+                _preferences.Set(UserSettingsKeys.LoggedInWithOneTimeToken, false);
+
                 if (RememberServerChoice)
                 {
                     _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
@@ -393,7 +486,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
                 }
 
-
                 try
                 {
                     var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
@@ -411,6 +503,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     // force relogin using saved googleToken if exist. If google token is expired, it will refresh it
                     try
                     {
+                        var hasUsedOneTimeToken = _preferences.Get(UserSettingsKeys.LoggedInWithOneTimeToken, false);
+                        if (hasUsedOneTimeToken)
+                            throw new Exception("Can't refresh Google token when Wasabee One Time Token was used previously");
+
                         var token = await GetGoogleToken();
                         await SaveGoogleToken(token);
 
@@ -443,10 +539,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             if (userModel.Blacklisted)
             {
-                ErrorMessage = "Account error";
+                ErrorMessage = "Error occured";
                 IsAuthInError = true;
                 IsLoginVisible = true;
                 IsGButtonVisible = false;
+                IsOTTButtonVisible = false;
                 IsLoading = false;
                 return;
             }
