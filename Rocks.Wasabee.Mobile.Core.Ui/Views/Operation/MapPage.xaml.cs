@@ -134,14 +134,12 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 if (_isAgentListPanelVisible) return;
 
                 _isAgentListPanelVisible = true;
-                AgentListPanel.IsVisible = true;
                 await AgentListPanel.TranslateTo(0, 0, 150); // Show
             }
             else
             {
                 await AgentListPanel.TranslateTo(180, 0, 150); // Hide
                 _isAgentListPanelVisible = false;
-                AgentListPanel.IsVisible = false;
             }
         }
 
