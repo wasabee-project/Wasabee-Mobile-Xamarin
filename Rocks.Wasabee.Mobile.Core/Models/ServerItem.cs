@@ -16,5 +16,17 @@ namespace Rocks.Wasabee.Mobile.Core.Models
         public string Image { get; }
 
         public static ServerItem Undefined => new ServerItem("_UNDEFINED_", WasabeeServer.Undefined, string.Empty);
+
+        public static bool operator ==(ServerItem left, ServerItem right)
+        {
+            return left.Name == right.Name &&
+                   left.Server == right.Server;
+        }
+
+        public static bool operator !=(ServerItem left, ServerItem right)
+        {
+            return left.Name != right.Name &&
+                   left.Server != right.Server;
+        }
     }
 }

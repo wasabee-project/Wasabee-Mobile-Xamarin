@@ -1,5 +1,4 @@
 ﻿using System;
-using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 {
@@ -29,6 +28,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 
         public string WasabeeBaseUrl { get; private set; } = string.Empty;
         public string WasabeeTokenUrl { get; private set; } = string.Empty;
+        public string WasabeeOneTimeTokenUrl { get; private set; } = string.Empty;
 
         public string AppCenterKey { get; set; } = string.Empty;
 
@@ -45,6 +45,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 
             WasabeeBaseUrl = $"https://{server}.wasabee.rocks";
             WasabeeTokenUrl = $"{WasabeeBaseUrl}/aptok";
+            WasabeeOneTimeTokenUrl = $"{WasabeeBaseUrl}/oneTimeToken";
         }
     }
 }

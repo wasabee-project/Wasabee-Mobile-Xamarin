@@ -19,7 +19,8 @@ using Xamarin.Essentials.Interfaces;
 using Rocks.Wasabee.Mobile.Core.Services;
 #endif
 
-namespace Rocks.Wasabee.Mobile.Core.Infra.Security {
+namespace Rocks.Wasabee.Mobile.Core.Infra.Security
+{
     public class LoginProvider : ILoginProvider
     {
         private readonly IAppSettings _appSettings;
@@ -201,6 +202,60 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Runs the Wasabee login process with one time token to retrieve Wasabeee data
+        /// </summary>
+        /// <param name="oneTimeToken">Wasabee one time token</param>
+        /// <returns>Returns a WasabeeLoginResponse with account data</returns>
+        public async Task<UserModel?> DoWasabeeOneTimeTokenLoginAsync(string oneTimeToken)
+        {
+            _loggingService.Trace("Executing LoginProvider.DoWasabeeOneTimeTokenLoginAsync");
+
+            HttpResponseMessage response;
+            var cookieContainer = new CookieContainer();
+
+#if DEBUG_NETWORK_LOGS
+            var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
+#else
+            var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
+#endif
+
+            using var client = new HttpClient(httpHandler)
+            {
+                DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{_versionTracking.CurrentVersion} ({_deviceInfo.Platform} {_deviceInfo.VersionString})" } }
+            };
+
+            try
+            {
+                MultipartFormDataContent form = new MultipartFormDataContent
+                {
+                    { new StringContent(oneTimeToken), "token" }
+                };
+                
+                response = await client.PostAsync(_appSettings.WasabeeOneTimeTokenUrl, form).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                _loggingService.Error(e, "Error Executing LoginProvider.DoWasabeeLoginAsync");
+
+                return null;
+            }
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(responseContent);
+
+            var uri = new Uri(_appSettings.WasabeeBaseUrl);
+            var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()
+                .AsEnumerable()
+                .FirstOrDefault();
+
+            if (wasabeeCookie != null)
+                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, JsonConvert.SerializeObject(wasabeeCookie));
+
+            return wasabeeUserModel;
         }
 
         public Task RemoveTokenFromSecureStore()

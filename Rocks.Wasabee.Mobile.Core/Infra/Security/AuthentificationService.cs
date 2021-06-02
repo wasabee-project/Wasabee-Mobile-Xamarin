@@ -37,12 +37,20 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             return await _loginProvider.DoWasabeeLoginAsync(googleToken);
         }
 
+        public async Task<UserModel?> WasabeeOneTimeTokenLoginAsync(string oneTimeToken)
+        {
+            _loggingService.Trace("Executing AuthentificationService.WasabeeOneTimeTokenLoginAsync");
+
+            return await _loginProvider.DoWasabeeOneTimeTokenLoginAsync(oneTimeToken);
+        }
+
         public async Task LogoutAsync()
         {
             _loggingService.Trace("Executing AuthentificationService.LogoutAsync");
 
             _preferences.Remove(UserSettingsKeys.RememberServerChoice);
             _preferences.Remove(UserSettingsKeys.SavedServerChoice);
+            _preferences.Remove(UserSettingsKeys.LoggedInWithOneTimeToken);
 
             await ClearUserTokenAndCookie(_loginProvider);
             await ClearDatabases();
