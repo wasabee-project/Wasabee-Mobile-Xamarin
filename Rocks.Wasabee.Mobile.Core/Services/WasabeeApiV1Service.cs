@@ -76,10 +76,10 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Get("/draw/{opId}/link/{linkId}/incomplete")]
         Task<ApiResponse<string>> Operation_Link_Incomplete(string opId, string linkId);
 
-        [Get("/draw/{opId}/link/{linkId}/claim")]
+        [Post("/draw/{opId}/link/{linkId}/claim")]
         Task<ApiResponse<string>> Operation_Link_Claim(string opId, string linkId);
 
-        [Get("/draw/{opId}/link/{linkId}/reject")]
+        [Post("/draw/{opId}/link/{linkId}/reject")]
         Task<ApiResponse<string>> Operation_Link_Reject(string opId, string linkId);
 
         #endregion
@@ -98,7 +98,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Get("/draw/{opId}/marker/{markerId}/complete")]
         Task<ApiResponse<string>> Operation_Marker_Complete(string opId, string markerId);
 
-        [Get("/draw/{opId}/marker/{markerId}/claim")]
+        [Post("/draw/{opId}/marker/{markerId}/claim")]
         Task<ApiResponse<string>> Operation_Marker_Claim(string opId, string markerId);
 
         [Get("/draw/{opId}/marker/{markerId}/reject")]

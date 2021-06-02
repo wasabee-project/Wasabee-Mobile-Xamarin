@@ -5,12 +5,12 @@ namespace Rocks.Wasabee.Mobile.Core.Messages
 {
     public class MarkerDataChangedMessage : MvxMessage
     {
-        public MarkerModel MarkerModel { get; }
+        public MarkerModel MarkerData { get; }
         public string OperationId { get; }
 
-        public MarkerDataChangedMessage(object sender, MarkerModel markerModel, string operationId) : base(sender)
+        public MarkerDataChangedMessage(object sender, MarkerModel markerData, string operationId) : base(sender)
         {
-            MarkerModel = markerModel;
+            MarkerData = markerData;
             OperationId = operationId;
         }
     }

@@ -138,7 +138,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public IMvxAsyncCommand ClaimCommand => new MvxAsyncCommand(ClaimExecuted, () => ClaimEnabled);
         private async Task ClaimExecuted()
         {
-            if (IsBusy || !IsSelfAssignment)
+            if (IsBusy || IsSelfAssignment)
                 return;
 
             if (MarkerAssignment != null && Marker != null)
@@ -168,7 +168,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
                 if (await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id))
                 {
-                    _userDialogs.Toast("Assignment removed");
+                    _userDialogs.Toast("Assignment rejected");
 
                     await UpdateMarkerAndNotify();
                 }
@@ -257,6 +257,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     await _markersDatabase.SaveMarkerModel(Marker, MarkerAssignment.OpId);
 
                     _messenger.Publish(new MarkerDataChangedMessage(this, Marker, MarkerAssignment.OpId));
+                }
+                else
+                {
+                    IsBusy = false;
+                    CloseCommand.Execute();
                 }
             }
         }
