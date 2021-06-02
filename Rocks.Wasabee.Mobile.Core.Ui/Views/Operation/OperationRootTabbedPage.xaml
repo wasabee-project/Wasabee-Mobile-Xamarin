@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <views:MvxTabbedPage x:TypeArguments="viewModels:OperationRootTabbedViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                     x:DataType="viewModels:OperationRootTabbedViewModel"
                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                      xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                      xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
@@ -11,7 +12,7 @@
                      xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.OperationRootTabbedPage"
                      android:TabbedPage.ToolbarPlacement="Bottom"
-                     BarBackgroundColor="{StaticResource NavBarsBackgroundColor}"
+                     BarBackgroundColor="{DynamicResource NavBarsBackgroundColor}"
                      SelectedTabColor="{DynamicResource SelectedTabColor}"
                      Title="Operation">
 
@@ -22,7 +23,7 @@
 
         <ResourceDictionary>
             <DataTemplate x:Key="LinkTemplate">
-                <ViewCell>
+                <ViewCell x:DataType="viewModels:LinkAssignmentData">
                     <Grid Padding="10" RowSpacing="0" ColumnSpacing="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"/>
@@ -83,7 +84,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="MarkerTemplate">
-                <ViewCell>
+                <ViewCell x:DataType="viewModels:MarkerAssignmentData">
                     <Grid Padding="10" RowSpacing="0" ColumnSpacing="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"/>

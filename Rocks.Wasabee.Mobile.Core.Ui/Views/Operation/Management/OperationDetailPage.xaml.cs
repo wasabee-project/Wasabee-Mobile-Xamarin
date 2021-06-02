@@ -18,7 +18,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.Management
         {
             TeamsList.SelectedItem = null;
 
-            if (e.SelectedItem is Team team)
+            if (e.SelectedItem is TeamItemSubViewModel team)
             {
                 ViewModel.ShowTeamDetailCommand.Execute(team);
             }

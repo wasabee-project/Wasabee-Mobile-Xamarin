@@ -46,11 +46,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             Link = LinkAssignment.Link;
             
             IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link?.AssignedTo);
+            UpdateButtonsState();
         }
 
         #region Properties
         
         public bool IsSelfAssignment { get; set; }
+        
+        public bool CompletedEnabled { get; set; }
+        public bool IncompleteEnabled { get; set; }
+        public bool ClaimEnabled{ get; set; }
+        public bool RejectEnabled { get; set; }
 
         public LinkAssignmentData? LinkAssignment { get; set; }
         public LinkModel? Link { get; set; }
@@ -202,6 +208,66 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             }
         }
 
+        public IMvxAsyncCommand ClaimCommand => new MvxAsyncCommand(ClaimExecuted);
+        private async Task ClaimExecuted()
+        {
+            if (IsBusy || IsSelfAssignment)
+                return;
+
+            if (LinkAssignment?.Link == null)
+                return;
+
+            LoggingService.Trace("Executing LinkAssignmentDialogViewModel.ClaimCommand");
+
+            IsBusy = true;
+
+            try
+            {
+                if (await _wasabeeApiV1Service.Operation_Link_Claim(LinkAssignment.OpId, LinkAssignment.Link.Id))
+                    await UpdateLinkAndNotify();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing LinkAssignmentDialogViewModel.ClaimCommand");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public IMvxAsyncCommand RejectCommand => new MvxAsyncCommand(RejectExecuted);
+        private async Task RejectExecuted()
+        {
+            if (IsBusy || !IsSelfAssignment)
+                return;
+
+            if (LinkAssignment?.Link == null)
+                return;
+
+            LoggingService.Trace("Executing LinkAssignmentDialogViewModel.RejectCommand");
+
+            IsBusy = true;
+
+            try
+            {
+                if (await _wasabeeApiV1Service.Operation_Link_Reject(LinkAssignment.OpId, LinkAssignment.Link.Id))
+                {
+                    _userDialogs.Toast("Assignment rejected");
+
+                    await UpdateLinkAndNotify();
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing LinkAssignmentDialogViewModel.RejectCommand");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         #endregion
 
         #region Private methods
@@ -218,13 +284,42 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Link = updated;
+                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link.AssignedTo);
+
+                    UpdateButtonsState();
+
                     await _linksDatabase.SaveLinkModel(Link, LinkAssignment.OpId);
 
                     _messenger.Publish(new LinkDataChangedMessage(this, Link, LinkAssignment.OpId));
                 }
+                else
+                {
+                    IsBusy = false;
+                    CloseCommand.Execute();
+                }
             }
         }
-        
+
+        private void UpdateButtonsState()
+        {
+            if (Link == null)
+                return;
+
+            if (IsSelfAssignment)
+            {
+                CompletedEnabled = !Link.Completed;
+                IncompleteEnabled = Link.Completed;
+                RejectEnabled = !Link.Completed;
+                ClaimEnabled = false;
+            }
+            else
+            {
+                CompletedEnabled = false;
+                IncompleteEnabled = false;
+                RejectEnabled = false;
+                ClaimEnabled = true;
+            }
+        }
         #endregion
     }
 }

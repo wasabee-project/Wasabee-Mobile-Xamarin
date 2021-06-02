@@ -1,4 +1,6 @@
-﻿using MvvmCross.Commands;
+using Microsoft.AppCenter.Analytics;
+using MvvmCross;
+using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
@@ -8,8 +10,6 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AppCenter.Analytics;
-using MvvmCross;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
 {
@@ -66,7 +66,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
         #region Properties
 
         public OperationModel? Operation { get; set; }
-        public MvxObservableCollection<Team> TeamsCollection { get; set; } = new MvxObservableCollection<Team>();
+        public MvxObservableCollection<TeamItemSubViewModel> TeamsCollection { get; set; } = new MvxObservableCollection<TeamItemSubViewModel>();
 
         #endregion
 
@@ -99,12 +99,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
                     var team = await _teamsDatabase.GetTeam(teamId);
                     if (team == null)
                     {
-                        TeamsCollection.Add(new Team(teamId, "Error retrieving name"));
+                        TeamsCollection.Add(new TeamItemSubViewModel(teamId, "Error retrieving name"));
                     }
                     else
                     {
                         var isOwner = userTeams.Any(x => x.Id.Equals(team.Id) && x.Owner.Equals(loggedUserId));
-                        TeamsCollection.Add(new Team(team.Id, team.Name) { IsOwner = isOwner });
+                        TeamsCollection.Add(new TeamItemSubViewModel(team.Id, team.Name) { IsOwner = isOwner });
                     }
                 }
             }
@@ -118,8 +118,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
             }
         }
 
-        public IMvxCommand<Team> ShowTeamDetailCommand => new MvxCommand<Team>(ShowTeamDetailExecuted);
-        private async void ShowTeamDetailExecuted(Team team)
+        public IMvxCommand<TeamItemSubViewModel> ShowTeamDetailCommand => new MvxCommand<TeamItemSubViewModel>(ShowTeamDetailExecuted);
+        private async void ShowTeamDetailExecuted(TeamItemSubViewModel team)
         {
             if (IsBusy)
                 return;
@@ -136,12 +136,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
         #endregion
     }
 
-    public class Team : MvxViewModel
+    public class TeamItemSubViewModel : MvxViewModel
     {
         public string Id { get; }
         public string Name { get; }
 
-        public Team(string id, string name)
+        public TeamItemSubViewModel(string id, string name)
         {
             Id = id;
             Name = name;

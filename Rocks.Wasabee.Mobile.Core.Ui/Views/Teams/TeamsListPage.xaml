@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<views:BaseContentPage x:TypeArguments="teams:TeamsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+<views:BaseContentPage x:TypeArguments="viewModels:TeamsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       x:DataType="viewModels:TeamsListViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-                       xmlns:teams="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Teams;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Teams;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamsListPage"
@@ -32,7 +33,7 @@
                                          Orientation="Vertical"/>
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="viewModels:Team">
                             <SwipeView>
 
                                 <SwipeView.LeftItems>

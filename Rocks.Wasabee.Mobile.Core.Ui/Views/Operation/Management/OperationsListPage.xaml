@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<views:BaseContentPage x:TypeArguments="vm:OperationsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+<views:BaseContentPage x:TypeArguments="viewModels:OperationsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       x:DataType="viewModels:OperationsListViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-                       xmlns:vm="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.Management.OperationsListPage"
@@ -17,18 +18,17 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <ListView
-                x:Name="OperationsList"
-                HasUnevenRows="True"
-                IsPullToRefreshEnabled="True"
-                CachingStrategy="RecycleElement"
-                ItemSelected="OperationsList_OnItemSelected"
-                RefreshCommand="{Binding RefreshCommand}"
-                IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
-                ItemsSource="{Binding OperationsCollection}"
-                RefreshControlColor="{DynamicResource PrimaryGreenDark}">
+            <ListView x:Name="OperationsList"
+                      HasUnevenRows="True"
+                      IsPullToRefreshEnabled="True"
+                      CachingStrategy="RecycleElement"
+                      ItemSelected="OperationsList_OnItemSelected"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+                      ItemsSource="{Binding OperationsCollection}"
+                      RefreshControlColor="{DynamicResource PrimaryGreenDark}">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="viewModels:OperationItemSubViewModel">
                         <ViewCell>
                             <Grid Padding="10" ColumnSpacing="0">
                                 <Grid.ColumnDefinitions>
