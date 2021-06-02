@@ -40,7 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.Management
         {
             OperationsList.SelectedItem = null;
 
-            if (e.SelectedItem is ViewModels.Operation.Management.Operation operation)
+            if (e.SelectedItem is ViewModels.Operation.Management.OperationItemSubViewModel operation)
             {
                 ViewModel.ShowOperationDetailCommand.Execute(operation);
             }

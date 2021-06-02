@@ -25,7 +25,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IPreferences _preferences;
         
-        private MvxSubscriptionToken? _tokenRefresh;
+        private MvxSubscriptionToken? _token;
+        private MvxSubscriptionToken? _tokenRefreshLink;
+        private MvxSubscriptionToken? _tokenRefreshMarker;
 
         private int _pendingRefreshCount = 0;
 
@@ -51,7 +53,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             base.ViewAppearing();
             
-            _tokenRefresh ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
+            _token ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenRefreshLink ??= _messenger.Subscribe<LinkDataChangedMessage>(msg => RefreshLinkCommand.Execute(msg.LinkData));
+            _tokenRefreshMarker ??= _messenger.Subscribe<MarkerDataChangedMessage>(msg => RefreshMarkerCommand.Execute(msg.MarkerData));
             
             await RefreshCommand.ExecuteAsync();
         }
@@ -60,8 +64,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             base.ViewDisappeared();
 
-            _tokenRefresh?.Dispose();
-            _tokenRefresh = null;
+            _token?.Dispose();
+            _token = null;
+            _tokenRefreshLink?.Dispose();
+            _tokenRefreshLink = null;
+            _tokenRefreshMarker?.Dispose();
+            _tokenRefreshMarker = null;
         }
 
         #region Properties
@@ -103,31 +111,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var assignedLinks = new List<LinkAssignmentData>();
                 var assignedMarkers = new List<MarkerAssignmentData>();
                 if (!Operation.Links.IsNullOrEmpty())
-                {
-                    assignedLinks = Operation.Links
-                        .Select(l => new LinkAssignmentData(Operation.Id, l.ThrowOrderPos)
-                        {
-                            Link = l,
-                            AssignedAgent = l.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(l.AssignedTo).Result,
-                            ShowAssignee = !l.AssignedTo.IsNullOrEmpty(),
-                            FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.FromPortalId)),
-                            ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(l.ToPortalId)),
-                            Color = WasabeeColorsHelper.GetColorFromWasabeeName(l.Color, Operation.Color)
-                        }).ToList();
-                }
+                    assignedLinks = Operation.Links.Select(CreateLinkAssignmentData).ToList();
 
                 if (!Operation.Markers.IsNullOrEmpty())
-                {
-                    assignedMarkers = Operation.Markers
-                        .Select(m => new MarkerAssignmentData(Operation.Id, m.Order)
-                        {
-                            Marker = m,
-                            AssignedAgent = m.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(m.AssignedTo).Result,
-                            ShowAssignee = !m.AssignedTo.IsNullOrEmpty(),
-                            Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(m.PortalId))
-                        }).ToList();
-                }
-                
+                    assignedMarkers = Operation.Markers.Select(CreateMarkerAssignmentData).ToList();
+
                 var orderedAssignments = new List<AssignmentData>();
                 if (!assignedLinks.IsNullOrEmpty())
                     orderedAssignments.AddRange(assignedLinks);
@@ -156,6 +144,64 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     await RefreshCommand.ExecuteAsync().ConfigureAwait(false);
             }
         }
+        
+        public IMvxCommand<LinkModel> RefreshLinkCommand => new MvxCommand<LinkModel>(RefreshLinkExecuted);
+        private void RefreshLinkExecuted(LinkModel linkModel)
+        {
+            if (IsLoading || Elements.IsNullOrEmpty() || Operation == null)
+                return;
+
+            LoggingService.Trace("Executing ChecklistViewModel.RefreshLinkExecuted");
+
+            try
+            {
+                var toRemove = Elements.Where(x => x.Link != null).FirstOrDefault(assignment => assignment.Link!.Id.Equals(linkModel.Id));
+                if (toRemove != null)
+                {
+                    var index = Elements.IndexOf(toRemove);
+                    var newAssignment = CreateLinkAssignmentData(linkModel);
+
+                    Elements.ReplaceRange(new [] { newAssignment }, index, 1);
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing ChecklistViewModel.RefreshLinkExecuted");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+        
+        public IMvxCommand<MarkerModel> RefreshMarkerCommand => new MvxCommand<MarkerModel>(RefreshMarkerExecuted);
+        private void RefreshMarkerExecuted(MarkerModel markerModel)
+        {
+            if (IsLoading || Elements.IsNullOrEmpty() || Operation == null)
+                return;
+
+            LoggingService.Trace("Executing ChecklistViewModel.RefreshMarkerExecuted");
+
+            try
+            {
+                var toRemove = Elements.Where(x => x.Marker != null).FirstOrDefault(assignment => assignment.Marker!.Id.Equals(markerModel.Id));
+                if (toRemove != null)
+                {
+                    var index = Elements.IndexOf(toRemove);
+                    var newAssignment = CreateMarkerAssignmentData(markerModel);
+
+                    Elements.ReplaceRange(new [] { newAssignment }, index, 1);
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Executing ChecklistViewModel.RefreshMarkerExecuted");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
 
         public IMvxAsyncCommand<AssignmentData> SelectElementCommand => new MvxAsyncCommand<AssignmentData>(SelectAssignmentExecuted);
         private async Task SelectAssignmentExecuted(AssignmentData data)
@@ -164,6 +210,40 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 await _dialogNavigationService.Navigate<LinkAssignmentDialogViewModel, LinkAssignmentData>(linkAssignmentData);
             else if (data is MarkerAssignmentData markerAssignmentData)
                 await _dialogNavigationService.Navigate<MarkerAssignmentDialogViewModel, MarkerAssignmentData>(markerAssignmentData);
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private LinkAssignmentData CreateLinkAssignmentData(LinkModel link)
+        {
+            if (Operation == null)
+                throw new Exception("Operation is null");
+
+            return new LinkAssignmentData(Operation!.Id, link.ThrowOrderPos)
+            {
+                Link = link,
+                AssignedAgent = link.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(link.AssignedTo).Result,
+                ShowAssignee = !link.AssignedTo.IsNullOrEmpty(),
+                FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.FromPortalId)),
+                ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.ToPortalId)),
+                Color = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color)
+            };
+        }
+
+        private MarkerAssignmentData CreateMarkerAssignmentData(MarkerModel marker)
+        {
+            if (Operation == null)
+                throw new Exception("Operation is null");
+
+            return new MarkerAssignmentData(Operation.Id, marker.Order)
+            {
+                Marker = marker,
+                AssignedAgent = marker.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                ShowAssignee = !marker.AssignedTo.IsNullOrEmpty(),
+                Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
+            };
         }
 
         #endregion

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="viewModels:MapViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       x:DataType="viewModels:MapViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
@@ -7,6 +8,7 @@
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:mapElements="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation.MapElements;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.MapPage"
                        Title="Map"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
@@ -115,7 +117,7 @@
                               ItemsSource="{Binding Agents}"
                               ItemTapped="AgentsListView_OnItemTapped">
                         <ListView.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="mapElements:WasabeeAgentPin">
                                 <ViewCell>
                                     <Label Text="{Binding AgentName}" TextColor="{DynamicResource PrimaryTextColor}" Padding="10"/>
                                 </ViewCell>

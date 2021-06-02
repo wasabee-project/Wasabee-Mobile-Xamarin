@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="teams:TeamDetailsViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       x:DataType="teams:TeamDetailsViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:teams="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Teams;assembly=Rocks.Wasabee.Mobile.Core"
@@ -8,6 +9,7 @@
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+                       xmlns:models="clr-namespace:Rocks.Wasabee.Mobile.Core.Models.Teams;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamDetailsPage"
                        x:Name="Page"
                        Title="{Binding Title}"
@@ -38,7 +40,7 @@
                     </CollectionView.ItemsLayout>
 
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:TeamAgentModel">
                             <SwipeView>
 
                                 <SwipeView.RightItems>

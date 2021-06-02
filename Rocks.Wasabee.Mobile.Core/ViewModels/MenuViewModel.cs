@@ -1,4 +1,5 @@
 using Acr.UserDialogs;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -21,7 +22,6 @@ using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using MvvmCross;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;

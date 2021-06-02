@@ -16,6 +16,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.User
         public static string ShowAgentsFromAnyTeam => "SHOW_AGENTS_FROM_ANY_TEAM";
         public static string LastLaunchedVersion => "LAST_LAUNCHED_VERSION";
         public static string ShowDebugToasts => "SHOW_DEBUG_TOASTS";
+        public static string LoggedInWithOneTimeToken => "LOGGED_IN_WITH_OTT";
 
     }
 }

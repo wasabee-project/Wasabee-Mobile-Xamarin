@@ -324,6 +324,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 // Message data set to true to force move mapview
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, true));
                 IsLoading = false;
+
+                await RaisePropertyChanged(() => Anchors);
+                await RaisePropertyChanged(() => Links);
+                await RaisePropertyChanged(() => Markers);
             }
         }
 
@@ -783,11 +787,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             if (!updateMessage.OperationId.Equals(Operation.Id))
                 return;
 
-            var marker = Markers.FirstOrDefault(x => x.Marker.Id.Equals(updateMessage.MarkerModel.Id));
+            var marker = Markers.FirstOrDefault(x => x.Marker.Id.Equals(updateMessage.MarkerData.Id));
             if (marker != null)
             {
                 var culture = CultureInfo.GetCultureInfo("en-US");
-                var portal = Operation.Portals.First(x => x.Id.Equals(updateMessage.MarkerModel.PortalId));
+                var portal = Operation.Portals.First(x => x.Id.Equals(updateMessage.MarkerData.PortalId));
                 double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
                 double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
 
@@ -795,13 +799,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     new Pin()
                     {
                         Position = new Position(portalLat, portalLng),
-                        Icon = BitmapDescriptorFactory.FromBundle($"{updateMessage.MarkerModel.Type}|{updateMessage.MarkerModel.State}"),
-                        Label = GetMarkerNameFromTypeAndState(updateMessage.MarkerModel.Type, updateMessage.MarkerModel.State)
+                        Icon = BitmapDescriptorFactory.FromBundle($"{updateMessage.MarkerData.Type}|{updateMessage.MarkerData.State}"),
+                        Label = GetMarkerNameFromTypeAndState(updateMessage.MarkerData.Type, updateMessage.MarkerData.State)
                     })
                 {
                     Portal = portal,
-                    Marker = updateMessage.MarkerModel,
-                    AssignedTo = updateMessage.MarkerModel.AssignedNickname
+                    Marker = updateMessage.MarkerData,
+                    AssignedTo = updateMessage.MarkerData.AssignedNickname
                 };
 
                 Markers.Remove(marker);
@@ -810,7 +814,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _messenger.Publish(new MessageFrom<MapViewModel>(this));
 
                 // If assigned to current user
-                if (updateMessage.MarkerModel.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
+                if (updateMessage.MarkerData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
                     _messenger.Publish(new MessageFor<AssignmentsListViewModel>(this));
             }
         }

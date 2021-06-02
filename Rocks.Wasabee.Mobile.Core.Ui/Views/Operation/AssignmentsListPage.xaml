@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="viewModels:AssignmentsListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                       x:DataType="viewModels:AssignmentsListViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"

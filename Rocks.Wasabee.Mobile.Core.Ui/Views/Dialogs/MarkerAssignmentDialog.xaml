@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseDialogPage x:TypeArguments="viewModels:MarkerAssignmentDialogViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                      x:DataType="viewModels:MarkerAssignmentDialogViewModel"
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
@@ -55,15 +56,29 @@
                         <StackLayout IsVisible="{Binding IsSelfAssignment}">
                             <Label Text="{Binding Marker.State, StringFormat='State : {0}'}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                <Button Text="Ack" TextColor="White" BackgroundColor="{DynamicResource PrimaryOrange}"
-                                    Command="{Binding AckCommand}" />
-                                <Button Text="Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}"
-                                    Command="{Binding DoneCommand}"
-                                    IsVisible="{Binding IncompleteEnabled, Converter={StaticResource BoolNegateConverter}}"/>
-                                <Button Text="Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}"
+                                <Button Text="👍🏻   Ack" TextColor="White" BackgroundColor="{DynamicResource PrimaryOrange}" CornerRadius="5"
+                                    Command="{Binding AckCommand}"
+                                    IsVisible="{Binding AcknowledgedEnabled}"/>
+                                <Button Text="✓   Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
+                                    Command="{Binding CompleteCommand}"
+                                    IsVisible="{Binding CompletedEnabled}"/>
+                                <Button Text="✗   Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
                                     Command="{Binding IncompleteCommand}"
                                     IsVisible="{Binding IncompleteEnabled}"/>
                             </StackLayout>
+
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                <Button Text="⚠   Reject" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
+                                        Command="{Binding RejectCommand}"
+                                        IsVisible="{Binding RejectEnabled}"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                        <StackLayout IsVisible="{Binding IsSelfAssignment, Converter={StaticResource BoolNegateConverter}}"
+                                     Orientation="Horizontal" HorizontalOptions="Center">
+                            
+                            <Button Text="Claim" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
+                                    Command="{Binding ClaimCommand}"/>
                         </StackLayout>
                     </StackLayout>
 

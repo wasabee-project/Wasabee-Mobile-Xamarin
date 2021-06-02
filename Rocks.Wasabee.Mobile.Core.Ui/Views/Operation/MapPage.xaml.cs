@@ -78,13 +78,19 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 RefreshAgentsLayer();
             else if (e.PropertyName == "IsAgentListVisible")
                 AnimateAgentListPanel();
+            else if (e.PropertyName == "Anchors")
+                RefreshAnchorsLayer();
+            else if (e.PropertyName == "Links")
+                RefreshLinksLayer();
+            else if (e.PropertyName == "Markers")
+                RefreshMarkersLayer();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
 
-            _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
+            _token ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
             {
                 _hasLoaded = false;
                 RefreshMapView(msg.Data is bool data && data);
@@ -128,14 +134,12 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 if (_isAgentListPanelVisible) return;
 
                 _isAgentListPanelVisible = true;
-                AgentListPanel.IsVisible = true;
                 await AgentListPanel.TranslateTo(0, 0, 150); // Show
             }
             else
             {
                 await AgentListPanel.TranslateTo(180, 0, 150); // Hide
                 _isAgentListPanelVisible = false;
-                AgentListPanel.IsVisible = false;
             }
         }
 
@@ -160,7 +164,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshLinksLayer()
         {
-            if (!ViewModel.IsLayerLinksActivated)
+            if (!ViewModel.IsLayerLinksActivated || ViewModel.Links.IsNullOrEmpty())
             {
                 Map.Polylines.Clear();
                 return;
@@ -178,6 +182,15 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshAnchorsLayer()
         {
+            if (ViewModel.Anchors.IsNullOrEmpty())
+            {
+                var anchors = new List<Pin>(Map.Pins.Where(x => x.ZIndex == zIndexForAnchors));
+                foreach (var anchor in anchors)
+                    Map.Pins.Remove(anchor);
+
+                return;
+            }
+
             foreach (var anchor in ViewModel.Anchors)
             {
                 if (Map.Pins.Any(x => x.Equals(anchor.Pin)))
@@ -201,6 +214,15 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
         private void RefreshMarkersLayer()
         {
+            if (ViewModel.Markers.IsNullOrEmpty())
+            {
+                var markers = new List<Pin>(Map.Pins.Where(x => x.ZIndex == zIndexForMarkers));
+                foreach (var marker in markers)
+                    Map.Pins.Remove(marker);
+
+                return;
+            }
+
             foreach (var marker in ViewModel.Markers)
             {
                 if (Map.Pins.Any(x => x.Equals(marker.Pin)))
