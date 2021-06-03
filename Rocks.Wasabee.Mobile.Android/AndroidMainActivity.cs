@@ -29,6 +29,7 @@ using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 using Orientation = Rocks.Wasabee.Mobile.Core.Messages.Orientation;
 
+#nullable enable
 namespace Rocks.Wasabee.Mobile.Droid
 {
     [Activity(
@@ -40,13 +41,19 @@ namespace Rocks.Wasabee.Mobile.Droid
     {
         public const string CHANNEL_ID = "WASABEE_FCM_CHANNEL";
 
-        private MvxSubscriptionToken _token;
-        private MvxSubscriptionToken _tokenTheme;
-        private MvxSubscriptionToken _tokenOrientation;
-        private MvxSubscriptionToken _tokenPromptBackground;
+        private MvxSubscriptionToken? _token;
+        private MvxSubscriptionToken? _tokenTheme;
+        private MvxSubscriptionToken? _tokenOrientation;
+        private MvxSubscriptionToken? _tokenPromptBackground;
 
         protected override void OnCreate(Bundle bundle)
         {
+            if (!IsTaskRoot)
+            {
+                Finish();
+                return;
+            }
+
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
@@ -93,42 +100,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
                 base.OnCreate(bundle);
 
-                _token = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
-                {
-                    if (msg.Action == Action.Start)
-                        await GeolocationHelper.StartLocationService();
-                    else
-                        GeolocationHelper.StopLocationService();
-                });
-
-                _tokenTheme = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<ChangeThemeMessage>(msg => OnThemeChanged(msg.Theme));
-                _tokenOrientation = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<ChangeOrientationMessage>(msg =>
-                {
-                    if (msg.Orientation == Orientation.Portait)
-                        RequestedOrientation = ScreenOrientation.Portrait;
-                    else if (msg.Orientation == Orientation.Landscape)
-                        RequestedOrientation = ScreenOrientation.Landscape;
-                    else if (msg.Orientation == Orientation.Any)
-                        RequestedOrientation = ScreenOrientation.Unspecified;
-                });
-
-                _tokenPromptBackground = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<PromptAndroidRunInBackgroundMessage>(msg =>
-                {
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
-                    {
-                        try
-                        {
-                            var dozeIntent = new Intent();
-                            dozeIntent.SetAction(Settings.ActionRequestIgnoreBatteryOptimizations);
-                            dozeIntent.SetData(Android.Net.Uri.Parse("package:" + Plugin.CurrentActivity.CrossCurrentActivity.Current.AppContext.PackageName));
-                            StartActivity(dozeIntent);
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                });
+                SubscribeMvxMessenger();
 
 #if DEBUG
                 if (System.Diagnostics.Debugger.IsAttached)
@@ -179,6 +151,49 @@ namespace Rocks.Wasabee.Mobile.Droid
             {
                 // Do nothing
             }
+        }
+
+        private void SubscribeMvxMessenger()
+        {
+            var messenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
+
+            _token ??= messenger.Subscribe<LiveGeolocationTrackingMessage>(async msg =>
+            {
+                if (msg.Action == Action.Start)
+                    await GeolocationHelper.StartLocationService();
+                else
+                    GeolocationHelper.StopLocationService();
+            });
+
+            _tokenTheme ??= messenger.Subscribe<ChangeThemeMessage>(msg => OnThemeChanged(msg.Theme));
+
+            _tokenOrientation ??= messenger.Subscribe<ChangeOrientationMessage>(msg =>
+            {
+                if (msg.Orientation == Orientation.Portait)
+                    RequestedOrientation = ScreenOrientation.Portrait;
+                else if (msg.Orientation == Orientation.Landscape)
+                    RequestedOrientation = ScreenOrientation.Landscape;
+                else if (msg.Orientation == Orientation.Any)
+                    RequestedOrientation = ScreenOrientation.Unspecified;
+            });
+
+            _tokenPromptBackground ??= messenger.Subscribe<PromptAndroidRunInBackgroundMessage>(msg =>
+            {
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                {
+                    try
+                    {
+                        var dozeIntent = new Intent();
+                        dozeIntent.SetAction(Settings.ActionRequestIgnoreBatteryOptimizations);
+                        dozeIntent.SetData(Android.Net.Uri.Parse("package:" + Plugin.CurrentActivity.CrossCurrentActivity.Current.AppContext.PackageName));
+                        StartActivity(dozeIntent);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            });
         }
 
         private void CreateNotificationChannels()
@@ -249,5 +264,20 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
             CoreApp.AppTheme = mode;
         }
+        
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            
+            _token?.Dispose();
+            _token = null;
+            _tokenTheme?.Dispose();
+            _tokenTheme = null;
+            _tokenOrientation?.Dispose();
+            _tokenOrientation = null;
+            _tokenPromptBackground?.Dispose();
+            _tokenPromptBackground = null;
+        }
     }
 }
+#nullable disable
