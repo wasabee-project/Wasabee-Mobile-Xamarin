@@ -97,7 +97,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management
                 foreach (var teamId in teamsIds)
                 {
                     var team = await _teamsDatabase.GetTeam(teamId);
-                    if (team != null)
+                    if (team != null && TeamsCollection.All(x => x.Id != team.Id))
                     {
                         var isOwner = userTeams.Any(x => x.Id.Equals(team.Id) && x.Owner.Equals(loggedUserId));
                         TeamsCollection.Add(new TeamItemSubViewModel(team.Id, team.Name) { IsOwner = isOwner });
