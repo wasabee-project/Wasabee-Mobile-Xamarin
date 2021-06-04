@@ -280,20 +280,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var wasabeeUserModel = await _authentificationService.WasabeeOneTimeTokenLoginAsync(OneTimeToken);
                 if (wasabeeUserModel != null)
                 {
-                    _preferences.Set(UserSettingsKeys.LoggedInWithOneTimeToken, true);
-
-                    if (RememberServerChoice)
-                    {
-                        _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
-                        _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
-                    }
-
                     await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
                     _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
                     _userSettingsService.SaveIngressName(wasabeeUserModel.IngressName);
 
-                    await FinishLogin(wasabeeUserModel);
+                    await FinishLogin(wasabeeUserModel, LoginMethod.OneTimeToken);
                 }
                 else
                 {
@@ -404,7 +396,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             if (IsSelectingServer)
                 ChangeServer();
             else
-                IsLoginVisible = true;
+            {
+                var lastLoginMethod = (LoginMethod) _preferences.Get(UserSettingsKeys.LastLoginMethod, (int) LoginMethod.Unknown);
+                switch (lastLoginMethod)
+                {
+                    // will get a refreshed auth token from Google
+                    case LoginMethod.Google:
+                        await ConnectWasabee();
+                        break;
+                    // will use previous Cookie to bypass auth process
+                    case LoginMethod.OneTimeToken:
+                    case LoginMethod.Bypass:
+                        await BypassGoogleAndWasabeeLogin();
+                        break;
+                    // use will choose
+                    default:
+                        IsLoginVisible = true;
+                        break;
+                }
+            }
         }
 
         private async Task ConnectWasabee()
@@ -425,20 +435,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(token);
             if (wasabeeUserModel != null)
             {
-                _preferences.Set(UserSettingsKeys.LoggedInWithOneTimeToken, false);
-
-                if (RememberServerChoice)
-                {
-                    _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
-                    _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
-                }
-
                 await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
                 _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel!.GoogleId);
                 _userSettingsService.SaveIngressName(wasabeeUserModel!.IngressName);
 
-                await FinishLogin(wasabeeUserModel);
+                await FinishLogin(wasabeeUserModel, LoginMethod.Google);
             }
             else
             {
@@ -480,19 +482,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsLoading = true;
                 LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
 
-                if (RememberServerChoice)
-                {
-                    _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
-                    _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
-                }
-
                 try
                 {
                     var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
                     if (userModel != null)
                     {
                         await _usersDatabase.SaveUserModel(userModel);
-                        await FinishLogin(userModel);
+                        await FinishLogin(userModel, LoginMethod.Bypass);
                     }
                     else
                         throw new NullReferenceException("SplashScreenViewModel.BypassGoogleAndWasabeeLogin() => _wasabeeApiV1Service.User_GetUserInformations() result is null");
@@ -503,8 +499,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     // force relogin using saved googleToken if exist. If google token is expired, it will refresh it
                     try
                     {
-                        var hasUsedOneTimeToken = _preferences.Get(UserSettingsKeys.LoggedInWithOneTimeToken, false);
-                        if (hasUsedOneTimeToken)
+                        var lastLoginMethod = (LoginMethod) _preferences.Get(UserSettingsKeys.LastLoginMethod, (int) LoginMethod.Unknown);
+                        if (lastLoginMethod == LoginMethod.OneTimeToken)
                             throw new Exception("Can't refresh Google token when Wasabee One Time Token was used previously");
 
                         var token = await GetGoogleToken();
@@ -535,7 +531,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
         }
 
-        private async Task FinishLogin(UserModel userModel)
+        private async Task FinishLogin(UserModel userModel, LoginMethod loginMethod)
         {
             if (userModel.Blacklisted)
             {
@@ -549,6 +545,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
 
             _messenger.Publish(new UserLoggedInMessage(this));
+            _preferences.Set(UserSettingsKeys.LastLoginMethod, (int) loginMethod);
+            
+            if (RememberServerChoice)
+            {
+                _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
+                _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
+            }
+            else
+            {
+                _preferences.Remove(UserSettingsKeys.RememberServerChoice);
+                _preferences.Remove(UserSettingsKeys.SavedServerChoice);
+            }
 
             LoadingStepLabel = $"Welcome {userModel.IngressName}";
             await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime * 2));
@@ -698,5 +706,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         }
 
         #endregion
+
+        private enum LoginMethod
+        {
+            Unknown = -1,
+            Google,
+            OneTimeToken,
+            Bypass
+        }
     }
 }
