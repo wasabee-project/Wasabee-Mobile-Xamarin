@@ -615,16 +615,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     .ToList();
 
                 var selectedOp = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
-                if (selectedOp == string.Empty || opsIds.All(id => id != null && !id.Equals(selectedOp)))
+                if (selectedOp == string.Empty || opsIds.All(id => id != selectedOp))
                 {
                     var id = opsIds.First();
                     _preferences.Set(UserSettingsKeys.SelectedOp, id);
                     selectedOp = id;
                 }
 
+                // Ensure last selected Operation is loaded before going any further
                 var op = await _wasabeeApiV1Service.Operations_GetOperation(selectedOp);
                 if (op != null)
                     await _operationsDatabase.SaveOperationModel(op);
+                else
+                {
+                    // Operation doesn't exist anymore on server ?
+                    _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
+                    selectedOp = string.Empty;
+                }
 
                 _ = Task.Factory.StartNew(async () =>
                 {
@@ -635,6 +642,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         op = await _wasabeeApiV1Service.Operations_GetOperation(id);
                         if (op != null)
                         {
+                            // previously selected Operation can't be retrieved, set a new one as selected
+                            if (string.IsNullOrEmpty(selectedOp))
+                            {
+                                selectedOp = op.Id;
+                                _preferences.Set(UserSettingsKeys.SelectedOp, selectedOp);
+                            }
+
                             await _operationsDatabase.SaveOperationModel(op);
                             _messenger.Publish(new NewOpAvailableMessage(this));
                         }
