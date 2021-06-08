@@ -299,22 +299,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             {
                 foreach (var wZone in ViewModel.Zones)
                 {
-                    if (wZone.Points.IsNullOrEmpty())
-                        continue;
-
-                    var polygon = new Polygon()
-                    {
-                        ZIndex = (int) ZIndexFor.Zones,
-                        StrokeColor = wZone.Color,
-                        StrokeWidth = 2,
-                        FillColor = wZone.Color.MultiplyAlpha(0.15),
-                        IsClickable = false
-                    };
-
-                    foreach (var wZonePoint in wZone.Points)
-                        polygon.Positions.Add(new Position(wZonePoint.Lat, wZonePoint.Lng));
-                    
-                    Map.Polygons.Add(polygon);
+                    wZone.Polygon.ZIndex = (int) ZIndexFor.Zones;
+                    Map.Polygons.Add(wZone.Polygon);
                 }
             }
         }

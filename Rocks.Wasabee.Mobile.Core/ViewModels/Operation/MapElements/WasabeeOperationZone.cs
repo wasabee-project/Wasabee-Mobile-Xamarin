@@ -1,19 +1,17 @@
-﻿using MvvmCross.ViewModels;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
+using Xamarin.Forms.GoogleMaps;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation.MapElements
 {
     public class WasabeeOperationZone
     {
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
         public Color Color { get; set; }
-        public MvxObservableCollection<ZonePoint> Points { get; set; } = new MvxObservableCollection<ZonePoint>();
-    }
+        public Polygon Polygon { get; set; } = new Polygon();
 
-    public class ZonePoint
-    {
-        public int Position { get; set; }
-        public double Lat { get; set; }
-        public double Lng { get; set; }
+        public WasabeeOperationZone(string name)
+        {
+            Name = name;
+        }
     }
 }
