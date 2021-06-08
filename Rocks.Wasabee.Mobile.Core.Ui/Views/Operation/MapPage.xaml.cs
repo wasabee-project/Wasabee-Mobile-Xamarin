@@ -21,16 +21,20 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
     [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true, Icon = "map.png")]
     public partial class MapPage : BaseContentPage<MapViewModel>
     {
+        private enum ZIndexFor
+        {
+            Zones,
+            Links,
+            Anchors,
+            Markers,
+            Players
+        }
+
         private MvxSubscriptionToken _token;
 
         private bool _hasLoaded;
         private bool _isDetailPanelVisible;
         private bool _isAgentListPanelVisible;
-
-        private static int zIndexForLinks = 0;
-        private static int zIndexForAnchors = 1;
-        private static int zIndexForMarkers = 2;
-        private static int zIndexForPlayers = 3;
 
         private readonly List<Pin> _cachedAgentsPins = new List<Pin>();
 
@@ -66,8 +70,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 AnimateDetailPanel();
             else if (e.PropertyName == "VisibleRegion")
                 Map.MoveToRegion(ViewModel.VisibleRegion);
-            else if (e.PropertyName == "Agents")
-                RefreshAgentsLayer();
+            else if (e.PropertyName == "IsAgentListVisible")
+                AnimateAgentListPanel();
             else if (e.PropertyName == "IsLayerLinksActivated")
                 RefreshLinksLayer();
             else if (e.PropertyName == "IsLayerAnchorsActivated")
@@ -76,14 +80,18 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 RefreshMarkersLayer();
             else if (e.PropertyName == "IsLayerAgentsActivated")
                 RefreshAgentsLayer();
-            else if (e.PropertyName == "IsAgentListVisible")
-                AnimateAgentListPanel();
-            else if (e.PropertyName == "Anchors")
-                RefreshAnchorsLayer();
+            else if (e.PropertyName == "IsLayerZonesActivated")
+                RefreshZonesLayer();
             else if (e.PropertyName == "Links")
                 RefreshLinksLayer();
+            else if (e.PropertyName == "Anchors")
+                RefreshAnchorsLayer();
             else if (e.PropertyName == "Markers")
                 RefreshMarkersLayer();
+            else if (e.PropertyName == "Agents")
+                RefreshAgentsLayer();
+            else if (e.PropertyName == "Zones")
+                RefreshZonesLayer();
         }
 
         protected override void OnAppearing()
@@ -155,6 +163,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             RefreshAnchorsLayer();
             RefreshMarkersLayer();
             RefreshAgentsLayer();
+            RefreshZonesLayer();
 
             if (moveToRegion)
                 Map.MoveToRegion(ViewModel.OperationMapRegion);
@@ -175,7 +184,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 if (Map.Polylines.Any(x => x.Equals(polyline)))
                     continue;
 
-                polyline.ZIndex = zIndexForLinks;
+                polyline.ZIndex = (int) ZIndexFor.Links;
                 Map.Polylines.Add(polyline);
             }
         }
@@ -184,7 +193,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             if (ViewModel.Anchors.IsNullOrEmpty())
             {
-                var anchors = new List<Pin>(Map.Pins.Where(x => x.ZIndex == zIndexForAnchors));
+                var anchors = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Anchors));
                 foreach (var anchor in anchors)
                     Map.Pins.Remove(anchor);
 
@@ -205,7 +214,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 {
                     if (ViewModel.IsLayerAnchorsActivated)
                     {
-                        anchor.Pin.ZIndex = zIndexForAnchors;
+                        anchor.Pin.ZIndex = (int) ZIndexFor.Anchors;
                         Map.Pins.Add(anchor.Pin);
                     }
                 }
@@ -216,7 +225,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             if (ViewModel.Markers.IsNullOrEmpty())
             {
-                var markers = new List<Pin>(Map.Pins.Where(x => x.ZIndex == zIndexForMarkers));
+                var markers = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Markers));
                 foreach (var marker in markers)
                     Map.Pins.Remove(marker);
 
@@ -237,7 +246,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 {
                     if (ViewModel.IsLayerMarkersActivated)
                     {
-                        marker.Pin.ZIndex = zIndexForMarkers;
+                        marker.Pin.ZIndex = (int) ZIndexFor.Markers;
                         Map.Pins.Add(marker.Pin);
                     }
                 }
@@ -270,10 +279,28 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
                 if (ViewModel.IsLayerAgentsActivated)
                 {
-                    agentPin.Pin.ZIndex = zIndexForPlayers;
+                    agentPin.Pin.ZIndex = (int) ZIndexFor.Players;
                     _cachedAgentsPins.Add(agentPin.Pin);
 
                     Map.Pins.Add(agentPin.Pin);
+                }
+            }
+        }
+
+        private void RefreshZonesLayer()
+        {
+            if (ViewModel.Zones.IsNullOrEmpty() || ViewModel.IsLayerZonesActivated is false)
+            {
+                Map.Polygons.Clear();
+                return;
+            }
+
+            if (ViewModel.IsLayerZonesActivated)
+            {
+                foreach (var wZone in ViewModel.Zones)
+                {
+                    wZone.Polygon.ZIndex = (int) ZIndexFor.Zones;
+                    Map.Polygons.Add(wZone.Polygon);
                 }
             }
         }

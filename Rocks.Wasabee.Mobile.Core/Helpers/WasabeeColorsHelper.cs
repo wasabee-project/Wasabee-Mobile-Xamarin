@@ -9,15 +9,29 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
             if (wasabeeColorName.StartsWith("#"))
                 return Color.FromHex(wasabeeColorName);
 
-            return wasabeeColorName switch
+            // Old wassabee names
+            var firstConvertedName = wasabeeColorName switch
+            {
+                "red" => "main",
+                "groupa" => "orange",
+                "groupb" => "yellow",
+                "groupc" => "lime",
+                "groupd" => "purple",
+                "groupe" => "teal",
+                "groupf" => "fuchsia",
+                _ => wasabeeColorName
+            };
+        
+            // New wasabee names
+            return firstConvertedName switch
             {
                 "main" => GetColorFromWasabeeName(defaultColorName, string.Empty),
-                "groupa" => Color.FromHex("#FF6600"),
-                "groupb" => Color.FromHex("#FF9900"),
-                "groupc" => Color.FromHex("#BB9900"),
-                "groupd" => Color.FromHex("#BB22CC"),
-                "groupe" => Color.FromHex("#33CCCC"),
-                "groupf" => Color.FromHex("#FF55FF"),
+                "orange" => Color.FromHex("#FF6600"),
+                "yellow" => Color.FromHex("#FF9900"),
+                "lime" => Color.FromHex("#BB9900"),
+                "purple" => Color.FromHex("#BB22CC"),
+                "teal" => Color.FromHex("#33CCCC"),
+                "fuchsia" => Color.FromHex("#FF55FF"),
                 _ => Color.FromHex("#FF0000")
             };
         }

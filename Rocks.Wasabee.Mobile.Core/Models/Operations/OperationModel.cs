@@ -210,6 +210,24 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("color")]
+        public string Color { get; set; }
+
+        [JsonProperty("points")]
+        public List<ZonePointModel> Points { get; set; }
+    }
+
+    public class ZonePointModel : BaseModel
+    {
+        [JsonProperty("position")]
+        public int Position { get; set; }
+        
+        [JsonProperty("lat")]
+        public string Lat { get; set; }
+        
+        [JsonProperty("lng")]
+        public string Lng { get; set; }
     }
 #nullable enable
 }

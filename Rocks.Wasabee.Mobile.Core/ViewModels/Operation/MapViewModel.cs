@@ -26,6 +26,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
     public class MapViewModel : BaseViewModel
     {
         private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon, France
+        private static readonly CultureInfo ConversionCulture = CultureInfo.GetCultureInfo("en-US");
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
@@ -161,6 +162,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public MvxObservableCollection<WasabeePin> Anchors { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeePin> Markers { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeeAgentPin> Agents { get; set; } = new MvxObservableCollection<WasabeeAgentPin>();
+        public MvxObservableCollection<WasabeeOperationZone> Zones { get; set; } = new MvxObservableCollection<WasabeeOperationZone>();
 
         public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
@@ -177,6 +179,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLayerMarkersActivated { get; set; } = true;
         public bool IsLayerAnchorsActivated { get; set; } = true;
         public bool IsLayerAgentsActivated { get; set; } = true;
+        public bool IsLayerZonesActivated { get; set; } = true;
 
         public bool IsAgentListVisible { get; set; }
 
@@ -241,7 +244,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             try
             {
-                var culture = CultureInfo.GetCultureInfo("en-US");
                 foreach (var link in Operation.Links)
                 {
                     try
@@ -266,8 +268,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         if (portal == null)
                             continue;
 
-                        double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
-                        double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
+                        double.TryParse(portal.Lat, NumberStyles.Float, ConversionCulture, out var portalLat);
+                        double.TryParse(portal.Lng, NumberStyles.Float, ConversionCulture, out var portalLng);
 
                         Anchors.Add(new WasabeePin(new Pin()
                         {
@@ -289,8 +291,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     try
                     {
                         var portal = Operation.Portals.First(x => x.Id.Equals(marker.PortalId));
-                        double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
-                        double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
+                        double.TryParse(portal.Lat, NumberStyles.Float, ConversionCulture, out var portalLat);
+                        double.TryParse(portal.Lng, NumberStyles.Float, ConversionCulture, out var portalLng);
 
                         var pin = new WasabeePin(
                             new Pin()
@@ -310,6 +312,24 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     catch (Exception e)
                     {
                         LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Step Markers");
+                    }
+                }
+
+                foreach (var zone in Operation.Zones.Where(z => z.Points.IsNullOrEmpty() is false))
+                {
+                    try
+                    {
+                        var wZone = new WasabeeOperationZone(zone.Name)
+                        {
+                            Color = WasabeeColorsHelper.GetColorFromWasabeeName(zone.Color, string.Empty)
+                        };
+
+                        if (BuildZonePolygon(wZone.Polygon, zone.Points.OrderBy(z => z.Position)))
+                            Zones.Add(wZone);
+                    }
+                    catch (Exception e)
+                    {
+                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Step Zones");
                     }
                 }
             }
@@ -700,6 +720,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
 
             return playerPin;
+        }
+
+        private bool BuildZonePolygon(Polygon polygonToBuild, IEnumerable<ZonePointModel> points)
+        {
+            try
+            {
+                foreach (var point in points)
+                {
+                    double.TryParse(point.Lat, NumberStyles.Float, ConversionCulture, out var pointLat);
+                    double.TryParse(point.Lng, NumberStyles.Float, ConversionCulture, out var pointLng);
+
+                    polygonToBuild.Positions.Add(new Position(pointLat, pointLng));
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, $"Error Executing MapViewModel.BuildZonePolygon");
+                return false;
+            }
         }
 
         private void UpdateMapRegion()
