@@ -50,7 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             _preferences.Remove(UserSettingsKeys.RememberServerChoice);
             _preferences.Remove(UserSettingsKeys.SavedServerChoice);
-            _preferences.Remove(UserSettingsKeys.LoggedInWithOneTimeToken);
+            _preferences.Remove(UserSettingsKeys.LastLoginMethod);
 
             await ClearUserTokenAndCookie(_loginProvider);
             await ClearDatabases();

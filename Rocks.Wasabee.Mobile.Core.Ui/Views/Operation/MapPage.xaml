@@ -80,6 +80,7 @@
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" Color="{Binding IsLayerLinksActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerLinksActivated}"/>
@@ -93,6 +94,9 @@
 
                     <CheckBox Grid.Row="3" Grid.Column="0" Color="{Binding IsLayerAgentsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAgentsActivated}"/>
                     <Label Grid.Row="3" Grid.Column="1" Text="Agents" TextColor="Black" VerticalTextAlignment="Center"/>
+
+                    <CheckBox Grid.Row="4" Grid.Column="0" Color="{Binding IsLayerZonesActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerZonesActivated}"/>
+                    <Label Grid.Row="4" Grid.Column="1" Text="Zones" TextColor="Black" VerticalTextAlignment="Center"/>
                 </Grid>
             </pancake:PancakeView>
 
@@ -100,11 +104,6 @@
                                  RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=180}"
                                  RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Map, Property=Height, Factor=1, Constant=0}"
                                  RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Map, Property=Width, Factor=1, Constant=-180}">
-                <pancake:PancakeView.Triggers>
-                    <DataTrigger TargetType="pancake:PancakeView" Binding="{Binding Agents.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="False"/>
-                    </DataTrigger>
-                </pancake:PancakeView.Triggers>
 
                 <StackLayout Padding="0" Margin="0" Spacing="5">
                     <Label Text="CLICK TO SHOW" FontAttributes="Bold" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12" Padding="10,10,10,0"/>
