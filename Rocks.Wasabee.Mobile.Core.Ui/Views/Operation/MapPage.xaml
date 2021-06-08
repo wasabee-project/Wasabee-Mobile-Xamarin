@@ -104,11 +104,6 @@
                                  RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=180}"
                                  RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Map, Property=Height, Factor=1, Constant=0}"
                                  RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Map, Property=Width, Factor=1, Constant=-180}">
-                <pancake:PancakeView.Triggers>
-                    <DataTrigger TargetType="pancake:PancakeView" Binding="{Binding Agents.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="False"/>
-                    </DataTrigger>
-                </pancake:PancakeView.Triggers>
 
                 <StackLayout Padding="0" Margin="0" Spacing="5">
                     <Label Text="CLICK TO SHOW" FontAttributes="Bold" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12" Padding="10,10,10,0"/>
