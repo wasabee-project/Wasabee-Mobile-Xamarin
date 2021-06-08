@@ -80,6 +80,7 @@
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" Color="{Binding IsLayerLinksActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerLinksActivated}"/>
@@ -93,6 +94,9 @@
 
                     <CheckBox Grid.Row="3" Grid.Column="0" Color="{Binding IsLayerAgentsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAgentsActivated}"/>
                     <Label Grid.Row="3" Grid.Column="1" Text="Agents" TextColor="Black" VerticalTextAlignment="Center"/>
+
+                    <CheckBox Grid.Row="4" Grid.Column="0" Color="{Binding IsLayerZonesActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerZonesActivated}"/>
+                    <Label Grid.Row="4" Grid.Column="1" Text="Zones" TextColor="Black" VerticalTextAlignment="Center"/>
                 </Grid>
             </pancake:PancakeView>
 

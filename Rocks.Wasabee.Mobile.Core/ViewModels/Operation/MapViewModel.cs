@@ -161,6 +161,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public MvxObservableCollection<WasabeePin> Anchors { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeePin> Markers { get; set; } = new MvxObservableCollection<WasabeePin>();
         public MvxObservableCollection<WasabeeAgentPin> Agents { get; set; } = new MvxObservableCollection<WasabeeAgentPin>();
+        public MvxObservableCollection<WasabeeOperationZone> Zones { get; set; } = new MvxObservableCollection<WasabeeOperationZone>();
 
         public MapSpan OperationMapRegion { get; set; } = MapSpan.FromCenterAndRadius(DefaultPosition, Distance.FromKilometers(5));
 
@@ -177,6 +178,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLayerMarkersActivated { get; set; } = true;
         public bool IsLayerAnchorsActivated { get; set; } = true;
         public bool IsLayerAgentsActivated { get; set; } = true;
+        public bool IsLayerZonesActivated { get; set; } = true;
 
         public bool IsAgentListVisible { get; set; }
 
@@ -310,6 +312,42 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     catch (Exception e)
                     {
                         LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Step Markers");
+                    }
+                }
+
+                foreach (var zone in Operation.Zones)
+                {
+                    try
+                    {
+                        var wZone = new WasabeeOperationZone()
+                        {
+                            Name = zone.Name,
+                            Color = WasabeeColorsHelper.GetColorFromWasabeeName(zone.Color, string.Empty)
+                        };
+
+                        if (zone.Points != null && zone.Points.Any())
+                        {
+                            foreach (var point in zone.Points.OrderBy(z => z.Position))
+                            {
+                                double.TryParse(point.Lat, NumberStyles.Float, culture, out var pointLat);
+                                double.TryParse(point.Lng, NumberStyles.Float, culture, out var pointLng);
+
+                                var wPoint = new ZonePoint()
+                                {
+                                    Position = point.Position,
+                                    Lat = pointLat,
+                                    Lng = pointLng
+                                };
+
+                                wZone.Points.Add(wPoint);
+                            }
+                        }
+
+                        Zones.Add(wZone);
+                    }
+                    catch (Exception e)
+                    {
+                        LoggingService.Error(e, "Error Executing MapViewModel.LoadOperationCommand - Step Zones");
                     }
                 }
             }
