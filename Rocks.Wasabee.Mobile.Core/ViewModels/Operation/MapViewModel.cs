@@ -234,6 +234,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             Links.Clear();
             Anchors.Clear();
             Markers.Clear();
+            Zones.Clear();
 
             Operation = await _operationsDatabase.GetOperationModel(selectedOpId);
             if (Operation == null)
@@ -348,6 +349,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 await RaisePropertyChanged(() => Anchors);
                 await RaisePropertyChanged(() => Links);
                 await RaisePropertyChanged(() => Markers);
+                await RaisePropertyChanged(() => Zones);
             }
         }
 
