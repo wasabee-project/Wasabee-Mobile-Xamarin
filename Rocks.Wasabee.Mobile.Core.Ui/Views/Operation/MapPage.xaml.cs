@@ -158,6 +158,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
 
             Map.Polylines.Clear();
             Map.Pins.Clear();
+            Map.Polygons.Clear();
 
             RefreshLinksLayer();
             RefreshAnchorsLayer();
