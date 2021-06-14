@@ -1,7 +1,6 @@
 using MvvmCross;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Plugin.Messenger;
-using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
@@ -27,16 +27,13 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             Links,
             Anchors,
             Markers,
-            Players
+            Agents
         }
 
         private MvxSubscriptionToken _token;
-
-        private bool _hasLoaded;
+        
         private bool _isDetailPanelVisible;
         private bool _isAgentListPanelVisible;
-
-        private readonly List<Pin> _cachedAgentsPins = new List<Pin>();
 
         public MapPage()
         {
@@ -94,21 +91,20 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 RefreshZonesLayer();
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            _token ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
+            _token ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(async msg =>
             {
-                _hasLoaded = false;
-                RefreshMapView(msg.Data is bool data && data);
+                await RefreshMapView(msg.Data is true);
             });
 
             AnimateDetailPanel();
             AnimateAgentListPanel();
             RefreshMapTheme();
 
-            RefreshMapView();
+            await RefreshMapView();
         }
 
         protected override void OnDisappearing()
@@ -150,158 +146,124 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 _isAgentListPanelVisible = false;
             }
         }
-
-        private void RefreshMapView(bool moveToRegion = true)
+        
+        private async Task RefreshMapView(bool moveToRegion = true)
         {
-            if (_hasLoaded)
-                return;
+            await Device.InvokeOnMainThreadAsync(() =>
+            {
+                RefreshLinksLayer();
+                RefreshAnchorsLayer();
+                RefreshMarkersLayer();
+                RefreshAgentsLayer();
+                RefreshZonesLayer();
 
-            Map.Polylines.Clear();
-            Map.Pins.Clear();
-            Map.Polygons.Clear();
-
-            RefreshLinksLayer();
-            RefreshAnchorsLayer();
-            RefreshMarkersLayer();
-            RefreshAgentsLayer();
-            RefreshZonesLayer();
-
-            if (moveToRegion)
-                Map.MoveToRegion(ViewModel.OperationMapRegion);
-
-            _hasLoaded = true;
+                if (moveToRegion)
+                    Map.MoveToRegion(ViewModel.OperationMapRegion);
+            });
         }
 
         private void RefreshLinksLayer()
         {
-            if (!ViewModel.IsLayerLinksActivated || ViewModel.Links.IsNullOrEmpty())
+            Map.Polylines.Clear();
+            
+            if (ViewModel.IsLayerLinksActivated && ViewModel.Links.Any())
             {
-                Map.Polylines.Clear();
-                return;
-            }
+                foreach (var polyline in ViewModel.Links.Select(x => x.Polyline))
+                {
+                    if (Map.Polylines.Any(x => x.Equals(polyline)))
+                    {
+                        var toRemove = Map.Polylines.First(x => x.Equals(polyline));
+                        Map.Polylines.Remove(toRemove);
+                    }
 
-            foreach (var polyline in ViewModel.Links.Select(x => x.Polyline))
-            {
-                if (Map.Polylines.Any(x => x.Equals(polyline)))
-                    continue;
-
-                polyline.ZIndex = (int) ZIndexFor.Links;
-                Map.Polylines.Add(polyline);
+                    polyline.ZIndex = (int) ZIndexFor.Links;
+                    Map.Polylines.Add(polyline);
+                }
             }
         }
 
         private void RefreshAnchorsLayer()
         {
-            if (ViewModel.Anchors.IsNullOrEmpty())
+            var anchors = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Anchors));
+            foreach (var anchor in anchors)
+                Map.Pins.Remove(anchor);
+
+            if (ViewModel.IsLayerAnchorsActivated && ViewModel.Anchors.Any())
             {
-                var anchors = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Anchors));
-                foreach (var anchor in anchors)
-                    Map.Pins.Remove(anchor);
-
-                return;
-            }
-
-            foreach (var anchor in ViewModel.Anchors)
-            {
-                if (Map.Pins.Any(x => x.Equals(anchor.Pin)))
+                foreach (var anchor in ViewModel.Anchors.Select(x => x.Pin))
                 {
-                    if (ViewModel.IsLayerAnchorsActivated)
-                        continue;
-
-                    var toRemove = Map.Pins.First(x => x.Equals(anchor.Pin));
-                    Map.Pins.Remove(toRemove);
-                }
-                else
-                {
-                    if (ViewModel.IsLayerAnchorsActivated)
+                    if (Map.Pins.Any(x => x.Equals(anchor)))
                     {
-                        anchor.Pin.ZIndex = (int) ZIndexFor.Anchors;
-                        Map.Pins.Add(anchor.Pin);
+                        var toRemove = Map.Pins.First(x => x.Equals(anchor));
+                        Map.Pins.Remove(toRemove);
                     }
+                    
+                    anchor.ZIndex = (int) ZIndexFor.Anchors;
+                    Map.Pins.Add(anchor);
                 }
             }
         }
 
         private void RefreshMarkersLayer()
         {
-            if (ViewModel.Markers.IsNullOrEmpty())
+            var markers = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Markers));
+            foreach (var marker in markers)
+                Map.Pins.Remove(marker);
+
+            if (ViewModel.IsLayerMarkersActivated && ViewModel.Markers.Any())
             {
-                var markers = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Markers));
-                foreach (var marker in markers)
-                    Map.Pins.Remove(marker);
-
-                return;
-            }
-
-            foreach (var marker in ViewModel.Markers)
-            {
-                if (Map.Pins.Any(x => x.Equals(marker.Pin)))
+                foreach (var marker in ViewModel.Markers.Select(x => x.Pin))
                 {
-                    if (ViewModel.IsLayerMarkersActivated)
-                        continue;
-
-                    var toRemove = Map.Pins.First(x => x.Equals(marker.Pin));
-                    Map.Pins.Remove(toRemove);
-                }
-                else
-                {
-                    if (ViewModel.IsLayerMarkersActivated)
+                    if (Map.Pins.Any(x => x.Equals(marker)))
                     {
-                        marker.Pin.ZIndex = (int) ZIndexFor.Markers;
-                        Map.Pins.Add(marker.Pin);
+                        var toRemove = Map.Pins.First(x => x.Equals(marker));
+                        Map.Pins.Remove(toRemove);
                     }
+                    
+                    marker.ZIndex = (int) ZIndexFor.Markers;
+                    Map.Pins.Add(marker);
                 }
             }
         }
 
         private void RefreshAgentsLayer()
         {
-            if (ViewModel.Agents.IsNullOrEmpty())
+            var players = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Agents));
+            foreach (var player in players)
+                Map.Pins.Remove(player);
+
+            if (ViewModel.IsLayerAgentsActivated && ViewModel.Agents.Any())
             {
-                foreach (var pin in _cachedAgentsPins)
+                foreach (var agent in ViewModel.Agents.Select(x => x.Pin))
                 {
-                    Map.Pins.Remove(pin);
-                }
-
-                _cachedAgentsPins.Clear();
-
-                return;
-            }
-
-            foreach (var agentPin in ViewModel.Agents)
-            {
-                while (_cachedAgentsPins.Any(x => x.Label.Contains(agentPin.AgentName)))
-                {
-                    var toRemove = _cachedAgentsPins.First(x => x.Label.Contains(agentPin.AgentName));
-                    _cachedAgentsPins.Remove(toRemove);
-
-                    Map.Pins.Remove(toRemove);
-                }
-
-                if (ViewModel.IsLayerAgentsActivated)
-                {
-                    agentPin.Pin.ZIndex = (int) ZIndexFor.Players;
-                    _cachedAgentsPins.Add(agentPin.Pin);
-
-                    Map.Pins.Add(agentPin.Pin);
+                    if (Map.Pins.Any(x => x.Label.Equals(agent.Label)))
+                    {
+                        var toRemove = Map.Pins.First(x => x.Label.Equals(agent.Label));
+                        Map.Pins.Remove(toRemove);
+                    }
+                    
+                    agent.ZIndex = (int) ZIndexFor.Agents;
+                    Map.Pins.Add(agent);
                 }
             }
         }
 
         private void RefreshZonesLayer()
         {
-            if (ViewModel.Zones.IsNullOrEmpty() || ViewModel.IsLayerZonesActivated is false)
-            {
-                Map.Polygons.Clear();
-                return;
-            }
+            Map.Polygons.Clear();
 
-            if (ViewModel.IsLayerZonesActivated)
+            if (ViewModel.IsLayerZonesActivated && ViewModel.Zones.Any())
             {
-                foreach (var wZone in ViewModel.Zones)
+                foreach (var polygon in ViewModel.Zones.Select(x => x.Polygon))
                 {
-                    wZone.Polygon.ZIndex = (int) ZIndexFor.Zones;
-                    Map.Polygons.Add(wZone.Polygon);
+                    if (Map.Polygons.Any(x => x.Equals(polygon)))
+                    {
+                        var toRemove = Map.Polygons.First(x => x.Equals(polygon));
+                        Map.Polygons.Remove(toRemove);
+                    }
+
+                    polygon.ZIndex = (int) ZIndexFor.Zones;
+                    Map.Polygons.Add(polygon);
                 }
             }
         }
