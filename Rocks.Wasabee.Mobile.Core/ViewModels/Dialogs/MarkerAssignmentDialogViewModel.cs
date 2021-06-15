@@ -90,8 +90,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
                 IsBusy = true;
 
-                if (await _wasabeeApiV1Service.Operation_Marker_Acknowledge(MarkerAssignment.OpId, Marker.Id))
-                    await UpdateMarkerAndNotify();
+                try
+                {
+                    if (await _wasabeeApiV1Service.Operation_Marker_Acknowledge(MarkerAssignment.OpId, Marker.Id))
+                        await UpdateMarkerAndNotify();
+                }
+                catch (Exception e)
+                {
+                    LoggingService.Error(e, "Error Executing MarkerAssignmentDialogViewModel.AckCommand");
+                }
 
                 IsBusy = false;
             }
@@ -108,9 +115,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.CompleteCommand");
 
                 IsBusy = true;
-
-                if (await _wasabeeApiV1Service.Operation_Marker_Complete(MarkerAssignment.OpId, Marker.Id))
-                    await UpdateMarkerAndNotify();
+                
+                try
+                {
+                    if (await _wasabeeApiV1Service.Operation_Marker_Complete(MarkerAssignment.OpId, Marker.Id))
+                        await UpdateMarkerAndNotify();
+                }
+                catch (Exception e)
+                {
+                    LoggingService.Error(e, "Error Executing MarkerAssignmentDialogViewModel.CompleteCommand");
+                }
 
                 IsBusy = false;
             }
@@ -127,9 +141,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.IncompleteCommand");
 
                 IsBusy = true;
-
-                if (await _wasabeeApiV1Service.Operation_Marker_Incomplete(MarkerAssignment.OpId, Marker.Id))
-                    await UpdateMarkerAndNotify();
+                
+                try
+                {
+                    if (await _wasabeeApiV1Service.Operation_Marker_Incomplete(MarkerAssignment.OpId, Marker.Id))
+                        await UpdateMarkerAndNotify();
+                }
+                catch (Exception e)
+                {
+                    LoggingService.Error(e, "Error Executing MarkerAssignmentDialogViewModel.IncompleteCommand");
+                }
 
                 IsBusy = false;
             }
@@ -146,9 +167,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.ClaimCommand");
 
                 IsBusy = true;
-
-                if (await _wasabeeApiV1Service.Operation_Marker_Claim(MarkerAssignment.OpId, Marker.Id))
-                    await UpdateMarkerAndNotify();
+                
+                try
+                {
+                    if (await _wasabeeApiV1Service.Operation_Marker_Claim(MarkerAssignment.OpId, Marker.Id))
+                        await UpdateMarkerAndNotify();
+                }
+                catch (Exception e)
+                {
+                    LoggingService.Error(e, "Error Executing MarkerAssignmentDialogViewModel.ClaimCommand");
+                }
 
                 IsBusy = false;
             }
@@ -165,12 +193,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.RejectCommand");
 
                 IsBusy = true;
-
-                if (await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id))
+                
+                try
                 {
-                    _userDialogs.Toast("Assignment rejected");
+                    if (await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id))
+                    {
+                        _userDialogs.Toast("Assignment rejected");
 
-                    await UpdateMarkerAndNotify();
+                        await UpdateMarkerAndNotify();
+                    }
+                }
+                catch (Exception e)
+                {
+                    LoggingService.Error(e, "Error Executing MarkerAssignmentDialogViewModel.RejectCommand");
                 }
 
                 IsBusy = false;
