@@ -345,11 +345,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 // Message data set to true to force move mapview
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, true));
                 IsLoading = false;
-
-                await RaisePropertyChanged(() => Anchors);
-                await RaisePropertyChanged(() => Links);
-                await RaisePropertyChanged(() => Markers);
-                await RaisePropertyChanged(() => Zones);
             }
         }
 

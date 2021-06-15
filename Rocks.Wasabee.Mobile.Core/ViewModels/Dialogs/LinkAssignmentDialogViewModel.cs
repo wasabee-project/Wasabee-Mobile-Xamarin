@@ -66,7 +66,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         #region Commands
 
         public IMvxCommand<string> ShowOnMapCommand => new MvxCommand<string>(ShowOnMapExecuted);
-        private void ShowOnMapExecuted(string fromOrToPortal)
+        private async void ShowOnMapExecuted(string fromOrToPortal)
         {
             if (IsBusy) return;
             
@@ -75,14 +75,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 case "From":
                     if (LinkAssignment?.FromPortal != null)
                         _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.FromPortal));
-
-                    CloseCommand.Execute();
+                    
+                    await CloseCommand.ExecuteAsync();
                     break;
                 case "To":
                     if (LinkAssignment?.ToPortal != null)
                         _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.ToPortal));
-
-                    CloseCommand.Execute();
+                    
+                    await CloseCommand.ExecuteAsync();
                     break;
             }
         }
@@ -168,7 +168,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             try
             {
                 if (await _wasabeeApiV1Service.Operation_Link_Complete(LinkAssignment.OpId, LinkAssignment.Link.Id))
+                {
                     await UpdateLinkAndNotify();
+                    
+                    IsBusy = false;
+                    await CloseCommand.ExecuteAsync();
+                }
             }
             catch (Exception e)
             {
@@ -254,8 +259,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (await _wasabeeApiV1Service.Operation_Link_Reject(LinkAssignment.OpId, LinkAssignment.Link.Id))
                 {
                     _userDialogs.Toast("Assignment rejected");
-
                     await UpdateLinkAndNotify();
+                    
+                    IsBusy = false;
+                    await CloseCommand.ExecuteAsync();
                 }
             }
             catch (Exception e)
@@ -295,7 +302,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 else
                 {
                     IsBusy = false;
-                    CloseCommand.Execute();
+                    await CloseCommand.ExecuteAsync();
                 }
             }
         }

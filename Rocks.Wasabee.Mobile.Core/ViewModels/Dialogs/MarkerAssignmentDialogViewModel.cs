@@ -119,7 +119,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 try
                 {
                     if (await _wasabeeApiV1Service.Operation_Marker_Complete(MarkerAssignment.OpId, Marker.Id))
+                    {
                         await UpdateMarkerAndNotify();
+
+                        IsBusy = false;
+                        await CloseCommand.ExecuteAsync();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -199,8 +204,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     if (await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id))
                     {
                         _userDialogs.Toast("Assignment rejected");
-
                         await UpdateMarkerAndNotify();
+
+                        IsBusy = false;
+                        await CloseCommand.ExecuteAsync();
                     }
                 }
                 catch (Exception e)
@@ -213,7 +220,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         }
 
         public IMvxCommand<string> ShowOnMapCommand => new MvxCommand<string>(ShowOnMapExecuted);
-        private void ShowOnMapExecuted(string fromOrToPortal)
+        private async void ShowOnMapExecuted(string fromOrToPortal)
         {
             if (IsBusy) return;
 
@@ -223,7 +230,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowMarkerOnMapMessage(this, Marker));
             
             IsBusy = false;
-            CloseCommand.Execute();
+            await CloseCommand.ExecuteAsync();
         }
 
         public IMvxCommand<string> OpenInNavigationAppCommand => new MvxCommand<string>(OpenInNavigationAppExecuted);
@@ -296,7 +303,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 else
                 {
                     IsBusy = false;
-                    CloseCommand.Execute();
+                    await CloseCommand.ExecuteAsync();
                 }
             }
         }

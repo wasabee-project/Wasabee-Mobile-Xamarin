@@ -1,5 +1,6 @@
 ﻿using MvvmCross.Commands;
 using Rocks.Wasabee.Mobile.Core.Services;
+using System.Threading.Tasks;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels
 {
@@ -14,8 +15,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         #region Commands
 
-        public IMvxCommand CloseCommand => new MvxCommand(CloseExecuted);
-        private async void CloseExecuted()
+        public IMvxAsyncCommand CloseCommand => new MvxAsyncCommand(CloseExecuted);
+        private async Task CloseExecuted()
         {
             if (IsBusy)
                 return;
