@@ -17,9 +17,13 @@ using System.Linq;
 using System.Net.Http.Headers;
 #endif
 
-namespace Rocks.Wasabee.Mobile.Core.Services {
+namespace Rocks.Wasabee.Mobile.Core.Services
+{
     public abstract class BaseApiService
     {
+        private static HttpClient? _httpClient = null;
+        private static bool _reinstanciateHttpClient = false;
+
         protected static Task<T> AttemptAndRetry<T>(Func<Task<T>> action, CancellationToken cancellationToken, int numRetries = 3)
         {
             return Policy.Handle<Exception>(shouldHandleException).WaitAndRetryAsync(numRetries, retryAttempt).ExecuteAsync(token => action(), cancellationToken);
@@ -30,6 +34,8 @@ namespace Rocks.Wasabee.Mobile.Core.Services {
             {
                 if (exception is ApiException apiException)
                     return !isForbiddenOrUnauthorized(apiException);
+                
+                _reinstanciateHttpClient = true;
 
                 return true;
 
@@ -39,6 +45,11 @@ namespace Rocks.Wasabee.Mobile.Core.Services {
 
         protected static HttpClient CreateHttpClient(string url)
         {
+            if (_httpClient != null && !_reinstanciateHttpClient)
+                return _httpClient;
+
+            _reinstanciateHttpClient = false;
+
             var wasabeeRawCookie = Mvx.IoCProvider.Resolve<ISecureStorage>().GetAsync(SecureStorageConstants.WasabeeCookie).Result;
             var cookie = JsonConvert.DeserializeObject<Cookie>(wasabeeRawCookie);
 
@@ -58,10 +69,15 @@ namespace Rocks.Wasabee.Mobile.Core.Services {
             {
                 Timeout = TimeSpan.FromSeconds(5),
                 BaseAddress = new Uri(url),
-                DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" } }
+                DefaultRequestHeaders =
+                {
+                    { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" },
+                    { "Connection", "keep-alive" }
+                }
             };
 
-            return client;
+            _httpClient = client;
+            return _httpClient;
         }
     }
 
