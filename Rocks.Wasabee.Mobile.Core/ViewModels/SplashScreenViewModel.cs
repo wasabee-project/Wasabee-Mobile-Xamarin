@@ -430,24 +430,38 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
 
             IsLoading = true;
-            LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
 
-            var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(token);
-            if (wasabeeUserModel != null)
-            {
-                await _usersDatabase.SaveUserModel(wasabeeUserModel);
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
+            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
 
-                _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel!.GoogleId);
-                _userSettingsService.SaveIngressName(wasabeeUserModel!.IngressName);
+            if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
+                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
+            else if (ServersCollection.Any(x => x.Server.ToString().Equals(currentServer)))
+                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(currentServer));
 
-                await FinishLogin(wasabeeUserModel, LoginMethod.Google);
-            }
+            if (SelectedServerItem.Server == WasabeeServer.Undefined)
+                ChangeServerCommand.Execute();
             else
             {
-                ErrorMessage = "Wasabee login failed !";
-                IsAuthInError = true;
-                IsLoading = false;
-                IsLoginVisible = true;
+                LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
+
+                var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(token);
+                if (wasabeeUserModel != null)
+                {
+                    await _usersDatabase.SaveUserModel(wasabeeUserModel);
+
+                    _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel!.GoogleId);
+                    _userSettingsService.SaveIngressName(wasabeeUserModel!.IngressName);
+
+                    await FinishLogin(wasabeeUserModel, LoginMethod.Google);
+                }
+                else
+                {
+                    ErrorMessage = "Wasabee login failed !";
+                    IsAuthInError = true;
+                    IsLoading = false;
+                    IsLoginVisible = true;
+                }
             }
         }
 
