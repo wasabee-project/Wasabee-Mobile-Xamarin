@@ -31,6 +31,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             LoggingService.Trace("Querying OperationsDatabase.DeleteAllExceptOwnedBy");
 
+            if (string.IsNullOrEmpty(ownerId))
+                return -1;
+
             var result = 0;
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -59,6 +62,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<OperationModel?> GetOperationModel(string operationId)
         {
             LoggingService.Trace("Querying OperationsDatabase.GetOperationModel");
+            
+            if (string.IsNullOrEmpty(operationId))
+                return null;
 
             var databaseConnection = await GetDatabaseConnection<OperationDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();

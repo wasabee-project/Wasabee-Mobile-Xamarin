@@ -5,17 +5,17 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
 {
     public static class EnumerableExtensions
     {
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T>? enumerable)
         {
             if (enumerable == null)
-                return false;
+                return true;
 
-            var collection = enumerable as ICollection<T>;
-            if (collection != null)
+            if (enumerable is ICollection<T> collection)
             {
-                return collection.Count < 1;
+                return collection.Count == 0;
             }
-            return !enumerable.Any();
+            
+            return enumerable.Any();
         }
     }
 

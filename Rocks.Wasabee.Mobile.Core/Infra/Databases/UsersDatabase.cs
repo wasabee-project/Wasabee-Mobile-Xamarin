@@ -30,6 +30,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             LoggingService.Trace("Querying UsersDatabase.GetUserTeams");
             
+            if (string.IsNullOrEmpty(googleId))
+                return new List<UserTeamModel>();
+
             var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
             try
@@ -54,6 +57,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             LoggingService.Trace("Querying UsersDatabase.SaveUserModel");
             
+            if (string.IsNullOrEmpty(googleId))
+                return null;
+
             var databaseConnection = await GetDatabaseConnection<UserDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
             try

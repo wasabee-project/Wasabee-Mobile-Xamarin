@@ -27,6 +27,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<LinkModel?> GetLinkModel(string linkId)
         {
             LoggingService.Trace("Querying LinksDatabase.GetLinkModel");
+            
+            if (string.IsNullOrEmpty(linkId))
+                return null;
 
             var databaseConnection = await GetDatabaseConnection<LinkDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -49,7 +52,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 dbLock.Dispose();
             }
         }
-
 
         public async Task<int> SaveLinkModel(LinkModel linkModel, string operationId)
         {
