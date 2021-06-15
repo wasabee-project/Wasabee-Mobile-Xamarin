@@ -37,15 +37,15 @@
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
                                         Clicked="TypeButton_OnClicked" />
                 </Frame>
-                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
-                    <iconize:IconButton Text="mdi-layers" BackgroundColor="Transparent" TextColor="Gray"
-                                        Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
-                                        Clicked="LayerChooserButton_OnClicked" />
-                </Frame>
                 <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF" IsVisible="{Binding IsStylingAvailable}">
                     <iconize:IconButton Text="mdi-brush" BackgroundColor="Transparent" TextColor="Gray"
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
                                         Clicked="StyleButton_OnClicked" />
+                </Frame>
+                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
+                    <iconize:IconButton Text="mdi-layers" BackgroundColor="Transparent" TextColor="Gray"
+                                        Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
+                                        Clicked="LayerChooserButton_OnClicked" />
                 </Frame>
                 <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
                     <iconize:IconButton Text="mdi-account" BackgroundColor="Transparent" TextColor="Gray"

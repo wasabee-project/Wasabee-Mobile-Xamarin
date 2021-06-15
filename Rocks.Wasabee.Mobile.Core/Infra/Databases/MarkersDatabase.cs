@@ -27,6 +27,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<MarkerModel?> GetMarkerModel(string markerId)
         {
             LoggingService.Trace("Querying MarkersDatabase.GetMarkerModel");
+            
+            if (string.IsNullOrEmpty(markerId))
+                return null;
 
             var databaseConnection = await GetDatabaseConnection<MarkerDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();

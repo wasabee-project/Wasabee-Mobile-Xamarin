@@ -83,6 +83,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<TeamModel?> GetTeam(string teamId)
         {
             LoggingService.Trace("Querying TeamsDatabase.GetTeam");
+            
+            if (string.IsNullOrEmpty(teamId))
+                return null;
 
             var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -110,6 +113,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             LoggingService.Trace("Querying TeamsDatabase.GetTeamsForAgent");
 
+            if (string.IsNullOrEmpty(agentId))
+                return new List<TeamModel>();
+            
             var databaseConnection = await GetDatabaseConnection<TeamDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
             try

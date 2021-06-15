@@ -1,4 +1,5 @@
-﻿using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+﻿using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
@@ -83,6 +84,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<TeamAgentModel?> GetTeamAgent(string agentId)
         {
             LoggingService.Trace("Querying TeamAgentsDatabase.GetTeamAgent");
+            
+            if (string.IsNullOrEmpty(agentId))
+                return null;
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -110,6 +114,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<List<TeamAgentModel>> GetAgentsInTeam(string teamId)
         {
             LoggingService.Trace("Querying TeamAgentsDatabase.GetAgentsInTeam");
+            
+            if (string.IsNullOrEmpty(teamId))
+                return new List<TeamAgentModel>();
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();
@@ -135,9 +142,12 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
         }
 
-        public async Task<List<TeamAgentModel>> GetAgentsInTeams(IEnumerable<string> teamIds)
+        public async Task<List<TeamAgentModel>> GetAgentsInTeams(IList<string> teamIds)
         {
             LoggingService.Trace("Querying TeamAgentsDatabase.GetAgentsInTeams");
+
+            if (teamIds.IsNullOrEmpty())
+                return new List<TeamAgentModel>();
 
             var databaseConnection = await GetDatabaseConnection<TeamAgentDatabaseModel>().ConfigureAwait(false);
             var dbLock = databaseConnection.GetConnection().Lock();

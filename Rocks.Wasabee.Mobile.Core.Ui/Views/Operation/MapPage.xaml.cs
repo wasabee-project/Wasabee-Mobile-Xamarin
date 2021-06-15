@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
@@ -21,6 +20,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
     [MvxTabbedPagePresentation(Position = TabbedPosition.Tab, NoHistory = true, Icon = "map.png")]
     public partial class MapPage : BaseContentPage<MapViewModel>
     {
+        private static object _lockObject = new object();
+
         private enum ZIndexFor
         {
             Zones,
@@ -34,6 +35,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         
         private bool _isDetailPanelVisible;
         private bool _isAgentListPanelVisible;
+
+        private bool _globalMapRefreshRunning = false;
 
         public MapPage()
         {
@@ -95,16 +98,16 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             base.OnAppearing();
 
-            _token ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(async msg =>
+            _token ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
             {
-                await RefreshMapView(msg.Data is true);
+                RefreshMapView(msg.Data is true);
             });
 
             AnimateDetailPanel();
             AnimateAgentListPanel();
             RefreshMapTheme();
 
-            await RefreshMapView();
+            RefreshMapView();
         }
 
         protected override void OnDisappearing()
@@ -146,26 +149,36 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 _isAgentListPanelVisible = false;
             }
         }
-        
-        private async Task RefreshMapView(bool moveToRegion = true)
+
+        private void RefreshMapView(bool moveToRegion = true)
         {
-            await Device.InvokeOnMainThreadAsync(() =>
+            lock (_lockObject)
             {
-                RefreshLinksLayer();
-                RefreshAnchorsLayer();
-                RefreshMarkersLayer();
-                RefreshAgentsLayer();
-                RefreshZonesLayer();
+                _globalMapRefreshRunning = true;
+
+                Map.Pins.Clear();
+                Map.Polylines.Clear();
+                Map.Polygons.Clear();
+
+                RefreshLinksLayer(true);
+                RefreshAnchorsLayer(true);
+                RefreshMarkersLayer(true);
+                RefreshAgentsLayer(true);
+                RefreshZonesLayer(true);
 
                 if (moveToRegion)
                     Map.MoveToRegion(ViewModel.OperationMapRegion);
-            });
+                _globalMapRefreshRunning = false;
+            }
         }
 
-        private void RefreshLinksLayer()
+        private void RefreshLinksLayer(bool fromGlobalRefresh = false)
         {
+            if (_globalMapRefreshRunning && !fromGlobalRefresh)
+                return;
+
             Map.Polylines.Clear();
-            
+
             if (ViewModel.IsLayerLinksActivated && ViewModel.Links.Any())
             {
                 foreach (var polyline in ViewModel.Links.Select(x => x.Polyline))
@@ -182,8 +195,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             }
         }
 
-        private void RefreshAnchorsLayer()
+        private void RefreshAnchorsLayer(bool fromGlobalRefresh = false)
         {
+            if (_globalMapRefreshRunning && !fromGlobalRefresh)
+                return;
+
             var anchors = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Anchors));
             foreach (var anchor in anchors)
                 Map.Pins.Remove(anchor);
@@ -204,8 +220,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             }
         }
 
-        private void RefreshMarkersLayer()
+        private void RefreshMarkersLayer(bool fromGlobalRefresh = false)
         {
+            if (_globalMapRefreshRunning && !fromGlobalRefresh)
+                return;
+
             var markers = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Markers));
             foreach (var marker in markers)
                 Map.Pins.Remove(marker);
@@ -226,8 +245,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             }
         }
 
-        private void RefreshAgentsLayer()
+        private void RefreshAgentsLayer(bool fromGlobalRefresh = false)
         {
+            if (_globalMapRefreshRunning && !fromGlobalRefresh)
+                return;
+
             var players = new List<Pin>(Map.Pins.Where(x => x.ZIndex == (int) ZIndexFor.Agents));
             foreach (var player in players)
                 Map.Pins.Remove(player);
@@ -248,8 +270,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             }
         }
 
-        private void RefreshZonesLayer()
+        private void RefreshZonesLayer(bool fromGlobalRefresh = false)
         {
+            if (_globalMapRefreshRunning && !fromGlobalRefresh)
+                return;
+
             Map.Polygons.Clear();
 
             if (ViewModel.IsLayerZonesActivated && ViewModel.Zones.Any())
