@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
@@ -40,6 +41,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IMvxMessenger _messenger;
         private readonly OperationsDatabase _operationsDatabase;
         private readonly IDialogNavigationService _dialogNavigationService;
+        private readonly IAppSettings _appSettings;
 
         private MvxSubscriptionToken? _token;
         private MvxSubscriptionToken? _tokenDebug;
@@ -47,7 +49,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
-            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase, IDialogNavigationService dialogNavigationService)
+            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase,
+            IDialogNavigationService dialogNavigationService, IAppSettings appSettings)
         {
             _navigationService = navigationService;
             _authentificationService = authentificationService;
@@ -58,6 +61,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _messenger = messenger;
             _operationsDatabase = operationsDatabase;
             _dialogNavigationService = dialogNavigationService;
+            _appSettings = appSettings;
 
             BuildMenu();
         }
@@ -77,9 +81,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var op = await _operationsDatabase.GetOperationModel(selectedOpId);
                 SelectedOpName = op == null ? "ERROR loading OP" : op.Name;
             }
+
+            Server = _appSettings.Server switch
+            {
+                WasabeeServer.US => "Americas",
+                WasabeeServer.EU => "Europe",
+                WasabeeServer.APAC => "Asia/Pacific",
+                WasabeeServer.Undefined => string.Empty,
+                _ => throw new ArgumentOutOfRangeException(nameof(Server))
+            };
         }
         
-        public override async void ViewAppeared()
+        public override void ViewAppeared()
         {
             base.ViewAppeared();
 
@@ -125,6 +138,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         #region Properties
 
         public string LoggedUser { get; set; } = string.Empty;
+        public string Server { get; set; } = string.Empty;
         public string DisplayVersion { get; set; } = string.Empty;
         public string SelectedOpName { get; set; } = string.Empty;
         public MvxObservableCollection<OperationModel> AvailableOpsCollection { get; set; } = new MvxObservableCollection<OperationModel>();
