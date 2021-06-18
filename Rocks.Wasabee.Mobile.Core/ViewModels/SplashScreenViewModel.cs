@@ -611,6 +611,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
+            await _operationsDatabase.DeleteAllData();
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {
