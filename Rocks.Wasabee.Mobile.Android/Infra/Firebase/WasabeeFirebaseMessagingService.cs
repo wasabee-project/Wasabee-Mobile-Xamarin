@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 using Firebase.Iid;
 using MvvmCross;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Xamarin.Essentials.Interfaces;
-
+using Xamarin.Forms.Platform.Android;
 #if DEBUG
 using Android.Util;
 #endif
@@ -31,6 +32,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         private ILoginProvider _loginProvider;
         private IBackgroundDataUpdaterService _backgroundDataUpdaterService;
         private ISecureStorage _secureStorage;
+        private OperationsDatabase _operationsDatabase;
 
         private int _lastId = 0;
         private MvxSubscriptionToken _mvxToken;
@@ -62,6 +64,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         {
             if (_isInitialized)
                 return;
+
+            _operationsDatabase ??= Mvx.IoCProvider.Resolve<OperationsDatabase>();
 
             _loginProvider ??= Mvx.IoCProvider.Resolve<ILoginProvider>();
             _mvxMessenger ??= Mvx.IoCProvider.Resolve<IMvxMessenger>();
@@ -125,7 +129,15 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                     var markerId = message.Data.FirstOrDefault(x => x.Key.Equals("markerID"));
 
                     if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(markerId.Value))
+                    {
                         await _backgroundDataUpdaterService.UpdateMarker(opId.Value, markerId.Value).ConfigureAwait(false);
+                        
+                        var op = await _operationsDatabase.GetOperationModel(opId.Value);
+                        if (op != null)
+                        {
+                            SendNotification($"{op.Name} : Marker {msg.Value}");
+                        }
+                    }
                 }
                 else if (messageBody.Contains("Link"))
                 {
@@ -133,7 +145,15 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                     var linkId = message.Data.FirstOrDefault(x => x.Key.Equals("linkID"));
 
                     if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(linkId.Value))
+                    {
                         await _backgroundDataUpdaterService.UpdateLink(opId.Value, linkId.Value).ConfigureAwait(false);
+                        
+                        var op = await _operationsDatabase.GetOperationModel(opId.Value);
+                        if (op != null)
+                        {
+                            SendNotification($"{op.Name} : Link {msg.Value}");
+                        }
+                    }
                 }
                 else if (messageBody.Contains("Map Change"))
                 {
@@ -146,33 +166,23 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
         private void SendNotification(string messageBody)
         {
-            var channels = new[]
-            {
-                "Quit", "Generic Message", "Agent Location Change", "Map Change", "Marker Status Change",
-                "Marker Assignment Change", "Link Status Change", "Link Assignment Change", "Subscribe", "Login", "Undefined"
-            };
-
-            var intent = new Intent(this, typeof(AndroidSplashScreenActivity));
-            intent.AddFlags(ActivityFlags.BroughtToFront);
-            intent.PutExtra("FCMMessage", messageBody);
-
-            var channel = "Undefined";
-            if (channels.Any(x => x.Equals(messageBody)))
-            {
-                channel = channels.First(x => x.Equals(messageBody));
-            }
-
+            var intent = new Intent(this, typeof(AndroidMainActivity));
+            intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
+            intent.SetPackage(null);
+            
             var pendingIntent = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.OneShot);
 
-            var notificationBuilder = new NotificationCompat.Builder(this, AndroidMainActivity.CHANNEL_ID);
+            var notificationBuilder = new NotificationCompat.Builder(this, "Wasabee_Notifications");
 
-            notificationBuilder.SetContentTitle("Wasabee")
+            notificationBuilder
                 .SetSmallIcon(Resource.Drawable.wasabee)
+                .SetContentTitle("Wasabee")
                 .SetContentText(messageBody)
-                .SetAutoCancel(true)
-                .SetShowWhen(false)
                 .SetContentIntent(pendingIntent)
-                .SetChannelId(channel);
+                .SetAutoCancel(true)
+                .SetDefaults((int) NotificationDefaults.All)
+                .SetPriority((int) NotificationPriority.Max)
+                .SetColor(Xamarin.Forms.Color.FromHex("#3BA345").ToAndroid().ToArgb());
 
             var notificationManager = NotificationManager.FromContext(this);
             notificationManager?.Notify(_lastId, notificationBuilder.Build());

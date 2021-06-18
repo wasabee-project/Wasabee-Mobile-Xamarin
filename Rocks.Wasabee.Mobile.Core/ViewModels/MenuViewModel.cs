@@ -77,20 +77,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var op = await _operationsDatabase.GetOperationModel(selectedOpId);
                 SelectedOpName = op == null ? "ERROR loading OP" : op.Name;
             }
-
-            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
-            {
-                _isLiveLocationSharingEnabled = true;
-                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
-                await RaisePropertyChanged(() => IsLiveLocationSharingEnabled);
-            }
         }
         
-        public override void ViewAppeared()
+        public override async void ViewAppeared()
         {
             base.ViewAppeared();
 
             _token ??= _messenger.Subscribe<NewOpAvailableMessage>(msg => RefreshAvailableOpsCommand.Execute());
+            _tokenOps ??= _messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());
             _tokenDebug ??= _messenger.SubscribeOnMainThread<MessageFrom<SettingsViewModel>>(msg =>
             {
                 if (MenuItems.Any(x => x.ViewModelType == typeof(LogsViewModel)))
@@ -101,8 +95,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 _preferences.Set(UserSettingsKeys.DevModeActivated, true);
             });
-
-            _tokenOps ??= _messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());
+            
+            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
+            {
+                SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+            }
+            else
+            {
+                SetProperty(ref _isLiveLocationSharingEnabled, false, nameof(IsLiveLocationSharingEnabled));
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Stop));
+            }
 
             RefreshAvailableOpsCommand.Execute();
         }

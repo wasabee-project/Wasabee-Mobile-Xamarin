@@ -6,9 +6,11 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Support.V4.App;
 using MvvmCross;
+using MvvmCross.Plugin.Messenger;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
@@ -16,9 +18,34 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Timers;
 using Xamarin.Essentials.Interfaces;
+using Xamarin.Forms.Platform.Android;
 
 namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 {
+    [BroadcastReceiver]
+    [IntentFilter(new [] { "WASABEE_STOP_GEOLOCATION" })]
+    public class LiveLocationSharingActionReceiver : BroadcastReceiver
+    {
+        public override void OnReceive(Context? context, Intent? intent)
+        {
+            var extras = intent?.Extras;
+            if (extras is { IsEmpty: false })
+            {
+                if (extras.GetBoolean("WasabeeNotification", false))
+                {
+                    var preferences = Mvx.IoCProvider.Resolve<IPreferences>();
+                    var messenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
+
+                    if (preferences != null && preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
+                    {
+                        preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
+                        messenger?.Publish(new LiveGeolocationTrackingMessage(this, Core.Messages.Action.Stop));
+                    }
+                }
+            }
+        }
+    }
+
     public class LiveGeolocationServiceBinder : Binder
     {
         public LiveGeolocationServiceBinder(LiveGeolocationService service)
@@ -55,6 +82,12 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 
         public override IBinder OnBind(Intent? intent)
         {
+            var customReceiver = new LiveLocationSharingActionReceiver();
+            var intentFilter = new IntentFilter();
+            intentFilter.AddAction("WASABEE_STOP_GEOLOCATION");
+
+            this.RegisterReceiver(customReceiver, intentFilter);
+
             _binder = new LiveGeolocationServiceBinder(this);
             return _binder;
         }
@@ -211,8 +244,13 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             var builder = new NotificationCompat.Builder(this, ChannelId);
 
             var newIntent = new Intent(this, typeof(AndroidMainActivity));
-            newIntent.PutExtra("LiveGeolocationTrackingExtra", true);
-            newIntent.AddFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
+            newIntent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
+            newIntent.SetPackage(null);
+
+            var actionIntent1 = new Intent();
+            actionIntent1.SetAction("WASABEE_STOP_GEOLOCATION");
+            actionIntent1.PutExtra("WasabeeNotification", true);
+            var pIntent1 = PendingIntent.GetBroadcast(this, 1331, actionIntent1, PendingIntentFlags.CancelCurrent);
 
             var pendingIntent = PendingIntent.GetActivity(this, 0, newIntent, PendingIntentFlags.UpdateCurrent);
             var notification = builder.SetContentIntent(pendingIntent)
@@ -223,6 +261,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                 .SetContentText($"Sharing your location.\r\nLast update at {_lastUpdateTime:T}")
                 .SetChannelId(ChannelId)
                 .SetSound(null)
+                .AddAction(Resource.Drawable.eyeoff, "STOP", pIntent1)
+                .SetColor(Xamarin.Forms.Color.FromHex("#3BA345").ToAndroid().ToArgb())
                 .Build();
 
             return notification;
