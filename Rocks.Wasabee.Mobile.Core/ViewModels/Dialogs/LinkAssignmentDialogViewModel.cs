@@ -3,8 +3,10 @@ using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -167,9 +169,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                if (await _wasabeeApiV1Service.Operation_Link_Complete(LinkAssignment.OpId, LinkAssignment.Link.Id))
+                var response = await _wasabeeApiV1Service.Operation_Link_Complete(LinkAssignment.OpId, LinkAssignment.Link.Id);
+                if (response != null)
                 {
-                    await UpdateLinkAndNotify();
+                    StoreResponseUpdateId(response);
+                    await UpdateLinkAndNotify(response);
                     
                     IsBusy = false;
                     await CloseCommand.ExecuteAsync();
@@ -200,8 +204,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                if (await _wasabeeApiV1Service.Operation_Link_Incomplete(LinkAssignment.OpId, LinkAssignment.Link.Id))
-                    await UpdateLinkAndNotify();
+                var response = await _wasabeeApiV1Service.Operation_Link_Incomplete(LinkAssignment.OpId, LinkAssignment.Link.Id);
+                if (response != null)
+                {
+                    StoreResponseUpdateId(response);
+                    await UpdateLinkAndNotify(response);
+                }
             }
             catch (Exception e)
             {
@@ -228,8 +236,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                if (await _wasabeeApiV1Service.Operation_Link_Claim(LinkAssignment.OpId, LinkAssignment.Link.Id))
-                    await UpdateLinkAndNotify();
+                var response = await _wasabeeApiV1Service.Operation_Link_Claim(LinkAssignment.OpId, LinkAssignment.Link.Id);
+                if (response != null)
+                {
+                    StoreResponseUpdateId(response);
+                    await UpdateLinkAndNotify(response);
+                }
             }
             catch (Exception e)
             {
@@ -256,10 +268,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             try
             {
-                if (await _wasabeeApiV1Service.Operation_Link_Reject(LinkAssignment.OpId, LinkAssignment.Link.Id))
+                var response = await _wasabeeApiV1Service.Operation_Link_Reject(LinkAssignment.OpId, LinkAssignment.Link.Id);
+                if (response != null)
                 {
                     _userDialogs.Toast("Assignment rejected");
-                    await UpdateLinkAndNotify();
+
+                    StoreResponseUpdateId(response);
+                    await UpdateLinkAndNotify(response);
                     
                     IsBusy = false;
                     await CloseCommand.ExecuteAsync();
@@ -283,10 +298,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
         /// <returns></returns>
-        private async Task UpdateLinkAndNotify()
+        private async Task UpdateLinkAndNotify(WasabeeApiResponse response)
         {
             if (LinkAssignment != null && Link != null)
             {
+                // Flags UpdatedId as done
+                OperationsUpdatesCache.Data[response.UpdateId] = true;
+
                 var updated = await _wasabeeApiV1Service.Operations_GetLink(LinkAssignment.OpId, Link.Id);
                 if (updated != null)
                 {
@@ -327,6 +345,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 ClaimEnabled = true;
             }
         }
+        
+        private static void StoreResponseUpdateId(WasabeeApiResponse response)
+        {
+            if (response.HasUpdateId())
+            {
+                var updateId = response.UpdateId;
+                OperationsUpdatesCache.Data.Add(updateId, false);
+            }
+        }
+
         #endregion
     }
 }

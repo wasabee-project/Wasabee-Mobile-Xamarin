@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Firebase.Iid;
 using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Services;
@@ -158,8 +159,28 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                 else if (messageBody.Contains("Map Change"))
                 {
                     var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
-                    if (!string.IsNullOrWhiteSpace(opId.Value))
-                        await _backgroundDataUpdaterService.UpdateOperation(opId.Value).ConfigureAwait(false);
+                    var updateId = message.Data.FirstOrDefault(x => x.Key.Equals("updateID"));
+
+                    var shouldUpdate = false;
+                    if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(updateId.Value))
+                    {
+                        if (OperationsUpdatesCache.Data.ContainsKey(updateId.Value))
+                        {
+                            if (OperationsUpdatesCache.Data[updateId.Value] == false)
+                            {
+                                shouldUpdate = true;
+                                OperationsUpdatesCache.Data[updateId.Value] = true;
+                            }
+                        }
+                        else
+                        {
+                            shouldUpdate = true;
+                            OperationsUpdatesCache.Data.Add(updateId.Value, true);
+                        }
+
+                        if (shouldUpdate)
+                            await _backgroundDataUpdaterService.UpdateOperation(opId.Value).ConfigureAwait(false);
+                    }
                 }
             }
         }

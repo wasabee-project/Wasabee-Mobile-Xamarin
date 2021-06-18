@@ -84,7 +84,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             Server = _appSettings.Server switch
             {
-                WasabeeServer.US => "Americas",
+                WasabeeServer.US => "America",
                 WasabeeServer.EU => "Europe",
                 WasabeeServer.APAC => "Asia/Pacific",
                 WasabeeServer.Undefined => string.Empty,
