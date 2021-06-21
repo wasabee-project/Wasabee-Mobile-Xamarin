@@ -173,16 +173,21 @@
                                 </StackLayout>
                             </pancake:PancakeView>
 
+                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsMarkerDetailAvailable}">
+                                <Button Text="ⓘ   Infos" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5" HeightRequest="40" Padding="0"
+                                        Command="{Binding ShowMarkerDetailCommand}"
+                                        CommandParameter="{Binding SelectedWasabeePin}"/>
+                            </StackLayout>
                         </StackLayout>
                     </ScrollView>
                 
-                    <StackLayout Orientation="Vertical" Spacing="0">
+                    <StackLayout Orientation="Vertical" Spacing="4">
 
                         <iconize:IconButton Text="mdi-close" TextColor="{DynamicResource PrimaryTextColor}" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
-                                            FontSize="20" HorizontalOptions="End" VerticalOptions="Start" Command="{Binding CloseDetailPanelCommand}"/>
+                                            FontSize="26" HorizontalOptions="End" VerticalOptions="Start" Command="{Binding CloseDetailPanelCommand}"/>
 
                         <iconize:IconButton Text="mdi-map-search" TextColor="{DynamicResource PrimaryTextColor}" WidthRequest="30" HeightRequest="30" Padding="0" BackgroundColor="Transparent"
-                                            FontSize="20" HorizontalOptions="End" VerticalOptions="Start" Command="{Binding OpenInNavigationAppCommand}"/>
+                                            FontSize="24" HorizontalOptions="End" VerticalOptions="Start" Command="{Binding OpenInNavigationAppCommand}"/>
 
                     </StackLayout>
 
