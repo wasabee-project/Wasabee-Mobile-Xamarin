@@ -94,9 +94,6 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         [JsonProperty("assignedTo")]
         public string AssignedTo { get; set; }
 
-        [JsonProperty("assignedToNickname")]
-        public string AssignedToNickname { get; set; }
-
         [JsonProperty("throwOrderPos")]
         public int ThrowOrderPos { get; set; }
 
@@ -153,12 +150,6 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
 
         [JsonProperty("assignedTeam")]
         public string AssignedTeam { get; set; }
-
-        [JsonProperty("assignedNickname")]
-        public string AssignedNickname { get; set; }
-
-        [JsonProperty("completedBy")]
-        public string CompletedBy { get; set; }
 
         [JsonProperty("completedID")]
         public string CompletedId { get; set; }

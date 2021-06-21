@@ -116,7 +116,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _tokenReload ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenLiveLocation ??= _messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
             _tokenLinkUpdated ??= _messenger.Subscribe<LinkDataChangedMessage>(UpdateLink);
-            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(UpdateMarker);
+            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(async msg => await UpdateMarker(msg));
             _tokenRefreshAllAgentsLocations ??= _messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
             
             await LoadOperationCommand.ExecuteAsync();
@@ -312,8 +312,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         {
                             Portal = portal,
                             Marker = marker,
-                            AssignedTo = marker.AssignedNickname // TODO Replace this
                         };
+
+                        if (!string.IsNullOrWhiteSpace(marker.AssignedTo))
+                        {
+                            var assignedTo = await _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo);
+                            if (assignedTo != null)
+                                pin.AssignedTo = assignedTo.Name;
+                        }
 
                         Markers.Add(pin);
                     }
@@ -845,7 +851,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-        private void UpdateMarker(MarkerDataChangedMessage updateMessage)
+        private async Task UpdateMarker(MarkerDataChangedMessage updateMessage)
         {
             if (Operation == null)
                 return;
@@ -870,9 +876,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     })
                 {
                     Portal = portal,
-                    Marker = updateMessage.MarkerData,
-                    AssignedTo = updateMessage.MarkerData.AssignedNickname
+                    Marker = updateMessage.MarkerData
                 };
+
+                if (!string.IsNullOrWhiteSpace(updateMessage.MarkerData.AssignedTo))
+                {
+                    var assignedTo = await _teamAgentsDatabase.GetTeamAgent(updateMessage.MarkerData.AssignedTo);
+                    if (assignedTo != null)
+                        pin.AssignedTo = assignedTo.Name;
+                }
 
                 Markers.Remove(marker);
                 Markers.Add(pin);
