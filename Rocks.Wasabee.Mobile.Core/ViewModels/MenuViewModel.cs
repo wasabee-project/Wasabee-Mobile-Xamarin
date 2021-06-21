@@ -40,6 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IMvxMessenger _messenger;
         private readonly OperationsDatabase _operationsDatabase;
+        private readonly UsersDatabase _usersDatabase;
         private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IAppSettings _appSettings;
 
@@ -49,7 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
-            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase,
+            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase, UsersDatabase usersDatabase,
             IDialogNavigationService dialogNavigationService, IAppSettings appSettings)
         {
             _navigationService = navigationService;
@@ -60,6 +61,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _userDialogs = userDialogs;
             _messenger = messenger;
             _operationsDatabase = operationsDatabase;
+            _usersDatabase = usersDatabase;
             _dialogNavigationService = dialogNavigationService;
             _appSettings = appSettings;
 
@@ -177,6 +179,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task ToggleLiveLocationSharingExecuted(bool value)
         {
             LoggingService.Trace($"Executing MenuViewModel.ToggleLiveLocationSharingCommand({value})");
+
+            var teams = await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId());
+            if (teams.Any(x => x.State.Equals("On")) is false)
+            {
+                var result = await _userDialogs.ConfirmAsync(
+                    "None of your teams has been set to share your location. Go to Teams list and enable at least one team.",
+                    string.Empty,
+                    "See Teams",
+                    "Cancel");
+
+                if (result)
+                {
+                    await _navigationService.Navigate<TeamsListViewModel>();
+
+                    // Message used to close menu UI
+                    _messenger.Publish(new MessageFor<MenuViewModel>(this));
+                }
+
+                return;
+            }
 
             if (!_isLiveLocationSharingEnabled && value)
             {
