@@ -4,8 +4,8 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 {
     public interface IBackgroundDataUpdaterService
     {
-        Task UpdateOperation(string operationId);
-        Task UpdateLink(string operationId, string linkId);
-        Task UpdateMarker(string operationId, string markerId);
+        Task UpdateOperationAndNotify(string operationId);
+        Task UpdateLinkAndNotify(string operationId, string linkId);
+        Task UpdateMarkerAndNotify(string operationId, string markerId);
     }
 }

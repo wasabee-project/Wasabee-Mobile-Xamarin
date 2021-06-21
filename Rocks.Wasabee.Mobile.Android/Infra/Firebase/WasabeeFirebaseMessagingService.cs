@@ -13,6 +13,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms.Platform.Android;
 #if DEBUG
@@ -33,6 +34,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         private ILoginProvider _loginProvider;
         private IBackgroundDataUpdaterService _backgroundDataUpdaterService;
         private ISecureStorage _secureStorage;
+        private IUserSettingsService _userSettingsService;
         private OperationsDatabase _operationsDatabase;
 
         private int _lastId = 0;
@@ -72,6 +74,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             _mvxMessenger ??= Mvx.IoCProvider.Resolve<IMvxMessenger>();
             _backgroundDataUpdaterService ??= Mvx.IoCProvider.Resolve<IBackgroundDataUpdaterService>();
             _secureStorage ??= Mvx.IoCProvider.Resolve<ISecureStorage>();
+            _userSettingsService ??= Mvx.IoCProvider.Resolve<IUserSettingsService>();
 
             _mvxToken ??= _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer());
 
@@ -131,12 +134,18 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
                     if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(markerId.Value))
                     {
-                        await _backgroundDataUpdaterService.UpdateMarker(opId.Value, markerId.Value).ConfigureAwait(false);
+                        await _backgroundDataUpdaterService.UpdateMarkerAndNotify(opId.Value, markerId.Value).ConfigureAwait(false);
                         
                         var op = await _operationsDatabase.GetOperationModel(opId.Value);
                         if (op != null)
                         {
-                            SendNotification($"{op.Name} : Marker {msg.Value}");
+                            var marker = op.Markers.FirstOrDefault(x => x.Id.Equals(markerId.Value));
+                            if (marker != null)
+                            {
+                                var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
+                                if (marker.AssignedTo.Equals(loggedUserGid))
+                                    SendNotification($"{op.Name} : Marker {msg.Value}");
+                            }
                         }
                     }
                 }
@@ -147,12 +156,18 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 
                     if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(linkId.Value))
                     {
-                        await _backgroundDataUpdaterService.UpdateLink(opId.Value, linkId.Value).ConfigureAwait(false);
+                        await _backgroundDataUpdaterService.UpdateLinkAndNotify(opId.Value, linkId.Value).ConfigureAwait(false);
                         
                         var op = await _operationsDatabase.GetOperationModel(opId.Value);
                         if (op != null)
                         {
-                            SendNotification($"{op.Name} : Link {msg.Value}");
+                            var link = op.Links.FirstOrDefault(x => x.Id.Equals(linkId.Value));
+                            if (link != null)
+                            {
+                                var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
+                                if (link.AssignedTo.Equals(loggedUserGid))
+                                    SendNotification($"{op.Name} : Link {msg.Value}");
+                            }
                         }
                     }
                 }
@@ -179,7 +194,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                         }
 
                         if (shouldUpdate)
-                            await _backgroundDataUpdaterService.UpdateOperation(opId.Value).ConfigureAwait(false);
+                            await _backgroundDataUpdaterService.UpdateOperationAndNotify(opId.Value).ConfigureAwait(false);
                     }
                 }
             }
