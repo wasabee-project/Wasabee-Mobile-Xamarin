@@ -1,21 +1,22 @@
 ﻿using Android.App;
 using Android.Content;
 using AndroidX.Core.App;
-using Firebase.Messaging;
-using MvvmCross.Plugin.Messenger;
-using Rocks.Wasabee.Mobile.Core.Infra.Security;
-using Rocks.Wasabee.Mobile.Core.Messages;
-using System.Linq;
-using System.Threading.Tasks;
 using Firebase.Iid;
+using Firebase.Messaging;
 using MvvmCross;
+using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Infra.Security;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms.Platform.Android;
+
 #if DEBUG
 using Android.Util;
 #endif
@@ -24,11 +25,11 @@ using Android.Util;
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
     [Service]
-    [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
-    [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
+    [IntentFilter(new[] {"com.google.firebase.MESSAGING_EVENT"})]
+    [IntentFilter(new[] {"com.google.firebase.INSTANCE_ID_EVENT"})]
     public class WasabeeFirebaseMessagingService : FirebaseMessagingService
     {
-        const string TAG = "[WASABEE_FCM_SERVICE]";
+        private const string Tag = "WASABEE_FCM_SERVICE";
 
         private IMvxMessenger _mvxMessenger;
         private ILoginProvider _loginProvider;
@@ -37,11 +38,11 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         private IUserSettingsService _userSettingsService;
         private OperationsDatabase _operationsDatabase;
 
-        private int _lastId = 0;
+        private int _lastId;
         private MvxSubscriptionToken _mvxToken;
 
         private string _fcmToken = string.Empty;
-        private bool _isInitialized = false;
+        private bool _isInitialized;
 
         public override async void OnNewToken(string token)
         {
@@ -50,7 +51,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             if (!_isInitialized)
                 await Initialize();
 #if DEBUG
-            Log.Debug(TAG, "FCM token: " + token);
+            Log.Debug(Tag, "Token=" + token);
 #endif
         }
 
@@ -100,104 +101,121 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                 await Initialize();
 
 #if DEBUG
-            Log.Debug(TAG + " : ", message.ToString());
+            Log.Debug(Tag, message.ToString());
 #endif
             if (message.GetNotification() != null)
             {
                 //These is how most messages will be received
 #if DEBUG
-                Log.Debug(TAG + " : ", message.GetNotification().Body);
+                Log.Debug(Tag, message.GetNotification().Body);
 #endif
                 SendNotification(message.GetNotification().Body);
             }
             else
             {
-                var cmd = message.Data.FirstOrDefault(x => x.Key.Equals("cmd"));
-                var msg = message.Data.FirstOrDefault(x => x.Key.Equals("msg"));
+                var (_, cmd) = message.Data.FirstOrDefault(x => x.Key.Equals("cmd"));
+                var (_, msg) = message.Data.FirstOrDefault(x => x.Key.Equals("msg"));
 
-                var messageBody = $"{cmd.Value} : {msg.Value}";
+                var messageBody = $"{cmd} : {msg}";
 
 #if DEBUG
-                Log.Debug(TAG + " : ", messageBody);
+                Log.Debug(Tag, messageBody);
 #endif
                 _mvxMessenger.Publish(new NotificationMessage(this, messageBody, message.Data));
+
+                var (_, opId) = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
+                var (_, updateId) = message.Data.FirstOrDefault(x => x.Key.Equals("updateID"));
 
                 if (messageBody.Contains("Agent Location Change"))
                 {
                     var gid = message.Data.FirstOrDefault(x => x.Key.Equals("gid"));
-                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, gid.Value, msg.Value));
+                    _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, gid.Value, msg));
                 }
                 else if (messageBody.Contains("Marker"))
                 {
-                    var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
-                    var markerId = message.Data.FirstOrDefault(x => x.Key.Equals("markerID"));
+                    var (_, markerId) = message.Data.FirstOrDefault(x => x.Key.Equals("markerID"));
 
-                    if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(markerId.Value))
+                    if (!string.IsNullOrWhiteSpace(opId) && !string.IsNullOrWhiteSpace(markerId))
                     {
-                        await _backgroundDataUpdaterService.UpdateMarkerAndNotify(opId.Value, markerId.Value).ConfigureAwait(false);
-                        
-                        var op = await _operationsDatabase.GetOperationModel(opId.Value);
-                        if (op != null)
+                        if (!string.IsNullOrWhiteSpace(updateId))
                         {
-                            var marker = op.Markers.FirstOrDefault(x => x.Id.Equals(markerId.Value));
-                            if (marker != null)
-                            {
-                                var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
-                                if (marker.AssignedTo.Equals(loggedUserGid))
-                                    SendNotification($"{op.Name} : Marker {msg.Value}");
-                            }
+                            if (CheckIfUpdateIdShouldBeProcessedOrNot(updateId))
+                                await _backgroundDataUpdaterService.UpdateMarkerAndNotify(opId, markerId)
+                                    .ConfigureAwait(false);
+                        }
+
+                        var op = await _operationsDatabase.GetOperationModel(opId);
+                        var marker = op?.Markers.FirstOrDefault(x => x.Id.Equals(markerId));
+                        if (marker != null)
+                        {
+                            var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
+                            if (marker.AssignedTo.Equals(loggedUserGid))
+                                SendNotification($"{op.Name} : Marker {msg}");
                         }
                     }
                 }
                 else if (messageBody.Contains("Link"))
                 {
-                    var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
-                    var linkId = message.Data.FirstOrDefault(x => x.Key.Equals("linkID"));
+                    var (_, linkId) = message.Data.FirstOrDefault(x => x.Key.Equals("linkID"));
 
-                    if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(linkId.Value))
+                    if (!string.IsNullOrWhiteSpace(opId) && !string.IsNullOrWhiteSpace(linkId))
                     {
-                        await _backgroundDataUpdaterService.UpdateLinkAndNotify(opId.Value, linkId.Value).ConfigureAwait(false);
-                        
-                        var op = await _operationsDatabase.GetOperationModel(opId.Value);
-                        if (op != null)
+                        if (!string.IsNullOrWhiteSpace(updateId))
                         {
-                            var link = op.Links.FirstOrDefault(x => x.Id.Equals(linkId.Value));
-                            if (link != null)
-                            {
-                                var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
-                                if (link.AssignedTo.Equals(loggedUserGid))
-                                    SendNotification($"{op.Name} : Link {msg.Value}");
-                            }
+                            if (CheckIfUpdateIdShouldBeProcessedOrNot(updateId))
+                                await _backgroundDataUpdaterService.UpdateLinkAndNotify(opId, linkId)
+                                    .ConfigureAwait(false);
+                        }
+
+                        var op = await _operationsDatabase.GetOperationModel(opId);
+                        var link = op?.Links.FirstOrDefault(x => x.Id.Equals(linkId));
+                        if (link != null)
+                        {
+                            var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
+                            if (link.AssignedTo.Equals(loggedUserGid))
+                                SendNotification($"{op.Name} : Link {msg}");
                         }
                     }
                 }
                 else if (messageBody.Contains("Map Change"))
                 {
-                    var opId = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
-                    var updateId = message.Data.FirstOrDefault(x => x.Key.Equals("updateID"));
-
-                    var shouldUpdate = false;
-                    if (!string.IsNullOrWhiteSpace(opId.Value) && !string.IsNullOrWhiteSpace(updateId.Value))
+                    if (!string.IsNullOrWhiteSpace(opId) && !string.IsNullOrWhiteSpace(updateId))
                     {
-                        if (OperationsUpdatesCache.Data.ContainsKey(updateId.Value))
-                        {
-                            if (OperationsUpdatesCache.Data[updateId.Value] == false)
-                            {
-                                shouldUpdate = true;
-                                OperationsUpdatesCache.Data[updateId.Value] = true;
-                            }
-                        }
-                        else
-                        {
-                            shouldUpdate = true;
-                            OperationsUpdatesCache.Data.Add(updateId.Value, true);
-                        }
-
-                        if (shouldUpdate)
-                            await _backgroundDataUpdaterService.UpdateOperationAndNotify(opId.Value).ConfigureAwait(false);
+                        if (CheckIfUpdateIdShouldBeProcessedOrNot(updateId))
+                            await _backgroundDataUpdaterService.UpdateOperationAndNotify(opId).ConfigureAwait(false);
                     }
                 }
             }
+        }
+
+        private bool CheckIfUpdateIdShouldBeProcessedOrNot(string updateId)
+        {
+            var result = false;
+            if (OperationsUpdatesCache.Data.ContainsKey(updateId))
+            {
+                if (OperationsUpdatesCache.Data[updateId] == false)
+                {
+                    result = true;
+                    OperationsUpdatesCache.Data[updateId] = true;
+#if DEBUG
+                    Log.Debug(Tag, $"updateID '{updateId}' isn't processed, update will be done");
+                }
+                else
+                {
+                    Log.Debug(Tag, $"updateID '{updateId}' has already been processed, update aborted");
+#endif
+                }
+            }
+            else
+            {
+                result = true;
+                OperationsUpdatesCache.Data.Add(updateId, true);
+#if DEBUG
+                Log.Debug(Tag, $"updateID '{updateId}' isn't processed, update will be done");
+#endif
+            }
+
+            return result;
         }
 
         private void SendNotification(string messageBody)
@@ -205,7 +223,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             var intent = new Intent(this, typeof(AndroidMainActivity));
             intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
             intent.SetPackage(null);
-            
+
             var pendingIntent = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.OneShot);
 
             var notificationBuilder = new NotificationCompat.Builder(this, "Wasabee_Notifications");
@@ -223,6 +241,16 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             var notificationManager = NotificationManager.FromContext(this);
             notificationManager?.Notify(_lastId, notificationBuilder.Build());
             _lastId++;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                _mvxToken?.Dispose();
+                _mvxToken = null;
+            }
         }
     }
 }
