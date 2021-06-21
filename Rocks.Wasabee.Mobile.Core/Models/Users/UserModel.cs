@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Rocks.Wasabee.Mobile.Core.Models.Users
@@ -14,6 +14,12 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
 
         [JsonProperty("name")]
         public string IngressName { get; set; }
+
+        [JsonProperty("vname")]
+        public string VName { get; set; }
+
+        [JsonProperty("rocksname")]
+        public string RocksName { get; set; }
 
         [JsonProperty("level")]
         public int Level { get; set; }
@@ -38,6 +44,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
 
         [JsonProperty("RISC")]
         public bool Risc { get; set; }
+
+        [JsonProperty("intelfaction")]
+        public string IntelFaction { get; set; }
 
         [JsonProperty("Telegram")]
         public TelegramModel Telegram { get; set; }
