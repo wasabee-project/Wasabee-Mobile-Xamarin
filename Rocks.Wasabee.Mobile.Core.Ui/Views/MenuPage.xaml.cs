@@ -19,7 +19,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
         {
             InitializeComponent();
 
-            _toggleMenuToken = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<MessageFor<MenuViewModel>>(_ => ToggleMenu());
+            _toggleMenuToken = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<MessageFrom<MenuViewModel>>(_ => ToggleMenu());
         }
 
         private void Logout_Clicked(object sender, EventArgs e)

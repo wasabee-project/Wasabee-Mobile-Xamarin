@@ -194,7 +194,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     await _navigationService.Navigate<TeamsListViewModel>();
 
                     // Message used to close menu UI
-                    _messenger.Publish(new MessageFor<MenuViewModel>(this));
+                    _messenger.Publish(new MessageFrom<MenuViewModel>(this));
                 }
 
                 return;
