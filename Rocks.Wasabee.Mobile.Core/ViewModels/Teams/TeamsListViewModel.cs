@@ -1,4 +1,6 @@
 ﻿using Acr.UserDialogs;
+using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -10,8 +12,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AppCenter.Analytics;
-using MvvmCross;
 using Xamarin.Essentials;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
@@ -155,11 +155,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                     team.IsEnabled = !team.IsEnabled;
                     _userDialogs.Toast($"Location sharing state changed for team {team.Name}", TimeSpan.FromSeconds(3));
 
-                    var updatedTeam = await _wasabeeApiV1Service.Teams_GetTeam(team.Id);
-                    if (updatedTeam != null)
-                    {
-                        await _teamsDatabase.SaveTeamModel(updatedTeam);
-                    }
+                    RefreshCommand.Execute();
                 }
                 else
                 {
