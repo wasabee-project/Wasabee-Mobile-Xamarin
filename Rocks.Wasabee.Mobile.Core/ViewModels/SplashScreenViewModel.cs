@@ -547,7 +547,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task FinishLogin(UserModel userModel, LoginMethod loginMethod)
         {
-            if (userModel.Blacklisted)
+            if (userModel.Blacklisted || userModel.IntelFaction.Equals("RESISTANCE"))
             {
                 ErrorMessage = "Error occured";
                 IsAuthInError = true;
