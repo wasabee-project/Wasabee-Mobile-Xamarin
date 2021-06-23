@@ -71,7 +71,7 @@
                             IsToggled="{Binding IsLiveLocationSharingEnabled}"/>
                 </StackLayout>
 
-                <BoxView HeightRequest="1" BackgroundColor="{DynamicResource PrimaryGray}" Margin="20"/>
+                <BoxView HeightRequest="1" BackgroundColor="{DynamicResource PrimaryGray}" Margin="20,10"/>
 
                 <StackLayout IsVisible="{Binding HasLocalOps}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
@@ -91,8 +91,9 @@
                         Style="{DynamicResource WasabeeStyleMenuButton}"/>
                 </StackLayout>
 
-                <BoxView HeightRequest="1" BackgroundColor="{DynamicResource PrimaryGray}" Margin="20"/>
+                <BoxView HeightRequest="1" BackgroundColor="{DynamicResource PrimaryGray}" Margin="20,10"/>
 
+                <Label Text="{Binding Server, StringFormat='Server : {0}'}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{DynamicResource WasabeeStyleInfoDivers}"/>
                 <Label Text="{Binding LoggedUser}" VerticalOptions="End" HorizontalOptions="CenterAndExpand" Style="{DynamicResource WasabeeStyleInfoDivers}"/>
                 
                 <Button Text="Log out" Clicked="Logout_Clicked" VerticalOptions="End" Margin="10"

@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation.MapElements;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly IUserDialogs _userDialogs;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly IDialogNavigationService _dialogNavigationService;
 
         private MvxSubscriptionToken? _token;
         private MvxSubscriptionToken? _tokenReload;
@@ -51,7 +53,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase,
             UsersDatabase usersDatabase, IPreferences preferences, IMvxMessenger messenger, IClipboard clipboard, IMap map,
-            IUserDialogs userDialogs, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service)
+            IUserDialogs userDialogs, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service, IDialogNavigationService dialogNavigationService)
         {
             _operationsDatabase = operationsDatabase;
             _teamsDatabase = teamsDatabase;
@@ -64,6 +66,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _userDialogs = userDialogs;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+            _dialogNavigationService = dialogNavigationService;
         }
 
         public override async Task Initialize()
@@ -113,7 +116,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _tokenReload ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
             _tokenLiveLocation ??= _messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
             _tokenLinkUpdated ??= _messenger.Subscribe<LinkDataChangedMessage>(UpdateLink);
-            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(UpdateMarker);
+            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(async msg => await UpdateMarker(msg));
             _tokenRefreshAllAgentsLocations ??= _messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
             
             await LoadOperationCommand.ExecuteAsync();
@@ -151,6 +154,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     ? Anchors.FirstOrDefault(x => x.Pin == value) ?? Markers.FirstOrDefault(x => x.Pin == value)
                     : null;
                 RaisePropertyChanged(() => SelectedPin);
+                
+                IsMarkerDetailAvailable = !string.IsNullOrWhiteSpace(SelectedWasabeePin?.Marker.Id);
             }
         }
 
@@ -180,6 +185,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLayerAnchorsActivated { get; set; } = true;
         public bool IsLayerAgentsActivated { get; set; } = true;
         public bool IsLayerZonesActivated { get; set; } = true;
+
+        public bool IsMarkerDetailAvailable { get; set; }
 
         public bool IsAgentListVisible { get; set; }
 
@@ -305,8 +312,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         {
                             Portal = portal,
                             Marker = marker,
-                            AssignedTo = marker.AssignedNickname // TODO Replace this
                         };
+
+                        if (!string.IsNullOrWhiteSpace(marker.AssignedTo))
+                        {
+                            var assignedTo = await _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo);
+                            if (assignedTo != null)
+                                pin.AssignedTo = assignedTo.Name;
+                        }
 
                         Markers.Add(pin);
                     }
@@ -345,11 +358,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 // Message data set to true to force move mapview
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, true));
                 IsLoading = false;
-
-                await RaisePropertyChanged(() => Anchors);
-                await RaisePropertyChanged(() => Links);
-                await RaisePropertyChanged(() => Markers);
-                await RaisePropertyChanged(() => Zones);
             }
         }
 
@@ -452,8 +460,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _isLoadingAgentsLocations = false;
             }
         }
-
-
 
         public IMvxAsyncCommand<TeamAgentLocationUpdatedMessage> RefreshTeamAgentPositionCommand => new MvxAsyncCommand<TeamAgentLocationUpdatedMessage>(RefreshTeamAgentPositionExecuted);
         private async Task RefreshTeamAgentPositionExecuted(TeamAgentLocationUpdatedMessage message)
@@ -617,9 +623,32 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
+        public IMvxAsyncCommand<WasabeePin> ShowMarkerDetailCommand => new MvxAsyncCommand<WasabeePin>(ShowMarkerDetailExecuted);
+        private async Task ShowMarkerDetailExecuted(WasabeePin pin)
+        {
+            if (IsMarkerDetailAvailable is false || Operation is null)
+                return;
+
+            var assignmentData = CreateMarkerAssignmentData(pin.Marker);
+            assignmentData.ShowAssignee = true;
+            await _dialogNavigationService.Navigate<MarkerAssignmentDialogViewModel, MarkerAssignmentData>(assignmentData);
+        }
+
         #endregion
 
         #region Private methods
+        private MarkerAssignmentData CreateMarkerAssignmentData(MarkerModel marker)
+        {
+            if (Operation == null)
+                throw new Exception("Operation is null");
+
+            return new MarkerAssignmentData(Operation.Id, marker.Order)
+            {
+                Marker = marker,
+                AssignedAgent = marker.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
+            };
+        }
         
         private async Task<bool> CheckAndAskForLocationPermissions()
         {
@@ -822,7 +851,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
         }
 
-        private void UpdateMarker(MarkerDataChangedMessage updateMessage)
+        private async Task UpdateMarker(MarkerDataChangedMessage updateMessage)
         {
             if (Operation == null)
                 return;
@@ -847,9 +876,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     })
                 {
                     Portal = portal,
-                    Marker = updateMessage.MarkerData,
-                    AssignedTo = updateMessage.MarkerData.AssignedNickname
+                    Marker = updateMessage.MarkerData
                 };
+
+                if (!string.IsNullOrWhiteSpace(updateMessage.MarkerData.AssignedTo))
+                {
+                    var assignedTo = await _teamAgentsDatabase.GetTeamAgent(updateMessage.MarkerData.AssignedTo);
+                    if (assignedTo != null)
+                        pin.AssignedTo = assignedTo.Name;
+                }
 
                 Markers.Remove(marker);
                 Markers.Add(pin);

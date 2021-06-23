@@ -89,7 +89,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             public string ToPortalId { get; set; }
             public string Description { get; set; }
             public string AssignedTo { get; set; }
-            public string AssignedToNickname { get; set; }
             public int ThrowOrderPos { get; set; }
             public bool Completed { get; set; }
             public string Color { get; set; }
@@ -108,7 +107,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     ToPortalId = linkDatabaseModel.ToPortalId,
                     Description = linkDatabaseModel.Description,
                     AssignedTo = linkDatabaseModel.AssignedTo,
-                    AssignedToNickname = linkDatabaseModel.AssignedToNickname,
                     ThrowOrderPos = linkDatabaseModel.ThrowOrderPos,
                     Completed = linkDatabaseModel.Completed,
                     Color = linkDatabaseModel.Color,
@@ -125,7 +123,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     ToPortalId = linkModel.ToPortalId,
                     Description = linkModel.Description,
                     AssignedTo = linkModel.AssignedTo,
-                    AssignedToNickname = linkModel.AssignedToNickname,
                     ThrowOrderPos = linkModel.ThrowOrderPos,
                     Completed = linkModel.Completed,
                     Color = linkModel.Color,

@@ -4,20 +4,19 @@ using Android.Content.PM;
 using Android.Content.Res;
 using Android.Gms.Common;
 using Android.OS;
-using Android.Util;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Com.Google.Android.Play.Core.Appupdate;
 using Com.Google.Android.Play.Core.Install.Model;
 using Com.Google.Android.Play.Core.Tasks;
+using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Core.Ui.Themes;
 using System.Threading.Tasks;
-using Android.Runtime;
-using MvvmCross;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
@@ -41,24 +40,11 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             var intent = new Intent(this, typeof(AndroidMainActivity));
             intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.NewTask);
-
-            if (Intent.Extras != null && Intent.Extras.ContainsKey("FCMMessage"))
-            {
-                foreach (var key in Intent.Extras.KeySet())
-                {
-                    var value = Intent.Extras.GetString(key);
-                    intent.PutExtra(key, value);
-
-                    Log.Debug("AndroidSplashScreenActivity", "Key: {0} Value: {1}", key, value);
-                }
-            }
-
+            
             IAppUpdateManager appUpdateManager = AppUpdateManagerFactory.Create(this);
             var appUpdateInfoTask = appUpdateManager.AppUpdateInfo;
             appUpdateInfoTask.AddOnSuccessListener(new AppUpdateSuccessListener(appUpdateManager, this, RequestUpdate, intent));
         }
-
-        
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {

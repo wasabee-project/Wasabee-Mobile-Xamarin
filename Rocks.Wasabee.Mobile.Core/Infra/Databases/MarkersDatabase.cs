@@ -96,10 +96,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string AssignedTeam { get; set; }
 
-            public string AssignedNickname { get; set; }
-
-            public string CompletedBy { get; set; }
-
             public string CompletedId { get; set; }
 
             public string State { get; set; }
@@ -121,8 +117,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Comment = markerDatabaseModel.Comment,
                     AssignedTo = markerDatabaseModel.AssignedTo,
                     AssignedTeam = markerDatabaseModel.AssignedTeam,
-                    AssignedNickname = markerDatabaseModel.AssignedNickname,
-                    CompletedBy = markerDatabaseModel.CompletedBy,
                     CompletedId = markerDatabaseModel.CompletedId,
                     State = markerDatabaseModel.State,
                     Order = markerDatabaseModel.Order,
@@ -140,8 +134,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Comment = markerModel.Comment,
                     AssignedTo = markerModel.AssignedTo,
                     AssignedTeam = markerModel.AssignedTeam,
-                    AssignedNickname = markerModel.AssignedNickname,
-                    CompletedBy = markerModel.CompletedBy,
                     CompletedId = markerModel.CompletedId,
                     State = markerModel.State,
                     Order = markerModel.Order,

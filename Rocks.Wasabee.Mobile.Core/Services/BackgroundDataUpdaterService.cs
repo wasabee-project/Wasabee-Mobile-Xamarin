@@ -29,7 +29,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             _usersDatabase = usersDatabase;
         }
 
-        public async Task UpdateOperation(string operationId)
+        public async Task UpdateOperationAndNotify(string operationId)
         {
             var operationData = await _wasabeeApiV1Service.Operations_GetOperation(operationId);
             if (operationData != null)
@@ -39,7 +39,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             }
         }
 
-        public async Task UpdateLink(string operationId, string linkId)
+        public async Task UpdateLinkAndNotify(string operationId, string linkId)
         {
             var linkData = await _wasabeeApiV1Service.Operations_GetLink(operationId, linkId);
             if (linkData != null)
@@ -49,7 +49,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             }
         }
 
-        public async Task UpdateMarker(string operationId, string markerId)
+        public async Task UpdateMarkerAndNotify(string operationId, string markerId)
         {
             var markerData = await _wasabeeApiV1Service.Operations_GetMarker(operationId, markerId);
             if (markerData != null)

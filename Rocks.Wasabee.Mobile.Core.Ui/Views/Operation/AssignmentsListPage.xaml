@@ -14,7 +14,7 @@
                       IsPullToRefreshEnabled="True"
                       RefreshCommand="{Binding RefreshCommand}"
                       IsRefreshing="{Binding IsLoading, Mode=OneWay}"
-                      ItemsSource="{Binding Assignments}"
+                      ItemsSource="{Binding Elements}"
                       ItemTemplate="{DynamicResource AssignmentsListDataTemplateSelector}"
                       ItemSelected="AssignmentListView_OnItemSelected" />
 

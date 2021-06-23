@@ -4,8 +4,10 @@ using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -92,8 +94,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
                 try
                 {
-                    if (await _wasabeeApiV1Service.Operation_Marker_Acknowledge(MarkerAssignment.OpId, Marker.Id))
-                        await UpdateMarkerAndNotify();
+                    var response = await _wasabeeApiV1Service.Operation_Marker_Acknowledge(MarkerAssignment.OpId, Marker.Id);
+                    if (response != null)
+                    {
+                        StoreResponseUpdateId(response);
+                        await UpdateMarkerAndNotify(response);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -118,8 +124,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 
                 try
                 {
-                    if (await _wasabeeApiV1Service.Operation_Marker_Complete(MarkerAssignment.OpId, Marker.Id))
-                        await UpdateMarkerAndNotify();
+                    var response = await _wasabeeApiV1Service.Operation_Marker_Complete(MarkerAssignment.OpId, Marker.Id);
+                    if (response != null)
+                    {
+                        StoreResponseUpdateId(response);
+                        await UpdateMarkerAndNotify(response);
+
+                        IsBusy = false;
+                        await CloseCommand.ExecuteAsync();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -144,8 +157,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 
                 try
                 {
-                    if (await _wasabeeApiV1Service.Operation_Marker_Incomplete(MarkerAssignment.OpId, Marker.Id))
-                        await UpdateMarkerAndNotify();
+                    var response = await _wasabeeApiV1Service.Operation_Marker_Incomplete(MarkerAssignment.OpId, Marker.Id);
+                    if (response != null)
+                    {
+                        StoreResponseUpdateId(response);
+                        await UpdateMarkerAndNotify(response);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -170,8 +187,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 
                 try
                 {
-                    if (await _wasabeeApiV1Service.Operation_Marker_Claim(MarkerAssignment.OpId, Marker.Id))
-                        await UpdateMarkerAndNotify();
+                    var response = await _wasabeeApiV1Service.Operation_Marker_Claim(MarkerAssignment.OpId, Marker.Id);
+                    if (response != null)
+                    {
+                        StoreResponseUpdateId(response);
+                        await UpdateMarkerAndNotify(response);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -196,11 +217,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 
                 try
                 {
-                    if (await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id))
+                    var response = await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id);
+                    if (response != null)
                     {
                         _userDialogs.Toast("Assignment rejected");
 
-                        await UpdateMarkerAndNotify();
+                        StoreResponseUpdateId(response);
+                        await UpdateMarkerAndNotify(response);
+
+                        IsBusy = false;
+                        await CloseCommand.ExecuteAsync();
                     }
                 }
                 catch (Exception e)
@@ -213,7 +239,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         }
 
         public IMvxCommand<string> ShowOnMapCommand => new MvxCommand<string>(ShowOnMapExecuted);
-        private void ShowOnMapExecuted(string fromOrToPortal)
+        private async void ShowOnMapExecuted(string fromOrToPortal)
         {
             if (IsBusy) return;
 
@@ -223,7 +249,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowMarkerOnMapMessage(this, Marker));
             
             IsBusy = false;
-            CloseCommand.Execute();
+            await CloseCommand.ExecuteAsync();
         }
 
         public IMvxCommand<string> OpenInNavigationAppCommand => new MvxCommand<string>(OpenInNavigationAppExecuted);
@@ -277,10 +303,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
         /// <returns></returns>
-        private async Task UpdateMarkerAndNotify()
+        private async Task UpdateMarkerAndNotify(WasabeeApiResponse response)
         {
             if (MarkerAssignment != null && Marker != null)
             {
+                // Flags UpdatedId as done
+                OperationsUpdatesCache.Data[response.UpdateId] = true;
+
                 var updated = await _wasabeeApiV1Service.Operations_GetMarker(MarkerAssignment.OpId, Marker.Id);
                 if (updated != null)
                 {
@@ -296,7 +325,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 else
                 {
                     IsBusy = false;
-                    CloseCommand.Execute();
+                    await CloseCommand.ExecuteAsync();
                 }
             }
         }
@@ -378,6 +407,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             return string.Empty;
         }
 
+        private static void StoreResponseUpdateId(WasabeeApiResponse response)
+        {
+            if (response.HasUpdateId())
+            {
+                var updateId = response.UpdateId;
+                OperationsUpdatesCache.Data.Add(updateId, false);
+            }
+        }
 
         #endregion
     }

@@ -11,6 +11,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Logs;
@@ -39,7 +40,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly IMvxMessenger _messenger;
         private readonly OperationsDatabase _operationsDatabase;
+        private readonly UsersDatabase _usersDatabase;
         private readonly IDialogNavigationService _dialogNavigationService;
+        private readonly IAppSettings _appSettings;
 
         private MvxSubscriptionToken? _token;
         private MvxSubscriptionToken? _tokenDebug;
@@ -47,7 +50,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
-            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase, IDialogNavigationService dialogNavigationService)
+            IUserDialogs userDialogs, IMvxMessenger messenger, OperationsDatabase operationsDatabase, UsersDatabase usersDatabase,
+            IDialogNavigationService dialogNavigationService, IAppSettings appSettings)
         {
             _navigationService = navigationService;
             _authentificationService = authentificationService;
@@ -57,7 +61,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _userDialogs = userDialogs;
             _messenger = messenger;
             _operationsDatabase = operationsDatabase;
+            _usersDatabase = usersDatabase;
             _dialogNavigationService = dialogNavigationService;
+            _appSettings = appSettings;
 
             BuildMenu();
         }
@@ -78,12 +84,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 SelectedOpName = op == null ? "ERROR loading OP" : op.Name;
             }
 
-            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
+            Server = _appSettings.Server switch
             {
-                _isLiveLocationSharingEnabled = true;
-                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
-                await RaisePropertyChanged(() => IsLiveLocationSharingEnabled);
-            }
+                WasabeeServer.US => "America",
+                WasabeeServer.EU => "Europe",
+                WasabeeServer.APAC => "Asia/Pacific",
+                WasabeeServer.Undefined => string.Empty,
+                _ => throw new ArgumentOutOfRangeException(nameof(Server))
+            };
         }
         
         public override void ViewAppeared()
@@ -91,6 +99,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             base.ViewAppeared();
 
             _token ??= _messenger.Subscribe<NewOpAvailableMessage>(msg => RefreshAvailableOpsCommand.Execute());
+            _tokenOps ??= _messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());
             _tokenDebug ??= _messenger.SubscribeOnMainThread<MessageFrom<SettingsViewModel>>(msg =>
             {
                 if (MenuItems.Any(x => x.ViewModelType == typeof(LogsViewModel)))
@@ -101,8 +110,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 _preferences.Set(UserSettingsKeys.DevModeActivated, true);
             });
-
-            _tokenOps ??= _messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());
+            
+            if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
+            {
+                SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Start));
+            }
+            else
+            {
+                SetProperty(ref _isLiveLocationSharingEnabled, false, nameof(IsLiveLocationSharingEnabled));
+                _messenger.Publish(new LiveGeolocationTrackingMessage(this, Action.Stop));
+            }
 
             RefreshAvailableOpsCommand.Execute();
         }
@@ -122,6 +140,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         #region Properties
 
         public string LoggedUser { get; set; } = string.Empty;
+        public string Server { get; set; } = string.Empty;
         public string DisplayVersion { get; set; } = string.Empty;
         public string SelectedOpName { get; set; } = string.Empty;
         public MvxObservableCollection<OperationModel> AvailableOpsCollection { get; set; } = new MvxObservableCollection<OperationModel>();
@@ -160,6 +179,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task ToggleLiveLocationSharingExecuted(bool value)
         {
             LoggingService.Trace($"Executing MenuViewModel.ToggleLiveLocationSharingCommand({value})");
+
+            var teams = await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId());
+            if (teams.Any(x => x.State.Equals("On")) is false)
+            {
+                var result = await _userDialogs.ConfirmAsync(
+                    "None of your teams has been set to share your location. Go to Teams list and enable at least one team.",
+                    string.Empty,
+                    "See Teams",
+                    "Cancel");
+
+                if (result)
+                {
+                    await _navigationService.Navigate<TeamsListViewModel>();
+
+                    // Message used to close menu UI
+                    _messenger.Publish(new MessageFrom<MenuViewModel>(this));
+                }
+
+                return;
+            }
 
             if (!_isLiveLocationSharingEnabled && value)
             {
