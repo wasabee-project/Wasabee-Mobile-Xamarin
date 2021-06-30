@@ -99,9 +99,9 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         private void SetupFcmServiceMessage()
         {
-            _tokenFcm = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<UserLoggedInMessage>(msg =>
+            _tokenFcm = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<UserLoggedInMessage>(async msg =>
             {
-                MessagingService.Instance.Init();
+                await MessagingService.Instance.Init();
             });
         }
 
