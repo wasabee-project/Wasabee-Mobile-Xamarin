@@ -1,0 +1,78 @@
+# Xamarin.Android
+# Build a Xamarin.Android project.
+# Add steps that test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
+
+trigger:
+- develop
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+- group: VersionNumbersDev
+- name: buildConfiguration
+  value: 'Release'
+- name: outputDirectory
+  value: '$(build.binariesDirectory)/$(buildConfiguration)'
+
+name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
+
+steps:
+
+# Download and place Google Services JSON file to solution folder
+- task: DownloadSecureFile@1
+  name: GoogleServicesJson 
+  inputs:
+    secureFile: 'google-services.json'
+- script: |
+    echo Copying google-services.json to project folder
+    cp $(GoogleServicesJson.secureFilePath) $(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android
+    echo End of copy task
+
+# Download and place ApiKeys.cs file in Solution root folder, referenced in native project properties
+# This file contains GoogleMaps And AppCenter API Keys, plus Google OAuth client informations
+- task: DownloadSecureFile@1
+  name: ApiKeysFile 
+  inputs:
+    secureFile: 'ApiKeys.cs'
+- script: |
+    echo Copying ApiKeys.cs to project folder
+    cp $(ApiKeysFile.secureFilePath) $(Build.SourcesDirectory)
+    echo End of copy task
+
+# Download signing Keystore file
+- task: DownloadSecureFile@1
+  name: Keystore 
+  inputs:
+    secureFile: 'WasabeeAndroid.Keystore'
+
+# ManifestUpdater powershell
+# changes PackageName, Version name, App label and icon
+- task: PowerShell@2
+  inputs:
+    filePath: '_Builds/AndroidManifestUpdater.ps1'
+    arguments: '-filePath "$(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.Android/Properties/AndroidManifest.xml" -package "$(PackageName)" -versionName "$(Build.BuildNumber)" -label "$(AppLabel)"'
+
+# NuGet Tool install
+- task: NuGetToolInstaller@1
+
+# NuGet packages restore
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/Rocks.Wasabee.Mobile.sln'
+
+# Build Xamarin.Android app bundle
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/Rocks.Wasabee.Mobile.Android.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+    msbuildArguments: '-p:AndroidPackageFormat=aab -t:SignAndroidPackage -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=$(Keystore.secureFilePath) -p:AndroidSigningStorePass=$(KeystorePassword) -p:AndroidSigningKeyAlias=$(KeystoreAlias) -p:AndroidSigningKeyPass=$(KeystorePassword)'
+
+# Publish artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(outputDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
