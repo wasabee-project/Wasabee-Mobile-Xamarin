@@ -38,9 +38,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         private IUserSettingsService _userSettingsService;
         private OperationsDatabase _operationsDatabase;
 
-        private int _lastId;
         private MvxSubscriptionToken _mvxToken;
 
+        private int _lastId;
         private string _fcmToken = string.Empty;
         private bool _isInitialized;
 
