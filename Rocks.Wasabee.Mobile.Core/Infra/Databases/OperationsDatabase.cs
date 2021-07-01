@@ -78,6 +78,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             }
             catch (Exception e)
             {
+                LoggingService.Error(e, "Error OperationsDatabase.GetOperationModel");
+
                 return null;
             }
             finally

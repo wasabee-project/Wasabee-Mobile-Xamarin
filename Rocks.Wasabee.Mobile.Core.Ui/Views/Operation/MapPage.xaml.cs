@@ -36,7 +36,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         private bool _isDetailPanelVisible;
         private bool _isAgentListPanelVisible;
 
-        private bool _globalMapRefreshRunning = false;
+        private bool _globalMapRefreshRunning;
 
         public MapPage()
         {
@@ -94,7 +94,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 RefreshZonesLayer();
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
 
