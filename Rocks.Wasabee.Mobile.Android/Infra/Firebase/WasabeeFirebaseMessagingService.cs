@@ -14,6 +14,8 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Infra.Firebase.Payloads;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms.Platform.Android;
 
@@ -126,12 +128,12 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                 var (_, opId) = message.Data.FirstOrDefault(x => x.Key.Equals("opID"));
                 var (_, updateId) = message.Data.FirstOrDefault(x => x.Key.Equals("updateID"));
 
-                if (messageBody.Contains("Agent Location Change"))
+                if (cmd.Contains("Agent Location Change"))
                 {
                     var gid = message.Data.FirstOrDefault(x => x.Key.Equals("gid"));
                     _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, gid.Value, msg));
                 }
-                else if (messageBody.Contains("Marker"))
+                else if (cmd.Contains("Marker"))
                 {
                     var (_, markerId) = message.Data.FirstOrDefault(x => x.Key.Equals("markerID"));
 
@@ -154,7 +156,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                         }
                     }
                 }
-                else if (messageBody.Contains("Link"))
+                else if (cmd.Contains("Link"))
                 {
                     var (_, linkId) = message.Data.FirstOrDefault(x => x.Key.Equals("linkID"));
 
@@ -177,13 +179,19 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
                         }
                     }
                 }
-                else if (messageBody.Contains("Map Change"))
+                else if (cmd.Contains("Map Change"))
                 {
                     if (!string.IsNullOrWhiteSpace(opId) && !string.IsNullOrWhiteSpace(updateId))
                     {
                         if (CheckIfUpdateIdShouldBeProcessedOrNot(updateId))
                             await _backgroundDataUpdaterService.UpdateOperationAndNotify(opId).ConfigureAwait(false);
                     }
+                }
+                else if (cmd.Equals("Target"))
+                {
+                    var targetPayload = JsonConvert.DeserializeObject<TargetPayload>(msg);
+                    SendNotification($"Target from {targetPayload.Sender}: {targetPayload.Name}");
+                    _mvxMessenger.Publish(new TargetReceivedMessage(this, targetPayload));
                 }
             }
         }

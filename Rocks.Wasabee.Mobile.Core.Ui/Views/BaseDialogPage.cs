@@ -1,6 +1,8 @@
 ﻿using MvvmCross.Binding.BindingContext;
 using MvvmCross.Forms.Views;
 using MvvmCross.ViewModels;
+using Rg.Plugins.Popup.Animations;
+using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Pages;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
 using Xamarin.Forms;
@@ -13,7 +15,13 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 
         protected BaseDialogPage() : base()
         {
+            base.Animation = new ScaleAnimation(MoveAnimationOptions.Bottom, MoveAnimationOptions.Top)
+            {
+                DurationIn = 250,
+                DurationOut = 250
+            };
 
+            base.BackgroundColor = Color.FromHex("#B000");
         }
 
         internal static void ViewModelChanged(BindableObject bindable, object oldvalue, object newvalue)
