@@ -10,6 +10,6 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         Task<TResult> Navigate<TViewModel, TResult>() where TViewModel : IMvxViewModelResult<TResult> where TResult : notnull;
 
         Task<bool> Close(bool animated = true);
-        Task<bool> Close<TResult>(IMvxViewModelResult<TResult> viewModel, bool animated = true, TResult? closeResult = default) where TResult : notnull;
+        Task<bool> Close<TResult>(IMvxViewModelResult<TResult> viewModel, bool animated = true, TResult closeResult = default!) where TResult : notnull;
     }
 }

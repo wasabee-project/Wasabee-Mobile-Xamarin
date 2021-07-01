@@ -50,7 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Services
             return _popupNavigationService.PopupStack.Count < count;
         }
 
-        public Task<bool> Close<TResult>(IMvxViewModelResult<TResult> viewModel, bool animated = true, TResult closeResult = default) where TResult : notnull
+        public Task<bool> Close<TResult>(IMvxViewModelResult<TResult> viewModel, bool animated = true, TResult closeResult = default!) where TResult : notnull
         {
             return Close(viewModel, closeResult, new CancellationToken());
         }
