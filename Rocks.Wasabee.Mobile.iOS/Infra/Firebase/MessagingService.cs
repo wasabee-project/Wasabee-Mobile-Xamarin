@@ -1,19 +1,21 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Firebase.CloudMessaging;
+﻿using Firebase.CloudMessaging;
 using Firebase.InstanceID;
 using Foundation;
 using MvvmCross;
 using MvvmCross.Plugin.Messenger;
+using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Infra.Firebase.Payloads;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using UIKit;
 using UserNotifications;
 using Xamarin.Essentials.Interfaces;
@@ -151,12 +153,12 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
             var (_, opId) = data.FirstOrDefault(x => x.Key.Equals("opID"));
             var (_, updateId) = data.FirstOrDefault(x => x.Key.Equals("updateID"));
 
-            if (messageBody.Contains("Agent Location Change"))
+            if (cmd.Contains("Agent Location Change"))
             {
                 var gid = data.FirstOrDefault(x => x.Key.Equals("gid"));
                 _mvxMessenger.Publish(new TeamAgentLocationUpdatedMessage(this, gid.Value, msg));
             }
-            else if (messageBody.Contains("Marker"))
+            else if (cmd.Contains("Marker"))
             {
                 var (_, markerId) = data.FirstOrDefault(x => x.Key.Equals("markerID"));
 
@@ -179,7 +181,7 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
                     }
                 }
             }
-            else if (messageBody.Contains("Link"))
+            else if (cmd.Contains("Link"))
             {
                 var (_, linkId) = data.FirstOrDefault(x => x.Key.Equals("linkID"));
 
@@ -202,13 +204,19 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
                     }
                 }
             }
-            else if (messageBody.Contains("Map Change"))
+            else if (cmd.Contains("Map Change"))
             {
                 if (!string.IsNullOrWhiteSpace(opId) && !string.IsNullOrWhiteSpace(updateId))
                 {
                     if (CheckIfUpdateIdShouldBeProcessedOrNot(updateId))
                         await _backgroundDataUpdaterService.UpdateOperationAndNotify(opId).ConfigureAwait(false);
                 }
+            }
+            else if (cmd.Equals("Target"))
+            {
+                var targetPayload = JsonConvert.DeserializeObject<TargetPayload>(msg);
+                //SendNotification($"Target from {targetPayload.Sender}: {targetPayload.Name}");
+                _mvxMessenger.Publish(new TargetReceivedMessage(this, targetPayload));
             }
         }
 

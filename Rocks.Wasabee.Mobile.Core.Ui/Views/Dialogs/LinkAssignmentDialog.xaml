@@ -2,21 +2,12 @@
 <views:BaseDialogPage x:TypeArguments="viewModels:LinkAssignmentDialogViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
                       x:DataType="viewModels:LinkAssignmentDialogViewModel"
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                      xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-                      xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;assembly=Rocks.Wasabee.Mobile.Core"
                       xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.LinkAssignmentDialog"
-                      BackgroundColor="#B000">
-
-    <pages:PopupPage.Animation>
-        <animations:ScaleAnimation 
-            PositionIn="Bottom"
-            PositionOut="Top"/>
-    </pages:PopupPage.Animation>
+                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.LinkAssignmentDialog">
 
     <ContentPage.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter" />

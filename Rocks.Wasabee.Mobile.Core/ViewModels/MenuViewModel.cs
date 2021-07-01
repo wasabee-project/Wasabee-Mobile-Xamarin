@@ -256,8 +256,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoggingService.Trace($"Executing MenuViewModel.SelectedMenuItemChangedCommand({menuItem.Title})");
 
-            if (menuItem.ViewModelType == null) return;
-            
+            if (menuItem.ViewModelType == null)
+                return;
+
             await _navigationService.Navigate(Mvx.IoCProvider.Resolve(menuItem.ViewModelType) as IMvxViewModel);
         }
 

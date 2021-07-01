@@ -4,20 +4,11 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;assembly=Rocks.Wasabee.Mobile.Core"
-                      xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-                      xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                       xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:behaviors="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Behaviors;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.LocationWarningDialog"
-                      BackgroundColor="#B000">
-
-    <pages:PopupPage.Animation>
-        <animations:ScaleAnimation 
-            PositionIn="Bottom"
-            PositionOut="Top"/>
-    </pages:PopupPage.Animation>
+                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.LocationWarningDialog">
 
     <ContentPage.Resources>
         <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
