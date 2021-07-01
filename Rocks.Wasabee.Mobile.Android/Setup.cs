@@ -8,11 +8,13 @@ using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Plugin.CurrentActivity;
 using Rocks.Wasabee.Mobile.Core;
+using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Droid.Infra.Firebase;
+using Rocks.Wasabee.Mobile.Droid.Infra.LocalNotification;
 using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Droid
@@ -52,6 +54,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
+            Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
 
