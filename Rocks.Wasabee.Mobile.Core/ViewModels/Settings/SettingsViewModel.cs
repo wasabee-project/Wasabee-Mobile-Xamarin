@@ -1,18 +1,18 @@
 ﻿using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
-using Rocks.Wasabee.Mobile.Core.Infra.Security;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using MvvmCross;
-using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
@@ -27,15 +27,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         private readonly IPreferences _preferences;
         private readonly IMvxMessenger _messenger;
         private readonly ISecureStorage _secureStorage;
-        private readonly ILoginProvider _loginProvider;
         private readonly IFirebaseService _firebaseService;
+        private readonly ICrossFirebaseMessagingService _crossFirebaseMessagingService;
 
         private int _tapCount = 0;
         private bool _devModeActivated = false;
 
         public SettingsViewModel(IVersionTracking versionTracking, IPermissions permissions, IUserDialogs userDialogs,
-            IPreferences preferences, IMvxMessenger messenger, ISecureStorage secureStorage, ILoginProvider loginProvider,
-            IFirebaseService firebaseService)
+            IPreferences preferences, IMvxMessenger messenger, ISecureStorage secureStorage, IFirebaseService firebaseService,
+            ICrossFirebaseMessagingService crossFirebaseMessagingService)
         {
             _versionTracking = versionTracking;
             _permissions = permissions;
@@ -43,8 +43,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             _preferences = preferences;
             _messenger = messenger;
             _secureStorage = secureStorage;
-            _loginProvider = loginProvider;
             _firebaseService = firebaseService;
+            _crossFirebaseMessagingService = crossFirebaseMessagingService;
         }
 
         public override Task Initialize()
@@ -247,10 +247,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
             IsBusy = true;
 
-            var token = await _secureStorage.GetAsync(SecureStorageConstants.FcmToken)
-                        ?? _firebaseService.GetFcmToken();
+            var token = await _secureStorage.GetAsync(SecureStorageConstants.FcmToken);
+            if (string.IsNullOrWhiteSpace(token))
+                token = _firebaseService.GetFcmToken();
 
-            var result = await _loginProvider.SendFirebaseTokenAsync(token);
+            var result = await _crossFirebaseMessagingService.SendRegistrationToServer(token);
             _userDialogs.Toast(result ? "Token upated" : "Error refreshing token");
 
             LoggingService.Trace($"Result for SettingsViewModel.RefreshFcmTokenCommand : {result}");

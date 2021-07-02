@@ -56,14 +56,14 @@ namespace Rocks.Wasabee.Mobile.Droid
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
 
-            var platformConfig = new PlatformConfig() {BitmapDescriptorFactory = new WasabeeBitmapConfig()};
+            var platformConfig = new PlatformConfig() { BitmapDescriptorFactory = new WasabeeBitmapConfig() };
             Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig);
 
             Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
 
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
             FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageViewHandler();
-
+            
             CreateNotificationChannels();
 
             Mvx.IoCProvider.RegisterSingleton(PopupNavigation.Instance);

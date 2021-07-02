@@ -58,16 +58,18 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
             _mvxToken ??= _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer(_firebaseService.GetFcmToken()));
         }
         
-        public async Task SendRegistrationToServer(string registrationToken)
+        public async Task<bool> SendRegistrationToServer(string registrationToken)
         {
             if (!_isInitialized)
                 Initialize();
 
             if (string.IsNullOrWhiteSpace(registrationToken))
-                return;
+                return false;
 
+            _fcmToken = registrationToken;
+            
             await _secureStorage.SetAsync(SecureStorageConstants.FcmToken, _fcmToken);
-            await _loginProvider.SendFirebaseTokenAsync(_fcmToken);
+            return await _loginProvider.SendFirebaseTokenAsync(_fcmToken);
         }
 
         public async Task ProcessMessageData(IDictionary<string, string> data)
