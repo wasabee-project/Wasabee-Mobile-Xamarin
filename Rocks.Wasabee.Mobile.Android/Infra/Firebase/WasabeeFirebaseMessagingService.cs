@@ -8,6 +8,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
 using Android.Util;
 #endif
 
+#pragma warning disable CS0618 // Type or member is obsolete
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
     [Service]
@@ -73,3 +74,4 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
         #endregion
     }
 }
+#pragma warning restore CS0618 // Type or member is obsolete
