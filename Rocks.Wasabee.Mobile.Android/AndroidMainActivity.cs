@@ -11,7 +11,6 @@ using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Forms.Views;
 using MvvmCross.Plugin.Messenger;
-using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -22,7 +21,6 @@ using Rocks.Wasabee.Mobile.Core.Ui.Themes;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
 using System.Linq;
-using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 using Orientation = Rocks.Wasabee.Mobile.Core.Messages.Orientation;
@@ -68,7 +66,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             CreateNotificationChannels();
 
-            Mvx.IoCProvider.RegisterSingleton<IPopupNavigation>(PopupNavigation.Instance);
+            Mvx.IoCProvider.RegisterSingleton(PopupNavigation.Instance);
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
 
             base.OnCreate(bundle);
@@ -79,12 +77,12 @@ namespace Rocks.Wasabee.Mobile.Droid
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 Console.WriteLine("[DEBUG] Activated WindowManagerFlags.KeepScreenOn while Debugger is connected");
-                Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+                Window?.AddFlags(WindowManagerFlags.KeepScreenOn);
             }
             else
             {
                 Console.WriteLine("[DEBUG] Removed WindowManagerFlags.KeepScreenOn");
-                Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+                Window?.ClearFlags(WindowManagerFlags.KeepScreenOn);
             }
 #endif
         }
@@ -111,11 +109,11 @@ namespace Rocks.Wasabee.Mobile.Droid
             {
                 await PopupNavigation.Instance.PopAsync();
             }
-            else if (App.Current.MainPage.Navigation.ModalStack.Count > 0)
+            else if (Xamarin.Forms.Application.Current.MainPage.Navigation.ModalStack.Count > 0)
             {
-                await App.Current.MainPage.Navigation.PopModalAsync(true);
+                await Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync(true);
             }
-            else if (App.Current.MainPage is NavigationPage {CurrentPage: MvxMasterDetailPage {Detail: NavigationPage detailNavigationPage}} && detailNavigationPage.Pages.Count() > 1)
+            else if (Xamarin.Forms.Application.Current.MainPage is Xamarin.Forms.NavigationPage {CurrentPage: MvxMasterDetailPage {Detail: Xamarin.Forms.NavigationPage detailNavigationPage}} && detailNavigationPage.Pages.Count() > 1)
             {
                 await detailNavigationPage.Navigation.PopAsync(true);
             }
@@ -178,7 +176,7 @@ namespace Rocks.Wasabee.Mobile.Droid
                 return;
             }
 
-            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+            var notificationManager = (NotificationManager?) GetSystemService(NotificationService);
 
             var channel = new NotificationChannel("Wasabee_Notifications", "Wasabee", NotificationImportance.High)
             {
@@ -190,14 +188,10 @@ namespace Rocks.Wasabee.Mobile.Droid
 
         private void OnThemeChanged(Theme theme)
         {
-            if (theme == Core.Messages.Theme.Light)
-            {
-                Delegate.SetLocalNightMode(AppCompatDelegate.ModeNightNo);
-            }
-            else
-            {
-                Delegate.SetLocalNightMode(AppCompatDelegate.ModeNightYes);
-            }
+            Delegate.SetLocalNightMode(theme == Core.Messages.Theme.Light ?
+                AppCompatDelegate.ModeNightNo :
+                AppCompatDelegate.ModeNightYes);
+
             SetTheme(theme);
         }
 
@@ -216,14 +210,14 @@ namespace Rocks.Wasabee.Mobile.Droid
                 if (CoreApp.AppTheme == Core.Messages.Theme.Dark)
                     return;
 
-                App.Current.Resources = new DarkTheme();
+                Xamarin.Forms.Application.Current.Resources = new DarkTheme();
             }
             else
             {
                 if (CoreApp.AppTheme != Core.Messages.Theme.Dark)
                     return;
 
-                App.Current.Resources = new LightTheme();
+                Xamarin.Forms.Application.Current.Resources = new LightTheme();
             }
             CoreApp.AppTheme = mode;
         }

@@ -1,12 +1,11 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
-using MvvmCross.Platforms.Ios.Presenters;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
-using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
+using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
@@ -14,41 +13,40 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
+using Rocks.Wasabee.Mobile.iOS.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.iOS.Services.Geolocation;
 using UIKit;
-using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 namespace Rocks.Wasabee.Mobile.iOS
 {
     public class Setup : MvxFormsIosSetup<CoreApp, App>
     {
-        private ILoggingService _loggingService;
-        private LocationManager _locationManager;
+        private ILoggingService? _loggingService;
+        private LocationManager? _locationManager;
 
-        private MvxSubscriptionToken _tokenLocation;
-        private MvxSubscriptionToken _tokenFcm;
+        private MvxSubscriptionToken? _tokenLocation;
+        private MvxSubscriptionToken? _tokenFcm;
 
-        private Xamarin.Forms.Application _formsApplication;
+        private Xamarin.Forms.Application? _formsApplication;
         public override Xamarin.Forms.Application FormsApplication
         {
             get
             {
-                if (!Forms.IsInitialized)
+                if (!Xamarin.Forms.Forms.IsInitialized)
                 {
-                    Forms.SetFlags("SwipeView_Experimental");
-                    Forms.Init();
+                    Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
+                    Xamarin.Forms.Forms.Init();
 
-                    UINavigationBar.Appearance.TintColor = Color.FromHex("#3BA345").ToUIColor(); // Green
+                    UINavigationBar.Appearance.TintColor = Xamarin.Forms.Color.FromHex("#3BA345").ToUIColor(); // Green
                 }
-                if (_formsApplication == null)
-                {
-                    _formsApplication = CreateFormsApplication();
-                }
+                
+                _formsApplication ??= CreateFormsApplication();
+
                 if (Xamarin.Forms.Application.Current != _formsApplication)
-                {
                     Xamarin.Forms.Application.Current = _formsApplication;
-                }
+
                 return _formsApplication;
             }
         }
@@ -60,8 +58,9 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
 
-            Mvx.IoCProvider.RegisterSingleton<IPopupNavigation>(PopupNavigation.Instance);
+            Mvx.IoCProvider.RegisterSingleton(PopupNavigation.Instance);
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
+            Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
 
@@ -73,7 +72,7 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         private void SetupGeolocationTrackingMessage()
         {
-            _tokenLocation = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
+            _tokenLocation ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
             {
                 _loggingService ??= Mvx.IoCProvider.Resolve<ILoggingService>();
 
@@ -99,9 +98,9 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         private void SetupFcmServiceMessage()
         {
-            _tokenFcm = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<UserLoggedInMessage>(msg =>
+            _tokenFcm ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<UserLoggedInMessage>(msg =>
             {
-                MessagingService.Instance.Init();
+                MessagingService.Instance.Initialize();
             });
         }
 
@@ -116,20 +115,6 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.Resolve<IAppSettings>().BaseRedirectUrl = OAuthClient.Redirect;
             Mvx.IoCProvider.Resolve<IAppSettings>().AppCenterKey = AppCenterKeys.Value;
         }
-
-        protected override void InitializeFirstChance()
-        {
-            base.InitializeFirstChance();
-        }
-
-        protected override void InitializeLastChance()
-        {
-            base.InitializeLastChance();
-        }
-
-        protected override IMvxIosViewPresenter CreateViewPresenter()
-        {
-            return base.CreateViewPresenter();
-        }
     }
 }
+#nullable disable

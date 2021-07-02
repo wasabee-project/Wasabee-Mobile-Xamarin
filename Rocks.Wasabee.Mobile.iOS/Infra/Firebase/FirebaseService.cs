@@ -8,7 +8,6 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
         public string GetFcmToken()
         {
             return Messaging.SharedInstance.FcmToken ?? string.Empty;
-
         }
     }
 }

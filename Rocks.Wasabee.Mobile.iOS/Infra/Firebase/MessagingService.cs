@@ -1,56 +1,70 @@
-﻿using System;
-using Firebase.CloudMessaging;
+﻿using Firebase.CloudMessaging;
 using Firebase.InstanceID;
 using Foundation;
 using MvvmCross;
-using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
+using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using UIKit;
 using UserNotifications;
-using Xamarin.Essentials.Interfaces;
 using FirebaseApp = Firebase.Core.App;
 
 namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
 {
     public class MessagingService : IUNUserNotificationCenterDelegate, IMessagingDelegate
     {
-        public IntPtr Handle { get; }
-
+        private readonly ILoggingService _loggingService;
+        private readonly ICrossFirebaseMessagingService _crossFirebaseMessagingService;
+        private readonly ILocalNotificationService _localNotificationService;
+        
         private static MessagingService _instance;
         public static MessagingService Instance => _instance ??= new MessagingService();
         
-        
-        private readonly ILoggingService _loggingService;
+        public IntPtr Handle { get; }
 
-        public void Dispose()
+        private MessagingService()
         {
+            _loggingService ??= Mvx.IoCProvider.Resolve<ILoggingService>();
+            _crossFirebaseMessagingService ??= Mvx.IoCProvider.Resolve<ICrossFirebaseMessagingService>();
+            _localNotificationService ??= Mvx.IoCProvider.Resolve<ILocalNotificationService>();
 
+            _crossFirebaseMessagingService.Initialize();
         }
 
-        public MessagingService()
-        {
-            _loggingService = Mvx.IoCProvider.Resolve<ILoggingService>();
-        }
-
-        public void Init()
+        public void Initialize()
         {
             // Use Firebase library to configure APIs
             FirebaseApp.Configure();
 
             // Register for remote notifications
             UNUserNotificationCenter.Current.Delegate = this;
+            // Register your app for remote notifications.
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            {
+                // For iOS 10 display notification (sent via APNS)
+                UNUserNotificationCenter.Current.Delegate = this;
 
-            var authOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound;
-            UNUserNotificationCenter.Current.RequestAuthorization (authOptions, (granted, error) => {
-                Console.WriteLine (granted);
-            });
-            
+                var authOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound;
+                UNUserNotificationCenter.Current.RequestAuthorization(authOptions, (granted, error) => {
+                    Console.WriteLine(granted);
+                });
+            }
+            else
+            {
+                // iOS 9 or before
+                var allNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound;
+                var settings = UIUserNotificationSettings.GetSettingsForTypes(allNotificationTypes, null);
+                UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
+            }
+
             UIApplication.SharedApplication.RegisterForRemoteNotifications();
 
             Messaging.SharedInstance.Delegate = this;
 
             InstanceId.SharedInstance.GetInstanceId(InstanceIdResultHandler);
- 
         }
 
         private void InstanceIdResultHandler(InstanceIdResult result, NSError error)
@@ -64,22 +78,26 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
         }
 
         [Export ("messaging:didReceiveRegistrationToken:")]
-        public void DidReceiveRegistrationToken(Messaging messaging, string fcmToken)
+        public async void DidReceiveRegistrationToken(Messaging messaging, string fcmToken)
         {
             // Monitor token generation: To be notified whenever the token is updated.
             _loggingService.Trace("MessagingService - DidReceiveRegistrationToken");
-
-            if (Mvx.IoCProvider.CanResolve<ISecureStorage>())
-            {
-                Mvx.IoCProvider.Resolve<ISecureStorage>().SetAsync(SecureStorageConstants.FcmToken, fcmToken);
-            }
+            
+            await _crossFirebaseMessagingService.SendRegistrationToServer(fcmToken);
         }
 
-        [Export ("messaging:didReceiveMessage:")]
-        public void DidReceiveMessage(Messaging messaging, RemoteMessage remoteMessage)
+        public async Task ReceivedMessage(NSDictionary nsDictionary)
         {
-            // TODO Handle message
-            _loggingService.Trace($"MessagingService - DidReceiveMessage => '{remoteMessage.AppData}'");
+            _loggingService.Trace($"MessagingService - ReceivedMessage => '{nsDictionary}'");
+
+            var dictionary = nsDictionary.ToDictionary(x => x.Key.ToString(), x => x.Value.ToString());
+
+            await _crossFirebaseMessagingService.ProcessMessageData(dictionary);
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

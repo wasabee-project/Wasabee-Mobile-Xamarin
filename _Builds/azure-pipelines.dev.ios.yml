@@ -1,0 +1,114 @@
+# Xamarin.iOS
+# Build a Xamarin.iOS project.
+# Add steps that install certificates, test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
+
+pool:
+  vmImage: 'macos-latest'
+
+variables:
+- group: VersionNumbersDev
+- name: buildConfiguration
+  value: 'Release'
+
+name: DEV-$(MajorVersion).$(MinorVersion).$(Rev:rr)
+
+steps:
+
+# Install signing cert and provisioning profile
+- task: InstallAppleCertificate@2
+  inputs:
+    certSecureFile: '$(P12File)'
+    certPwd: '$(P12Password)'
+    keychain: 'temp'
+    deleteCert: true
+- task: InstallAppleProvisioningProfile@1
+  inputs:
+    provisioningProfileLocation: 'secureFiles'
+    provProfileSecureFile: '$(ProvisioningProfile)'
+    removeProfile: true
+
+# Download and place MapsKey.cs file in Solution root folder, referenced in native project properties
+# This file contains GoogleMaps And AppCenter API Keys, plus Google OAuth client informations
+- task: DownloadSecureFile@1
+  name: ApiKeysFile 
+  inputs:
+    secureFile: 'ApiKeys.cs'
+- script: |
+    echo Copying ApiKeys.cs to project folder
+    cp $(ApiKeysFile.secureFilePath) $(Build.SourcesDirectory)
+    echo End of copy task
+
+# Download and place GoogleService-Info.plist file in iOS project folder
+- task: DownloadSecureFile@1
+  name: GoogleServiceInfoFile 
+  inputs:
+    secureFile: 'GoogleService-Info.plist'
+- script: |
+    echo Copying GoogleService-Info.plist to project folder
+    cp $(GoogleServiceInfoFile.secureFilePath) $(Build.SourcesDirectory)/Rocks.Wasabee.Mobile.iOS
+    echo End of copy task
+
+# To manually select a Xamarin SDK version on the Microsoft-hosted macOS agent,
+# configure this task with the *Mono* version that is associated with the
+# Xamarin SDK version that you need, and set the "enabled" property to true.
+# See https://go.microsoft.com/fwlink/?linkid=871629
+- script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_12_0
+  displayName: 'Select the Xamarin SDK version'
+  enabled: false
+
+# NuGet Tool install
+- task: NuGetToolInstaller@1
+
+# NuGet packages restore
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/Build.iOS.sln'
+
+# Bump iOS version
+- task: ios-bundle-version@1
+  inputs:
+    sourcePath: '$(build.SourcesDirectory)/Rocks.Wasabee.Mobile.iOS/Info.plist'
+    versionCodeOption: 'timestamp'
+    versionName: '$(Build.BuildNumber)'
+    printFile: true
+
+# Build Xamarin.iOS app
+- task: XamariniOS@2
+  inputs:
+    solutionFile: '**/Build.iOS.sln'
+    configuration: '$(buildConfiguration)'
+    buildForSimulator: false
+    packageApp: true
+    signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+    signingProvisioningProfileID: '$(APPLE_PROV_PROFILE_UUID)'
+
+# Copy .ipa to Artifacts
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(build.SourcesDirectory)'
+    Contents: '**/*.ipa'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    CleanTargetFolder: true
+    OverWrite: true
+    flattenFolders: true
+
+# Copy dSYM files to Artifacts
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(build.SourcesDirectory)'
+    Contents: |
+              **/*.dSYM
+              **/*.dSYM/**
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/dSYMs'
+    CleanTargetFolder: false
+    OverWrite: true
+    flattenFolders: false
+
+# Publish artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+

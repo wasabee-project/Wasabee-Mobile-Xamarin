@@ -106,7 +106,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
             };
             var scanPage = new ZXingScannerPage(options);
 
-            scanPage.OnScanResult += async result =>
+            scanPage.OnScanResult += result =>
             {
                 Device.BeginInvokeOnMainThread(async () => await Navigation.PopModalAsync(false));
 

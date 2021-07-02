@@ -222,6 +222,7 @@
     <Compile Include="AndroidSplashScreenActivity.cs" />
     <Compile Include="Infra\Firebase\FirebaseService.cs" />
     <Compile Include="Infra\Firebase\WasabeeFirebaseMessagingService.cs" />
+    <Compile Include="Infra\LocalNotification\LocalNotificationService.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
     <Compile Include="Services\Geolocation\LiveGeolocationService.cs" />
@@ -529,6 +530,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\warning.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

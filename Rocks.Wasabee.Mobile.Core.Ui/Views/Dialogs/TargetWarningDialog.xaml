@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseDialogPage x:TypeArguments="dialogs:TargetWarningDialogViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      xmlns:dialogs="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;assembly=Rocks.Wasabee.Mobile.Core"
+                      xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                      xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.TargetWarningDialog"
+                      x:DataType="dialogs:TargetWarningDialogViewModel">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+    </ContentPage.Resources>
+
+    <views:BaseDialogPage.Content>
+
+        <Frame BackgroundColor="{DynamicResource DialogsBackgroundColor}" CornerRadius="5" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" Margin="20">
+            <Grid RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackLayout Grid.Row="0" Orientation="Horizontal" BackgroundColor="{DynamicResource PrimaryOrange}" Padding="10" Margin="0" Spacing="15">
+                    <iconize:IconLabel Text="mdi-alert-octagram-outline" TextColor="White" FontSize="28" VerticalTextAlignment="Center"/>
+                    <Label Text="Important target received" TextColor="White" FontSize="Large" FontAttributes="Bold"/>
+                </StackLayout>
+
+                <Grid Grid.Row="1" Padding="10" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Grid.Row="0" Grid.Column="0" Text="Sent by : "/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Payload.Sender}"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Text="Portal : "/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding Payload.Name}"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Text="Goal : "/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding TargetGoal}"/>
+                </Grid>
+
+                <Grid Grid.Row="3" HorizontalOptions="CenterAndExpand" Margin="10,0,10,10" Padding="0" ColumnSpacing="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleCancelButton}" Text="Ignore" Command="{Binding IgnoreCommand}" HorizontalOptions="Start" WidthRequest="100"
+                            BorderColor="{DynamicResource PrimaryGray}" TextColor="{DynamicResource PrimaryGray}" />
+                    <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleValidateButton}" Text="Go to !" Command="{Binding OpenInNavigationAppCommand}" HorizontalOptions="End" WidthRequest="100" />
+                </Grid>
+            </Grid>
+
+        </Frame>
+
+    </views:BaseDialogPage.Content>
+</views:BaseDialogPage>

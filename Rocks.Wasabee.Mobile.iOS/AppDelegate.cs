@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using MvvmCross;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using UIKit;
-using UserNotifications;
 using Xamarin.Forms.GoogleMaps.iOS;
+using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 
 namespace Rocks.Wasabee.Mobile.iOS
 {
     [Register("AppDelegate")]
-    public partial class AppDelegate : MvxFormsApplicationDelegate<Setup, CoreApp, App>, IUNUserNotificationCenterDelegate
+    public partial class AppDelegate : MvxFormsApplicationDelegate<Setup, CoreApp, App>
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -36,7 +36,6 @@ namespace Rocks.Wasabee.Mobile.iOS
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.InitImageSourceHandler();
 
- 
             return base.FinishedLaunching(app, options);
         }
 
@@ -79,29 +78,24 @@ namespace Rocks.Wasabee.Mobile.iOS
             return base.OpenUrl(app, url, options);
         }
 
-		// You'll need this method if you set "FirebaseAppDelegateProxyEnabled": NO in GoogleService-Info.plist
-		//public override void RegisteredForRemoteNotifications (UIApplication application, NSData deviceToken)
-		//{
-		//	Messaging.SharedInstance.ApnsToken = deviceToken;
-		//}
+        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            // If you are receiving a notification message while your app is in the background,
+            // this callback will not be fired till the user taps on the notification launching the application.
+            // TODO: Handle data of notification
 
-		public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
-		{
-			// If you are receiving a notification message while your app is in the background,
-			// this callback will not be fired till the user taps on the notification launching the application.
-			// TODO: Handle data of notification
+            // With swizzling disabled you must let Messaging know about the message, for Analytics
+            //Messaging.SharedInstance.AppDidReceiveMessage (userInfo);
 
-			// With swizzling disabled you must let Messaging know about the message, for Analytics
-			//Messaging.SharedInstance.AppDidReceiveMessage (userInfo);
-            
             // TODO Handle message
 
-			// Print full message.
-			LogInformation (nameof (DidReceiveRemoteNotification), userInfo);
+            // Print full message.
+            LogInformation(nameof(DidReceiveRemoteNotification), userInfo);
+            MessagingService.Instance.ReceivedMessage(userInfo).ConfigureAwait(true);
 
-			completionHandler (UIBackgroundFetchResult.NewData);
-		}
+            completionHandler(UIBackgroundFetchResult.NewData);
+        }
 
-		void LogInformation(string methodName, object information) => Console.WriteLine ($"\nMethod name: {methodName}\nInformation: {information}");
+        void LogInformation(string methodName, object information) => Console.WriteLine($"\nMethod name: {methodName}\nInformation: {information}");
     }
 }
