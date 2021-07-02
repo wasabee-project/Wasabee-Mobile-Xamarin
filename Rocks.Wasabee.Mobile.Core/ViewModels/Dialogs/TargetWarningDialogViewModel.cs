@@ -43,9 +43,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         #region Properties
 
-        public TargetPayload? Payload { get; set; }
+        public TargetPayload? Payload { get; private set; }
 
-        public string TargetGoal { get; set; }
+        public string TargetGoal { get; set; } = string.Empty;
         
         #endregion
 

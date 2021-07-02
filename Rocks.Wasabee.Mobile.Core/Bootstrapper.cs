@@ -2,6 +2,7 @@ using MvvmCross;
 using MvvmCross.IoC;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
+using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Services;
@@ -69,6 +70,8 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IAuthentificationService, AuthentificationService>();
 
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IBackgroundDataUpdaterService, BackgroundDataUpdaterService>();
+
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ICrossFirebaseMessagingService, CrossFirebaseMessagingService>();
         }
     }
 }

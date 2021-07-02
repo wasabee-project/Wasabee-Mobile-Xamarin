@@ -28,5 +28,29 @@ namespace Rocks.Wasabee.Mobile.Core.Models
             return left.Name != right.Name &&
                    left.Server != right.Server;
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ServerItem) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Name.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int) Server;
+                hashCode = (hashCode * 397) ^ Image.GetHashCode();
+                return hashCode;
+            }
+        }
+        
+        private bool Equals(ServerItem other)
+        {
+            return Name == other.Name && Server == other.Server && Image == other.Image;
+        }
     }
 }
