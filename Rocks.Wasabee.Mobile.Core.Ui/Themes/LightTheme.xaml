@@ -21,6 +21,7 @@
     <Color x:Key="SecondaryTextColor">Gray</Color>
 
     <Color x:Key="SelectedTabColor">White</Color>
+    <Color x:Key="UnselectedTabColor">#333</Color>
 
     <!-- NavigationPage and TabbedPage -->
     <Style TargetType="NavigationPage">

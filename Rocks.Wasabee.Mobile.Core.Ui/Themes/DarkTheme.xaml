@@ -21,6 +21,7 @@
     <Color x:Key="SecondaryTextColor">#BABABA</Color>
 
     <Color x:Key="SelectedTabColor">#24752C</Color>
+    <Color x:Key="UnselectedTabColor">#BABABA</Color>
 
     <!-- NavigationPage and TabbedPage-->
     <Style TargetType="NavigationPage">
