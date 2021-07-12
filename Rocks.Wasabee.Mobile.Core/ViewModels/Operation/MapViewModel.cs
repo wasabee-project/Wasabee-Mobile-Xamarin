@@ -354,9 +354,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             finally
             {
                 UpdateMapRegion();
-
-                // Message data set to true to force move mapview
-                _messenger.Publish(new MessageFrom<MapViewModel>(this, true));
+                
+                _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
                 IsLoading = false;
             }
         }
@@ -843,7 +842,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Links.Remove(oldLink);
                 Links.Add(newLink);
 
-                _messenger.Publish(new MessageFrom<MapViewModel>(this));
+                _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
                 if (updateMessage.LinkData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
@@ -889,7 +888,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Markers.Remove(marker);
                 Markers.Add(pin);
 
-                _messenger.Publish(new MessageFrom<MapViewModel>(this));
+                _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
                 if (updateMessage.MarkerData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
