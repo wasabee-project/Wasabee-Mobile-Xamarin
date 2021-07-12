@@ -224,8 +224,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new LinkAssignmentData(Operation!.Id, link.ThrowOrderPos)
             {
                 Link = link,
-                AssignedAgent = link.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(link.AssignedTo).Result,
-                ShowAssignee = !link.AssignedTo.IsNullOrEmpty(),
+                AssignedAgent = string.IsNullOrEmpty(link.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(link.AssignedTo).Result,
+                ShowAssignee = !string.IsNullOrEmpty(link.AssignedTo),
                 FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.FromPortalId)),
                 ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.ToPortalId)),
                 Color = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color)
@@ -240,8 +240,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = marker.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
-                ShowAssignee = !marker.AssignedTo.IsNullOrEmpty(),
+                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                ShowAssignee = !string.IsNullOrEmpty(marker.AssignedTo),
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
