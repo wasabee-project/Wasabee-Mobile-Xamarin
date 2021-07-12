@@ -94,20 +94,26 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 RefreshZonesLayer();
         }
 
+        private bool _firstTime = true;
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
+            
             _token ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().SubscribeOnMainThread<MessageFrom<MapViewModel>>(msg =>
             {
                 RefreshMapView(msg.Data is true);
             });
 
-            AnimateDetailPanel();
-            AnimateAgentListPanel();
-            RefreshMapTheme();
+            if (_firstTime)
+            {
+                _firstTime = false;
 
-            RefreshMapView();
+                AnimateDetailPanel();
+                AnimateAgentListPanel();
+                RefreshMapTheme();
+
+                RefreshMapView();
+            }
         }
 
         protected override void OnDisappearing()
