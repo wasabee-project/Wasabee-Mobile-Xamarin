@@ -608,7 +608,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var coordinates = $"{SelectedWasabeePin.Pin.Position.Latitude},{SelectedWasabeePin.Pin.Position.Longitude}";
                 var location = new Location(SelectedWasabeePin.Pin.Position.Latitude, SelectedWasabeePin.Pin.Position.Longitude);
 
-                if (coordinates.IsNullOrEmpty() is false)
+                if (string.IsNullOrEmpty(coordinates) is false)
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
@@ -645,7 +645,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = marker.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }

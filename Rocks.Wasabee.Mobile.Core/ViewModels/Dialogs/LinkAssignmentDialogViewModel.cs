@@ -2,7 +2,6 @@ using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
-using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -135,7 +134,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                             "Incorrect value");
                 }
 
-                if (coordinates.IsNullOrEmpty() is false)
+                if (string.IsNullOrEmpty(coordinates) is false)
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
