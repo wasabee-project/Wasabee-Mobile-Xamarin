@@ -4,6 +4,7 @@ using MoreLinq;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -88,6 +89,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 nameof(MapType.Hybrid) => MapType.Hybrid,
                 _ => MapType.Street
             };
+
+            var rawMapLayersConfig = _preferences.Get(UserSettingsKeys.MapLayers, string.Empty);
+            var config = string.IsNullOrEmpty(rawMapLayersConfig) ? null : JsonConvert.DeserializeObject<MapLayersConfig>(rawMapLayersConfig);
+            if (config != null)
+            {
+                IsLayerLinksActivated = config.Links;
+                IsLayerMarkersActivated = config.Markers;
+                IsLayerAnchorsActivated = config.Anchors;
+                IsLayerAgentsActivated = config.Agents;
+                IsLayerZonesActivated = config.Zones;
+            }
 
             IsStylingAvailable = MapType == MapType.Street;
 
@@ -180,15 +192,65 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsStylingAvailable { get; set; } = true;
 
         public bool IsLayerChooserVisible { get; set; } = false;
-        public bool IsLayerLinksActivated { get; set; } = true;
-        public bool IsLayerMarkersActivated { get; set; } = true;
-        public bool IsLayerAnchorsActivated { get; set; } = true;
-        public bool IsLayerAgentsActivated { get; set; } = true;
-        public bool IsLayerZonesActivated { get; set; } = true;
 
         public bool IsMarkerDetailAvailable { get; set; }
 
         public bool IsAgentListVisible { get; set; }
+        
+        private bool _isLayerLinksActivated = true;
+        public bool IsLayerLinksActivated
+        {
+            get => _isLayerLinksActivated;
+            set
+            {
+                SetProperty(ref _isLayerLinksActivated, value);
+                UpdateMapLayersConfig();
+            }
+        }
+
+        private bool _isLayerMarkersActivated = true;
+        public bool IsLayerMarkersActivated
+        {
+            get => _isLayerMarkersActivated;
+            set
+            {
+                SetProperty(ref _isLayerMarkersActivated, value);
+                UpdateMapLayersConfig();
+            }
+        }
+
+        private bool _isLayerAnchorsActivated = true;
+        public bool IsLayerAnchorsActivated
+        {
+            get => _isLayerAnchorsActivated;
+            set
+            {
+                SetProperty(ref _isLayerAnchorsActivated, value);
+                UpdateMapLayersConfig();
+            }
+        }
+
+        private bool _isLayerAgentsActivated = true;
+        public bool IsLayerAgentsActivated
+        {
+            get => _isLayerAgentsActivated;
+            set
+            {
+                SetProperty(ref _isLayerAgentsActivated, value);
+                UpdateMapLayersConfig();
+            }
+        }
+
+        private bool _isLayerZonesActivated = true;
+        public bool IsLayerZonesActivated
+        {
+            get => _isLayerZonesActivated;
+            set
+            {
+                SetProperty(ref _isLayerZonesActivated, value);
+                UpdateMapLayersConfig();
+            }
+        }
 
         #endregion
 
@@ -918,6 +980,25 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         }
 
         #endregion
+
+        private readonly object _mapLayerConfigLock = new object();
+        private void UpdateMapLayersConfig()
+        {
+            lock (_mapLayerConfigLock)
+            {
+                var config = new MapLayersConfig()
+                {
+                    Links = IsLayerLinksActivated,
+                    Markers = IsLayerMarkersActivated,
+                    Anchors = IsLayerAnchorsActivated,
+                    Agents = IsLayerAgentsActivated,
+                    Zones = IsLayerZonesActivated
+                };
+
+                var raw = JsonConvert.SerializeObject(config);
+                _preferences.Set(UserSettingsKeys.MapLayers, raw);
+            }
+        }
     }
 
     public enum MapThemeEnum
@@ -961,5 +1042,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             Miles = 0,
             Kilometers = 1
         }
+    }
+
+    class MapLayersConfig
+    {
+        public bool Links { get; set; }
+        public bool Markers { get; set; }
+        public bool Anchors { get; set; }
+        public bool Agents { get; set; }
+        public bool Zones { get; set; }
     }
 }
