@@ -102,7 +102,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             _token = _messenger.Subscribe<SelectedOpChangedMessage>(async msg =>
             {
-                await LoadOperationCommand.ExecuteAsync();
+                await LoadOperationCommand.ExecuteAsync(true);
 
                 if (_preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false) is false)
                 {
@@ -113,13 +113,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                 await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
             });
-            _tokenReload ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync());
+            _tokenReload ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync(false));
             _tokenLiveLocation ??= _messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
             _tokenLinkUpdated ??= _messenger.Subscribe<LinkDataChangedMessage>(UpdateLink);
             _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(async msg => await UpdateMarker(msg));
             _tokenRefreshAllAgentsLocations ??= _messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
             
-            await LoadOperationCommand.ExecuteAsync();
+            await LoadOperationCommand.ExecuteAsync(false);
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
         }
 
@@ -226,8 +226,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 VisibleRegion = region;
         }
 
-        public IMvxAsyncCommand LoadOperationCommand => new MvxAsyncCommand(LoadOperationExecuted);
-        private async Task LoadOperationExecuted()
+        public IMvxAsyncCommand<bool> LoadOperationCommand => new MvxAsyncCommand<bool>(LoadOperationExecuted);
+        private async Task LoadOperationExecuted(bool forceResetMapView)
         {
             if (IsLoading) return;
             IsLoading = true;
@@ -354,9 +354,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             finally
             {
                 UpdateMapRegion();
-
-                // Message data set to true to force move mapview
-                _messenger.Publish(new MessageFrom<MapViewModel>(this, true));
+                
+                _messenger.Publish(new MessageFrom<MapViewModel>(this, forceResetMapView));
                 IsLoading = false;
             }
         }
@@ -608,7 +607,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var coordinates = $"{SelectedWasabeePin.Pin.Position.Latitude},{SelectedWasabeePin.Pin.Position.Longitude}";
                 var location = new Location(SelectedWasabeePin.Pin.Position.Latitude, SelectedWasabeePin.Pin.Position.Longitude);
 
-                if (coordinates.IsNullOrEmpty() is false)
+                if (string.IsNullOrEmpty(coordinates) is false)
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
@@ -645,7 +644,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = marker.AssignedTo.IsNullOrEmpty() ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
@@ -776,48 +775,48 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private void UpdateMapRegion()
         {
+            var hasValues = false;
+
             var lowestLat = 0.0d;
             var highestLat = 0.0d;
             var lowestLong = 0.0d;
             var highestLong = 0.0d;
-            var finalLat = 0.0d;
-            var finalLong = 0.0d;
-            var distance = 0.0d;
 
-            if (Markers.Any() && Anchors.Any())
-            {
-                lowestLat = Math.Min(Anchors.Min(p => p.Pin.Position.Latitude), Markers.Min(p => p.Pin.Position.Latitude));
-                highestLat = Math.Max(Anchors.Max(p => p.Pin.Position.Latitude), Markers.Max(p => p.Pin.Position.Latitude));
-                lowestLong = Math.Min(Anchors.Min(p => p.Pin.Position.Longitude), Markers.Min(p => p.Pin.Position.Longitude));
-                highestLong = Math.Max(Anchors.Max(p => p.Pin.Position.Longitude), Markers.Max(p => p.Pin.Position.Longitude));
-                finalLat = (lowestLat + highestLat) / 2;
-                finalLong = (lowestLong + highestLong) / 2;
-                distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
-                    highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-            }
-            else if (Markers.Any() && !Anchors.Any())
+            if (Markers.Any())
             {
                 lowestLat = Markers.Min(p => p.Pin.Position.Latitude);
                 highestLat = Markers.Max(p => p.Pin.Position.Latitude);
                 lowestLong = Markers.Min(p => p.Pin.Position.Longitude);
                 highestLong = Markers.Max(p => p.Pin.Position.Longitude);
-                finalLat = (lowestLat + highestLat) / 2;
-                finalLong = (lowestLong + highestLong) / 2;
-                distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
-                    highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
-            }
-            else if (!Markers.Any() && Anchors.Any())
-            {
-                lowestLat = Anchors.Min(p => p.Pin.Position.Latitude);
-                highestLat = Anchors.Max(p => p.Pin.Position.Latitude);
-                lowestLong = Anchors.Min(p => p.Pin.Position.Longitude);
-                highestLong = Anchors.Max(p => p.Pin.Position.Longitude);
-                finalLat = (lowestLat + highestLat) / 2;
-                finalLong = (lowestLong + highestLong) / 2;
-                distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
-                    highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
 
+                hasValues = true;
             }
+            if (Anchors.Any())
+            {
+                lowestLat = hasValues ? Math.Min(lowestLat, Anchors.Min(p => p.Pin.Position.Latitude)) : Anchors.Min(p => p.Pin.Position.Latitude);
+                highestLat = hasValues ? Math.Max(highestLat, Anchors.Max(p => p.Pin.Position.Latitude)) : Anchors.Max(p => p.Pin.Position.Latitude);
+                lowestLong = hasValues ? Math.Min(lowestLong, Anchors.Min(p => p.Pin.Position.Longitude)) : Anchors.Min(p => p.Pin.Position.Longitude);
+                highestLong = hasValues ? Math.Max(highestLong, Anchors.Max(p => p.Pin.Position.Longitude)) : Anchors.Max(p => p.Pin.Position.Longitude);
+
+                hasValues = true;
+            }
+            if (Zones.Any())
+            {
+                var zonesLowestLat = Zones.Select(x => x.Polygon.Positions.Min(y => y.Latitude)).Min();
+                var zonesHighestLat = Zones.Select(x => x.Polygon.Positions.Max(y => y.Latitude)).Max();
+                var zonesLowestLng = Zones.Select(x => x.Polygon.Positions.Min(y => y.Longitude)).Min();
+                var zonesHighestLng = Zones.Select(x => x.Polygon.Positions.Max(y => y.Longitude)).Max();
+
+                lowestLat = hasValues ? Math.Min(lowestLat, zonesLowestLat) : zonesLowestLat;
+                highestLat = hasValues ? Math.Max(highestLat, zonesHighestLat) : zonesHighestLat;
+                lowestLong = hasValues ? Math.Min(lowestLong, zonesLowestLng) : zonesLowestLng;
+                highestLong = hasValues ? Math.Max(highestLong, zonesHighestLng) : zonesHighestLng;
+            }
+            
+            var finalLat = (lowestLat + highestLat) / 2;
+            var finalLong = (lowestLong + highestLong) / 2;
+            var distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
+                highestLong, DistanceCalculation.GeoCodeCalcMeasurement.Kilometers);
 
             if (distance != 0.0d)
                 OperationMapRegion = MapSpan.FromCenterAndRadius(new Position(finalLat, finalLong), Distance.FromKilometers(distance));
@@ -843,7 +842,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Links.Remove(oldLink);
                 Links.Add(newLink);
 
-                _messenger.Publish(new MessageFrom<MapViewModel>(this));
+                _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
                 if (updateMessage.LinkData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
@@ -889,7 +888,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Markers.Remove(marker);
                 Markers.Add(pin);
 
-                _messenger.Publish(new MessageFrom<MapViewModel>(this));
+                _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
                 if (updateMessage.MarkerData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
