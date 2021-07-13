@@ -32,23 +32,23 @@
                          RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=12}"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=38}">
 
-                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
-                    <iconize:IconButton Text="mdi-texture" BackgroundColor="Transparent" TextColor="Gray"
+                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+                    <iconize:IconButton Text="mdi-texture" BackgroundColor="Transparent" TextColor="{DynamicResource SecondaryTextColor}"
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
                                         Clicked="TypeButton_OnClicked" />
                 </Frame>
-                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF" IsVisible="{Binding IsStylingAvailable}">
-                    <iconize:IconButton Text="mdi-brush" BackgroundColor="Transparent" TextColor="Gray"
+                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="{DynamicResource BackgroundColorLevel1}" IsVisible="{Binding IsStylingAvailable}">
+                    <iconize:IconButton Text="mdi-brush" BackgroundColor="Transparent" TextColor="{DynamicResource SecondaryTextColor}"
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
                                         Clicked="StyleButton_OnClicked" />
                 </Frame>
-                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
-                    <iconize:IconButton Text="mdi-layers" BackgroundColor="Transparent" TextColor="Gray"
+                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+                    <iconize:IconButton Text="mdi-layers" BackgroundColor="Transparent" TextColor="{DynamicResource SecondaryTextColor}"
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
                                         Clicked="LayerChooserButton_OnClicked" />
                 </Frame>
-                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="#BFFF">
-                    <iconize:IconButton Text="mdi-account" BackgroundColor="Transparent" TextColor="Gray"
+                <Frame Padding="0" Margin="0" HasShadow="True" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+                    <iconize:IconButton Text="mdi-account" BackgroundColor="Transparent" TextColor="{DynamicResource SecondaryTextColor}"
                                         Padding="0" FontSize="25" WidthRequest="38" HeightRequest="38"
                                         Clicked="AgentListButton_OnClicked">
                         <iconize:IconButton.Triggers>
@@ -66,7 +66,7 @@
                 </Frame>
             </StackLayout>
 
-            <pancake:PancakeView BackgroundColor="#FFF" CornerRadius="0, 5, 5, 5" Padding="10,5"
+            <pancake:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel1}" CornerRadius="0, 5, 5, 5" Padding="10,5"
                                  IsVisible="{Binding IsLayerChooserVisible}"
                                  RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=X, Factor=1, Constant=0}"
                                  RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=LeftToolbar, Property=Height, Factor=0.5, Constant=-7}">
@@ -84,19 +84,19 @@
                     </Grid.RowDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" Color="{Binding IsLayerLinksActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerLinksActivated}"/>
-                    <Label Grid.Row="0" Grid.Column="1" Text="Links" TextColor="Black" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="Links" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="1" Grid.Column="0" Color="{Binding IsLayerAnchorsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAnchorsActivated}"/>
-                    <Label Grid.Row="1" Grid.Column="1" Text="Anchors" TextColor="Black" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="Anchors" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="2" Grid.Column="0" Color="{Binding IsLayerMarkersActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerMarkersActivated}"/>
-                    <Label Grid.Row="2" Grid.Column="1" Text="Markers" TextColor="Black" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="Markers" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="3" Grid.Column="0" Color="{Binding IsLayerAgentsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAgentsActivated}"/>
-                    <Label Grid.Row="3" Grid.Column="1" Text="Agents" TextColor="Black" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="Agents" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="4" Grid.Column="0" Color="{Binding IsLayerZonesActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerZonesActivated}"/>
-                    <Label Grid.Row="4" Grid.Column="1" Text="Zones" TextColor="Black" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="4" Grid.Column="1" Text="Zones" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
                 </Grid>
             </pancake:PancakeView>
 
