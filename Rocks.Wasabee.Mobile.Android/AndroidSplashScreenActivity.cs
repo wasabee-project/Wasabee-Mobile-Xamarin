@@ -40,10 +40,15 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             var intent = new Intent(this, typeof(AndroidMainActivity));
             intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.NewTask);
-            
+
+#if DEBUG
+            StartActivity(intent);
+            Finish();
+#else
             IAppUpdateManager appUpdateManager = AppUpdateManagerFactory.Create(this);
             var appUpdateInfoTask = appUpdateManager.AppUpdateInfo;
             appUpdateInfoTask.AddOnSuccessListener(new AppUpdateSuccessListener(appUpdateManager, this, RequestUpdate, intent));
+#endif
         }
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
