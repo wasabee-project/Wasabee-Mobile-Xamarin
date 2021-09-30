@@ -62,10 +62,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 #else
             var httpHandler = new HttpClientHandler() { CookieContainer = new CookieContainer() };
             httpHandler.CookieContainer.Add(cookie);
-
-            httpHandler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 #endif
-
             var appVersion = Mvx.IoCProvider.Resolve<IVersionTracking>().CurrentVersion;
             var device = Mvx.IoCProvider.Resolve<IDeviceInfo>();
             var client = new HttpClient(httpHandler)

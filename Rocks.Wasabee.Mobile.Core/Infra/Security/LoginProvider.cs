@@ -117,7 +117,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
 #else
             var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            httpHandler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 #endif
 
             using var client = new HttpClient(httpHandler)
@@ -181,7 +180,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
                 cookieContainer.Add(new Uri(_appSettings.WasabeeBaseUrl), wasabeeCookie);
 
                 using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
-                handler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
                 using var client = new HttpClient(handler);
 
                 var url = $"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.Firebase}";
@@ -222,7 +220,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
 #else
             var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            httpHandler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 #endif
 
             using var client = new HttpClient(httpHandler)

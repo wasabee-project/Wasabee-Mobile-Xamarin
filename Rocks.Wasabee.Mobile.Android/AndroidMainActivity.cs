@@ -21,7 +21,6 @@ using Rocks.Wasabee.Mobile.Core.Ui.Themes;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
 using System.Linq;
-using System.Net;
 using Xamarin.Forms.GoogleMaps.Android;
 using Action = Rocks.Wasabee.Mobile.Core.Messages.Action;
 using Orientation = Rocks.Wasabee.Mobile.Core.Messages.Orientation;
@@ -86,8 +85,6 @@ namespace Rocks.Wasabee.Mobile.Droid
                 Window?.ClearFlags(WindowManagerFlags.KeepScreenOn);
             }
 #endif
-
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
         protected override void OnResume()
