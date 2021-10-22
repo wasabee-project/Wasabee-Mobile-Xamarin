@@ -52,6 +52,8 @@ namespace Rocks.Wasabee.Mobile.Droid
             
             UserDialogs.Init(() => CrossCurrentActivity.Current.Activity);
 
+            Mvx.IoCProvider.RegisterType<Core.Infra.HttpClientFactory.IFactory, Droid.Infra.HttpClientFactory.Factory>();
+
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();

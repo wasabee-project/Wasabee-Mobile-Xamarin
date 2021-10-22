@@ -54,6 +54,8 @@ namespace Rocks.Wasabee.Mobile.iOS
         protected override IMvxApplication CreateApp()
         {
             SetupAppSettings();
+            
+            Mvx.IoCProvider.RegisterType<Core.Infra.HttpClientFactory.IFactory, iOS.Infra.HttpClientFactory.Factory>();
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();

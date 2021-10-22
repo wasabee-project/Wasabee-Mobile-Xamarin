@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Infra\Firebase\FirebaseService.cs" />
     <Compile Include="Infra\Firebase\MessagingService.cs" />
+    <Compile Include="Infra\HttpClientFactory\Factory.cs" />
     <Compile Include="Infra\LocalNotification\LocalNotificationService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />

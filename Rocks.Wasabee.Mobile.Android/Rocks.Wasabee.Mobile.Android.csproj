@@ -38,7 +38,7 @@
     <BundleAssemblies>false</BundleAssemblies>
     <MandroidI18n />
     <LangVersion>8.0</LangVersion>
-    <AndroidHttpClientHandlerType>System.Net.Http.HttpClientHandler</AndroidHttpClientHandlerType>
+    <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <AndroidSupportedAbis />
     <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
@@ -222,6 +222,7 @@
     <Compile Include="AndroidSplashScreenActivity.cs" />
     <Compile Include="Infra\Firebase\FirebaseService.cs" />
     <Compile Include="Infra\Firebase\WasabeeFirebaseMessagingService.cs" />
+    <Compile Include="Infra\HttpClientFactory\Factory.cs" />
     <Compile Include="Infra\LocalNotification\LocalNotificationService.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
