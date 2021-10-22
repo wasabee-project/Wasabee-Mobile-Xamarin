@@ -774,6 +774,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             var wasabeeLink = new WasabeeLink(
                 new Polyline() 
                 {
+                    IsGeodesic = true,
                     StrokeColor = baseLinkColor,
                     StrokeWidth = linkModel.Completed ? 1 : 2,
                     Positions =
