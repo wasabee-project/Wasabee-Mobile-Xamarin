@@ -1,14 +1,14 @@
 using Foundation;
+using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
 using Rocks.Wasabee.Mobile.Core;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Ui;
+using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 using System;
 using System.Threading.Tasks;
-using MvvmCross;
-using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using UIKit;
 using Xamarin.Forms.GoogleMaps.iOS;
-using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 
 namespace Rocks.Wasabee.Mobile.iOS
 {
