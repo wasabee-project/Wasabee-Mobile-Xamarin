@@ -1,6 +1,8 @@
 ﻿using Acr.UserDialogs;
+using Microsoft.Extensions.Logging;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
+using MvvmCross.IoC;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rg.Plugins.Popup.Services;
@@ -51,8 +53,11 @@ namespace Rocks.Wasabee.Mobile.iOS
             }
         }
 
-        protected override IMvxApplication CreateApp()
+        protected override IMvxApplication CreateApp(IMvxIoCProvider iocProvider)
         {
+            // this force Xamarin.Forms to initialize
+            var app = this.FormsApplication;
+
             SetupAppSettings();
             
             Mvx.IoCProvider.RegisterType<Core.Infra.HttpClientFactory.IFactory, iOS.Infra.HttpClientFactory.Factory>();
@@ -116,6 +121,16 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.Resolve<IAppSettings>().ClientId = OAuthClient.Id;
             Mvx.IoCProvider.Resolve<IAppSettings>().BaseRedirectUrl = OAuthClient.Redirect;
             Mvx.IoCProvider.Resolve<IAppSettings>().AppCenterKey = AppCenterKeys.Value;
+        }
+        
+        protected override ILoggerProvider? CreateLogProvider()
+        {
+            return null;
+        }
+
+        protected override ILoggerFactory? CreateLogFactory()
+        {
+            return null;
         }
     }
 }

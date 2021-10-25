@@ -42,6 +42,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         {
             InitializeComponent();
 
+            NavigationPage.SetHasNavigationBar(this, false);
+
             Map.UiSettings.ScrollGesturesEnabled = true;
             Map.UiSettings.ZoomControlsEnabled = true;
             Map.UiSettings.ZoomGesturesEnabled = true;

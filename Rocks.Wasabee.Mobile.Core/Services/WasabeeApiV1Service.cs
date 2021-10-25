@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Models;
@@ -10,9 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
-//using Newtonsoft.Json;
-//using Newtonsoft.Json.Serialization;
 
 namespace Rocks.Wasabee.Mobile.Core.Services
 {
@@ -115,10 +114,10 @@ namespace Rocks.Wasabee.Mobile.Core.Services
     {
         private readonly IAppSettings _appSettings;
 
-        private Lazy<IWasabeeApiV1> _wasabeeApiClient => new Lazy<IWasabeeApiV1>(() => RestService.For<IWasabeeApiV1>(CreateHttpClient($"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.BaseRoute}")/*, GetNewtonsoftJsonRefitSettings()*/));
+        private Lazy<IWasabeeApiV1> _wasabeeApiClient => new Lazy<IWasabeeApiV1>(() => RestService.For<IWasabeeApiV1>(CreateHttpClient($"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.BaseRoute}"), GetNewtonsoftJsonRefitSettings()));
         private IWasabeeApiV1 WasabeeApiClient => _wasabeeApiClient.Value;
 
-        //private static RefitSettings GetNewtonsoftJsonRefitSettings() => new RefitSettings(new NewtonsoftJsonContentSerializer(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+        private static RefitSettings GetNewtonsoftJsonRefitSettings() => new RefitSettings(new NewtonsoftJsonContentSerializer(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
         
         public WasabeeApiV1Service(IAppSettings appSettings)
         {

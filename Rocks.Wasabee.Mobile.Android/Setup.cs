@@ -1,9 +1,11 @@
 ﻿using Acr.UserDialogs;
 using Android.Runtime;
+using Microsoft.Extensions.Logging;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.IoC;
 using MvvmCross.Platforms.Android;
+using MvvmCross.Platforms.Android.Presenters;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Plugin.CurrentActivity;
@@ -46,7 +48,7 @@ namespace Rocks.Wasabee.Mobile.Droid
             }
         }
 
-        protected override IMvxApplication CreateApp()
+        protected override IMvxApplication CreateApp(IMvxIoCProvider iocProvider)
         {
             SetupAppSettings();
             
@@ -84,5 +86,22 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             throw e.Exception;
         }
+        
+        protected override IMvxAndroidViewPresenter CreateViewPresenter()
+        {
+            return base.CreateViewPresenter();
+        }
+
+#nullable enable
+        protected override ILoggerProvider? CreateLogProvider()
+        {
+            return null;
+        }
+
+        protected override ILoggerFactory? CreateLogFactory()
+        {
+            return null;
+        }
+#nullable disable
     }
 }

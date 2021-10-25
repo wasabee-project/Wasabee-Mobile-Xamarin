@@ -12,7 +12,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-            MasterBehavior = MasterBehavior.Popover;
+            FlyoutLayoutBehavior = FlyoutLayoutBehavior.Popover;
         }
     }
 }
