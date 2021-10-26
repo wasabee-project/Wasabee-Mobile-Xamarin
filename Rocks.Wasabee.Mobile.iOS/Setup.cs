@@ -98,7 +98,7 @@ namespace Rocks.Wasabee.Mobile.iOS
                     if (_locationManager is null)
                         return;
 
-                    await _locationManager.StopLocationUpdates();
+                    _locationManager.StopLocationUpdates();
                 }
             });
         }
