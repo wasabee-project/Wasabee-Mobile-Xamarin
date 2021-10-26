@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Timers;
@@ -89,10 +89,22 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
                 if (Geolocator.IsListening)
                 {
                     await Geolocator.StopListeningAsync();
+                    LocMgr.StopUpdatingLocation();
                 }
 
                 if (Geolocator.IsGeolocationAvailable && Geolocator.IsGeolocationEnabled)
                 {
+                    if (CLLocationManager.LocationServicesEnabled)
+                    {
+                        LocMgr.DesiredAccuracy = 5;
+                        LocMgr.LocationsUpdated += (object sender, CLLocationsUpdatedEventArgs e) =>
+                        {
+                            var location = e.Locations[e.Locations.Length - 1];
+                            Geolocator_PositionChanged(this, new PositionEventArgs(new Position(location.Coordinate.Latitude, location.Coordinate.Longitude)));
+                        };
+                        LocMgr.StartUpdatingLocation();
+                    }
+
                     Geolocator.DesiredAccuracy = 5;
                     Geolocator.PositionChanged += Geolocator_PositionChanged;
 
@@ -191,6 +203,7 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             {
                 _forceSendTimer.Stop();
 
+                LocMgr.StopUpdatingLocation();
                 if (await Geolocator.StopListeningAsync())
                 {
                     Geolocator.PositionChanged -= Geolocator_PositionChanged;
