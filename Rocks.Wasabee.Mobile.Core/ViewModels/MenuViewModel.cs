@@ -180,28 +180,28 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoggingService.Trace($"Executing MenuViewModel.ToggleLiveLocationSharingCommand({value})");
 
-            var teams = await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId());
-            if (teams.Any(x => x.State.Equals("On")) is false)
-            {
-                var result = await _userDialogs.ConfirmAsync(
-                    "None of your teams has been set to share your location. Go to Teams list and enable at least one team.",
-                    string.Empty,
-                    "See Teams",
-                    "Cancel");
-
-                if (result)
-                {
-                    await _navigationService.Navigate<TeamsListViewModel>();
-
-                    // Message used to close menu UI
-                    _messenger.Publish(new MessageFrom<MenuViewModel>(this));
-                }
-
-                return;
-            }
-
             if (!_isLiveLocationSharingEnabled && value)
             {
+                var teams = await _usersDatabase.GetUserTeams(_userSettingsService.GetLoggedUserGoogleId());
+                if (teams.Any(x => x.State.Equals("On")) is false)
+                {
+                    var result = await _userDialogs.ConfirmAsync(
+                        "None of your teams has been set to share your location. Go to Teams list and enable at least one team.",
+                        string.Empty,
+                        "See Teams",
+                        "Cancel");
+
+                    if (result)
+                    {
+                        await _navigationService.Navigate<TeamsListViewModel>();
+
+                        // Message used to close menu UI
+                        _messenger.Publish(new MessageFrom<MenuViewModel>(this));
+                    }
+
+                    return;
+                }
+
                 if (_preferences.Get(UserSettingsKeys.NeverShowLiveLocationWarningAgain, false) is false)
                 {
                     LoggingService.Trace("MenuViewModel - Showing location warning dialog");
