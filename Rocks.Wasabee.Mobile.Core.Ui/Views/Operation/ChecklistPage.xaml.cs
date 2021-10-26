@@ -12,6 +12,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         public ChecklistPage()
         {
             InitializeComponent();
+
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         private void ElementsListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)

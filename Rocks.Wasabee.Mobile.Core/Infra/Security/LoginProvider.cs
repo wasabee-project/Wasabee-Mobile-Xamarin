@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Wasabee;
@@ -28,15 +29,17 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         private readonly ILoggingService _loggingService;
         private readonly IDeviceInfo _deviceInfo;
         private readonly IVersionTracking _versionTracking;
+        private readonly IFactory _httpClientFactory;
 
         public LoginProvider(IAppSettings appSettings, ISecureStorage secureStorage, ILoggingService loggingService,
-            IDeviceInfo deviceInfo, IVersionTracking versionTracking)
+            IDeviceInfo deviceInfo, IVersionTracking versionTracking, IFactory httpClientFactory)
         {
             _appSettings = appSettings;
             _secureStorage = secureStorage;
             _loggingService = loggingService;
             _deviceInfo = deviceInfo;
             _versionTracking = versionTracking;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -116,8 +119,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 #if DEBUG_NETWORK_LOGS
             var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
 #else
-            var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            httpHandler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
 #endif
 
             using var client = new HttpClient(httpHandler)
@@ -180,8 +182,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
                 var cookieContainer = new CookieContainer();
                 cookieContainer.Add(new Uri(_appSettings.WasabeeBaseUrl), wasabeeCookie);
 
-                using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
-                handler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+                using var handler = _httpClientFactory.CreateHandler(cookieContainer);
                 using var client = new HttpClient(handler);
 
                 var url = $"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.Firebase}";
@@ -221,8 +222,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 #if DEBUG_NETWORK_LOGS
             var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
 #else
-            var httpHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            httpHandler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
 #endif
 
             using var client = new HttpClient(httpHandler)

@@ -35,10 +35,10 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
 
         private void ToggleMenu()
         {
-            if (Parent is MasterDetailPage md)
+            if (Parent is FlyoutPage flyout)
             {
-                md.MasterBehavior = MasterBehavior.Popover;
-                md.IsPresented = !md.IsPresented;
+                flyout.FlyoutLayoutBehavior = FlyoutLayoutBehavior.Popover;
+                flyout.IsPresented = !flyout.IsPresented;
             }
         }
 

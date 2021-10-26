@@ -4,16 +4,22 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 pool:
-  vmImage: 'macos-latest'
+  vmImage: 'macOS-11'
 
 variables:
 - group: VersionNumbersDev
 - name: buildConfiguration
   value: 'Release'
+- name: msbuildproxy
+  value: $(Pipeline.Workspace)/s/_Builds/msbuildproxy.sh
 
 name: DEV-$(MajorVersion).$(MinorVersion).$(Rev:rr)
 
 steps:
+# Set msbuildproxy script executable
+- task: CmdLine@2
+  inputs:
+    script: 'chmod u+x $(msbuildproxy)'
 
 # Install signing cert and provisioning profile
 - task: InstallAppleCertificate@2
@@ -82,6 +88,7 @@ steps:
     packageApp: true
     signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
     signingProvisioningProfileID: '$(APPLE_PROV_PROFILE_UUID)'
+    mdtoolFile: '$(msbuildproxy)'
 
 # Copy .ipa to Artifacts
 - task: CopyFiles@2

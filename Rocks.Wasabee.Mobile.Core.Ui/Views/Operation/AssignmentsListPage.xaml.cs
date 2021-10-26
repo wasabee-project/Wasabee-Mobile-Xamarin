@@ -12,6 +12,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
         public AssignmentsListPage()
         {
             InitializeComponent();
+
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         private void AssignmentListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)

@@ -12,7 +12,8 @@ using AndroidBitmapDescriptor = Android.Gms.Maps.Model.BitmapDescriptor;
 using AndroidBitmapDescriptorFactory = Android.Gms.Maps.Model.BitmapDescriptorFactory;
 using Application = Android.App.Application;
 
-namespace Rocks.Wasabee.Mobile.Droid {
+namespace Rocks.Wasabee.Mobile.Droid
+{
     public sealed class WasabeeBitmapConfig : IBitmapDescriptorFactory
     {
         private static readonly Dictionary<int, AndroidBitmapDescriptor> BitmapCache = new Dictionary<int, AndroidBitmapDescriptor>();

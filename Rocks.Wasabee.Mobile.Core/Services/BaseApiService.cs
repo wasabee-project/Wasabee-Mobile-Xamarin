@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Polly;
 using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -60,12 +61,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
             var httpHandler = new HttpLoggingHandler(httpClientHandler);
 #else
-            var httpHandler = new HttpClientHandler() { CookieContainer = new CookieContainer() };
+            var httpHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(new CookieContainer());
             httpHandler.CookieContainer.Add(cookie);
-
-            httpHandler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 #endif
-
             var appVersion = Mvx.IoCProvider.Resolve<IVersionTracking>().CurrentVersion;
             var device = Mvx.IoCProvider.Resolve<IDeviceInfo>();
             var client = new HttpClient(httpHandler)
