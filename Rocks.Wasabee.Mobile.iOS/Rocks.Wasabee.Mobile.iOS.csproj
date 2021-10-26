@@ -267,7 +267,7 @@
       <Name>Rocks.Wasabee.Mobile.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Xamarin.Forms.GoogleMaps\Xamarin.Forms.GoogleMaps\Xamarin.Forms.GoogleMaps\Xamarin.Forms.GoogleMaps.csproj">
-      <Project>{A6451E04-A1B6-4A0F-BC7D-D278FBEF2AEF}</Project>
+      <Project>{5A107E28-CC1F-4652-8C7B-F53D7DDE228C}</Project>
       <Name>Xamarin.Forms.GoogleMaps</Name>
     </ProjectReference>
     <ProjectReference Include="..\Xamarin.Forms.GoogleMaps\Xamarin.Forms.GoogleMaps\Xamarin.Forms.GoogleMaps.iOS\Xamarin.Forms.GoogleMaps.iOS.csproj">

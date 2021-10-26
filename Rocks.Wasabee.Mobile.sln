@@ -21,11 +21,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{B004
 	ProjectSection(SolutionItems) = preProject
 		_Builds\AndroidManifestUpdater.ps1 = _Builds\AndroidManifestUpdater.ps1
 		azure-pipeline.prod.android.yml = azure-pipeline.prod.android.yml
+		_Builds\azure-pipeline.dev.android.yml = _Builds\azure-pipeline.dev.android.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iOS", "iOS", "{ED35CF01-3FF3-4083-902E-51000970DC3B}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.prod.ios.yml = azure-pipelines.prod.ios.yml
+		_Builds\azure-pipelines.dev.ios.yml = _Builds\azure-pipelines.dev.ios.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3_Libs", "3_Libs", "{050EA8F5-3C00-4CC9-947F-C76DC33E032F}"
