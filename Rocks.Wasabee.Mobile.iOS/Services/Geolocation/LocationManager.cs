@@ -86,27 +86,15 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
 
                 _isRunning = true;
 
-                if (Geolocator.IsListening)
-                {
-                    await Geolocator.StopListeningAsync();
-                    LocMgr.StopUpdatingLocation();
-                }
-
                 if (Geolocator.IsGeolocationAvailable && Geolocator.IsGeolocationEnabled)
                 {
                     if (CLLocationManager.LocationServicesEnabled)
                     {
                         LocMgr.DesiredAccuracy = 5;
-                        LocMgr.LocationsUpdated += (object sender, CLLocationsUpdatedEventArgs e) =>
-                        {
-                            var location = e.Locations[e.Locations.Length - 1];
-                            Geolocator_PositionChanged(this, new PositionEventArgs(new Position(location.Coordinate.Latitude, location.Coordinate.Longitude)));
-                        };
+                        LocMgr.LocationsUpdated += LocMgr_LocationsUpdated;
+
                         LocMgr.StartUpdatingLocation();
                     }
-
-                    Geolocator.DesiredAccuracy = 5;
-                    Geolocator.PositionChanged += Geolocator_PositionChanged;
 
                     _forceSendTimer.Elapsed += async (sender, args) =>
                     {
@@ -135,9 +123,6 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
                         }
                     };
 
-
-                    //every 5 second, 5 meters
-                    await Geolocator.StartListeningAsync(TimeSpan.FromSeconds(5), 5);
                     _forceSendTimer.Start();
                 }
                 else
@@ -167,16 +152,16 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             return true;
         }
 
-        private async void Geolocator_PositionChanged(object sender, PositionEventArgs e)
+        private async void LocMgr_LocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
         {
             if (!_isRunning)
                 return;
 
-            _loggingService.Trace("Executing LocationManager.Geolocator_PositionChanged");
-            
+            _loggingService.Trace("Executing LocationManager.LocMgr_LocationsUpdated");
+
             if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false) == false)
             {
-                await StopLocationUpdates();
+                StopLocationUpdates();
                 return;
             }
 
@@ -188,30 +173,28 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
 
                 _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, true);
 
-                var position = new Position(e.Position.Latitude, e.Position.Longitude);
+                var lastLocation = e.Locations[e.Locations.Length - 1];
+                var position = new Position(lastLocation.Coordinate.Latitude, lastLocation.Coordinate.Longitude);
                 await UpdateLocation(position);
             }
             catch (Exception ex)
             {
-                _loggingService.Error(ex, "Error Executing LocationManager.Geolocator_PositionChanged");
+                _loggingService.Error(ex, "Error Executing LocationManager.LocMgr_LocationsUpdated");
             }
         }
 
-        public async Task StopLocationUpdates()
+        public void StopLocationUpdates()
         {
             if (_isRunning)
             {
                 _forceSendTimer.Stop();
 
                 LocMgr.StopUpdatingLocation();
-                if (await Geolocator.StopListeningAsync())
-                {
-                    Geolocator.PositionChanged -= Geolocator_PositionChanged;
-                    _isRunning = false;
-                    
-                    _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
-                    _loggingService.Trace("Executing LocationManager.StopLocationUpdates");
-                }
+                LocMgr.LocationsUpdated -= LocMgr_LocationsUpdated;
+                _isRunning = false;
+
+                _preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
+                _loggingService.Trace("Executing LocationManager.StopLocationUpdates");
             }
         }
 
