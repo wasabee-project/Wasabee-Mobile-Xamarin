@@ -59,5 +59,50 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SignIn_Button_OneTimeToken {
+            get {
+                return ResourceManager.GetString("SignIn_Button_OneTimeToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SignIn_Button_WithGoogle {
+            get {
+                return ResourceManager.GetString("SignIn_Button_WithGoogle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SignIn_Label_EnterToken {
+            get {
+                return ResourceManager.GetString("SignIn_Label_EnterToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SignIn_Label_NoInternet {
+            get {
+                return ResourceManager.GetString("SignIn_Label_NoInternet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SignIn_Label_RememberServerChoice {
+            get {
+                return ResourceManager.GetString("SignIn_Label_RememberServerChoice", resourceCulture);
+            }
+        }
     }
 }
