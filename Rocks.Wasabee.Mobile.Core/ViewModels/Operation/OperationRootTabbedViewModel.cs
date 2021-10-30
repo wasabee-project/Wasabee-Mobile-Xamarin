@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -9,7 +10,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MvvmCross;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
@@ -62,8 +62,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             IsBusy = true;
             _userDialogs.ShowLoading();
-
-
+            
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
             if (string.IsNullOrWhiteSpace(selectedOpId))
                 return;
@@ -90,12 +89,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                 _userDialogs.HideLoading();
                 _userDialogs.Toast(hasUpdated ? "Operation data updated" : "You already have latest OP version");
-
-                if (hasUpdated)
-                {
-                    _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this));
-                }
-
+                
+                _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this));
                 _messenger.Publish(new RefreshAllAgentsLocationsMessage(this));
             }
         }
