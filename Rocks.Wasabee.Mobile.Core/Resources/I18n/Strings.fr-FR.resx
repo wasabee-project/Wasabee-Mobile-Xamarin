@@ -118,35 +118,35 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SignIn_Button_ChangeAccount" xml:space="preserve">
-    <value>Changer de compte</value>
+    <value></value>
     <comment>Text for change account button</comment>
   </data>
   <data name="SignIn_Button_ChangeServer" xml:space="preserve">
-    <value>Changer de serveur</value>
+    <value></value>
     <comment>Text for changing server button</comment>
   </data>
   <data name="SignIn_Button_OneTimeToken" xml:space="preserve">
-    <value>Utiliser One Time Token</value>
+    <value></value>
     <comment>Text for the "One time token" button</comment>
   </data>
   <data name="SignIn_Button_Retry" xml:space="preserve">
-    <value>Réessayer</value>
+    <value></value>
     <comment>Text for retry button</comment>
   </data>
   <data name="SignIn_Button_WithGoogle" xml:space="preserve">
-    <value>Se connecter avec Google</value>
+    <value></value>
     <comment>Text for the "Sign In with Google" button</comment>
   </data>
   <data name="SignIn_Label_EnterToken" xml:space="preserve">
-    <value>Saisir le token :</value>
+    <value></value>
     <comment>Text above one time token entry field</comment>
   </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
-    <value>Vous devez être connecté à Internet en wifi ou réseau mobile pour utiliser l'application</value>
+    <value></value>
     <comment>Error message when no internet connection</comment>
   </data>
   <data name="SignIn_Label_RememberServerChoice" xml:space="preserve">
-    <value>Retenir mon choix (connexion plus rapide)</value>
+    <value></value>
     <comment>Text for the quicklogin checkbox</comment>
   </data>
 </root>
