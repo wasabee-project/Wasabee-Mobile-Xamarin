@@ -61,7 +61,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change account.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Button_ChangeAccount {
             get {
@@ -70,7 +70,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change server.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Button_ChangeServer {
             get {
@@ -79,7 +79,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use One Time Token.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Button_OneTimeToken {
             get {
@@ -88,7 +88,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retry.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Button_Retry {
             get {
@@ -97,7 +97,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sign in with Google.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Button_WithGoogle {
             get {
@@ -106,7 +106,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the token :.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Label_EnterToken {
             get {
@@ -115,7 +115,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must be connected to Internet over Wi-Fi or cellular network to use this application.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Label_NoInternet {
             get {
@@ -124,7 +124,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remember my choice (quick login if enabled).
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string SignIn_Label_RememberServerChoice {
             get {
