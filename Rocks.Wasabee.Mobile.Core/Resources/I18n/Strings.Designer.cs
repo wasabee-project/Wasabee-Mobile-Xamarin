@@ -115,6 +115,114 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Google login failed !.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_GoogleError {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_GoogleError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal error.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_Internal {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_Internal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error loading Wasabee OPs data.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_LoadingOpsData {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_LoadingOpsData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wasabee login failed !.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_WasabeeFail {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_WasabeeFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application loading....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_AppLoading {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_AppLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contacting &apos;{0}&apos; Wasabee server....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_ContactingServer {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_ContactingServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google login success....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_GoogleSuccess {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_GoogleSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Harvesting beehive,\r\nPlease wait....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_LoadingData {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_LoadingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging in....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_LoggingIn {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_LoggingIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose your server :.
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_SelectServer {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_SelectServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose token&apos;s server :.
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_SelectServerToken {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_SelectServerToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome {0}.
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_WelcomeAgent {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_WelcomeAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must be connected to Internet over Wi-Fi or cellular network to use this application.
         /// </summary>
         internal static string SignIn_Label_NoInternet {
@@ -124,11 +232,47 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have any assigned team or operation, contact your Operator before using Wasabee Mobile !.
+        /// </summary>
+        internal static string SignIn_Label_NoTeamsOrOperation {
+            get {
+                return ResourceManager.GetString("SignIn_Label_NoTeamsOrOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remember my choice (quick login if enabled).
         /// </summary>
         internal static string SignIn_Label_RememberServerChoice {
             get {
                 return ResourceManager.GetString("SignIn_Label_RememberServerChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attention please !.
+        /// </summary>
+        internal static string SignIn_Label_Warning {
+            get {
+                return ResourceManager.GetString("SignIn_Label_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your OPs are loading in background.
+        /// </summary>
+        internal static string Toasts_LoadingOpsInBackground {
+            get {
+                return ResourceManager.GetString("Toasts_LoadingOpsInBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OPs loaded succesfully.
+        /// </summary>
+        internal static string Toasts_LoadingOpsSuccess {
+            get {
+                return ResourceManager.GetString("Toasts_LoadingOpsSuccess", resourceCulture);
             }
         }
     }

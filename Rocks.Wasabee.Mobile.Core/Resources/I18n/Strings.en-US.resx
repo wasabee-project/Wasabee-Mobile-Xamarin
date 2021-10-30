@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -141,12 +141,74 @@
     <value>Enter the token :</value>
     <comment>Text above one time token entry field</comment>
   </data>
+  <data name="SignIn_Label_ErrorMsg_GoogleError" xml:space="preserve">
+    <value>Google login failed !</value>
+    <comment>Logging in Google servers failed</comment>
+  </data>
+  <data name="SignIn_Label_ErrorMsg_Internal" xml:space="preserve">
+    <value>Internal error</value>
+  </data>
+  <data name="SignIn_Label_ErrorMsg_LoadingOpsData" xml:space="preserve">
+    <value>Error loading Wasabee OPs data</value>
+  </data>
+  <data name="SignIn_Label_ErrorMsg_WasabeeFail" xml:space="preserve">
+    <value>Wasabee login failed !</value>
+    <comment>Logging in Wasabee server failed</comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_AppLoading" xml:space="preserve">
+    <value>Application loading...</value>
+    <comment>Loading step </comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_ContactingServer" xml:space="preserve">
+    <value>Contacting '{0}' Wasabee server...</value>
+    <comment>Loading step</comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_GoogleSuccess" xml:space="preserve">
+    <value>Google login success...</value>
+    <comment>Loading step</comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_LoadingData" xml:space="preserve">
+    <value>Harvesting beehive,\r\nPlease wait...</value>
+    <comment>Final Loading step</comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_LoggingIn" xml:space="preserve">
+    <value>Logging in...</value>
+    <comment>Loading step</comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_SelectServer" xml:space="preserve">
+    <value>Choose your server :</value>
+    <comment>Loading step</comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_SelectServerToken" xml:space="preserve">
+    <value>Choose token's server :</value>
+    <comment>Loading step</comment>
+  </data>
+  <data name="SignIn_Label_LoadingStep_WelcomeAgent" xml:space="preserve">
+    <value>Welcome {0}</value>
+    <comment>Loading step</comment>
+  </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
     <value>You must be connected to Internet over Wi-Fi or cellular network to use this application</value>
     <comment>Error message when no internet connection</comment>
   </data>
+  <data name="SignIn_Label_NoTeamsOrOperation" xml:space="preserve">
+    <value>You don't have any assigned team or operation, contact your Operator before using Wasabee Mobile !</value>
+    <comment>Text for when user don't have any teams or ops and can't use app</comment>
+  </data>
   <data name="SignIn_Label_RememberServerChoice" xml:space="preserve">
     <value>Remember my choice (quick login if enabled)</value>
     <comment>Text for the quicklogin checkbox</comment>
+  </data>
+  <data name="SignIn_Label_Warning" xml:space="preserve">
+    <value>Attention please !</value>
+    <comment>Text for when user attention is required after login</comment>
+  </data>
+  <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
+    <value>Your OPs are loading in background</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toasts_LoadingOpsSuccess" xml:space="preserve">
+    <value>OPs loaded succesfully</value>
+    <comment>Toast message</comment>
   </data>
 </root>

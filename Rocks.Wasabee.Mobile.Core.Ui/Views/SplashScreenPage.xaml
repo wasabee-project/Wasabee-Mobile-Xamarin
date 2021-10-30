@@ -223,14 +223,15 @@
                     HorizontalTextAlignment="Center"
                     Margin="0, 20, 0, 0"
                     TextColor="{DynamicResource AccentColor}"
-                    FontSize="Medium">
-                    <!-- DO NOT touch Label.Text indentation !-->
-                    <Label.Text>
-Attention please !
+                    FontSize="Medium"
+                    Text="{xaml:Translate SignIn_Label_Warning}"/>
 
-You don't have any assigned team or operation, contact your Operator before using Wasabee Mobile !
-                    </Label.Text>
-                </Label>
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Margin="0, 20, 0, 0"
+                    TextColor="{DynamicResource AccentColor}"
+                    FontSize="Medium"
+                    Text="{xaml:Translate SignIn_Label_NoTeamsOrOperation}"/>
 
                 <Button Margin="0, 30, 0, 0" Text="{xaml:Translate SignIn_Button_ChangeAccount}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
                 <Button Text="{xaml:Translate SignIn_Button_ChangeServer}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
