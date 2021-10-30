@@ -23,8 +23,8 @@
             <googleMaps:Map x:Name="Map" MapType="{Binding MapType}"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=0}"
-                            SelectedPin="{Binding SelectedPin}"
                             MyLocationEnabled="{Binding IsLocationAvailable}"
+                            PinClicked="Map_OnPinClicked"
                             MapClicked="Map_OnMapClicked"/>
 
             <StackLayout x:Name="LeftToolbar" Orientation="Vertical" Spacing="10"
