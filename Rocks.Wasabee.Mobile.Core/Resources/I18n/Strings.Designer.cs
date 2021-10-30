@@ -61,6 +61,24 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Global_Cancel {
+            get {
+                return ResourceManager.GetString("Global_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗   Cancel.
+        /// </summary>
+        internal static string SignIn_Button_Cancel {
+            get {
+                return ResourceManager.GetString("SignIn_Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change account.
         /// </summary>
         internal static string SignIn_Button_ChangeAccount {
@@ -79,6 +97,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ✓   Next.
+        /// </summary>
+        internal static string SignIn_Button_Next {
+            get {
+                return ResourceManager.GetString("SignIn_Button_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use One Time Token.
         /// </summary>
         internal static string SignIn_Button_OneTimeToken {
@@ -93,6 +120,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string SignIn_Button_Retry {
             get {
                 return ResourceManager.GetString("SignIn_Button_Retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓   Validate.
+        /// </summary>
+        internal static string SignIn_Button_Validate {
+            get {
+                return ResourceManager.GetString("SignIn_Button_Validate", resourceCulture);
             }
         }
         
@@ -178,7 +214,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Harvesting beehive,\r\nPlease wait....
+        ///   Looks up a localized string similar to Harvesting beehive,.
         /// </summary>
         internal static string SignIn_Label_LoadingStep_LoadingData {
             get {
@@ -237,6 +273,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string SignIn_Label_NoTeamsOrOperation {
             get {
                 return ResourceManager.GetString("SignIn_Label_NoTeamsOrOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        internal static string SignIn_Label_PleaseWait {
+            get {
+                return ResourceManager.GetString("SignIn_Label_PleaseWait", resourceCulture);
             }
         }
         

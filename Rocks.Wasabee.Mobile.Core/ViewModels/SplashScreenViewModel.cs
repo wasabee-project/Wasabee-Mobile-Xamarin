@@ -607,7 +607,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task PullDataFromServer(UserModel userModel)
         {
-            LoadingStepLabel = Strings.SignIn_Label_LoadingStep_LoadingData;
+            LoadingStepLabel = Strings.SignIn_Label_LoadingStep_LoadingData + "\r\n" +
+                               Strings.SignIn_Label_PleaseWait;
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
