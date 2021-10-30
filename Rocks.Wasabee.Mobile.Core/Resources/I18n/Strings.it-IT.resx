@@ -118,35 +118,35 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SignIn_Button_ChangeAccount" xml:space="preserve">
-    <value></value>
+    <value>Change account</value>
     <comment>Text for change account button</comment>
   </data>
   <data name="SignIn_Button_ChangeServer" xml:space="preserve">
-    <value></value>
+    <value>Change server</value>
     <comment>Text for changing server button</comment>
   </data>
   <data name="SignIn_Button_OneTimeToken" xml:space="preserve">
-    <value></value>
+    <value>Use One Time Token</value>
     <comment>Text for the "One time token" button</comment>
   </data>
   <data name="SignIn_Button_Retry" xml:space="preserve">
-    <value></value>
+    <value>Retry</value>
     <comment>Text for retry button</comment>
   </data>
   <data name="SignIn_Button_WithGoogle" xml:space="preserve">
-    <value></value>
+    <value>Sign in with Google</value>
     <comment>Text for the "Sign In with Google" button</comment>
   </data>
   <data name="SignIn_Label_EnterToken" xml:space="preserve">
-    <value></value>
+    <value>Enter the token :</value>
     <comment>Text above one time token entry field</comment>
   </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
-    <value></value>
+    <value>You must be connected to Internet over Wi-Fi or cellular network to use this application</value>
     <comment>Error message when no internet connection</comment>
   </data>
   <data name="SignIn_Label_RememberServerChoice" xml:space="preserve">
-    <value></value>
+    <value>Remember my choice (quick login if enabled)</value>
     <comment>Text for the quicklogin checkbox</comment>
   </data>
 </root>
