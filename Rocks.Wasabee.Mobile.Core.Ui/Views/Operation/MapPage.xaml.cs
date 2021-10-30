@@ -306,6 +306,12 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
             ViewModel.CloseDetailPanelCommand.Execute();
             ViewModel.IsLayerChooserVisible = false;
             ViewModel.IsAgentListVisible = false;
+            ViewModel.SelectedPin = null;
+        }
+
+        private void Map_OnPinClicked(object sender, PinClickedEventArgs e)
+        {
+            ViewModel.SelectedPin = e.Pin;
         }
 
         private void StyleButton_OnClicked(object sender, EventArgs e)
@@ -384,6 +390,5 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Operation
                 ViewModel.MoveToAgentCommand.Execute(agent);
             }
         }
-
     }
 }
