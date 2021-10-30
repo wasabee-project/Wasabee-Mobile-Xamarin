@@ -6,6 +6,8 @@ Not affiliated with Niantic.
 
 > Tags : Wasabee, Ingress, Xamarin, Xamarin.Forms, Android, iOS, Mobile Application
 
+[![Crowdin](https://badges.crowdin.net/wasabee-mobile/localized.svg)](https://crowdin.com/project/wasabee-mobile)
+
 ---
 ## Build status
 | Build Server | Platform | Status |
