@@ -8,6 +8,7 @@
                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:models="clr-namespace:Rocks.Wasabee.Mobile.Core.Models;assembly=Rocks.Wasabee.Mobile.Core"
+                      xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                       mc:Ignorable="d"
                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.SplashScreenPage"
                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
@@ -83,7 +84,7 @@
                                BackgroundColor="White" HeightRequest="50" WidthRequest="50">
                             <Image Source="g_logo.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
-                        <Label Text="Sign in with Google" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
+                        <Label Text="{xaml:Translate SignIn_Button_WithGoogle}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
                                VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" TextColor="White" FontAttributes="Bold" />
 
                         <Grid.GestureRecognizers>
@@ -115,7 +116,7 @@
                                BackgroundColor="White" HeightRequest="50" WidthRequest="50">
                             <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
-                        <Label Text="Use One Time Token" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
+                        <Label Text="{xaml:Translate SignIn_Button_OneTimeToken}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
                                VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" TextColor="White" FontAttributes="Bold" />
 
                         <Grid.GestureRecognizers>
@@ -134,7 +135,7 @@
                 <Label
                     HorizontalTextAlignment="Center"
                     IsVisible="{Binding IsConnected, Converter={StaticResource BoolNegateConverter}}"
-                    Text="You must be connected to Internet over Wi-Fi or cellular network to use this application"
+                    Text="{xaml:Translate SignIn_Label_NoInternet}"
                     Margin="0, 20, 0, 0"
                     TextColor="{DynamicResource AccentColor}" />
             </StackLayout>
@@ -149,7 +150,7 @@
                     HorizontalTextAlignment="Center"
                     HorizontalOptions="FillAndExpand"
                     VerticalOptions="CenterAndExpand"
-                    Text="Enter the token :"
+                    Text="{xaml:Translate SignIn_Label_EnterToken}"
                     FontSize="Large"/>
 
                 <Entry Text="{Binding OneTimeToken}"/>
@@ -172,7 +173,7 @@
 
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                     <CheckBox Color="{DynamicResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
-                    <Label Text="Remember my choice (quick login if enabled)" VerticalOptions="CenterAndExpand" FontSize="Small">
+                    <Label Text="{xaml:Translate SignIn_Label_RememberServerChoice}" VerticalOptions="CenterAndExpand" FontSize="Small">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding RememberChoiceCommand}"/>
                         </Label.GestureRecognizers>
@@ -231,9 +232,9 @@ You don't have any assigned team or operation, contact your Operator before usin
                     </Label.Text>
                 </Label>
 
-                <Button Margin="0, 30, 0, 0" Text="Change account" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
-                <Button Text="Change server" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
-                <Button Text="Retry" Style="{DynamicResource WasabeeStyleValidateButton}" Command="{Binding RetryTeamLoadingCommand}" />
+                <Button Margin="0, 30, 0, 0" Text="{xaml:Translate SignIn_Button_ChangeAccount}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
+                <Button Text="{xaml:Translate SignIn_Button_ChangeServer}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
+                <Button Text="{xaml:Translate SignIn_Button_Retry}" Style="{DynamicResource WasabeeStyleValidateButton}" Command="{Binding RetryTeamLoadingCommand}" />
 
             </StackLayout>
 
