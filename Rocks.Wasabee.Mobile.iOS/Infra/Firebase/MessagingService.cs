@@ -19,7 +19,9 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
         private readonly ILoggingService _loggingService;
         private readonly ICrossFirebaseMessagingService _crossFirebaseMessagingService;
         private readonly ILocalNotificationService _localNotificationService;
-        
+
+        private bool _isInitialized = false;
+
         private static MessagingService _instance;
         public static MessagingService Instance => _instance ??= new MessagingService();
         
@@ -36,35 +38,50 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
 
         public void Initialize()
         {
-            // Use Firebase library to configure APIs
-            FirebaseApp.Configure();
-
-            // Register for remote notifications
-            UNUserNotificationCenter.Current.Delegate = this;
-            // Register your app for remote notifications.
-            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            if (_isInitialized)
+                return;
+            try
             {
-                // For iOS 10 display notification (sent via APNS)
+
+                // Use Firebase library to configure APIs
+                FirebaseApp.Configure();
+
+                // Register for remote notifications
                 UNUserNotificationCenter.Current.Delegate = this;
+                // Register your app for remote notifications.
+                if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+                {
+                    // For iOS 10 display notification (sent via APNS)
+                    UNUserNotificationCenter.Current.Delegate = this;
 
-                var authOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound;
-                UNUserNotificationCenter.Current.RequestAuthorization(authOptions, (granted, error) => {
-                    Console.WriteLine(granted);
-                });
+                    var authOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge |
+                                      UNAuthorizationOptions.Sound;
+                    UNUserNotificationCenter.Current.RequestAuthorization(authOptions,
+                        (granted, error) => { Console.WriteLine(granted); });
+                }
+                else
+                {
+                    // iOS 9 or before
+                    var allNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge |
+                                               UIUserNotificationType.Sound;
+                    var settings = UIUserNotificationSettings.GetSettingsForTypes(allNotificationTypes, null);
+                    UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
+                }
+
+                UIApplication.SharedApplication.RegisterForRemoteNotifications();
+
+                Messaging.SharedInstance.Delegate = this;
+
+                InstanceId.SharedInstance.GetInstanceId(InstanceIdResultHandler);
             }
-            else
+            catch (Exception e)
             {
-                // iOS 9 or before
-                var allNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound;
-                var settings = UIUserNotificationSettings.GetSettingsForTypes(allNotificationTypes, null);
-                UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
+                _loggingService.Error(e, "MessagingService - Initialize() failed");
             }
-
-            UIApplication.SharedApplication.RegisterForRemoteNotifications();
-
-            Messaging.SharedInstance.Delegate = this;
-
-            InstanceId.SharedInstance.GetInstanceId(InstanceIdResultHandler);
+            finally
+            {
+                _isInitialized = true;
+            }
         }
 
         private void InstanceIdResultHandler(InstanceIdResult result, NSError error)
