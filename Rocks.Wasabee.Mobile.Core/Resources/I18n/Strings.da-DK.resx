@@ -117,113 +117,378 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
+    <value>Available OP's :</value>
+    <comment>Title for the popup where user select an OP</comment>
+  </data>
+  <data name="Dialogs_Warning_LocationPermissionRequired" xml:space="preserve">
+    <value>Geolocation permission is required !</value>
+    <comment>Warning message for when geolocation permission is needed and not granted</comment>
+  </data>
+  <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
+    <value>To use the live location sharing, please set the permission to 'Allow all the time'.</value>
+    <comment>Message for changing location permissions</comment>
+  </data>
+  <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
+    <value>See Teams</value>
+    <comment>Button to access teams list</comment>
+  </data>
+  <data name="Dialog_Warning_NoOpsAvailable" xml:space="preserve">
+    <value>No OP's available</value>
+    <comment>Warning popup when user want to change selected OP but nothing else is available</comment>
+  </data>
+  <data name="Dialog_Warning_NoTeamSharingEnabled" xml:space="preserve">
+    <value>None of your teams has been set to share your location. Go to Teams list and enable at least one team.</value>
+    <comment>Warning popup when agent tries to enable location sharing but no team has been previously enabled for location sharing.</comment>
+  </data>
+  <data name="Dialog_Warning_PermissionsRequired" xml:space="preserve">
+    <value>Permissions required</value>
+    <comment>Title for warning popup when app needs permissions</comment>
+  </data>
+  <data name="Global_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="Global_Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annuller</value>
+  </data>
+  <data name="Global_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Global_ErrorOccuredPleaseRetry" xml:space="preserve">
+    <value>Error occured, please retry</value>
+  </data>
+  <data name="Global_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Global_NoInternet" xml:space="preserve">
+    <value>No Internet, please verify your network access</value>
+  </data>
+  <data name="Global_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Global_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Global_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Menu_Button_ChangeOp" xml:space="preserve">
+    <value>Change</value>
+    <comment>Text on the button to change selected OP</comment>
+  </data>
+  <data name="Menu_Button_Logout" xml:space="preserve">
+    <value>Log out</value>
+    <comment>Button for logging out</comment>
+  </data>
+  <data name="Menu_Button_RefreshOps" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>Button for pulling OPs from server when nothing is stored locally</comment>
+  </data>
+  <data name="Menu_Item_OperationMap" xml:space="preserve">
+    <value>Operation Map</value>
+    <comment>Menu button for the Operation map</comment>
+  </data>
+  <data name="Menu_Item_OperationsList" xml:space="preserve">
+    <value>My Operations</value>
+    <comment>Menu button for the Operations list</comment>
+  </data>
+  <data name="Menu_Item_Profile" xml:space="preserve">
+    <value>Profile</value>
+    <comment>Menu button for Profile</comment>
+  </data>
+  <data name="Menu_Item_Settings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Menu button for Settings</comment>
+  </data>
+  <data name="Menu_Item_Teams" xml:space="preserve">
+    <value>Teams</value>
+    <comment>Menu button for Teams list</comment>
+  </data>
+  <data name="Menu_Label_CurrentOp" xml:space="preserve">
+    <value>OP :</value>
+    <comment>Label next to current selected OP name</comment>
+  </data>
+  <data name="Menu_Label_CurrentServer" xml:space="preserve">
+    <value>Server :</value>
+    <comment>Label next to current logged in server</comment>
+  </data>
+  <data name="Menu_Label_ErrorLoadingOp" xml:space="preserve">
+    <value>ERROR loading OP</value>
+    <comment>Error when loading OP</comment>
+  </data>
+  <data name="Menu_Label_LocationSharing" xml:space="preserve">
+    <value>Location sharing :</value>
+    <comment>Text next to the switch that turns on location sharing</comment>
+  </data>
+  <data name="Menu_Label_NoLocalOpsStored" xml:space="preserve">
+    <value>You don't have any local OP's stored</value>
+    <comment>Warning message when no OPs are stored on phone</comment>
+  </data>
+  <data name="Profile_Label_DataOrigin" xml:space="preserve">
+    <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
+    <comment>Message indicating from where data came from</comment>
+  </data>
+  <data name="Profile_Label_Status" xml:space="preserve">
+    <value>Status :</value>
+    <comment>Label for current status</comment>
+  </data>
+  <data name="Profile_Label_VStatus" xml:space="preserve">
+    <value>V Status</value>
+    <comment>Label before status on V</comment>
+  </data>
+  <data name="Profile_Page_Title" xml:space="preserve">
+    <value>Profile</value>
+    <comment>Title for Profile page</comment>
+  </data>
+  <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
+    <value>Open app system settings</value>
+    <comment>Button for opening system settings for the app</comment>
+  </data>
+  <data name="Settings_Label_AnonymousAnalytics" xml:space="preserve">
+    <value>Enable Anonymous Analytics</value>
+  </data>
+  <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
+    <value>(this helps the developers improve Wasabee)</value>
+  </data>
+  <data name="Settings_Label_DarkMode" xml:space="preserve">
+    <value>Switch light/dark theme</value>
+  </data>
+  <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
+    <value>Refresh FCM token</value>
+  </data>
+  <data name="Settings_Label_SendLogs" xml:space="preserve">
+    <value>Send logs</value>
+  </data>
+  <data name="Settings_Label_SendLogsHint" xml:space="preserve">
+    <value>No personnal data are sent. You can include Wasabee data.</value>
+  </data>
+  <data name="Settings_Label_ShowAgentsFromAnyTeam" xml:space="preserve">
+    <value>Show Agents from any team on Map</value>
+  </data>
+  <data name="Settings_Label_ShowDebugToasts" xml:space="preserve">
+    <value>Show debug messages</value>
+  </data>
+  <data name="Settings_Label_WasabeeWebpage" xml:space="preserve">
+    <value>Wasabee Webpage</value>
+  </data>
+  <data name="Settings_Section_About" xml:space="preserve">
+    <value>About</value>
+    <comment>Title for about section</comment>
+  </data>
+  <data name="Settings_Section_Application" xml:space="preserve">
+    <value>Application</value>
+    <comment>Title for application section</comment>
+  </data>
+  <data name="Settings_Section_Miscellaneous" xml:space="preserve">
+    <value>Misc.</value>
+    <comment>Title for miscellaneous section</comment>
+  </data>
+  <data name="Settings_Section_Permissions" xml:space="preserve">
+    <value>Permissions</value>
+    <comment>Title for permissions section</comment>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Title for Settings page</comment>
+  </data>
+  <data name="Settings_Toast_FcmtokenUpdated" xml:space="preserve">
+    <value>Token updated</value>
+  </data>
+  <data name="Settings_Toast_LogsAutomaticallySent" xml:space="preserve">
+    <value>Data is beeing sent automatically</value>
+  </data>
+  <data name="Settings_Warning_NoLogs" xml:space="preserve">
+    <value>Can't find any log files</value>
+  </data>
+  <data name="Settings_Warning_SendFileOverTelegram" xml:space="preserve">
+    <value>Please send the file to @fisher01 on Telegram</value>
+  </data>
+  <data name="Settings_Warning_SendLogsWithDatabase" xml:space="preserve">
+    <value>Include local DB copy ? This will include ALL your teams and OPS related data, please take care !</value>
+  </data>
+  <data name="Settings_Warning_SendLogsWithDatabase_Title" xml:space="preserve">
+    <value>#OpSec Warning !</value>
+  </data>
+  <data name="Settings_Warning_SendLogs_NoDb" xml:space="preserve">
+    <value>Don't include !</value>
+  </data>
+  <data name="Settings_Warning_SendLogs_WithDb" xml:space="preserve">
+    <value>Ok, include it !</value>
+  </data>
+  <data name="Settings_Warning_StoragePermissionsNeeded" xml:space="preserve">
+    <value>Storage permissions are required !</value>
   </data>
   <data name="SignIn_Button_Cancel" xml:space="preserve">
-    <value>✗   Cancel</value>
+    <value>✗   Annuller</value>
   </data>
   <data name="SignIn_Button_ChangeAccount" xml:space="preserve">
-    <value>Change account</value>
+    <value>Skift konto</value>
     <comment>Text for change account button</comment>
   </data>
   <data name="SignIn_Button_ChangeServer" xml:space="preserve">
-    <value>Change server</value>
+    <value>Skift server</value>
     <comment>Text for changing server button</comment>
   </data>
   <data name="SignIn_Button_Next" xml:space="preserve">
-    <value>✓   Next</value>
+    <value>✓ Næste</value>
   </data>
   <data name="SignIn_Button_OneTimeToken" xml:space="preserve">
-    <value>Use One Time Token</value>
+    <value>Brug Én Gang Token</value>
     <comment>Text for the "One time token" button</comment>
   </data>
   <data name="SignIn_Button_Retry" xml:space="preserve">
-    <value>Retry</value>
+    <value>Prøv igen</value>
     <comment>Text for retry button</comment>
   </data>
   <data name="SignIn_Button_Validate" xml:space="preserve">
-    <value>✓   Validate</value>
+    <value>✓ Bekræft</value>
   </data>
   <data name="SignIn_Button_WithGoogle" xml:space="preserve">
-    <value>Sign in with Google</value>
+    <value>Log ind med Google</value>
     <comment>Text for the "Sign In with Google" button</comment>
   </data>
   <data name="SignIn_Label_EnterToken" xml:space="preserve">
-    <value>Enter the token :</value>
+    <value>Angiv token:</value>
     <comment>Text above one time token entry field</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_GoogleError" xml:space="preserve">
-    <value>Google login failed !</value>
+    <value>Google login mislykkedes!</value>
     <comment>Logging in Google servers failed</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_Internal" xml:space="preserve">
-    <value>Internal error</value>
+    <value>Intern fejl</value>
+    <comment>An error occured</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_LoadingOpsData" xml:space="preserve">
-    <value>Error loading Wasabee OPs data</value>
+    <value>Fejl under indlæsning af Wasabee OP data</value>
+    <comment>Error occured while processing OPs data</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_WasabeeFail" xml:space="preserve">
-    <value>Wasabee login failed !</value>
+    <value>Wasabee login mislykkedes!</value>
     <comment>Logging in Wasabee server failed</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_AppLoading" xml:space="preserve">
-    <value>Application loading...</value>
-    <comment>Loading step </comment>
+    <value>Applikation indlæser...</value>
+    <comment>Application is loading</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_ContactingServer" xml:space="preserve">
-    <value>Contacting '{0}' Wasabee server...</value>
-    <comment>Loading step</comment>
+    <value>Kontakter '{0}' Wasabee server...</value>
+    <comment>App is contacting Wasabee server. Parameter is server name</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_GoogleSuccess" xml:space="preserve">
-    <value>Google login success...</value>
-    <comment>Loading step</comment>
+    <value>Google login gennemført...</value>
+    <comment>Logging in with Google success</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoadingData" xml:space="preserve">
-    <value>Harvesting beehive,</value>
+    <value>Høster bikuben</value>
     <comment>Final Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoggingIn" xml:space="preserve">
-    <value>Logging in...</value>
-    <comment>Loading step</comment>
+    <value>Logger ind...</value>
+    <comment>App is logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServer" xml:space="preserve">
-    <value>Choose your server :</value>
-    <comment>Loading step</comment>
+    <value>Vælg din server :</value>
+    <comment>Server selection for logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServerToken" xml:space="preserve">
-    <value>Choose token's server :</value>
-    <comment>Loading step</comment>
+    <value>Vælg token's server:</value>
+    <comment>Server selection for the token</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_WelcomeAgent" xml:space="preserve">
-    <value>Welcome {0}</value>
-    <comment>Loading step</comment>
+    <value>Velkommen {0}</value>
+    <comment>Welcome message. Parameter is Agent name</comment>
   </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
-    <value>You must be connected to Internet over Wi-Fi or cellular network to use this application</value>
+    <value>Du skal være forbundet til internettet via Wi-Fi eller mobilnetværk for at bruge denne applikation</value>
     <comment>Error message when no internet connection</comment>
   </data>
   <data name="SignIn_Label_NoTeamsOrOperation" xml:space="preserve">
-    <value>You don't have any assigned team or operation, contact your Operator before using Wasabee Mobile !</value>
+    <value>Du er ikke tildelt nogle hold eller operationer, kontakt din operatør, før du bruger Wasabee Mobile !</value>
     <comment>Text for when user don't have any teams or ops and can't use app</comment>
   </data>
   <data name="SignIn_Label_PleaseWait" xml:space="preserve">
-    <value>Please wait...</value>
+    <value>Vent venligst...</value>
+    <comment>Wait message</comment>
   </data>
   <data name="SignIn_Label_RememberServerChoice" xml:space="preserve">
-    <value>Remember my choice (quick login if enabled)</value>
+    <value>Husk mit valg (hurtig login, hvis aktiveret)</value>
     <comment>Text for the quicklogin checkbox</comment>
   </data>
   <data name="SignIn_Label_Warning" xml:space="preserve">
-    <value>Attention please !</value>
+    <value>Bemærk venligst!</value>
     <comment>Text for when user attention is required after login</comment>
   </data>
+  <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
+    <value>Add Agent</value>
+    <comment>Button in toolbar for adding agent</comment>
+  </data>
+  <data name="TeamDetail_Button_RenameTeam" xml:space="preserve">
+    <value>Change name</value>
+    <comment>Button in toolbar for renaming team</comment>
+  </data>
+  <data name="TeamDetail_Prompt_AddAgentTitle" xml:space="preserve">
+    <value>Agent name</value>
+    <comment>Title for adding agent by name popup</comment>
+  </data>
+  <data name="TeamDetail_Warning_AgentAlreadyInTeam" xml:space="preserve">
+    <value>{0} is already in the team !</value>
+    <comment>Error when agent already is in team. Parameter is agent name</comment>
+  </data>
+  <data name="TeamDetail_Warning_AgentNotFound" xml:space="preserve">
+    <value>Agent not found</value>
+    <comment>Error when adding agent in team</comment>
+  </data>
+  <data name="TeamDetail_Warning_RemoveAgent" xml:space="preserve">
+    <value>Remove '{0}' from the team ?</value>
+    <comment>Warning before removing agent from team. Parameter is agent name</comment>
+  </data>
+  <data name="TeamsList_Label_ErrorLoadingTeams" xml:space="preserve">
+    <value>Error occured while loading your teams</value>
+    <comment>Error while loading teams list</comment>
+  </data>
+  <data name="TeamsList_Page_Title" xml:space="preserve">
+    <value>Teams</value>
+    <comment>Title for Teams list page</comment>
+  </data>
+  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
+    <value>Location sharing state changed for team {0}</value>
+    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
+  </data>
+  <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
+    <value>Successfully deleted team '{0}'</value>
+    <comment>Info message after team is deleted. Parameter is team name</comment>
+  </data>
+  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
+    <value>State can't be changed, please try again</value>
+    <comment>Error when location sharing state can't be changed</comment>
+  </data>
+  <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
+    <value>Danger zone</value>
+    <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
+  </data>
+  <data name="TeamsList_Warning_TeamDeleteLastWarning" xml:space="preserve">
+    <value>Please confirm one last time before deletion</value>
+    <comment>Last warning before deleting a team</comment>
+  </data>
+  <data name="TeamsList_Warning_TeamDeleteSecondWarning" xml:space="preserve">
+    <value>Are you REALLY sure ?</value>
+    <comment>Another warning before deleting team</comment>
+  </data>
+  <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
+    <value>You're going to delete the team '{0}'. Are you sure ?</value>
+    <comment>Warning message before deleting a team. Parameter is team name</comment>
+  </data>
+  <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
+    <value>Change team name</value>
+    <comment>Title for changing team name popup</comment>
+  </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
-    <value>Your OPs are loading in background</value>
+    <value>Dine OPs indlæses i baggrunden</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toasts_LoadingOpsSuccess" xml:space="preserve">
-    <value>OPs loaded succesfully</value>
+    <value>OP's indlæst succesfuldt</value>
     <comment>Toast message</comment>
   </data>
 </root>
