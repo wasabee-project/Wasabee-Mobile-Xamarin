@@ -148,8 +148,23 @@
   <data name="Global_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Global_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Global_ErrorOccuredPleaseRetry" xml:space="preserve">
+    <value>Error occured, please retry</value>
+  </data>
+  <data name="Global_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Global_NoInternet" xml:space="preserve">
+    <value>No Internet, please verify your network access</value>
+  </data>
   <data name="Global_Ok" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="Global_Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Change</value>
@@ -274,7 +289,7 @@
   </data>
   <data name="SignIn_Label_LoadingStep_ContactingServer" xml:space="preserve">
     <value>Contacting '{0}' Wasabee server...</value>
-    <comment>App is contacting Wasabee server</comment>
+    <comment>App is contacting Wasabee server. Parameter is server name</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_GoogleSuccess" xml:space="preserve">
     <value>Google login success...</value>
@@ -298,7 +313,7 @@
   </data>
   <data name="SignIn_Label_LoadingStep_WelcomeAgent" xml:space="preserve">
     <value>Welcome {0}</value>
-    <comment>Welcome message with Agent name</comment>
+    <comment>Welcome message. Parameter is Agent name</comment>
   </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
     <value>You must be connected to Internet over Wi-Fi or cellular network to use this application</value>
@@ -319,6 +334,46 @@
   <data name="SignIn_Label_Warning" xml:space="preserve">
     <value>Attention please !</value>
     <comment>Text for when user attention is required after login</comment>
+  </data>
+  <data name="TeamsList_Label_ErrorLoadingTeams" xml:space="preserve">
+    <value>Error occured while loading your teams</value>
+    <comment>Error while loading teams list</comment>
+  </data>
+  <data name="TeamsList_Page_Title" xml:space="preserve">
+    <value>Teams</value>
+    <comment>Title for Teams list page</comment>
+  </data>
+  <data name="TeamsList_Prompt_ChangeTeamNameTitle" xml:space="preserve">
+    <value>Change team name</value>
+    <comment>Title for changing team name popup</comment>
+  </data>
+  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
+    <value>Location sharing state changed for team {0}</value>
+    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
+  </data>
+  <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
+    <value>Successfully deleted team '{0}'</value>
+    <comment>Info message after team is deleted. Parameter is team name</comment>
+  </data>
+  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
+    <value>State can't be changed, please try again</value>
+    <comment>Error when location sharing state can't be changed</comment>
+  </data>
+  <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
+    <value>Danger zone</value>
+    <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
+  </data>
+  <data name="TeamsList_Warning_TeamDeleteLastWarning" xml:space="preserve">
+    <value>Please confirm one last time before deletion</value>
+    <comment>Last warning before deleting a team</comment>
+  </data>
+  <data name="TeamsList_Warning_TeamDeleteSecondWarning" xml:space="preserve">
+    <value>Are you REALLY sure ?</value>
+    <comment>Another warning before deleting team</comment>
+  </data>
+  <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
+    <value>You're going to delete the team '{0}'. Are you sure ?</value>
+    <comment>Warning message before deleting a team. Parameter is team name</comment>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Your OPs are loading in background</value>

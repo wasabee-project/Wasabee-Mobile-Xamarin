@@ -7,6 +7,7 @@ using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
@@ -87,7 +88,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
-                _userDialogs.Toast("No Internet, please verify your network access");
+                _userDialogs.Toast(Strings.Global_NoInternet);
                 return;
             }
 
@@ -129,7 +130,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             {
                 LoggingService.Error(e, "Error Executing TeamsListViewModel.RefreshCommand");
 
-                _userDialogs.Toast("Error occured while loading your teams");
+                _userDialogs.Toast(Strings.TeamsList_Label_ErrorLoadingTeams);
             }
             finally
             {
@@ -153,20 +154,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 if (result)
                 {
                     team.IsEnabled = !team.IsEnabled;
-                    _userDialogs.Toast($"Location sharing state changed for team {team.Name}", TimeSpan.FromSeconds(3));
+                    _userDialogs.Toast(string.Format(Strings.TeamsList_Toast_LocationSharingStateChanged, team.Name), TimeSpan.FromSeconds(3));
 
                     RefreshCommand.Execute();
                 }
                 else
                 {
-                    _userDialogs.Toast("State can't be changed, please try again", TimeSpan.FromSeconds(3));
+                    _userDialogs.Toast(Strings.TeamsList_Toast_Warning_CantChangeState, TimeSpan.FromSeconds(3));
                 }
             }
             catch (Exception e)
             {
                 LoggingService.Error(e, "Error Executing TeamsListViewModel.SwitchTeamStateCommand");
 
-                _userDialogs.Toast("Error occured, please retry", TimeSpan.FromSeconds(3));
+                _userDialogs.Toast(Strings.Global_ErrorOccuredPleaseRetry, TimeSpan.FromSeconds(3));
             }
             finally
             {
@@ -188,20 +189,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
             {
                 InputType = InputType.Name,
-                OkText = "Ok",
-                CancelText = "Cancel",
-                Title = "Change team name",
+                OkText = Strings.Global_Ok,
+                CancelText = Strings.Global_Cancel,
+                Title = Strings.TeamsList_Prompt_ChangeTeamNameTitle,
             });
 
             if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
             {
                 var result = await _wasabeeApiV1Service.Teams_RenameTeam(team.Id, promptResult.Text);
                 if (result)
-                {
                     RefreshCommand.Execute();
-                }
                 else
-                    _userDialogs.Toast("Rename failed");
+                    _userDialogs.Toast(Strings.Global_ErrorOccuredPleaseRetry);
             }
 
         }
@@ -219,14 +218,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             if (team.IsOwner is false)
                 return;
 
-            if (await _userDialogs.ConfirmAsync($"You're going to delete the team '{team.Name}'. Are you sure ?", "Danger zone", "Yes", "Cancel"))
+            if (await _userDialogs.ConfirmAsync(
+                string.Format(Strings.TeamsList_Warning_TeamWillDelete, team.Name),
+                Strings.TeamsList_Warning_DeleteTeamTitle,
+                Strings.Global_Yes,
+                Strings.Global_Cancel))
             {
-                if (await _userDialogs.ConfirmAsync("Are you REALLY sure ?", string.Empty, "Yes!", "Cancel"))
+                if (await _userDialogs.ConfirmAsync(Strings.TeamsList_Warning_TeamDeleteSecondWarning, string.Empty, Strings.Global_Yes, Strings.Global_Cancel))
                 {
-                    if (await _userDialogs.ConfirmAsync("Please confirm one last time before deletion", string.Empty, "Delete", "Cancel"))
+                    if (await _userDialogs.ConfirmAsync(Strings.TeamsList_Warning_TeamDeleteLastWarning, string.Empty, Strings.Global_Delete, Strings.Global_Cancel))
                     {
                         var result = await _wasabeeApiV1Service.Teams_DeleteTeam(team.Id);
-                        _userDialogs.Toast(result ? $"Successfully deleted team '{team.Id}'" : "An error occured, team not deleted");
+                        _userDialogs.Toast(result ? string.Format(Strings.TeamsList_Toast_TeamDeleted, team.Name) : Strings.Global_ErrorOccuredPleaseRetry);
 
                         if (result)
                         {

@@ -133,11 +133,56 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Global_Delete {
+            get {
+                return ResourceManager.GetString("Global_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error occured, please retry.
+        /// </summary>
+        internal static string Global_ErrorOccuredPleaseRetry {
+            get {
+                return ResourceManager.GetString("Global_ErrorOccuredPleaseRetry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string Global_No {
+            get {
+                return ResourceManager.GetString("Global_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Internet, please verify your network access.
+        /// </summary>
+        internal static string Global_NoInternet {
+            get {
+                return ResourceManager.GetString("Global_NoInternet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         internal static string Global_Ok {
             get {
                 return ResourceManager.GetString("Global_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string Global_Yes {
+            get {
+                return ResourceManager.GetString("Global_Yes", resourceCulture);
             }
         }
         
@@ -525,6 +570,96 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string SignIn_Label_Warning {
             get {
                 return ResourceManager.GetString("SignIn_Label_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error occured while loading your teams.
+        /// </summary>
+        internal static string TeamsList_Label_ErrorLoadingTeams {
+            get {
+                return ResourceManager.GetString("TeamsList_Label_ErrorLoadingTeams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teams.
+        /// </summary>
+        internal static string TeamsList_Page_Title {
+            get {
+                return ResourceManager.GetString("TeamsList_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change team name.
+        /// </summary>
+        internal static string TeamsList_Prompt_ChangeTeamNameTitle {
+            get {
+                return ResourceManager.GetString("TeamsList_Prompt_ChangeTeamNameTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location sharing state changed for team {0}.
+        /// </summary>
+        internal static string TeamsList_Toast_LocationSharingStateChanged {
+            get {
+                return ResourceManager.GetString("TeamsList_Toast_LocationSharingStateChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully deleted team &apos;{0}&apos;.
+        /// </summary>
+        internal static string TeamsList_Toast_TeamDeleted {
+            get {
+                return ResourceManager.GetString("TeamsList_Toast_TeamDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State can&apos;t be changed, please try again.
+        /// </summary>
+        internal static string TeamsList_Toast_Warning_CantChangeState {
+            get {
+                return ResourceManager.GetString("TeamsList_Toast_Warning_CantChangeState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Danger zone.
+        /// </summary>
+        internal static string TeamsList_Warning_DeleteTeamTitle {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_DeleteTeamTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please confirm one last time before deletion.
+        /// </summary>
+        internal static string TeamsList_Warning_TeamDeleteLastWarning {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_TeamDeleteLastWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you REALLY sure ?.
+        /// </summary>
+        internal static string TeamsList_Warning_TeamDeleteSecondWarning {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_TeamDeleteSecondWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re going to delete the team &apos;{0}&apos;. Are you sure ?.
+        /// </summary>
+        internal static string TeamsList_Warning_TeamWillDelete {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_TeamWillDelete", resourceCulture);
             }
         }
         
