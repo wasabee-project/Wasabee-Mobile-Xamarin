@@ -166,6 +166,9 @@
   <data name="Global_Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="Global_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
   <data name="Global_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
@@ -236,6 +239,84 @@
   <data name="Profile_Page_Title" xml:space="preserve">
     <value>Profile</value>
     <comment>Title for Profile page</comment>
+  </data>
+  <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
+    <value>Open app system settings</value>
+    <comment>Button for opening system settings for the app</comment>
+  </data>
+  <data name="Settings_Label_AnonymousAnalytics" xml:space="preserve">
+    <value>Enable Anonymous Analytics</value>
+  </data>
+  <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
+    <value>(this helps the developers improve Wasabee)</value>
+  </data>
+  <data name="Settings_Label_DarkMode" xml:space="preserve">
+    <value>Switch light/dark theme</value>
+  </data>
+  <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
+    <value>Refresh FCM token</value>
+  </data>
+  <data name="Settings_Label_SendLogs" xml:space="preserve">
+    <value>Send logs</value>
+  </data>
+  <data name="Settings_Label_SendLogsHint" xml:space="preserve">
+    <value>No personnal data are sent. You can include Wasabee data.</value>
+  </data>
+  <data name="Settings_Label_ShowAgentsFromAnyTeam" xml:space="preserve">
+    <value>Show Agents from any team on Map</value>
+  </data>
+  <data name="Settings_Label_ShowDebugToasts" xml:space="preserve">
+    <value>Show debug messages</value>
+  </data>
+  <data name="Settings_Label_WasabeeWebpage" xml:space="preserve">
+    <value>Wasabee Webpage</value>
+  </data>
+  <data name="Settings_Section_About" xml:space="preserve">
+    <value>About</value>
+    <comment>Title for about section</comment>
+  </data>
+  <data name="Settings_Section_Application" xml:space="preserve">
+    <value>Application</value>
+    <comment>Title for application section</comment>
+  </data>
+  <data name="Settings_Section_Miscellaneous" xml:space="preserve">
+    <value>Misc.</value>
+    <comment>Title for miscellaneous section</comment>
+  </data>
+  <data name="Settings_Section_Permissions" xml:space="preserve">
+    <value>Permissions</value>
+    <comment>Title for permissions section</comment>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Title for Settings page</comment>
+  </data>
+  <data name="Settings_Toast_FcmtokenUpdated" xml:space="preserve">
+    <value>Token updated</value>
+  </data>
+  <data name="Settings_Toast_LogsAutomaticallySent" xml:space="preserve">
+    <value>Data is beeing sent automatically</value>
+  </data>
+  <data name="Settings_Warning_NoLogs" xml:space="preserve">
+    <value>Can't find any log files</value>
+  </data>
+  <data name="Settings_Warning_SendFileOverTelegram" xml:space="preserve">
+    <value>Please send the file to @fisher01 on Telegram</value>
+  </data>
+  <data name="Settings_Warning_SendLogsWithDatabase" xml:space="preserve">
+    <value>Include local DB copy ? This will include ALL your teams and OPS related data, please take care !</value>
+  </data>
+  <data name="Settings_Warning_SendLogsWithDatabase_Title" xml:space="preserve">
+    <value>#OpSec Warning !</value>
+  </data>
+  <data name="Settings_Warning_SendLogs_NoDb" xml:space="preserve">
+    <value>Don't include !</value>
+  </data>
+  <data name="Settings_Warning_SendLogs_WithDb" xml:space="preserve">
+    <value>Ok, include it !</value>
+  </data>
+  <data name="Settings_Warning_StoragePermissionsNeeded" xml:space="preserve">
+    <value>Storage permissions are required !</value>
   </data>
   <data name="SignIn_Button_Cancel" xml:space="preserve">
     <value>✗   Cancel</value>

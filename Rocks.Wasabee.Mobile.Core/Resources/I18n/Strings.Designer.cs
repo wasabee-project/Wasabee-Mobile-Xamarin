@@ -187,6 +187,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string Global_Version {
+            get {
+                return ResourceManager.GetString("Global_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         internal static string Global_Yes {
@@ -345,6 +354,222 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string Profile_Page_Title {
             get {
                 return ResourceManager.GetString("Profile_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open app system settings.
+        /// </summary>
+        internal static string Settings_Button_OpenSystemSettings {
+            get {
+                return ResourceManager.GetString("Settings_Button_OpenSystemSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Anonymous Analytics.
+        /// </summary>
+        internal static string Settings_Label_AnonymousAnalytics {
+            get {
+                return ResourceManager.GetString("Settings_Label_AnonymousAnalytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (this helps the developers improve Wasabee).
+        /// </summary>
+        internal static string Settings_Label_AnonymousAnalyticsHint {
+            get {
+                return ResourceManager.GetString("Settings_Label_AnonymousAnalyticsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch light/dark theme.
+        /// </summary>
+        internal static string Settings_Label_DarkMode {
+            get {
+                return ResourceManager.GetString("Settings_Label_DarkMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh FCM token.
+        /// </summary>
+        internal static string Settings_Label_RefreshFcmToken {
+            get {
+                return ResourceManager.GetString("Settings_Label_RefreshFcmToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send logs.
+        /// </summary>
+        internal static string Settings_Label_SendLogs {
+            get {
+                return ResourceManager.GetString("Settings_Label_SendLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No personnal data are sent. You can include Wasabee data..
+        /// </summary>
+        internal static string Settings_Label_SendLogsHint {
+            get {
+                return ResourceManager.GetString("Settings_Label_SendLogsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Agents from any team on Map.
+        /// </summary>
+        internal static string Settings_Label_ShowAgentsFromAnyTeam {
+            get {
+                return ResourceManager.GetString("Settings_Label_ShowAgentsFromAnyTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show debug messages.
+        /// </summary>
+        internal static string Settings_Label_ShowDebugToasts {
+            get {
+                return ResourceManager.GetString("Settings_Label_ShowDebugToasts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wasabee Webpage.
+        /// </summary>
+        internal static string Settings_Label_WasabeeWebpage {
+            get {
+                return ResourceManager.GetString("Settings_Label_WasabeeWebpage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string Settings_Section_About {
+            get {
+                return ResourceManager.GetString("Settings_Section_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application.
+        /// </summary>
+        internal static string Settings_Section_Application {
+            get {
+                return ResourceManager.GetString("Settings_Section_Application", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Misc..
+        /// </summary>
+        internal static string Settings_Section_Miscellaneous {
+            get {
+                return ResourceManager.GetString("Settings_Section_Miscellaneous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permissions.
+        /// </summary>
+        internal static string Settings_Section_Permissions {
+            get {
+                return ResourceManager.GetString("Settings_Section_Permissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string Settings_Title {
+            get {
+                return ResourceManager.GetString("Settings_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token updated.
+        /// </summary>
+        internal static string Settings_Toast_FcmtokenUpdated {
+            get {
+                return ResourceManager.GetString("Settings_Toast_FcmtokenUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data is beeing sent automatically.
+        /// </summary>
+        internal static string Settings_Toast_LogsAutomaticallySent {
+            get {
+                return ResourceManager.GetString("Settings_Toast_LogsAutomaticallySent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t find any log files.
+        /// </summary>
+        internal static string Settings_Warning_NoLogs {
+            get {
+                return ResourceManager.GetString("Settings_Warning_NoLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please send the file to @fisher01 on Telegram.
+        /// </summary>
+        internal static string Settings_Warning_SendFileOverTelegram {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendFileOverTelegram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t include !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogs_NoDb {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogs_NoDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok, include it !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogs_WithDb {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogs_WithDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include local DB copy ? This will include ALL your teams and OPS related data, please take care !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogsWithDatabase {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogsWithDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #OpSec Warning !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogsWithDatabase_Title {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogsWithDatabase_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storage permissions are required !.
+        /// </summary>
+        internal static string Settings_Warning_StoragePermissionsNeeded {
+            get {
+                return ResourceManager.GetString("Settings_Warning_StoragePermissionsNeeded", resourceCulture);
             }
         }
         
