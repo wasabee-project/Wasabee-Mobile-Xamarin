@@ -259,6 +259,42 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct..
+        /// </summary>
+        internal static string Profile_Label_DataOrigin {
+            get {
+                return ResourceManager.GetString("Profile_Label_DataOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status :.
+        /// </summary>
+        internal static string Profile_Label_Status {
+            get {
+                return ResourceManager.GetString("Profile_Label_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to V Status.
+        /// </summary>
+        internal static string Profile_Label_VStatus {
+            get {
+                return ResourceManager.GetString("Profile_Label_VStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        internal static string Profile_Page_Title {
+            get {
+                return ResourceManager.GetString("Profile_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ✗   Cancel.
         /// </summary>
         internal static string SignIn_Button_Cancel {

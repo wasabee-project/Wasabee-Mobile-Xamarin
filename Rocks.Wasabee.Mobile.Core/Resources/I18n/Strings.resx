@@ -203,6 +203,22 @@
     <value>You don't have any local OP's stored</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
+  <data name="Profile_Label_DataOrigin" xml:space="preserve">
+    <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
+    <comment>Message indicating from where data came from</comment>
+  </data>
+  <data name="Profile_Label_Status" xml:space="preserve">
+    <value>Status :</value>
+    <comment>Label for current status</comment>
+  </data>
+  <data name="Profile_Label_VStatus" xml:space="preserve">
+    <value>V Status</value>
+    <comment>Label before status on V</comment>
+  </data>
+  <data name="Profile_Page_Title" xml:space="preserve">
+    <value>Profile</value>
+    <comment>Title for Profile page</comment>
+  </data>
   <data name="SignIn_Button_Cancel" xml:space="preserve">
     <value>✗   Cancel</value>
   </data>
