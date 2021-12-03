@@ -18,14 +18,24 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers.Xaml
         {
             if (string.IsNullOrWhiteSpace(Text))
                 return string.Empty;
+            
+            return GetValueInternal(Text);
+        }
 
+        public static string GetValue(string key)
+        {
+            return GetValueInternal(key);
+        }
+
+        private static string GetValueInternal(string key)
+        {
             ResourceManager resourceManager = new ResourceManager(ResourceId, typeof(TranslateExtension).GetTypeInfo().Assembly);
 
-            var result = resourceManager.GetString(Text, CultureInfo.CurrentCulture);
+            var result = resourceManager.GetString(key, CultureInfo.CurrentCulture);
             
             if (string.IsNullOrWhiteSpace(result))
-                result = $"[{Text}] not found";
-            
+                result = $"[{key}] not found";
+
             return result;
         }
     }

@@ -191,7 +191,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 InputType = InputType.Name,
                 OkText = Strings.Global_Ok,
                 CancelText = Strings.Global_Cancel,
-                Title = Strings.TeamsList_Prompt_ChangeTeamNameTitle,
+                Title = Strings.Teams_Prompt_ChangeTeamNameTitle,
             });
 
             if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))

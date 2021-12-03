@@ -124,6 +124,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        internal static string Global_Add {
+            get {
+                return ResourceManager.GetString("Global_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Global_Cancel {
@@ -574,6 +583,69 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Agent.
+        /// </summary>
+        internal static string TeamDetail_Button_AddAgent {
+            get {
+                return ResourceManager.GetString("TeamDetail_Button_AddAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change name.
+        /// </summary>
+        internal static string TeamDetail_Button_RenameTeam {
+            get {
+                return ResourceManager.GetString("TeamDetail_Button_RenameTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agent name.
+        /// </summary>
+        internal static string TeamDetail_Prompt_AddAgentTitle {
+            get {
+                return ResourceManager.GetString("TeamDetail_Prompt_AddAgentTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is already in the team !.
+        /// </summary>
+        internal static string TeamDetail_Warning_AgentAlreadyInTeam {
+            get {
+                return ResourceManager.GetString("TeamDetail_Warning_AgentAlreadyInTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agent not found.
+        /// </summary>
+        internal static string TeamDetail_Warning_AgentNotFound {
+            get {
+                return ResourceManager.GetString("TeamDetail_Warning_AgentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove &apos;{0}&apos; from the team ?.
+        /// </summary>
+        internal static string TeamDetail_Warning_RemoveAgent {
+            get {
+                return ResourceManager.GetString("TeamDetail_Warning_RemoveAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change team name.
+        /// </summary>
+        internal static string Teams_Prompt_ChangeTeamNameTitle {
+            get {
+                return ResourceManager.GetString("Teams_Prompt_ChangeTeamNameTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occured while loading your teams.
         /// </summary>
         internal static string TeamsList_Label_ErrorLoadingTeams {
@@ -588,15 +660,6 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string TeamsList_Page_Title {
             get {
                 return ResourceManager.GetString("TeamsList_Page_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Change team name.
-        /// </summary>
-        internal static string TeamsList_Prompt_ChangeTeamNameTitle {
-            get {
-                return ResourceManager.GetString("TeamsList_Prompt_ChangeTeamNameTitle", resourceCulture);
             }
         }
         

@@ -145,6 +145,9 @@
     <value>Permissions required</value>
     <comment>Title for warning popup when app needs permissions</comment>
   </data>
+  <data name="Global_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="Global_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -335,6 +338,30 @@
     <value>Attention please !</value>
     <comment>Text for when user attention is required after login</comment>
   </data>
+  <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
+    <value>Add Agent</value>
+    <comment>Button in toolbar for adding agent</comment>
+  </data>
+  <data name="TeamDetail_Button_RenameTeam" xml:space="preserve">
+    <value>Change name</value>
+    <comment>Button in toolbar for renaming team</comment>
+  </data>
+  <data name="TeamDetail_Prompt_AddAgentTitle" xml:space="preserve">
+    <value>Agent name</value>
+    <comment>Title for adding agent by name popup</comment>
+  </data>
+  <data name="TeamDetail_Warning_AgentAlreadyInTeam" xml:space="preserve">
+    <value>{0} is already in the team !</value>
+    <comment>Error when agent already is in team. Parameter is agent name</comment>
+  </data>
+  <data name="TeamDetail_Warning_AgentNotFound" xml:space="preserve">
+    <value>Agent not found</value>
+    <comment>Error when adding agent in team</comment>
+  </data>
+  <data name="TeamDetail_Warning_RemoveAgent" xml:space="preserve">
+    <value>Remove '{0}' from the team ?</value>
+    <comment>Warning before removing agent from team. Parameter is agent name</comment>
+  </data>
   <data name="TeamsList_Label_ErrorLoadingTeams" xml:space="preserve">
     <value>Error occured while loading your teams</value>
     <comment>Error while loading teams list</comment>
@@ -342,10 +369,6 @@
   <data name="TeamsList_Page_Title" xml:space="preserve">
     <value>Teams</value>
     <comment>Title for Teams list page</comment>
-  </data>
-  <data name="TeamsList_Prompt_ChangeTeamNameTitle" xml:space="preserve">
-    <value>Change team name</value>
-    <comment>Title for changing team name popup</comment>
   </data>
   <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
     <value>Location sharing state changed for team {0}</value>
@@ -374,6 +397,10 @@
   <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
     <value>You're going to delete the team '{0}'. Are you sure ?</value>
     <comment>Warning message before deleting a team. Parameter is team name</comment>
+  </data>
+  <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
+    <value>Change team name</value>
+    <comment>Title for changing team name popup</comment>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Your OPs are loading in background</value>
