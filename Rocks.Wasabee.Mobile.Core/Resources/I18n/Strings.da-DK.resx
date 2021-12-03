@@ -118,112 +118,112 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Global_Cancel" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Cancelar</value>
   </data>
   <data name="SignIn_Button_Cancel" xml:space="preserve">
-    <value>✗   Annuler</value>
+    <value>✗   Cancelar</value>
   </data>
   <data name="SignIn_Button_ChangeAccount" xml:space="preserve">
-    <value>Changer de compte</value>
+    <value>Cambiar de cuenta</value>
     <comment>Text for change account button</comment>
   </data>
   <data name="SignIn_Button_ChangeServer" xml:space="preserve">
-    <value>Changer de serveur</value>
+    <value>Cambiar de servidor</value>
     <comment>Text for changing server button</comment>
   </data>
   <data name="SignIn_Button_Next" xml:space="preserve">
-    <value>✓   Suivant</value>
+    <value>✓ Siguiente</value>
   </data>
   <data name="SignIn_Button_OneTimeToken" xml:space="preserve">
-    <value>Utiliser One Time Token</value>
+    <value>Utilizar token de un sólo uso</value>
     <comment>Text for the "One time token" button</comment>
   </data>
   <data name="SignIn_Button_Retry" xml:space="preserve">
-    <value>Réessayer</value>
+    <value>Reintentar</value>
     <comment>Text for retry button</comment>
   </data>
   <data name="SignIn_Button_Validate" xml:space="preserve">
-    <value>✓   Valider</value>
+    <value>✓ Validar</value>
   </data>
   <data name="SignIn_Button_WithGoogle" xml:space="preserve">
-    <value>Se connecter avec Google</value>
+    <value>Iniciar sesión con Google</value>
     <comment>Text for the "Sign In with Google" button</comment>
   </data>
   <data name="SignIn_Label_EnterToken" xml:space="preserve">
-    <value>Saisir le token :</value>
+    <value>Introduce el token :</value>
     <comment>Text above one time token entry field</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_GoogleError" xml:space="preserve">
-    <value>Erreur de connexion avec Google !</value>
+    <value>¡Error al iniciar sesión en Google!</value>
     <comment>Logging in Google servers failed</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_Internal" xml:space="preserve">
-    <value>Erreur interne</value>
+    <value>Error interno</value>
   </data>
   <data name="SignIn_Label_ErrorMsg_LoadingOpsData" xml:space="preserve">
-    <value>Erreur lors du chargement des données Wasabee</value>
+    <value>Error al cargar los datos de Wasabee</value>
   </data>
   <data name="SignIn_Label_ErrorMsg_WasabeeFail" xml:space="preserve">
-    <value>Erreur de connexion à Wasabee !</value>
+    <value>¡Error al iniciar sesión en Wasabee!</value>
     <comment>Logging in Wasabee server failed</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_AppLoading" xml:space="preserve">
-    <value>Chargement de l'application...</value>
+    <value>Aplicación cargando...</value>
     <comment>Loading step </comment>
   </data>
   <data name="SignIn_Label_LoadingStep_ContactingServer" xml:space="preserve">
-    <value>Connexion au serveur Wasabee '{0}'...</value>
+    <value>Conectando al servidor '{0}' de Wasabee...</value>
     <comment>Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_GoogleSuccess" xml:space="preserve">
-    <value>Connexion Google réussie...</value>
+    <value>Inicio de sesión exitoso con Google...</value>
     <comment>Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoadingData" xml:space="preserve">
-    <value>Collecte des données,</value>
+    <value>Recolectando la colmena,</value>
     <comment>Final Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoggingIn" xml:space="preserve">
-    <value>Connexion en cours...</value>
+    <value>Iniciando sesión ...</value>
     <comment>Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServer" xml:space="preserve">
-    <value>Choisissez votre serveur :</value>
+    <value>Elige tu servidor:</value>
     <comment>Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServerToken" xml:space="preserve">
-    <value>Choisir le serveur du token :</value>
+    <value>Elige el servidor de token:</value>
     <comment>Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_WelcomeAgent" xml:space="preserve">
-    <value>Bienvenue {0}</value>
+    <value>Bienvenido/a {0}</value>
     <comment>Loading step</comment>
   </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
-    <value>Vous devez être connecté à Internet par Wi-Fi ou réseau mobile pour utiliser cette application</value>
+    <value>Debes estar conectado a Internet a través de Wi-Fi o red móvil para usar esta aplicación</value>
     <comment>Error message when no internet connection</comment>
   </data>
   <data name="SignIn_Label_NoTeamsOrOperation" xml:space="preserve">
-    <value>Vous n'avez aucune équipe ou opération assignée, contactez votre Opérateur avant d'utiliser Wasabee Mobile !</value>
+    <value>Noo tienes ningún equipo u operación asignados. ¡Ponte en contacto con tu Operador antes de usar Wasabee Mobile!</value>
     <comment>Text for when user don't have any teams or ops and can't use app</comment>
   </data>
   <data name="SignIn_Label_PleaseWait" xml:space="preserve">
-    <value>Veuillez patienter...</value>
+    <value>Por favor, espere...</value>
   </data>
   <data name="SignIn_Label_RememberServerChoice" xml:space="preserve">
-    <value>Mémoriser mon choix (connexion rapide si activé)</value>
+    <value>Recordar mi elección (inicio de sesión rápido si está activado)</value>
     <comment>Text for the quicklogin checkbox</comment>
   </data>
   <data name="SignIn_Label_Warning" xml:space="preserve">
-    <value>Attention !</value>
+    <value>¡Atención, por favor!</value>
     <comment>Text for when user attention is required after login</comment>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
-    <value>Vos OPs sont en cours de chargement en arrière-plan</value>
+    <value>Tus operaciones están cargando en segundo plano</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toasts_LoadingOpsSuccess" xml:space="preserve">
-    <value>OPs chargés avec succès</value>
+    <value>Operaciones cargadas correctamente</value>
     <comment>Toast message</comment>
   </data>
 </root>
