@@ -117,8 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
+    <value>Available OP's :</value>
+    <comment>Title for the popup where user select an OP</comment>
+  </data>
+  <data name="Dialogs_Warning_LocationPermissionRequired" xml:space="preserve">
+    <value>Geolocation permission is required !</value>
+    <comment>Warning message for when geolocation permission is needed and not granted</comment>
+  </data>
+  <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
+    <value>To use the live location sharing, please set the permission to 'Allow all the time'.</value>
+    <comment>Message for changing location permissions</comment>
+  </data>
+  <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
+    <value>See Teams</value>
+    <comment>Button to access teams list</comment>
+  </data>
+  <data name="Dialog_Warning_NoOpsAvailable" xml:space="preserve">
+    <value>No OP's available</value>
+    <comment>Warning popup when user want to change selected OP but nothing else is available</comment>
+  </data>
+  <data name="Dialog_Warning_NoTeamSharingEnabled" xml:space="preserve">
+    <value>None of your teams has been set to share your location. Go to Teams list and enable at least one team.</value>
+    <comment>Warning popup when agent tries to enable location sharing but no team has been previously enabled for location sharing.</comment>
+  </data>
+  <data name="Dialog_Warning_PermissionsRequired" xml:space="preserve">
+    <value>Permissions required</value>
+    <comment>Title for warning popup when app needs permissions</comment>
+  </data>
   <data name="Global_Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="Global_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Menu_Button_ChangeOp" xml:space="preserve">
+    <value>Change</value>
+    <comment>Text on the button to change selected OP</comment>
+  </data>
+  <data name="Menu_Button_Logout" xml:space="preserve">
+    <value>Log out</value>
+    <comment>Button for logging out</comment>
+  </data>
+  <data name="Menu_Button_RefreshOps" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>Button for pulling OPs from server when nothing is stored locally</comment>
+  </data>
+  <data name="Menu_Item_OperationMap" xml:space="preserve">
+    <value>Operation Map</value>
+    <comment>Menu button for the Operation map</comment>
+  </data>
+  <data name="Menu_Item_OperationsList" xml:space="preserve">
+    <value>My Operations</value>
+    <comment>Menu button for the Operations list</comment>
+  </data>
+  <data name="Menu_Item_Profile" xml:space="preserve">
+    <value>Profile</value>
+    <comment>Menu button for Profile</comment>
+  </data>
+  <data name="Menu_Item_Settings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Menu button for Settings</comment>
+  </data>
+  <data name="Menu_Item_Teams" xml:space="preserve">
+    <value>Teams</value>
+    <comment>Menu button for Teams list</comment>
+  </data>
+  <data name="Menu_Label_CurrentOp" xml:space="preserve">
+    <value>OP :</value>
+    <comment>Label next to current selected OP name</comment>
+  </data>
+  <data name="Menu_Label_CurrentServer" xml:space="preserve">
+    <value>Server :</value>
+    <comment>Label next to current logged in server</comment>
+  </data>
+  <data name="Menu_Label_ErrorLoadingOp" xml:space="preserve">
+    <value>ERROR loading OP</value>
+    <comment>Error when loading OP</comment>
+  </data>
+  <data name="Menu_Label_LocationSharing" xml:space="preserve">
+    <value>Location sharing :</value>
+    <comment>Text next to the switch that turns on location sharing</comment>
+  </data>
+  <data name="Menu_Label_NoLocalOpsStored" xml:space="preserve">
+    <value>You don't have any local OP's stored</value>
+    <comment>Warning message when no OPs are stored on phone</comment>
   </data>
   <data name="SignIn_Button_Cancel" xml:space="preserve">
     <value>✗   Cancel</value>
@@ -159,9 +242,11 @@
   </data>
   <data name="SignIn_Label_ErrorMsg_Internal" xml:space="preserve">
     <value>Internal error</value>
+    <comment>An error occured</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_LoadingOpsData" xml:space="preserve">
     <value>Error loading Wasabee OPs data</value>
+    <comment>Error occured while processing OPs data</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_WasabeeFail" xml:space="preserve">
     <value>Wasabee login failed !</value>
@@ -169,15 +254,15 @@
   </data>
   <data name="SignIn_Label_LoadingStep_AppLoading" xml:space="preserve">
     <value>Application loading...</value>
-    <comment>Loading step </comment>
+    <comment>Application is loading</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_ContactingServer" xml:space="preserve">
     <value>Contacting '{0}' Wasabee server...</value>
-    <comment>Loading step</comment>
+    <comment>App is contacting Wasabee server</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_GoogleSuccess" xml:space="preserve">
     <value>Google login success...</value>
-    <comment>Loading step</comment>
+    <comment>Logging in with Google success</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoadingData" xml:space="preserve">
     <value>Harvesting beehive,</value>
@@ -185,19 +270,19 @@
   </data>
   <data name="SignIn_Label_LoadingStep_LoggingIn" xml:space="preserve">
     <value>Logging in...</value>
-    <comment>Loading step</comment>
+    <comment>App is logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServer" xml:space="preserve">
     <value>Choose your server :</value>
-    <comment>Loading step</comment>
+    <comment>Server selection for logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServerToken" xml:space="preserve">
     <value>Choose token's server :</value>
-    <comment>Loading step</comment>
+    <comment>Server selection for the token</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_WelcomeAgent" xml:space="preserve">
     <value>Welcome {0}</value>
-    <comment>Loading step</comment>
+    <comment>Welcome message with Agent name</comment>
   </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
     <value>You must be connected to Internet over Wi-Fi or cellular network to use this application</value>
@@ -209,6 +294,7 @@
   </data>
   <data name="SignIn_Label_PleaseWait" xml:space="preserve">
     <value>Please wait...</value>
+    <comment>Wait message</comment>
   </data>
   <data name="SignIn_Label_RememberServerChoice" xml:space="preserve">
     <value>Remember my choice (quick login if enabled)</value>

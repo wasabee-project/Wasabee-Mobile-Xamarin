@@ -61,11 +61,200 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See Teams.
+        /// </summary>
+        internal static string Dialog_Warning_GoToTeamsList {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_GoToTeamsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No OP&apos;s available.
+        /// </summary>
+        internal static string Dialog_Warning_NoOpsAvailable {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_NoOpsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None of your teams has been set to share your location. Go to Teams list and enable at least one team..
+        /// </summary>
+        internal static string Dialog_Warning_NoTeamSharingEnabled {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_NoTeamSharingEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permissions required.
+        /// </summary>
+        internal static string Dialog_Warning_PermissionsRequired {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_PermissionsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available OP&apos;s :.
+        /// </summary>
+        internal static string Dialogs_Title_AvailableOpsList {
+            get {
+                return ResourceManager.GetString("Dialogs_Title_AvailableOpsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geolocation permission is required !.
+        /// </summary>
+        internal static string Dialogs_Warning_LocationPermissionRequired {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_LocationPermissionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To use the live location sharing, please set the permission to &apos;Allow all the time&apos;..
+        /// </summary>
+        internal static string Dialogs_Warning_SetLocationPermissionsAllTheTime {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_SetLocationPermissionsAllTheTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Global_Cancel {
             get {
                 return ResourceManager.GetString("Global_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string Global_Ok {
+            get {
+                return ResourceManager.GetString("Global_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change.
+        /// </summary>
+        internal static string Menu_Button_ChangeOp {
+            get {
+                return ResourceManager.GetString("Menu_Button_ChangeOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        internal static string Menu_Button_Logout {
+            get {
+                return ResourceManager.GetString("Menu_Button_Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        internal static string Menu_Button_RefreshOps {
+            get {
+                return ResourceManager.GetString("Menu_Button_RefreshOps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation Map.
+        /// </summary>
+        internal static string Menu_Item_OperationMap {
+            get {
+                return ResourceManager.GetString("Menu_Item_OperationMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Operations.
+        /// </summary>
+        internal static string Menu_Item_OperationsList {
+            get {
+                return ResourceManager.GetString("Menu_Item_OperationsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        internal static string Menu_Item_Profile {
+            get {
+                return ResourceManager.GetString("Menu_Item_Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string Menu_Item_Settings {
+            get {
+                return ResourceManager.GetString("Menu_Item_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teams.
+        /// </summary>
+        internal static string Menu_Item_Teams {
+            get {
+                return ResourceManager.GetString("Menu_Item_Teams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OP :.
+        /// </summary>
+        internal static string Menu_Label_CurrentOp {
+            get {
+                return ResourceManager.GetString("Menu_Label_CurrentOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server :.
+        /// </summary>
+        internal static string Menu_Label_CurrentServer {
+            get {
+                return ResourceManager.GetString("Menu_Label_CurrentServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR loading OP.
+        /// </summary>
+        internal static string Menu_Label_ErrorLoadingOp {
+            get {
+                return ResourceManager.GetString("Menu_Label_ErrorLoadingOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location sharing :.
+        /// </summary>
+        internal static string Menu_Label_LocationSharing {
+            get {
+                return ResourceManager.GetString("Menu_Label_LocationSharing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have any local OP&apos;s stored.
+        /// </summary>
+        internal static string Menu_Label_NoLocalOpsStored {
+            get {
+                return ResourceManager.GetString("Menu_Label_NoLocalOpsStored", resourceCulture);
             }
         }
         
