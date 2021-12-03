@@ -223,7 +223,7 @@
     <comment>Toast message</comment>
   </data>
   <data name="Toasts_LoadingOpsSuccess" xml:space="preserve">
-    <value>OPs loaded succesfully</value>
+    <value>OPs loaded successfully</value>
     <comment>Toast message</comment>
   </data>
 </root>
