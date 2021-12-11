@@ -64,6 +64,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             var showDebugToastsSetting = _preferences.Get(UserSettingsKeys.ShowDebugToasts, false);
             SetProperty(ref _showDebugToasts, showDebugToastsSetting);
 
+            var hideCompletedMarkersSetting = _preferences.Get(UserSettingsKeys.HideCompletedMarkers, false);
+            SetProperty(ref _isHideCompletedMarkersEnabled, hideCompletedMarkersSetting);
+
             return base.Initialize();
         }
 
@@ -90,6 +93,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
         {
             get => _showDebugToasts;
             set => ToggleShowDebugToastsCommand.Execute(value);
+        }
+
+        private bool _isHideCompletedMarkersEnabled;
+        public bool IsHideCompletedMarkersEnabled
+        {
+            get => _isHideCompletedMarkersEnabled;
+            set => ToggleHideCompletedMarkersCommand.Execute(value);
         }
 
         #endregion
@@ -297,6 +307,23 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             {
                 SetProperty(ref _showDebugToasts, false);
                 _preferences.Remove(UserSettingsKeys.ShowDebugToasts);
+            }
+        }
+
+        public IMvxCommand<bool> ToggleHideCompletedMarkersCommand => new MvxCommand<bool>(ToggleHideCompletedMarkersExecuted);
+        private void ToggleHideCompletedMarkersExecuted(bool value)
+        {
+            LoggingService.Trace($"Executing SettingsViewModel.ToggleHideCompletedMarkersCommand({value})");
+
+            if (value)
+            {
+                SetProperty(ref _isHideCompletedMarkersEnabled, true);
+                _preferences.Set(UserSettingsKeys.HideCompletedMarkers, true);
+            }
+            else
+            {
+                SetProperty(ref _isHideCompletedMarkersEnabled, false);
+                _preferences.Remove(UserSettingsKeys.HideCompletedMarkers);
             }
         }
 
