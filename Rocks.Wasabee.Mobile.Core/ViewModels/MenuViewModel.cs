@@ -89,6 +89,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 WasabeeServer.US => "America",
                 WasabeeServer.EU => "Europe",
                 WasabeeServer.APAC => "Asia/Pacific",
+                WasabeeServer.Custom => "Custom",
                 WasabeeServer.Undefined => string.Empty,
                 _ => throw new ArgumentOutOfRangeException(nameof(Server))
             };

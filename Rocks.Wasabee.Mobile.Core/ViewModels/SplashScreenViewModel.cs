@@ -60,6 +60,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private bool _working = false;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
         private bool _isUsingOneTimeToken = false;
+        
+        private int _tapCount = 0;
 
         private SplashScreenNavigationParameter? _parameter;
 
@@ -109,8 +111,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoggingService.Trace("Initializing SplashScreenViewModel");
 
-            // TODO Handle app opening from notification
+            IsSettingButtonVisible = _preferences.Get(UserSettingsKeys.DevModeActivated, false);
+            LoadCustomBackendServer();
 
+            // TODO Handle app opening from notification
 
             LoadingStepLabel = "Application loading...";
             _connectivity.ConnectivityChanged += ConnectivityOnConnectivityChanged;
@@ -143,6 +147,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public bool IsSelectingServer { get; set; }
         public bool RememberServerChoice { get; set; }
         public bool HasNoTeamOrOpsAssigned { get; set; }
+        public bool IsSettingButtonVisible { get; set; }
         public string LoadingStepLabel { get; set; } = string.Empty;
         public string AppEnvironnement { get; set; } = string.Empty;
         public string DisplayVersion { get; set; } = string.Empty;
@@ -163,12 +168,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
         }
 
-        public MvxObservableCollection<ServerItem> ServersCollection => new MvxObservableCollection<ServerItem>()
+        private MvxObservableCollection<ServerItem> _serversCollection = new MvxObservableCollection<ServerItem>()
         {
-            new ServerItem("America", WasabeeServer.US, "US.png"),
-            new ServerItem("Europe", WasabeeServer.EU, "EU.png"),
-            new ServerItem("Asia/Pacific", WasabeeServer.APAC, "APAC.png")
+            new("America", WasabeeServer.US, "US.png"),
+            new("Europe", WasabeeServer.EU, "EU.png"),
+            new("Asia/Pacific", WasabeeServer.APAC, "APAC.png")
         };
+        public MvxObservableCollection<ServerItem> ServersCollection
+        {
+            get => _serversCollection;
+            private set => SetProperty(ref _serversCollection, value);
+        }
 
         #endregion
 
@@ -372,6 +382,52 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             RememberServerChoice = !RememberServerChoice;
         });
+
+        public IMvxCommand ShowSettingCommand => new MvxCommand(ShowSettingExecuted);
+        private async void ShowSettingExecuted()
+        {
+            var customBackendUri = string.Empty;
+            var hasCustomBackendUri = _preferences.Get(UserSettingsKeys.HasCustomBackendUri, false);
+            if (hasCustomBackendUri)
+                customBackendUri = _preferences.Get(UserSettingsKeys.CustomBackendUri, string.Empty);
+
+            var result = await _userDialogs.PromptAsync(customBackendUri, "Custom sever URL :", "Ok", "Cancel");
+            try
+            {
+                var value = result?.Text ?? string.Empty;
+                if (value.StartsWith("http://"))
+                    value = value.Replace("http", "https");
+
+                var parsed = Uri.TryCreate(value, UriKind.Absolute, out Uri uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
+                if (parsed)
+                {
+                    _preferences.Set(UserSettingsKeys.HasCustomBackendUri, true);
+                    _preferences.Set(UserSettingsKeys.CustomBackendUri, value);
+
+                    LoadCustomBackendServer();
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        public IMvxCommand VersionTappedCommand => new MvxCommand(VersionTappedExecuted);
+        private void VersionTappedExecuted()
+        {
+            if (IsSettingButtonVisible)
+                return;
+
+            _tapCount++;
+            if (_tapCount < 5)
+                return;
+
+            IsSettingButtonVisible = true;
+            _preferences.Set(UserSettingsKeys.DevModeActivated, true);
+
+            _userDialogs.Toast("Dev mode activated");
+        }
 
         #endregion
 
@@ -718,6 +774,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task SaveGoogleToken(GoogleToken? token)
         {
             await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, token != null ? JsonConvert.SerializeObject(token) : string.Empty);
+        }
+
+        private void LoadCustomBackendServer()
+        {
+            var hasCustomBackendUri = _preferences.Get(UserSettingsKeys.HasCustomBackendUri, false);
+            if (!hasCustomBackendUri) 
+                return;
+            
+            if (ServersCollection.Any(x => x.Server is WasabeeServer.Custom))
+                ServersCollection.Remove(ServersCollection.First(x => x.Server is WasabeeServer.Custom));
+
+            ServersCollection.Add(new ServerItem("Custom", WasabeeServer.Custom, ""));
+            RaisePropertyChanged(nameof(ServersCollection));
         }
 
         #endregion

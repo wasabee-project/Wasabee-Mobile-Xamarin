@@ -56,13 +56,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             Version = _versionTracking.CurrentVersion;
 
             var analyticsSetting = _preferences.Get(UserSettingsKeys.AnalyticsEnabled, false);
-            SetProperty(ref _isAnonymousAnalyticsEnabled, analyticsSetting);
+            SetProperty(ref _isAnonymousAnalyticsEnabled, analyticsSetting, nameof(IsAnonymousAnalyticsEnabled));
 
             var showAgentsFromAnyTeamSetting = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
-            SetProperty(ref _showAgentsFromAnyTeam, showAgentsFromAnyTeamSetting);
+            SetProperty(ref _showAgentsFromAnyTeam, showAgentsFromAnyTeamSetting, nameof(ShowAgentsFromAnyTeam));
 
             var showDebugToastsSetting = _preferences.Get(UserSettingsKeys.ShowDebugToasts, false);
-            SetProperty(ref _showDebugToasts, showDebugToastsSetting);
+            SetProperty(ref _showDebugToasts, showDebugToastsSetting, nameof(ShowDebugToasts));
 
             return base.Initialize();
         }

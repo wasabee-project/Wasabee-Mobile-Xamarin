@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 using Polly;
 using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
-using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using Xamarin.Essentials.Interfaces;
 
 #if DEBUG_NETWORK_LOGS
@@ -53,16 +53,18 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
             var wasabeeRawCookie = Mvx.IoCProvider.Resolve<ISecureStorage>().GetAsync(SecureStorageConstants.WasabeeCookie).Result;
             var cookie = JsonConvert.DeserializeObject<Cookie>(wasabeeRawCookie);
-
+            
+            var cookieContainer = new CookieContainer();
+            if (cookie != null)
+                cookieContainer.Add(cookie);
             
 #if DEBUG_NETWORK_LOGS
-            var httpClientHandler = new HttpClientHandler() {CookieContainer = new CookieContainer()};
-            httpClientHandler.CookieContainer.Add(cookie);
+
+            var httpClientHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer);
 
             var httpHandler = new HttpLoggingHandler(httpClientHandler);
 #else
-            var httpHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(new CookieContainer());
-            httpHandler.CookieContainer.Add(cookie);
+            var httpHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer);
 #endif
             var appVersion = Mvx.IoCProvider.Resolve<IVersionTracking>().CurrentVersion;
             var device = Mvx.IoCProvider.Resolve<IDeviceInfo>();
@@ -85,7 +87,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 #if DEBUG_NETWORK_LOGS
     public class HttpLoggingHandler : DelegatingHandler
     {
-        public HttpLoggingHandler(HttpMessageHandler innerHandler = null) : base(innerHandler ?? new HttpClientHandler())
+        public HttpLoggingHandler(HttpMessageHandler innerHandler) : base(innerHandler)
         {
         }
 
@@ -97,7 +99,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
             Debug.WriteLine($"{msg}========Start==========");
             Debug.WriteLine($"{msg} {req.Method} {req.RequestUri.PathAndQuery} {req.RequestUri.Scheme}/{req.Version}");
-            Debug.WriteLine($"{msg} Host: {req.RequestUri.Scheme}://{req.RequestUri.Host}");
+            Debug.WriteLine($"{msg} Host: {req.RequestUri.Scheme}://{req.RequestUri.Host}:{req.RequestUri.Port}");
 
             foreach (var header in req.Headers)
                 Debug.WriteLine($"{msg} {header.Key}: {string.Join(", ", header.Value)}");

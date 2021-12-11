@@ -22,6 +22,7 @@
         Undefined,
         US,
         EU,
-        APAC
+        APAC,
+        Custom
     }
 }
