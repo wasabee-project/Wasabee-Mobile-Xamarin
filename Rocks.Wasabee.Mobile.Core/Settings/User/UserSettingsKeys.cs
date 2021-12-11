@@ -18,6 +18,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.User
         public static string LastLaunchedVersion => "LAST_LAUNCHED_VERSION";
         public static string ShowDebugToasts => "SHOW_DEBUG_TOASTS";
         public static string LastLoginMethod => "LAST_LOGIN_METHOD";
+        public static string HideCompletedMarkers => "HIDE_COMPLETED_MARKERS";
 
     }
 }
