@@ -15,7 +15,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.HttpClientFactory
     {
         public HttpClientHandler CreateHandler(CookieContainer cookieContainer = null)
         {
-            #if DEBUG
+            #if DEBUG_NETWORK_LOGS
             var handler = new HttpLoggingHandler();
             #else
             var handler = new Xamarin.Android.Net.AndroidClientHandler();

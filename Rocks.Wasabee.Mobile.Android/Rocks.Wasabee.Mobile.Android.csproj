@@ -70,7 +70,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Network Logs|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug Network Logs\</OutputPath>
-    <DefineConstants>DEBUG;__ANDROID__</DefineConstants>
+    <DefineConstants>DEBUG;__ANDROID__;DEBUG_NETWORK_LOGS</DefineConstants>
     <DebugType>portable</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
