@@ -16,7 +16,6 @@ using Xamarin.Essentials.Interfaces;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http.Headers;
 #endif
 
 namespace Rocks.Wasabee.Mobile.Core.Services
@@ -60,9 +59,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
                 cookieContainer.Add(cookie);
 
 #if DEBUG_NETWORK_LOGS
-
             var httpClientHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer);
-
             var httpHandler = new HttpLoggingHandler(httpClientHandler);
 #else
             var httpHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer);
@@ -73,12 +70,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             {
                 Timeout = TimeSpan.FromSeconds(5),
                 BaseAddress = new Uri(url),
-                DefaultRequestHeaders =
-                {
-                    { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" },
-                    { "Connection", "close"},
-                    { "Transfer-Encoding", "chunked"}
-                }
+                DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" } }
             };
             
             var jwt = Mvx.IoCProvider.Resolve<ISecureStorage>().GetAsync(SecureStorageConstants.WasabeeJwt).Result;
