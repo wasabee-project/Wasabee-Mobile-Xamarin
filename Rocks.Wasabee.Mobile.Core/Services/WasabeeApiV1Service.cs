@@ -29,6 +29,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Get("/me?lat={lat}&lon={lon}")]
         Task<ApiResponse<WasabeeApiResponse>> User_UpdateLocation(string lat, string lon);
 
+        [Post("/me/firebase")]
+        Task<ApiResponse<WasabeeApiResponse>> User_UpdateFirebaseToken([Body] string token);
+
         #endregion
 
         #region Agents
@@ -137,7 +140,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             if (state.Equals("On") || state.Equals("Off"))
             {
                 var result = await AttemptAndRetry(() => WasabeeApiClient.User_ChangeTeamState(teamId, state), new CancellationToken()).ConfigureAwait(false);
-                return result.IsSuccessStatusCode && result.Content.IsSuccess();
+                return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
             }
 
             throw new ArgumentException($"{nameof(state)} '{state}' is not a valid parameter");
@@ -146,7 +149,13 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         public async Task<bool> User_UpdateLocation(string lat, string lon)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.User_UpdateLocation(lat, lon), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess();
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
+        }
+
+        public async Task<bool> User_UpdateFirebaseToken(string token)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.User_UpdateFirebaseToken(token), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
         }
 
         #endregion
@@ -166,7 +175,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         public async Task<IList<Models.Teams.TeamModel>> Teams_GetTeams(GetTeamsQuery getTeamsQuery)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_GetTeams(getTeamsQuery), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode ? result.Content : new List<Models.Teams.TeamModel>();
+            return result.IsSuccessStatusCode && result.Content != null ? result.Content : new List<Models.Teams.TeamModel>();
         }
 
         public async Task<Models.Teams.TeamModel?> Teams_GetTeam(string teamId)
@@ -178,25 +187,25 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         public async Task<bool> Teams_AddAgentToTeam(string teamId, string agentId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_AddAgentToTeam(teamId, agentId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess();
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
         }
 
         public async Task<bool> Teams_RemoveAgentFromTeam(string teamId, string agentId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_RemoveAgentFromTeam(teamId, agentId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess();
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
         }
 
         public async Task<bool> Teams_RenameTeam(string teamId, string name)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_RenameTeam(teamId, name), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess();
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
         }
 
         public async Task<bool> Teams_DeleteTeam(string teamId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Teams_DeleteTeam(teamId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess();
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
         }
 
         #endregion
@@ -220,25 +229,25 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         public async Task<WasabeeApiResponse?> Operation_Link_Complete(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Complete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         public async Task<WasabeeApiResponse?> Operation_Link_Incomplete(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Incomplete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         public async Task<WasabeeApiResponse?> Operation_Link_Claim(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Claim(opId, linkId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         public async Task<WasabeeApiResponse?> Operation_Link_Reject(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Reject(opId, linkId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         #endregion
@@ -254,31 +263,31 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         public async Task<WasabeeApiResponse?> Operation_Marker_Acknowledge(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Acknowledge(opId, markerId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         public async Task<WasabeeApiResponse?> Operation_Marker_Incomplete(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Incomplete(opId, markerId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         public async Task<WasabeeApiResponse?> Operation_Marker_Complete(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Complete(opId, markerId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         public async Task<WasabeeApiResponse?> Operation_Marker_Claim(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Claim(opId, markerId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         public async Task<WasabeeApiResponse?> Operation_Marker_Reject(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Reject(opId, markerId), new CancellationToken()).ConfigureAwait(false);
-            return result.IsSuccessStatusCode && result.Content.IsSuccess() ? result.Content : null;
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
         #endregion

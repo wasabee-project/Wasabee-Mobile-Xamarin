@@ -5,7 +5,7 @@ using System;
 namespace Rocks.Wasabee.Mobile.Droid
 {
 #if DEBUG
-    [Application(Debuggable = true)]
+    [Application(Debuggable = true, UsesCleartextTraffic = true)]
 #else
 	[Application(Debuggable = false)]
 #endif

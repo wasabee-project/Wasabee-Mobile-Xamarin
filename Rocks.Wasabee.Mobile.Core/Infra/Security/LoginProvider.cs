@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using MvvmCross;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
@@ -144,6 +144,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(responseContent);
+            
+            if (wasabeeUserModel != null && !string.IsNullOrWhiteSpace(wasabeeUserModel.Jwt))
+                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeJwt, wasabeeUserModel.Jwt);
 
             var uri = new Uri(_appSettings.WasabeeBaseUrl);
             var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()
@@ -161,6 +164,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// </summary>
         /// <param name="token">FCM token</param>
         /// <returns></returns>
+        [Obsolete]
         public async Task<bool> SendFirebaseTokenAsync(string token)
         {
             _loggingService.Trace("Executing LoginProvider.SendFirebaseTokenAsync");
@@ -177,6 +181,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
                 return false;
             //TODO : catch this : throw new KeyNotFoundException(SecureStorageConstants.WasabeeCookie);
 
+            var jwt = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeJwt);
+            if (string.IsNullOrWhiteSpace(jwt))
+                return false;
+            //TODO : catch this : throw new KeyNotFoundException(SecureStorageConstants.WasabeeJwt);
+
             try
             {
                 var wasabeeCookie = JsonConvert.DeserializeObject<Cookie>(cookie);
@@ -185,6 +194,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
                 using var handler = _httpClientFactory.CreateHandler(cookieContainer);
                 using var client = new HttpClient(handler);
+                
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
 
                 var url = $"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.Firebase}";
                 var postContent = new StringContent(token, Encoding.UTF8, "application/json");

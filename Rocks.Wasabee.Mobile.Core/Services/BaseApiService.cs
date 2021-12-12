@@ -3,12 +3,13 @@ using Newtonsoft.Json;
 using Polly;
 using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using Xamarin.Essentials.Interfaces;
 
 #if DEBUG_NETWORK_LOGS
@@ -57,7 +58,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             var cookieContainer = new CookieContainer();
             if (cookie != null)
                 cookieContainer.Add(cookie);
-            
+
 #if DEBUG_NETWORK_LOGS
 
             var httpClientHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer);
@@ -75,9 +76,14 @@ namespace Rocks.Wasabee.Mobile.Core.Services
                 DefaultRequestHeaders =
                 {
                     { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" },
-                    { "Connection", "keep-alive" }
+                    { "Connection", "close"},
+                    { "Transfer-Encoding", "chunked"}
                 }
             };
+            
+            var jwt = Mvx.IoCProvider.Resolve<ISecureStorage>().GetAsync(SecureStorageConstants.WasabeeJwt).Result;
+            if (string.IsNullOrWhiteSpace(jwt) is false)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
 
             _httpClient = client;
             return _httpClient;

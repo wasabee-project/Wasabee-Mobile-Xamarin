@@ -62,8 +62,15 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.HttpClientFactory
             }
 
             var start = DateTime.Now;
+            HttpResponseMessage response = null;
+            try
+            {
+                response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
 
-            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            }
 
             var end = DateTime.Now;
 

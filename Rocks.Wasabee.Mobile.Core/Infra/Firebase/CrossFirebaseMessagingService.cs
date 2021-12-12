@@ -5,7 +5,6 @@ using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Firebase.Payloads;
 using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
-using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -20,7 +19,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
     public class CrossFirebaseMessagingService : ICrossFirebaseMessagingService
     {
         private readonly IMvxMessenger _mvxMessenger;
-        private readonly ILoginProvider _loginProvider;
+        private readonly WasabeeApiV1Service _wasabeeApiV1;
         private readonly IBackgroundDataUpdaterService _backgroundDataUpdaterService;
         private readonly ISecureStorage _secureStorage;
         private readonly IUserSettingsService _userSettingsService;
@@ -33,13 +32,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
         private string _fcmToken = string.Empty;
         private bool _isInitialized;
 
-        public CrossFirebaseMessagingService(IMvxMessenger mvxMessenger, ILoginProvider loginProvider,
-            IBackgroundDataUpdaterService backgroundDataUpdaterService, ISecureStorage secureStorage,
-            IUserSettingsService userSettingsService, IFirebaseService firebaseService,
+        public CrossFirebaseMessagingService(IMvxMessenger mvxMessenger, WasabeeApiV1Service wasabeeApiV1, 
+            IBackgroundDataUpdaterService backgroundDataUpdaterService, ISecureStorage secureStorage, 
+            IUserSettingsService userSettingsService, IFirebaseService firebaseService, 
             ILocalNotificationService localNotificationService, OperationsDatabase operationsDatabase)
         {
             _mvxMessenger = mvxMessenger;
-            _loginProvider = loginProvider;
+            _wasabeeApiV1 = wasabeeApiV1;
             _backgroundDataUpdaterService = backgroundDataUpdaterService;
             _secureStorage = secureStorage;
             _userSettingsService = userSettingsService;
@@ -69,7 +68,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
             _fcmToken = registrationToken;
             
             await _secureStorage.SetAsync(SecureStorageConstants.FcmToken, _fcmToken);
-            return await _loginProvider.SendFirebaseTokenAsync(_fcmToken);
+            return await _wasabeeApiV1.User_UpdateFirebaseToken(_fcmToken);
         }
 
         public async Task ProcessMessageData(IDictionary<string, string> data)

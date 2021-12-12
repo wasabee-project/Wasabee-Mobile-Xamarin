@@ -59,6 +59,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
 
         [JsonProperty("Assignments")]
         public List<AssignmentModel> Assignments { get; set; }
+
+        [JsonProperty("jwt")]
+        public string Jwt { get; set; }
     }
 
     public class TelegramModel : BaseModel
