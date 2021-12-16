@@ -24,6 +24,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Settings
             ViewModel.ShowAgentsFromAnyTeam = !ViewModel.ShowAgentsFromAnyTeam;
         }
 
+        private void HideComletedMarkersCell_OnTapped(object sender, EventArgs e)
+        {
+            ViewModel.IsHideCompletedMarkersEnabled = !ViewModel.IsHideCompletedMarkersEnabled;
+        }
+
         private void ShowDebugToastsCell_OnTapped(object sender, EventArgs e)
         {
             ViewModel.ShowDebugToasts = !ViewModel.ShowDebugToasts;
