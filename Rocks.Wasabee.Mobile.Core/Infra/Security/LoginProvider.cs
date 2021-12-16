@@ -9,7 +9,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,16 +114,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _loggingService.Trace("Executing LoginProvider.DoWasabeeLoginAsync");
 
             HttpResponseMessage response;
-            var cookieContainer = new CookieContainer();
 
 #if DEBUG_NETWORK_LOGS
-            var httpHandler = new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer));
+            var httpHandler = new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler());
 #else
-            var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
+            var httpHandler = _httpClientFactory.CreateHandler();
 #endif
 
             using var client = new HttpClient(httpHandler)
             {
+                Timeout = TimeSpan.FromSeconds(5),
                 DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{_versionTracking.CurrentVersion} ({_deviceInfo.Platform} {_deviceInfo.VersionString})" } }
             };
 
@@ -144,18 +143,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(responseContent);
-            
-            if (wasabeeUserModel != null && !string.IsNullOrWhiteSpace(wasabeeUserModel.Jwt))
-                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeJwt, wasabeeUserModel.Jwt);
-            
-            // TODO : Remove cookie when server can fully handle JWTs
-            var uri = new Uri(_appSettings.WasabeeBaseUrl);
-            var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()
-                .AsEnumerable()
-                .FirstOrDefault();
 
-            if (wasabeeCookie != null)
-                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, JsonConvert.SerializeObject(wasabeeCookie));
+            if (wasabeeUserModel != null && !string.IsNullOrWhiteSpace(wasabeeUserModel.Jwt))
+                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, wasabeeUserModel.Jwt);
+            else
+                return null;
 
             return wasabeeUserModel;
         }
@@ -170,16 +162,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _loggingService.Trace("Executing LoginProvider.DoWasabeeOneTimeTokenLoginAsync");
 
             HttpResponseMessage response;
-            var cookieContainer = new CookieContainer();
 
 #if DEBUG_NETWORK_LOGS
-            var httpHandler = new HttpLoggingHandler(new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer)));
+            var httpHandler = new HttpLoggingHandler(new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler()));
 #else
-            var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
+            var httpHandler = _httpClientFactory.CreateHandler();
 #endif
 
             using var client = new HttpClient(httpHandler)
             {
+                Timeout = TimeSpan.FromSeconds(5),
                 DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{_versionTracking.CurrentVersion} ({_deviceInfo.Platform} {_deviceInfo.VersionString})" } }
             };
 
@@ -204,17 +196,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(responseContent);
             
             if (wasabeeUserModel != null && !string.IsNullOrWhiteSpace(wasabeeUserModel.Jwt))
-                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeJwt, wasabeeUserModel.Jwt);
+                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, wasabeeUserModel.Jwt);
+            else
+                return null;
 
-            // TODO : Remove cookie when server can fully handle JWTs
-            var uri = new Uri(_appSettings.WasabeeBaseUrl);
-            var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()
-                .AsEnumerable()
-                .FirstOrDefault();
-
-            if (wasabeeCookie != null)
-                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, JsonConvert.SerializeObject(wasabeeCookie));
-            
             return wasabeeUserModel;
         }
         
@@ -257,16 +242,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         public Task RemoveTokenFromSecureStore()
         {
             _loggingService.Trace("Executing LoginProvider.RemoveTokenFromSecureStore");
-            _secureStorage.Remove(SecureStorageConstants.WasabeeJwt);
+            _secureStorage.Remove(SecureStorageConstants.WasabeeToken);
 
             return Task.CompletedTask;
-        }
-
-        [Obsolete]
-        public void ClearCookie()
-        {
-            _loggingService.Trace("Executing LoginProvider.ClearCookie");
-            _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
         }
     }
 }

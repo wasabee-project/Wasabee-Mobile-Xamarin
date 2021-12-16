@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -13,15 +12,13 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.HttpClientFactory
 {
     public class Factory : IFactory
     {
-        public HttpClientHandler CreateHandler(CookieContainer cookieContainer = null)
+        public HttpClientHandler CreateHandler()
         {
             #if DEBUG_NETWORK_LOGS
             var handler = new HttpLoggingHandler();
             #else
             var handler = new Xamarin.Android.Net.AndroidClientHandler();
             #endif
-            if (cookieContainer != null)
-                handler.CookieContainer = cookieContainer;
             
             return handler;
         }

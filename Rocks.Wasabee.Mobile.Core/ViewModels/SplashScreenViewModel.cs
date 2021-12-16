@@ -18,6 +18,7 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -206,8 +207,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _usersDatabase.DeleteAllData();
 
-            var wasabeeCookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
-            if (!string.IsNullOrWhiteSpace(wasabeeCookie) && RememberServerChoice)
+            var wtoken = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeToken);
+            if (!string.IsNullOrWhiteSpace(wtoken) && RememberServerChoice)
             {
                 await BypassGoogleAndWasabeeLogin();
                 return;
@@ -458,14 +459,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 {
                     // will get a refreshed auth token from Google
                     case LoginMethod.Google:
-                        await ConnectWasabee();
+                        await ConnectUserCommand.ExecuteAsync();
                         break;
                     // will use previous Cookie to bypass auth process
                     case LoginMethod.OneTimeToken:
                     case LoginMethod.Bypass:
                         await BypassGoogleAndWasabeeLogin();
                         break;
-                    // use will choose
+                    // user will choose login method
                     default:
                         IsLoginVisible = true;
                         break;
@@ -517,14 +518,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     IsAuthInError = true;
                     IsLoading = false;
                     IsLoginVisible = true;
+
+                    SelectedServerItem = ServerItem.Undefined;
                 }
             }
         }
 
         private async Task BypassGoogleAndWasabeeLogin()
         {
-            var cookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
-            if (string.IsNullOrWhiteSpace(cookie))
+            var wtoken = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeToken);
+            if (string.IsNullOrWhiteSpace(wtoken))
             {
                 IsLoginVisible = true;
                 IsLoading = false;
@@ -533,6 +536,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 SelectedServerItem = ServerItem.Undefined;
 
                 return;
+            }
+
+            var jwt = new JwtSecurityToken(wtoken);
+            var span = DateTime.UtcNow - jwt.IssuedAt;
+            if (span > TimeSpan.FromHours(12))
+            {
+                var refreshedToken = await _wasabeeApiV1Service.User_RefreshWasabeeToken();
+                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, refreshedToken);
             }
 
             _isBypassingGoogleAndWasabeeLogin = true;
@@ -565,17 +576,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 catch
                 {
-                    // Auto login failed (expired cookie ?)
-                    // force relogin using saved googleToken if exist. If google token is expired, it will refresh it
+                    // Auto login failed (expired token ?)
                     try
                     {
                         var lastLoginMethod = (LoginMethod) _preferences.Get(UserSettingsKeys.LastLoginMethod, (int) LoginMethod.Unknown);
                         if (lastLoginMethod == LoginMethod.OneTimeToken)
                             throw new Exception("Can't refresh Google token when Wasabee One Time Token was used previously");
-
-                        var token = await GetGoogleToken();
-                        await SaveGoogleToken(token);
-
+                        
                         await ConnectWasabee();
                     }
                     catch (Exception e)
@@ -593,7 +600,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
 
                         _isBypassingGoogleAndWasabeeLogin = false;
-                        _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
+                        _secureStorage.Remove(SecureStorageConstants.WasabeeToken);
 
                         await ChangeAccountCommand.ExecuteAsync();
                     }
@@ -742,6 +749,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
         }
 
+        /// <summary>
+        /// This will get the current GoogleToken saved in SecureStorage and verify if it's expired or not.
+        /// If expired, it'll be automatically refreshed using the Refreshtoken in the GoogleToken.
+        /// Else, it just returns as is.
+        /// </summary>
+        /// <returns>Current valid or new refreshed <see cref="GoogleToken"/></returns>
         private async Task<GoogleToken?> GetGoogleToken()
         {
             var rawGoogleToken = await _secureStorage.GetAsync(SecureStorageConstants.GoogleToken);
@@ -762,6 +775,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                             TokenType = refreshedToken.Scope,
                             RefreshToken = googleToken.RefreshToken
                         };
+
+                        await SaveGoogleToken(googleToken);
                     }
                 }
 

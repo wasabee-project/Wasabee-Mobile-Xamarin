@@ -68,7 +68,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _loggingService.Trace("Executing AuthentificationService.ClearUserTokenAndCookie");
 
             await loginProvider.RemoveTokenFromSecureStore();
-            loginProvider.ClearCookie();
         }
 
         private async Task ClearDatabases()

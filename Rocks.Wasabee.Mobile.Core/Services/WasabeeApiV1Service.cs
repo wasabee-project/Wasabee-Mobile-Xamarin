@@ -32,6 +32,9 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         [Post("/me/firebase")]
         Task<ApiResponse<WasabeeApiResponse>> User_UpdateFirebaseToken([Body] string token);
 
+        [Get("/me/jwtrefresh")]
+        Task<ApiResponse<WasabeeJwtRefreshApiResponse>> User_RefreshWasabeeToken();
+
         #endregion
 
         #region Agents
@@ -156,6 +159,15 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.User_UpdateFirebaseToken(token), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
+        }
+
+        public async Task<string> User_RefreshWasabeeToken()
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.User_RefreshWasabeeToken(), new CancellationToken()).ConfigureAwait(false);
+            if (result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess())
+                return result.Content.Token;
+
+            return string.Empty;
         }
 
         #endregion

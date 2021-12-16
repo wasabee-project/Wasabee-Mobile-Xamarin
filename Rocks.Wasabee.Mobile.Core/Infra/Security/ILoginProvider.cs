@@ -11,6 +11,5 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         Task<UserModel?> DoWasabeeOneTimeTokenLoginAsync(string oneTimeToken);
         Task<GoogleToken?> RefreshTokenAsync(string refreshToken);
         Task RemoveTokenFromSecureStore();
-        void ClearCookie();
     }
 }

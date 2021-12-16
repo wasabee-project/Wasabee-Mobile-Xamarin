@@ -14,6 +14,12 @@ namespace Rocks.Wasabee.Mobile.Core.Models
         [JsonProperty("updateID")]
         public string UpdateId { get; set; }
     }
+
+    public class WasabeeJwtRefreshApiResponse : WasabeeApiResponse
+    {
+        [JsonProperty("jwk")]
+        public string Token { get; set; }
+    }
 #nullable enable
 
     public static class WasabeeApiResponseExtensions
