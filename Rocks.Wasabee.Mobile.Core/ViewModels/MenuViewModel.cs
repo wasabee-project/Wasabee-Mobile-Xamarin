@@ -47,6 +47,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private MvxSubscriptionToken? _token;
         private MvxSubscriptionToken? _tokenDebug;
         private MvxSubscriptionToken? _tokenOps;
+        private MvxSubscriptionToken? _tokenStopGeolocationFromNotification;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
@@ -111,6 +112,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 _preferences.Set(UserSettingsKeys.DevModeActivated, true);
             });
+            _tokenStopGeolocationFromNotification ??= _messenger.Subscribe<LiveGeolocationTrackingMessage>(msg =>
+            {
+                if (msg.Sender != this && msg.Action == Action.Stop)
+                    ToggleLiveLocationSharingCommand.Execute(false);
+            });
             
             if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
             {
@@ -136,6 +142,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _tokenDebug = null;
             _tokenOps?.Dispose();
             _tokenOps = null;
+            _tokenStopGeolocationFromNotification?.Dispose();
+            _tokenStopGeolocationFromNotification = null;
         }
 
         #region Properties
