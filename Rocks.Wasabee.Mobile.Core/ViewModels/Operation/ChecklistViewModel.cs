@@ -17,7 +17,7 @@ using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
-    public class ChecklistViewModel : BaseViewModel
+    public class ChecklistViewModel : BasePageInTabbedPageViewModel
     {
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamAgentsDatabase _teamAgentsDatabase;
@@ -61,11 +61,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             
             await RefreshCommand.ExecuteAsync();
         }
-
-        public override void ViewDisappeared()
+        
+        public override void Destroy()
         {
-            base.ViewDisappeared();
-
             _token?.Dispose();
             _token = null;
             _tokenRefresh?.Dispose();
