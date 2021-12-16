@@ -674,7 +674,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
-            await _operationsDatabase.DeleteAllData();
+            await _operationsDatabase.DeleteAllExceptOwnedBy(userModel.GoogleId);
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {
@@ -719,29 +719,41 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     selectedOp = string.Empty;
                 }
 
-                _ = Task.Factory.StartNew(async () =>
+                var opsToLoad = opsIds.Except(new[] { selectedOp }).ToList();
+                if (opsToLoad.Any())
                 {
-                    _userDialogs.Toast("Your OPs are loading in background");
-
-                    foreach (var id in opsIds.Except(new[] { selectedOp }))
+                    _ = Task.Factory.StartNew(async () =>
                     {
-                        op = await _wasabeeApiV1Service.Operations_GetOperation(id);
-                        if (op != null)
+                        _userDialogs.Toast("Your OPs are loading in background");
+                        
+                        foreach (var id in opsToLoad)
                         {
-                            // previously selected Operation can't be retrieved, set a new one as selected
-                            if (string.IsNullOrEmpty(selectedOp))
+                            var localOp = await _operationsDatabase.GetOperationModel(id);
+                            var userModelOp = userModel.Ops.FirstOrDefault(x => x.Id.Equals(id));
+                            if (userModelOp != null && localOp != null)
                             {
-                                selectedOp = op.Id;
-                                _preferences.Set(UserSettingsKeys.SelectedOp, selectedOp);
+                                if (localOp.Modified.Equals(userModelOp.Modified) || localOp.LastEditID.Equals(userModelOp.LastEditID))
+                                    continue;
                             }
 
-                            await _operationsDatabase.SaveOperationModel(op);
-                            _messenger.Publish(new NewOpAvailableMessage(this));
-                        }
-                    }
+                            op = await _wasabeeApiV1Service.Operations_GetOperation(id);
+                            if (op != null)
+                            {
+                                // previously selected Operation can't be retrieved, set a new one as selected
+                                if (string.IsNullOrEmpty(selectedOp))
+                                {
+                                    selectedOp = op.Id;
+                                    _preferences.Set(UserSettingsKeys.SelectedOp, selectedOp);
+                                }
 
-                    _userDialogs.Toast("OPs loaded succesfully");
-                }).ConfigureAwait(false);
+                                await _operationsDatabase.SaveOperationModel(op);
+                                _messenger.Publish(new NewOpAvailableMessage(this));
+                            }
+                        }
+
+                        _userDialogs.Toast("OPs loaded succesfully");
+                    }).ConfigureAwait(false);
+                }
             }
             else
             {

@@ -122,6 +122,12 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
 
         [JsonProperty("TeamID")]
         public string TeamId { get; set; }
+
+        [JsonProperty("Modified")]
+        public string Modified { get; set; }
+
+        [JsonProperty("LastEditID")]
+        public string LastEditID { get; set; }
     }
 
     public class AssignmentModel : BaseModel
