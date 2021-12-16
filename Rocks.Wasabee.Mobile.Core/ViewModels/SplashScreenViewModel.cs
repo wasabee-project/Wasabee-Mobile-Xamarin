@@ -763,7 +763,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var googleToken = JsonConvert.DeserializeObject<GoogleToken>(rawGoogleToken);
                 if (googleToken.CreatedAt.AddSeconds(double.Parse(googleToken.ExpiresIn)) <= DateTime.Now)
                 {
-                    var refreshedToken = await _authentificationService.RefreshTokenAsync(googleToken.RefreshToken);
+                    var refreshedToken = await _authentificationService.RefreshGoogleTokenAsync(googleToken.RefreshToken);
                     if (refreshedToken != null)
                     {
                         googleToken = new GoogleToken()

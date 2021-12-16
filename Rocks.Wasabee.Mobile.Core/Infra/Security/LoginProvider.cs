@@ -208,7 +208,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// </summary>
         /// <param name="refreshToken">Google's refresh token</param>
         /// <returns>Returns a <see cref="GoogleToken"/></returns>
-        public async Task<GoogleToken?> RefreshTokenAsync(string refreshToken)
+        public async Task<GoogleToken?> RefreshGoogleTokenAsync(string refreshToken)
         {
             _loggingService.Trace("Executing LoginProvider.RefreshTokenAsync");
 
@@ -239,10 +239,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             return googleToken;
         }
 
-        public Task RemoveTokenFromSecureStore()
+        public Task RemoveTokensFromSecureStore()
         {
             _loggingService.Trace("Executing LoginProvider.RemoveTokenFromSecureStore");
             _secureStorage.Remove(SecureStorageConstants.WasabeeToken);
+            _secureStorage.Remove(SecureStorageConstants.GoogleToken);
 
             return Task.CompletedTask;
         }

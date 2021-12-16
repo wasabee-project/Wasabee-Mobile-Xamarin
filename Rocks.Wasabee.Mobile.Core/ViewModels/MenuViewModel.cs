@@ -283,6 +283,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsLiveLocationSharingEnabled = false;
 
             await _authentificationService.LogoutAsync();
+
+            await _navigationService.Close(this);
             await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>());
 
             IsBusy = false;
