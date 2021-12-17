@@ -207,6 +207,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _usersDatabase.DeleteAllData();
 
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
+            if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
+                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
+
             var wtoken = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeToken);
             if (!string.IsNullOrWhiteSpace(wtoken) && RememberServerChoice)
             {
@@ -221,11 +225,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 LoadingStepLabel = "Google login success...";
                 await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
-
-                var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
-                if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
-                    SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
-
+                
                 if (SelectedServerItem.Server == WasabeeServer.Undefined)
                     ChangeServerCommand.Execute();
                 else
@@ -540,7 +540,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             var jwt = new JwtSecurityToken(wtoken);
             var span = DateTime.UtcNow - jwt.IssuedAt;
-            if (span > TimeSpan.FromHours(12))
+            if (span > TimeSpan.FromSeconds(1))
             {
                 var refreshedToken = await _wasabeeApiV1Service.User_RefreshWasabeeToken();
                 await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, refreshedToken);
