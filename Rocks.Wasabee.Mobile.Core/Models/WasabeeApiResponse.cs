@@ -17,7 +17,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models
 
     public class WasabeeJwtRefreshApiResponse : WasabeeApiResponse
     {
-        [JsonProperty("jwk")]
+        [JsonProperty("jwt")]
         public string Token { get; set; }
     }
 #nullable enable
