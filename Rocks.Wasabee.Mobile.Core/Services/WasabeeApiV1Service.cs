@@ -78,16 +78,16 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         Task<ApiResponse<LinkModel>> Operations_GetLink(string opId, string linkId);
 
         [Get("/draw/{opId}/link/{linkId}/complete")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Link_Complete(string opId, string linkId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Link_Complete(string opId, string linkId);
 
         [Get("/draw/{opId}/link/{linkId}/incomplete")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Link_Incomplete(string opId, string linkId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Link_Incomplete(string opId, string linkId);
 
         [Post("/draw/{opId}/link/{linkId}/claim")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Link_Claim(string opId, string linkId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Link_Claim(string opId, string linkId);
 
         [Post("/draw/{opId}/link/{linkId}/reject")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Link_Reject(string opId, string linkId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Link_Reject(string opId, string linkId);
 
         #endregion
 
@@ -97,19 +97,19 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         Task<ApiResponse<MarkerModel>> Operations_GetMarker(string opId, string markerId);
 
         [Get("/draw/{opId}/marker/{markerId}/acknowledge")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Marker_Acknowledge(string opId, string markerId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Marker_Acknowledge(string opId, string markerId);
 
         [Get("/draw/{opId}/marker/{markerId}/incomplete")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Marker_Incomplete(string opId, string markerId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Marker_Incomplete(string opId, string markerId);
 
         [Get("/draw/{opId}/marker/{markerId}/complete")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Marker_Complete(string opId, string markerId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Marker_Complete(string opId, string markerId);
 
         [Post("/draw/{opId}/marker/{markerId}/claim")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Marker_Claim(string opId, string markerId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Marker_Claim(string opId, string markerId);
 
         [Get("/draw/{opId}/marker/{markerId}/reject")]
-        Task<ApiResponse<WasabeeApiResponse>> Operation_Marker_Reject(string opId, string markerId);
+        Task<ApiResponse<WasabeeOpUpdateApiResponse>> Operation_Marker_Reject(string opId, string markerId);
 
         #endregion
 
@@ -238,25 +238,25 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             return result.IsSuccessStatusCode ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Link_Complete(string opId, string linkId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Link_Complete(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Complete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Link_Incomplete(string opId, string linkId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Link_Incomplete(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Incomplete(opId, linkId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Link_Claim(string opId, string linkId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Link_Claim(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Claim(opId, linkId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Link_Reject(string opId, string linkId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Link_Reject(string opId, string linkId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Link_Reject(opId, linkId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
@@ -272,31 +272,31 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             return result.IsSuccessStatusCode ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Marker_Acknowledge(string opId, string markerId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Marker_Acknowledge(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Acknowledge(opId, markerId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Marker_Incomplete(string opId, string markerId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Marker_Incomplete(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Incomplete(opId, markerId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Marker_Complete(string opId, string markerId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Marker_Complete(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Complete(opId, markerId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Marker_Claim(string opId, string markerId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Marker_Claim(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Claim(opId, markerId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;
         }
 
-        public async Task<WasabeeApiResponse?> Operation_Marker_Reject(string opId, string markerId)
+        public async Task<WasabeeOpUpdateApiResponse?> Operation_Marker_Reject(string opId, string markerId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Operation_Marker_Reject(opId, markerId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess() ? result.Content : null;

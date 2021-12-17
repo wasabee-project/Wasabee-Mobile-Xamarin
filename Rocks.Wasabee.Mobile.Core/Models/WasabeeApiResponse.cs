@@ -11,6 +11,13 @@ namespace Rocks.Wasabee.Mobile.Core.Models
         [JsonProperty("error")]
         public string Error { get; set; }
 
+        public bool IsSuccess()
+        {
+            return string.IsNullOrWhiteSpace(Error) && Status.Equals("ok");
+        }
+    }
+    public class WasabeeOpUpdateApiResponse : WasabeeApiResponse
+    {
         [JsonProperty("updateID")]
         public string UpdateId { get; set; }
     }
@@ -21,17 +28,4 @@ namespace Rocks.Wasabee.Mobile.Core.Models
         public string Token { get; set; }
     }
 #nullable enable
-
-    public static class WasabeeApiResponseExtensions
-    {
-        public static bool IsSuccess(this WasabeeApiResponse response)
-        {
-            return string.IsNullOrWhiteSpace(response.Error) && response.Status.Equals("ok");
-        }
-
-        public static bool HasUpdateId(this WasabeeApiResponse response)
-        {
-            return !string.IsNullOrWhiteSpace(response.UpdateId);
-        }
-    }
 }
