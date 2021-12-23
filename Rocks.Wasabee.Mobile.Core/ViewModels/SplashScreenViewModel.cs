@@ -559,7 +559,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 {
                     var jwt = new JwtSecurityToken(wtoken);
                     var span = DateTime.UtcNow - jwt.IssuedAt;
-                    if (span > TimeSpan.FromSeconds(1))
+                    if (span >= TimeSpan.FromHours(24))
                     {
                         var refreshedToken = await _wasabeeApiV1Service.User_RefreshWasabeeToken();
                         await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, refreshedToken);
