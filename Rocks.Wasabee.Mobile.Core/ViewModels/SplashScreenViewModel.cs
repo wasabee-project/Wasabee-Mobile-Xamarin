@@ -538,14 +538,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 return;
             }
 
-            var jwt = new JwtSecurityToken(wtoken);
-            var span = DateTime.UtcNow - jwt.IssuedAt;
-            if (span > TimeSpan.FromSeconds(1))
-            {
-                var refreshedToken = await _wasabeeApiV1Service.User_RefreshWasabeeToken();
-                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, refreshedToken);
-            }
-
             _isBypassingGoogleAndWasabeeLogin = true;
 
             var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
@@ -565,6 +557,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 try
                 {
+                    var jwt = new JwtSecurityToken(wtoken);
+                    var span = DateTime.UtcNow - jwt.IssuedAt;
+                    if (span > TimeSpan.FromSeconds(1))
+                    {
+                        var refreshedToken = await _wasabeeApiV1Service.User_RefreshWasabeeToken();
+                        await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, refreshedToken);
+                    }
+
                     var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
                     if (userModel != null)
                     {
