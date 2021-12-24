@@ -73,6 +73,12 @@
     <Compile Update="Themes\DarkTheme.xaml.cs">
       <DependentUpon>DarkTheme.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\AgentVerification\SubViews\AgentVerificationStep3View.xaml.cs">
+      <DependentUpon>AgentVerificationStep3View.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\AgentVerification\SubViews\AgentVerificationStep2View.xaml.cs">
+      <DependentUpon>AgentVerificationStep2View.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
@@ -85,7 +91,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Controls\FloatingLabelEntry.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Themes\BaseStyle.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AgentVerification\AgentVerificationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AgentVerification\SubViews\AgentVerificationStep1View.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Dialogs\LinkAssignmentDialog.xaml">

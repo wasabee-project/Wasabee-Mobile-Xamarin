@@ -33,7 +33,13 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         Task<ApiResponse<WasabeeApiResponse>> User_UpdateFirebaseToken([Body] string token);
 
         [Get("/me/jwtrefresh")]
-        Task<ApiResponse<WasabeeJwtRefreshApiResponse>> User_RefreshWasabeeToken();
+        Task<ApiResponse<WasabeeJwtApiResponse>> User_RefreshWasabeeToken();
+
+        [Get("/me/commproof?name={name}")]
+        Task<ApiResponse<WasabeeJwtApiResponse>> User_GetVerificationToken(string name);
+
+        [Get("/me/commverify?name={name}")]
+        Task<ApiResponse<WasabeeApiResponse>> User_GetVerificationStatus(string name);
 
         #endregion
 
@@ -168,6 +174,21 @@ namespace Rocks.Wasabee.Mobile.Core.Services
                 return result.Content.Token;
 
             return string.Empty;
+        }
+
+        public async Task<string> User_GetVerificationToken(string name)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.User_GetVerificationToken(name), new CancellationToken()).ConfigureAwait(false);
+            if (result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess())
+                return result.Content.Token;
+
+            return string.Empty;
+        }
+
+        public async Task<bool> User_GetVerificationStatus(string name)
+        {
+            var result = await AttemptAndRetry(() => WasabeeApiClient.User_GetVerificationStatus(name), new CancellationToken()).ConfigureAwait(false);
+            return result.IsSuccessStatusCode && result.Content != null && result.Content.IsSuccess();
         }
 
         #endregion

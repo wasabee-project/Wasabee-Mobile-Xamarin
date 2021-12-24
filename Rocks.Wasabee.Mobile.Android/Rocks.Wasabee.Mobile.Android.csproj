@@ -228,6 +228,8 @@
     <Compile Include="Infra\HttpClientFactory\Factory.cs" />
     <Compile Include="Infra\LocalNotification\LocalNotificationService.cs" />
     <Compile Include="MainApplication.cs" />
+    <Compile Include="Renderers\BorderlessEditorRenderer.cs" />
+    <Compile Include="Renderers\BorderlessEntryRenderer.cs" />
     <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
     <Compile Include="Services\Geolocation\LiveGeolocationService.cs" />
     <Compile Include="WasabeeBitmapConfig.cs" />

@@ -17,6 +17,7 @@ using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -651,7 +652,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     await PullDataFromServer(userModel)
                         .ContinueWith(async task =>
                         {
-                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
+                            if (string.IsNullOrEmpty(userModel.CommunityName))
+                                await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(), 
+                                    new AgentVerificationNavigationParameter(comingFromLogin: true));
+                            else
+                                await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
                         });
 
                 }
@@ -674,7 +679,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
-            await _operationsDatabase.DeleteAllExceptOwnedBy(userModel.GoogleId);
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {

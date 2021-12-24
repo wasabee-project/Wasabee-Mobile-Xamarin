@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep1SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:subViewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:system="clr-namespace:System;assembly=netstandard"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep1View"
+                       x:DataType="subViewModels:AgentVerificationStep1SubViewModel">
+  <ContentView.Content>
+      <Frame Padding="0" Margin="10,0" HasShadow="False" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+          <ScrollView>
+              <Grid RowDefinitions="*, Auto">
+                  <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand" Padding="10">
+                      <Label HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineHeight="1.25">
+                          <Label.FormattedText>
+                              <FormattedString>
+                                  <Span Text="Welcome to the" FontSize="Large"/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="Agent Community Verification" FontSize="22" FontAttributes="Bold"/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="🐝     🐝     🐝" FontSize="Large"/>
+                              </FormattedString>
+                          </Label.FormattedText>
+                      </Label>
+
+                      <Label Margin="0,20,0,0">
+                          <Label.FormattedText>
+                              <FormattedString>
+                                  <Span Text="Your Wasabee account isn't yet verified against Ingress Community forums." />
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="This process is easy and fast to complete." />
+                              </FormattedString>
+                          </Label.FormattedText>
+                      </Label>
+
+                      <Label Text="Step-by-step guide :" FontSize="Medium" Margin="0,20,0,0"/>
+                      <Label Margin="15,0">
+                          <Label.FormattedText>
+                              <FormattedString>
+                                  <Span Text="1. Wasabee generate a secure token (can't be faked or guessed) associated to your in-game name" />
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="2. Log in to the Ingress Community forums and post the token in the Activity feed" />
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="3. Wasabee will verify that the token is posted by the account with the same in-game name." />
+                              </FormattedString>
+                          </Label.FormattedText>
+                      </Label>
+                      <Label Text="This will give Wasabee the proof that you're the owner of both the Wasabee and the Ingress accounts."/>
+                      <Label Text="Attention : This doesn't verify you as an Enlightened player."/>
+                  </StackLayout>
+
+                  <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                      <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
+                              Text="✗   Later"
+                              HorizontalOptions="Start"
+                              Command="{Binding Parent.ExitCommand}"/>
+                      <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                              Text="Next   ›"
+                              HorizontalOptions="End"
+                              Command="{Binding Parent.NextStepCommand}"/>
+                  </Grid>
+              </Grid>
+          </ScrollView>
+      </Frame>
+  </ContentView.Content>
+</views:BaseContentView>
