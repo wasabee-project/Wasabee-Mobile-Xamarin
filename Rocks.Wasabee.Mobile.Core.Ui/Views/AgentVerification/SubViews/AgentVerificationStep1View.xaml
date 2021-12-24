@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep1SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -18,11 +18,11 @@
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
                                   <Span Text="Agent Community Verification" FontSize="22" FontAttributes="Bold"/>
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
-                                  <Span Text="{x:Static system:Environment.NewLine}"/>
-                                  <Span Text="🐝     🐝     🐝" FontSize="Large"/>
                               </FormattedString>
                           </Label.FormattedText>
                       </Label>
+
+                      <Label Text="🐝     🐝     🐝" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" />
 
                       <Label Margin="0,20,0,0">
                           <Label.FormattedText>

@@ -671,12 +671,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                                 }
                             }
                         }
+                        
+                        await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
 
                         if (shouldGoToAgentCommunityVerification)
                             await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(), 
                                 new AgentVerificationNavigationParameter(comingFromLogin: true));
-                        else
-                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
                     });
 
                 }

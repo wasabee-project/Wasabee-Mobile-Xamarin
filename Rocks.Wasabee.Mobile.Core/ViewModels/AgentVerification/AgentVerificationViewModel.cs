@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;
-using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
@@ -95,10 +94,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
         private void ExitExecuted()
         {
             SaveDontAskAgainSetting();
-
-            _navigationService.Navigate<RootViewModel>();
-            if (_parameter.ComingFromLogin is false)
-                _navigationService.Navigate<ProfileViewModel>();
 
             _navigationService.Close(this);
         }

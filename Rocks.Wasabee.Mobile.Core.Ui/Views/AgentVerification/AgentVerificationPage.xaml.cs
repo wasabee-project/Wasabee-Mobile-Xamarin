@@ -9,7 +9,7 @@ using Xamarin.Forms.Xaml;
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [MvxContentPagePresentation(Animated = false, WrapInNavigationPage = false)]
+    [MvxModalPresentation(Animated = true, WrapInNavigationPage = false)]
     public partial class AgentVerificationPage : MvxContentPage<AgentVerificationViewModel>
     {
         public AgentVerificationPage()
