@@ -649,15 +649,35 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 else
                 {
-                    await PullDataFromServer(userModel)
-                        .ContinueWith(async task =>
+                    await PullDataFromServer(userModel).ContinueWith(async task =>
+                    {
+                        var shouldGoToAgentCommunityVerification = false;
+                        if (string.IsNullOrEmpty(userModel.CommunityName))
                         {
-                            if (string.IsNullOrEmpty(userModel.CommunityName))
-                                await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(), 
-                                    new AgentVerificationNavigationParameter(comingFromLogin: true));
-                            else
-                                await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
-                        });
+                            shouldGoToAgentCommunityVerification = true;
+
+                            if (_preferences.ContainsKey(UserSettingsKeys.NeverShowAgentCommunityVerificationAgain))
+                            {
+                                var dontAskAgainRawConfig = _preferences.Get(UserSettingsKeys.NeverShowAgentCommunityVerificationAgain, string.Empty);
+                                if (string.IsNullOrEmpty(dontAskAgainRawConfig) is false)
+                                {
+                                    var config = JsonConvert.DeserializeObject<DontAskAgainConfig>(dontAskAgainRawConfig);
+                                    if (config is not null)
+                                    {
+                                        var loggedUserId = _userSettingsService.GetLoggedUserGoogleId();
+                                        if (config.Values.ContainsKey(loggedUserId))
+                                            shouldGoToAgentCommunityVerification = !config.Values[loggedUserId];
+                                    }
+                                }
+                            }
+                        }
+
+                        if (shouldGoToAgentCommunityVerification)
+                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(), 
+                                new AgentVerificationNavigationParameter(comingFromLogin: true));
+                        else
+                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
+                    });
 
                 }
             }

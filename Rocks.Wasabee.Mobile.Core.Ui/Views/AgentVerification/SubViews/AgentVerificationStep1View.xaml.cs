@@ -1,4 +1,5 @@
 ﻿using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;
+using System;
 using Xamarin.Forms.Xaml;
 
 namespace Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews
@@ -9,6 +10,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews
         public AgentVerificationStep1View()
         {
             InitializeComponent();
+        }
+
+        private void DontAskAgainLabel_OnTapped(object sender, EventArgs e)
+        {
+            ViewModel.IsDontAskAgainChecked = !ViewModel.IsDontAskAgainChecked;
         }
     }
 }

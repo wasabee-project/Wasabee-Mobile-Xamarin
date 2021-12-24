@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep1SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -50,14 +50,25 @@
                       <Label Text="Attention : This doesn't verify you as an Enlightened player."/>
                   </StackLayout>
 
-                  <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                      <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
+                  <Grid Grid.Row="1" ColumnDefinitions="90,*,90" RowDefinitions="Auto, *" RowSpacing="0">
+                      <StackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Spacing="0"
+                                   IsVisible="{Binding IsDontAskAgainVisible}">
+                          <StackLayout Orientation="Horizontal" Spacing="0">
+                              <CheckBox VerticalOptions="Center"
+                                        IsChecked="{Binding IsDontAskAgainChecked}"/>
+                              <Label Text="Don't ask again" VerticalOptions="Center">
+                                  <Label.GestureRecognizers>
+                                      <TapGestureRecognizer Tapped="DontAskAgainLabel_OnTapped" />
+                                  </Label.GestureRecognizers>
+                              </Label>
+                          </StackLayout>
+                      </StackLayout>
+                      
+                      <Button Grid.Column="0" Grid.Row="1" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
                               Text="✗   Later"
-                              HorizontalOptions="Start"
                               Command="{Binding Parent.ExitCommand}"/>
-                      <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                      <Button Grid.Column="2" Grid.Row="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
                               Text="Next   ›"
-                              HorizontalOptions="End"
                               Command="{Binding Parent.NextStepCommand}"/>
                   </Grid>
               </Grid>
