@@ -50,13 +50,7 @@
                       </StackLayout>
                       
                       <StackLayout Spacing="15" IsVisible="{Binding HasOpenedCommunity}">
-                          <Label>
-                              <Label.FormattedText>
-                                  <FormattedString>
-                                      <Span Text="Once you've posted the token to the community Forums, click the button below to start the verification process."/>
-                                  </FormattedString>
-                              </Label.FormattedText>
-                          </Label>
+                          <Label Text="Once you've posted the token to the community Forums, click the button below to start the verification process." />
 
                           <Button Text="Verify me"
                                   HorizontalOptions="Center"

@@ -58,7 +58,7 @@
                                   <Label.FormattedText>
                                       <FormattedString>
                                           <Span Text="Token for : "/>
-                                          <Span Text="{Binding Parent.AgentName}"/>
+                                          <Span Text="{Binding Parent.AgentName}" FontAttributes="Italic"/>
                                       </FormattedString>
                                   </Label.FormattedText>
                               </Label>
