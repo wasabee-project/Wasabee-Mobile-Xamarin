@@ -50,7 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public string Modified { get; set; }
 
         [JsonProperty("lasteditid")]
-        public string LastEditID { get; set; }
+        public string LastEditId { get; set; }
 
         [JsonIgnore]
         public bool IsHiddenLocally { get; set; } = false;

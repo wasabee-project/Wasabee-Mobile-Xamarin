@@ -58,7 +58,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly LinksDatabase _linksDatabase;
         private readonly MarkersDatabase _markersDatabase;
         private readonly TeamsDatabase _teamsDatabase;
-        private readonly TeamAgentsDatabase _teamAgentsDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
 
         private bool _working = false;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
@@ -72,7 +72,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IAuthentificationService authentificationService, IMvxNavigationService navigationService, IMvxMessenger messenger,
             ISecureStorage secureStorage, IAppSettings appSettings, IUserSettingsService userSettingsService, IUserDialogs userDialogs,
             WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, LinksDatabase linksDatabase,
-            MarkersDatabase markersDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase)
+            MarkersDatabase markersDatabase, TeamsDatabase teamsDatabase, AgentsDatabase agentsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
@@ -90,7 +90,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _linksDatabase = linksDatabase;
             _markersDatabase = markersDatabase;
             _teamsDatabase = teamsDatabase;
-            _teamAgentsDatabase = teamAgentsDatabase;
+            _agentsDatabase = agentsDatabase;
         }
 
         public void Prepare(SplashScreenNavigationParameter parameter)
@@ -297,7 +297,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
                     _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
-                    _userSettingsService.SaveIngressName(wasabeeUserModel.IngressName);
+                    _userSettingsService.SaveIngressName(wasabeeUserModel.Name);
 
                     await FinishLogin(wasabeeUserModel, LoginMethod.OneTimeToken);
                 }
@@ -519,8 +519,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 {
                     await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
-                    _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel!.GoogleId);
-                    _userSettingsService.SaveIngressName(wasabeeUserModel!.IngressName);
+                    _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
+                    _userSettingsService.SaveIngressName(wasabeeUserModel.Name);
 
                     await FinishLogin(wasabeeUserModel, LoginMethod.Google);
                 }
@@ -647,7 +647,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 _preferences.Remove(UserSettingsKeys.SavedServerChoice);
             }
 
-            LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_WelcomeAgent, userModel.IngressName);
+            LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_WelcomeAgent, userModel.Name);
             await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime * 2));
 
             try
@@ -709,7 +709,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                                Strings.SignIn_Label_PleaseWait;
 
             await _teamsDatabase.DeleteAllData();
-            await _teamAgentsDatabase.DeleteAllData();
+            await _agentsDatabase.DeleteAllData();
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {
@@ -767,7 +767,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                             var userModelOp = userModel.Ops.FirstOrDefault(x => x.Id.Equals(id));
                             if (userModelOp != null && localOp != null)
                             {
-                                if (localOp.Modified.Equals(userModelOp.Modified) || localOp.LastEditID.Equals(userModelOp.LastEditID))
+                                if (localOp.Modified.Equals(userModelOp.Modified) || localOp.LastEditId.Equals(userModelOp.LastEditId))
                                     continue;
                             }
 

@@ -16,7 +16,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public TeamsDatabase(IFileSystem fileSystem, ILoggingService loggingService) : base(fileSystem, loggingService, TimeSpan.FromDays(7))
         {
             GetDatabaseConnection<TeamAgent>().ConfigureAwait(false);
-            GetDatabaseConnection<TeamAgentsDatabase.TeamAgentDatabaseModel>().ConfigureAwait(false);
+            GetDatabaseConnection<AgentsDatabase.AgentDatabaseModel>().ConfigureAwait(false);
         }
 
         public override async Task<int> DeleteAllData()
@@ -196,7 +196,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             public string Name { get; set; }
 
             [ManyToMany(typeof(TeamAgent), CascadeOperations = CascadeOperation.All)]
-            public List<TeamAgentsDatabase.TeamAgentDatabaseModel> Agents { get; set; }
+            public List<AgentsDatabase.AgentDatabaseModel> Agents { get; set; }
 
             public DateTime DownloadedAt { get; set; }
 
@@ -206,7 +206,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     Id = teamDatabaseModel.TeamId,
                     Name = teamDatabaseModel.Name,
-                    Agents = teamDatabaseModel.Agents?.Select(agentDbModel => TeamAgentsDatabase.TeamAgentDatabaseModel.ToTeamAgentModel(agentDbModel)).ToList(),
+                    Agents = teamDatabaseModel.Agents?.Select(agentDbModel => AgentsDatabase.AgentDatabaseModel.ToTeamAgentModel(agentDbModel)).ToList(),
                     DownloadedAt = teamDatabaseModel.DownloadedAt
                 };
             }
@@ -217,7 +217,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     TeamId = teamModel.Id,
                     Name = teamModel.Name,
-                    Agents = teamModel.Agents?.Select(agentModel => TeamAgentsDatabase.TeamAgentDatabaseModel.ToTeamAgentDatabaseModel(agentModel)).ToList(),
+                    Agents = teamModel.Agents?.Select(agentModel => AgentsDatabase.AgentDatabaseModel.ToAgentDatabaseModel(agentModel)).ToList(),
                     DownloadedAt = teamModel.DownloadedAt
                 };
             }
@@ -231,7 +231,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         [ForeignKey(typeof(TeamsDatabase.TeamDatabaseModel))]
         public string TeamId { get; set; }
 
-        [ForeignKey(typeof(TeamAgentsDatabase.TeamAgentDatabaseModel))]
+        [ForeignKey(typeof(AgentsDatabase.AgentDatabaseModel))]
         public string AgentId { get; set; }
     }
 #nullable enable

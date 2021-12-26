@@ -1,5 +1,6 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
 using Rocks.Wasabee.Mobile.Core.Helpers.Xaml;
+using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Ui.Helpers.Extensions;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Teams;
@@ -129,7 +130,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Teams
 
             AgentsList.SelectedItem = null;
 
-            if (sender is BindableObject { BindingContext: TeamAgentModel agent })
+            if (sender is BindableObject { BindingContext: AgentModel agent })
             {
                 await ViewModel.ShowAgentCommand.ExecuteAsync(agent);
             }

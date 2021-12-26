@@ -7,8 +7,8 @@ using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
-using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
@@ -24,7 +24,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
     public class AssignmentsListViewModel : BasePageInTabbedPageViewModel
     {
         private readonly OperationsDatabase _operationsDatabase;
-        private readonly TeamAgentsDatabase _teamAgentsDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly IPreferences _preferences;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IMvxMessenger _messenger;
@@ -41,12 +41,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private int _pendingRefreshCount = 0;
 
-        public AssignmentsListViewModel(OperationsDatabase operationsDatabase, TeamAgentsDatabase teamAgentsDatabase, IPreferences preferences,
+        public AssignmentsListViewModel(OperationsDatabase operationsDatabase, AgentsDatabase agentsDatabase, IPreferences preferences,
             IUserSettingsService userSettingsService, IMvxMessenger messenger, IDialogNavigationService dialogNavigationService,
             IMvxNavigationService navigationService, WasabeeApiV1Service wasabeeApiV1Service, IUserDialogs userDialogs)
         {
             _operationsDatabase = operationsDatabase;
-            _teamAgentsDatabase = teamAgentsDatabase;
+            _agentsDatabase = agentsDatabase;
             _preferences = preferences;
             _userSettingsService = userSettingsService;
             _messenger = messenger;
@@ -252,7 +252,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new LinkAssignmentData(Operation!.Id, link.ThrowOrderPos)
             {
                 Link = link,
-                AssignedAgent = string.IsNullOrEmpty(link.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(link.AssignedTo).Result,
+                AssignedAgent = string.IsNullOrEmpty(link.AssignedTo) ? null : _agentsDatabase.GetAgent(link.AssignedTo).Result,
                 FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.FromPortalId)),
                 ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.ToPortalId)),
                 Color = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color)
@@ -267,7 +267,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _agentsDatabase.GetAgent(marker.AssignedTo).Result,
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
@@ -289,7 +289,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public LinkModel? Link { get; set; }
         public MarkerModel? Marker { get; set; }
 
-        public TeamAgentModel? AssignedAgent { get; set; }
+        public AgentModel? AssignedAgent { get; set; }
         public bool ShowAssignee { get; set; } = false;
     }
 

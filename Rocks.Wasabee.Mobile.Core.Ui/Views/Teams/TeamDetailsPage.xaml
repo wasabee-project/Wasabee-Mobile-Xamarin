@@ -9,7 +9,7 @@
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-                       xmlns:models="clr-namespace:Rocks.Wasabee.Mobile.Core.Models.Teams;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:models="clr-namespace:Rocks.Wasabee.Mobile.Core.Models.Agent;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamDetailsPage"
                        x:Name="Page"
                        Title="{Binding Title}"
@@ -41,7 +41,7 @@
                     </CollectionView.ItemsLayout>
 
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:TeamAgentModel">
+                        <DataTemplate x:DataType="models:AgentModel">
                             <SwipeView>
 
                                 <SwipeView.RightItems>

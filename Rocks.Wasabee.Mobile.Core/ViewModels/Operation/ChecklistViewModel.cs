@@ -20,7 +20,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
     public class ChecklistViewModel : BasePageInTabbedPageViewModel
     {
         private readonly OperationsDatabase _operationsDatabase;
-        private readonly TeamAgentsDatabase _teamAgentsDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly IMvxMessenger _messenger;
         private readonly IDialogNavigationService _dialogNavigationService;
         private readonly IPreferences _preferences;
@@ -32,11 +32,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private int _pendingRefreshCount = 0;
 
-        public ChecklistViewModel(OperationsDatabase operationsDatabase, TeamAgentsDatabase teamAgentsDatabase,
+        public ChecklistViewModel(OperationsDatabase operationsDatabase, AgentsDatabase agentsDatabase,
             IMvxMessenger messenger, IDialogNavigationService dialogNavigationService, IPreferences preferences)
         {
             _operationsDatabase = operationsDatabase;
-            _teamAgentsDatabase = teamAgentsDatabase;
+            _agentsDatabase = agentsDatabase;
             _messenger = messenger;
             _dialogNavigationService = dialogNavigationService;
             _preferences = preferences;
@@ -226,7 +226,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new LinkAssignmentData(Operation!.Id, link.ThrowOrderPos)
             {
                 Link = link,
-                AssignedAgent = string.IsNullOrEmpty(link.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(link.AssignedTo).Result,
+                AssignedAgent = string.IsNullOrEmpty(link.AssignedTo) ? null : _agentsDatabase.GetAgent(link.AssignedTo).Result,
                 ShowAssignee = !string.IsNullOrEmpty(link.AssignedTo),
                 FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.FromPortalId)),
                 ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.ToPortalId)),
@@ -242,7 +242,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _agentsDatabase.GetAgent(marker.AssignedTo).Result,
                 ShowAssignee = !string.IsNullOrEmpty(marker.AssignedTo),
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };

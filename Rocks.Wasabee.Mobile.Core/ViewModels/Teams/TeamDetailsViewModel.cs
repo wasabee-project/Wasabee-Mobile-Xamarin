@@ -1,4 +1,4 @@
-using Acr.UserDialogs;
+﻿using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross;
 using MvvmCross.Commands;
@@ -7,6 +7,7 @@ using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
@@ -114,8 +115,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             IsRefreshing = false;
         }
 
-        public IMvxAsyncCommand<TeamAgentModel> ShowAgentCommand => new MvxAsyncCommand<TeamAgentModel>(ShowAgentExecuted);
-        private async Task ShowAgentExecuted(TeamAgentModel agent)
+        public IMvxAsyncCommand<AgentModel> ShowAgentCommand => new MvxAsyncCommand<AgentModel>(ShowAgentExecuted);
+        private async Task ShowAgentExecuted(AgentModel agent)
         {
             LoggingService.Trace("Executing TeamDetailsViewModel.ShowAgentCommand");
 
@@ -131,8 +132,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             IsBusy = false;
         }
 
-        public IMvxAsyncCommand<TeamAgentModel> RemoveAgentCommand => new MvxAsyncCommand<TeamAgentModel>(RemoveAgentExecuted);
-        private async Task RemoveAgentExecuted(TeamAgentModel agent)
+        public IMvxAsyncCommand<AgentModel> RemoveAgentCommand => new MvxAsyncCommand<AgentModel>(RemoveAgentExecuted);
+        private async Task RemoveAgentExecuted(AgentModel agent)
         {
             LoggingService.Trace("Executing TeamDetailsViewModel.RemoveAgentCommand");
 

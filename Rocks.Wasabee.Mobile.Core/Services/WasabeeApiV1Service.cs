@@ -3,8 +3,8 @@ using Newtonsoft.Json.Serialization;
 using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Models;
+using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
-using Rocks.Wasabee.Mobile.Core.Models.Teams;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
@@ -46,7 +46,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
         #region Agents
 
         [Get("/agent/{agentId}")]
-        Task<ApiResponse<TeamAgentModel>> Agents_GetAgent(string agentId);
+        Task<ApiResponse<AgentModel>> Agents_GetAgent(string agentId);
 
         #endregion
 
@@ -195,7 +195,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
         #region Agents
 
-        public async Task<TeamAgentModel?> Agents_GetAgent(string agentId)
+        public async Task<AgentModel?> Agents_GetAgent(string agentId)
         {
             var result = await AttemptAndRetry(() => WasabeeApiClient.Agents_GetAgent(agentId), new CancellationToken()).ConfigureAwait(false);
             return result.IsSuccessStatusCode ? result.Content : null;

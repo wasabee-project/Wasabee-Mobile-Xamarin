@@ -78,7 +78,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             {
                 await Mvx.IoCProvider.Resolve<UsersDatabase>().DeleteAllData();
                 await Mvx.IoCProvider.Resolve<TeamsDatabase>().DeleteAllData();
-                await Mvx.IoCProvider.Resolve<TeamAgentsDatabase>().DeleteAllData();
+                await Mvx.IoCProvider.Resolve<AgentsDatabase>().DeleteAllData();
                 await Mvx.IoCProvider.Resolve<OperationsDatabase>().DeleteAllData();
                 await Mvx.IoCProvider.Resolve<LinksDatabase>().DeleteAllData();
                 await Mvx.IoCProvider.Resolve<MarkersDatabase>().DeleteAllData();

@@ -114,7 +114,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string EnlId { get; set; }
 
-            public string IngressName { get; set; }
+            public string Name { get; set; }
+
             public string CommunityName { get; set; }
 
             public int Level { get; set; }
@@ -129,10 +130,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string ProfileImage { get; set; }
 
-            public bool Raid { get; set; }
-
-            public bool Risc { get; set; }
-
             public string Telegram { get; set; }
 
             public string TeamsBlobbed { get; set; }
@@ -143,10 +140,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [TextBlob("OpsBlobbed")]
             public List<OpModel> Ops { get; set; }
 
-            public string AssignmentsBlobbed { get; set; }
-            [TextBlob("AssignmentsBlobbed")]
-            public List<AssignmentModel> Assignments { get; set; }
-
             public static UserModel ToUserModel(UserDatabaseModel userDatabaseModel)
             {
                 try
@@ -155,7 +148,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     {
                         GoogleId = userDatabaseModel.GoogleId,
                         EnlId = userDatabaseModel.EnlId,
-                        IngressName = userDatabaseModel.IngressName,
+                        Name = userDatabaseModel.Name,
                         CommunityName = userDatabaseModel.CommunityName,
                         Level = userDatabaseModel.Level,
                         LocationKey = userDatabaseModel.LocationKey,
@@ -163,12 +156,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         VVerified = userDatabaseModel.VVerified,
                         Blacklisted = userDatabaseModel.Blacklisted,
                         ProfileImage = userDatabaseModel.ProfileImage,
-                        Raid = userDatabaseModel.Raid,
-                        Risc = userDatabaseModel.Risc,
                         Telegram = string.IsNullOrWhiteSpace(userDatabaseModel.Telegram) ? new TelegramModel() : JsonConvert.DeserializeObject<TelegramModel>(userDatabaseModel.Telegram),
                         Teams = userDatabaseModel.Teams ?? new List<UserTeamModel>(),
-                        Ops = userDatabaseModel.Ops ?? new List<OpModel>(),
-                        Assignments = userDatabaseModel.Assignments ?? new List<AssignmentModel>()
+                        Ops = userDatabaseModel.Ops ?? new List<OpModel>()
 
                     };
                 }
@@ -184,7 +174,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     GoogleId = userModel.GoogleId,
                     EnlId = userModel.EnlId,
-                    IngressName = userModel.IngressName,
+                    Name = userModel.Name,
                     CommunityName = userModel.CommunityName,
                     Level = userModel.Level,
                     LocationKey = userModel.LocationKey,
@@ -192,12 +182,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     VVerified = userModel.VVerified,
                     Blacklisted = userModel.Blacklisted,
                     ProfileImage = userModel.ProfileImage,
-                    Raid = userModel.Raid,
-                    Risc = userModel.Risc,
                     Telegram = userModel.Telegram != null ? JsonConvert.SerializeObject(userModel.Telegram) : string.Empty,
                     Teams = userModel.Teams ?? new List<UserTeamModel>(),
-                    Ops = userModel.Ops ?? new List<OpModel>(),
-                    Assignments = userModel.Assignments ?? new List<AssignmentModel>()
+                    Ops = userModel.Ops ?? new List<OpModel>()
                 };
             }
         }

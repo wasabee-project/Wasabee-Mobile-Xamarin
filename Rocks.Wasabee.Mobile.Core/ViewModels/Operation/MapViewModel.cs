@@ -34,7 +34,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamsDatabase _teamsDatabase;
-        private readonly TeamAgentsDatabase _teamAgentsDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly UsersDatabase _usersDatabase;
         private readonly IPreferences _preferences;
         private readonly IMvxMessenger _messenger;
@@ -54,13 +54,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
         private bool _isLoadingAgentsLocations;
 
-        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, TeamAgentsDatabase teamAgentsDatabase,
+        public MapViewModel(OperationsDatabase operationsDatabase, TeamsDatabase teamsDatabase, AgentsDatabase agentsDatabase,
             UsersDatabase usersDatabase, IPreferences preferences, IMvxMessenger messenger, IClipboard clipboard, IMap map,
             IUserDialogs userDialogs, IUserSettingsService userSettingsService, WasabeeApiV1Service wasabeeApiV1Service, IDialogNavigationService dialogNavigationService)
         {
             _operationsDatabase = operationsDatabase;
             _teamsDatabase = teamsDatabase;
-            _teamAgentsDatabase = teamAgentsDatabase;
+            _agentsDatabase = agentsDatabase;
             _usersDatabase = usersDatabase;
             _preferences = preferences;
             _messenger = messenger;
@@ -382,7 +382,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                         if (!string.IsNullOrWhiteSpace(marker.AssignedTo))
                         {
-                            var assignedTo = await _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo);
+                            var assignedTo = await _agentsDatabase.GetAgent(marker.AssignedTo);
                             if (assignedTo != null)
                                 pin.AssignedTo = assignedTo.Name;
                         }
@@ -576,7 +576,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         return;
                 }
 
-                var agent = await _teamAgentsDatabase.GetTeamAgent(agentId);
+                var agent = await _agentsDatabase.GetAgent(agentId);
                 if (agent == null)
                 {
                     var team = await _teamsDatabase.GetTeam(message.TeamId);
@@ -608,7 +608,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                 Agents.Add(updatedAgentPin);
 
-                await _teamAgentsDatabase.SaveTeamAgentModel(updatedAgent);
+                await _agentsDatabase.SaveTeamAgentModel(updatedAgent);
             }
             catch (Exception e)
             {
@@ -715,7 +715,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _teamAgentsDatabase.GetTeamAgent(marker.AssignedTo).Result,
+                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _agentsDatabase.GetAgent(marker.AssignedTo).Result,
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
@@ -801,7 +801,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return wasabeeLink;
         }
 
-        private WasabeeAgentPin CreateAgentPin(Models.Teams.TeamAgentModel agent, bool isAgentAssignedToOperation, bool isCurrentUser = false)
+        private WasabeeAgentPin CreateAgentPin(Models.Agent.AgentModel agent, bool isAgentAssignedToOperation, bool isCurrentUser = false)
         {
             var pin = new Pin()
             {
@@ -965,7 +965,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                     if (!string.IsNullOrWhiteSpace(updateMessage.MarkerData.AssignedTo))
                     {
-                        var assignedTo = await _teamAgentsDatabase.GetTeamAgent(updateMessage.MarkerData.AssignedTo);
+                        var assignedTo = await _agentsDatabase.GetAgent(updateMessage.MarkerData.AssignedTo);
                         if (assignedTo != null)
                             pin.AssignedTo = assignedTo.Name;
                     }
