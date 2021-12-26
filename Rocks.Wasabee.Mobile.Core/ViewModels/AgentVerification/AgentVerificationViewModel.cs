@@ -56,6 +56,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
             return base.Initialize();
         }
 
+        public override void ViewAppeared()
+        {
+            base.ViewAppeared();
+
+            if (Steps == null)
+                return;
+            
+            foreach (var step in Steps)
+                step.ViewAppeared();
+        }
+
         #region Properties
 
         public MvxObservableCollection<BaseViewModel>? Steps { get; set; }
