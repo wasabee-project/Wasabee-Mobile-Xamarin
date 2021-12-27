@@ -117,9 +117,121 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ACV_Button_Back" xml:space="preserve">
+    <value>‹   Back</value>
+    <comment>Go back</comment>
+  </data>
+  <data name="ACV_Button_Later" xml:space="preserve">
+    <value>✗   Later</value>
+    <comment>ACV Button to exit process and od it later</comment>
+  </data>
+  <data name="ACV_Button_Next" xml:space="preserve">
+    <value>Next   ›</value>
+    <comment>Go next</comment>
+  </data>
+  <data name="ACV_Step1_Label_AccountNotVerified" xml:space="preserve">
+    <value>Your Wasabee account isn't yet verified with Ingress Community forums.</value>
+    <comment>ACV explains account isn't verified</comment>
+  </data>
+  <data name="ACV_Step1_Label_FastProcess" xml:space="preserve">
+    <value>This process is easy and fast to complete.</value>
+    <comment>ACV is quick and fast</comment>
+  </data>
+  <data name="ACV_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>This will prove to Wasabee that you are the owner of both the Wasabee and Ingress accounts.</value>
+    <comment>ACV Notice, what does linking do</comment>
+  </data>
+  <data name="ACV_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts.</value>
+    <comment>ACV Notice, linking doesn't get your faction</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide" xml:space="preserve">
+    <value>Step-by-step guide :</value>
+    <comment>ACV guide</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee generates a secure token (that can't be faked or guessed) to associate with your in-game name.</value>
+    <comment>ACV Guide step 1</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. Log in to the Ingress Community forums and post the token in the Activity feed</value>
+    <comment>ACV Guide step 2</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee will verify that the token is posted by the account with the same in-game name.</value>
+    <comment>ACV Guide step 3</comment>
+  </data>
+  <data name="ACV_Step1_Label_Welcome" xml:space="preserve">
+    <value>Welcome to the</value>
+    <comment>Agent Community Verification welcome</comment>
+  </data>
+  <data name="ACV_Step2_Button_GetToken" xml:space="preserve">
+    <value>Get my token</value>
+    <comment>Button to get verification token</comment>
+  </data>
+  <data name="ACV_Step2_Input_InGameName" xml:space="preserve">
+    <value>In-game name</value>
+    <comment>Input for in-game name</comment>
+  </data>
+  <data name="ACV_Step2_Label_CaseSensitive" xml:space="preserve">
+    <value>Be sure to write it exactly as in Ingress !</value>
+    <comment>Label to tell user it's case sensitive</comment>
+  </data>
+  <data name="ACV_Step2_Label_TokenFor" xml:space="preserve">
+    <value>Token for : {0}</value>
+    <comment>Showing user which in-game name is used for the token</comment>
+  </data>
+  <data name="ACV_Step2_Label_TokenIs" xml:space="preserve">
+    <value>Your token is</value>
+    <comment>Showing token</comment>
+  </data>
+  <data name="ACV_Step3_Button_OpenCommunityForums" xml:space="preserve">
+    <value>Open Community Forums</value>
+    <comment>ACV button to open Community Forums</comment>
+  </data>
+  <data name="ACV_Step3_Button_VerifyMe" xml:space="preserve">
+    <value>Verify me</value>
+    <comment>ACV Button to get verified </comment>
+  </data>
+  <data name="ACV_Step3_Label_AfterPostExplanation" xml:space="preserve">
+    <value>Once you've posted the token to the community Forums, click the button below to start the verification process.</value>
+    <comment>ACV explains what to do after posting token</comment>
+  </data>
+  <data name="ACV_Step3_Label_PostTokenOnCommunityForums" xml:space="preserve">
+    <value>Post your token in the Activity feed of Ingress Community forums.</value>
+    <comment>ACV explains what to do with the token</comment>
+  </data>
+  <data name="ACV_Step3_Label_Verified_AccountVerified" xml:space="preserve">
+    <value>Your Wasabee account is now verified with the Community forums.</value>
+    <comment>ACV explains agent account is now verified</comment>
+  </data>
+  <data name="ACV_Step3_Label_Verified_BeeExplanation" xml:space="preserve">
+    <value>Your profile now displays a 🐝!</value>
+    <comment>ACV explains verified profiles will have a bee displayed</comment>
+  </data>
+  <data name="ACV_Step3_Label_Verified_WellDone" xml:space="preserve">
+    <value>Well done!</value>
+    <comment>ACV succeeded</comment>
+  </data>
   <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
     <value>Available OP's :</value>
     <comment>Title for the popup where user select an OP</comment>
+  </data>
+  <data name="Dialogs_Title_CustomServerUrl" xml:space="preserve">
+    <value>Custom server URL :</value>
+    <comment>Input title for setting custom server URL</comment>
+  </data>
+  <data name="Dialogs_Warning_ACVFailed" xml:space="preserve">
+    <value>Agent Community Verification failed. Please make sure you posted the token and retry.</value>
+    <comment>Warning popup when Wasabee failed verification process in ACV</comment>
+  </data>
+  <data name="Dialogs_Warning_InGameNameAlreadyVerified" xml:space="preserve">
+    <value>It seems that this Ingress name has already been verified.</value>
+    <comment>Warning popup when user tries to verify an already verified in-game name</comment>
+  </data>
+  <data name="Dialogs_Warning_InGameNameRequired" xml:space="preserve">
+    <value>Your in-game name is required!</value>
+    <comment>Warning popup when user didn't set his in-game name for ACV process</comment>
   </data>
   <data name="Dialogs_Warning_LocationPermissionRequired" xml:space="preserve">
     <value>Geolocation permission is required !</value>
@@ -154,8 +266,20 @@
   <data name="Global_Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="Global_DevModeActivated" xml:space="preserve">
+    <value>Dev mode activated</value>
+    <comment>User enabled dev mode</comment>
+  </data>
   <data name="Global_ErrorOccuredPleaseRetry" xml:space="preserve">
     <value>Error occured, please retry</value>
+  </data>
+  <data name="Global_Exit" xml:space="preserve">
+    <value>Exit</value>
+    <comment>Exit label</comment>
+  </data>
+  <data name="Global_NeverAskAgain" xml:space="preserve">
+    <value>Don't ask again</value>
+    <comment>Don't ask again label</comment>
   </data>
   <data name="Global_No" xml:space="preserve">
     <value>No</value>

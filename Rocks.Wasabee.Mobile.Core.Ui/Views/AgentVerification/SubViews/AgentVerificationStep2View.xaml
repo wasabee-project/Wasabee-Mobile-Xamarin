@@ -7,6 +7,7 @@
                        xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep2View"
                        x:DataType="subViewModels:AgentVerificationStep2SubViewModel">
     
@@ -42,9 +43,9 @@
                                                        TitleColor="{DynamicResource PrimaryTextColor}"
                                                        BorderColor="{DynamicResource PrimaryTextColor}"/>
 
-                          <Label Text="Be sure to write it exactly as in Ingress !" HorizontalOptions="Center"/>
+                          <Label Text="{xaml:Translate ACV_Step2_Label_CaseSensitive}" HorizontalOptions="Center"/>
 
-                          <Button Text="Get my token" Style="{DynamicResource WasabeeStyleMainActionButton}" 
+                          <Button Text="{xaml:Translate ACV_Step2_Button_GetToken}" Style="{DynamicResource WasabeeStyleMainActionButton}" 
                                   HorizontalOptions="Center"
                                   Command="{Binding GetTokenCommand}"
                                   IsVisible="{Binding IsBusy, Converter={StaticResource BoolNegateConverter}}"/>
@@ -54,14 +55,8 @@
 
                       <StackLayout IsVisible="{Binding IsTokenReady}" Spacing="40">
                           <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                              <Label HorizontalOptions="StartAndExpand" VerticalOptions="Center">
-                                  <Label.FormattedText>
-                                      <FormattedString>
-                                          <Span Text="Token for : "/>
-                                          <Span Text="{Binding Parent.AgentName}" FontAttributes="Italic"/>
-                                      </FormattedString>
-                                  </Label.FormattedText>
-                              </Label>
+                              <Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"
+                                     Text="{Binding Parent.AgentName, StringFormat={xaml:Translate ACV_Step2_Label_TokenFor}}" />
 
                               <iconize:IconButton Text="mdi-reload" Style="{DynamicResource WasabeeStyleMainActionButton}" 
                                                   HorizontalOptions="End" VerticalOptions="Center"
@@ -78,7 +73,7 @@
                                                              Text="{Binding Token}"/>
                               </Frame>
 
-                              <Label Text="Your token is" FontSize="14" TranslationY="-20"/>
+                              <Label Text="{xaml:Translate ACV_Step2_Label_TokenIs}" FontSize="14" TranslationY="-20"/>
 
                               <StackLayout Grid.Column="1" VerticalOptions="Center" >
                                   
@@ -94,11 +89,11 @@
 
                   <Grid Grid.Row="2" ColumnDefinitions="*,*">
                       <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
-                              Text="‹   Back"
+                              Text="{xaml:Translate ACV_Button_Back}"
                               HorizontalOptions="Start"
                               Command="{Binding Parent.BackStepCommand}"/>
                       <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
-                              Text="Next   ›"
+                              Text="{xaml:Translate ACV_Button_Next}"
                               HorizontalOptions="End"
                               Command="{Binding Parent.NextStepCommand}"
                               IsVisible="{Binding IsNextStepButtonVisible}"/>

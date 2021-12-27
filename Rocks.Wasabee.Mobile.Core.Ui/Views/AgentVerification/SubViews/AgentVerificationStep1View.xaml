@@ -6,6 +6,7 @@
                        xmlns:system="clr-namespace:System;assembly=netstandard"
                        xmlns:controls="clr-namespace:Xamarin.Forms.Controls;assembly=CircularProgressBar"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep1View"
                        x:DataType="subViewModels:AgentVerificationStep1SubViewModel">
     
@@ -21,7 +22,7 @@
                         <Label HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineHeight="1.25">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="Welcome to the" FontSize="Large"/>
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_Welcome}" FontSize="Large"/>
                                     <Span Text="{x:Static system:Environment.NewLine}"/>
                                     <Span Text="Agent Community Verification" FontSize="22" FontAttributes="Bold"/>
                                     <Span Text="{x:Static system:Environment.NewLine}"/>
@@ -34,27 +35,27 @@
                         <Label Margin="0,20,0,0">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="Your Wasabee account isn't yet verified against Ingress Community forums." />
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_AccountNotVerified}" />
                                     <Span Text="{x:Static system:Environment.NewLine}"/>
-                                    <Span Text="This process is easy and fast to complete." />
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_FastProcess}" />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
 
-                        <Label Text="Step-by-step guide :" FontSize="Medium" Margin="0,20,0,0"/>
+                        <Label Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide}" FontSize="Medium" Margin="0,20,0,0"/>
                         <Label Margin="15,0">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="Wasabee generates a secure token (that can't be faked or guessed) to associate with your in-game name." />
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide_1}" />
                                     <Span Text="{x:Static system:Environment.NewLine}"/>
-                                    <Span Text="2. Log in to the Ingress Community forums and post the token in the Activity feed" />
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide_2}" />
                                     <Span Text="{x:Static system:Environment.NewLine}"/>
-                                    <Span Text="3. Wasabee will verify that the token is posted by the account with the same in-game name." />
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide_3}" />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
-                        <Label Text="This will prove to Wasabee that you are the owner of both the Wasabee and Ingress accounts."/>
-                        <Label Text="Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts."/>
+                        <Label Text="{xaml:Translate ACV_Step1_Label_NoticeLine1}"/>
+                        <Label Text="{xaml:Translate ACV_Step1_Label_NoticeLine2}"/>
                     </StackLayout>
 
                     <Grid Grid.Row="1" ColumnDefinitions="90,*,90" RowDefinitions="Auto, *" RowSpacing="0">
@@ -63,7 +64,7 @@
                             <StackLayout Orientation="Horizontal" Spacing="0">
                                 <CheckBox VerticalOptions="Center"
                                           IsChecked="{Binding IsDontAskAgainChecked}"/>
-                                <Label Text="Don't ask again" VerticalOptions="Center">
+                                <Label Text="{xaml:Translate Global_NeverAskAgain}" VerticalOptions="Center">
                                     <Label.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="DontAskAgainLabel_OnTapped" />
                                     </Label.GestureRecognizers>
@@ -72,7 +73,7 @@
                         </StackLayout>
                       
                         <Button Grid.Column="0" Grid.Row="1" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
-                                Text="✗   Later"
+                                Text="{xaml:Translate ACV_Button_Later}"
                                 Command="{Binding Parent.ExitCommand}"/>
 
                         <controls:CircularProgressBar Grid.Column="1" Grid.Row="1"
@@ -84,7 +85,7 @@
                                                       IsVisible="{Binding IsNextStepEnabled, Converter={StaticResource BoolNegateConverter}}"/>
 
                         <Button Grid.Column="2" Grid.Row="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
-                                Text="Next   ›"
+                                Text="{xaml:Translate ACV_Button_Next}"
                                 Command="{Binding Parent.NextStepCommand}"
                                 IsEnabled="{Binding IsNextStepEnabled}"/>
                     </Grid>

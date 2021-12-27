@@ -61,6 +61,222 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ‹   Back.
+        /// </summary>
+        internal static string ACV_Button_Back {
+            get {
+                return ResourceManager.GetString("ACV_Button_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗   Later.
+        /// </summary>
+        internal static string ACV_Button_Later {
+            get {
+                return ResourceManager.GetString("ACV_Button_Later", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next   ›.
+        /// </summary>
+        internal static string ACV_Button_Next {
+            get {
+                return ResourceManager.GetString("ACV_Button_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Wasabee account isn&apos;t yet verified with Ingress Community forums..
+        /// </summary>
+        internal static string ACV_Step1_Label_AccountNotVerified {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_AccountNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This process is easy and fast to complete..
+        /// </summary>
+        internal static string ACV_Step1_Label_FastProcess {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_FastProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will prove to Wasabee that you are the owner of both the Wasabee and Ingress accounts..
+        /// </summary>
+        internal static string ACV_Step1_Label_NoticeLine1 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_NoticeLine1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts..
+        /// </summary>
+        internal static string ACV_Step1_Label_NoticeLine2 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_NoticeLine2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step-by-step guide :.
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1. Wasabee generates a secure token (that can&apos;t be faked or guessed) to associate with your in-game name..
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide_1 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2. Log in to the Ingress Community forums and post the token in the Activity feed.
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide_2 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3. Wasabee will verify that the token is posted by the account with the same in-game name..
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide_3 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to the.
+        /// </summary>
+        internal static string ACV_Step1_Label_Welcome {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get my token.
+        /// </summary>
+        internal static string ACV_Step2_Button_GetToken {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Button_GetToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In-game name.
+        /// </summary>
+        internal static string ACV_Step2_Input_InGameName {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Input_InGameName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Be sure to write it exactly as in Ingress !.
+        /// </summary>
+        internal static string ACV_Step2_Label_CaseSensitive {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Label_CaseSensitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token for : {0}.
+        /// </summary>
+        internal static string ACV_Step2_Label_TokenFor {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Label_TokenFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your token is.
+        /// </summary>
+        internal static string ACV_Step2_Label_TokenIs {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Label_TokenIs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Community Forums.
+        /// </summary>
+        internal static string ACV_Step3_Button_OpenCommunityForums {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Button_OpenCommunityForums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verify me.
+        /// </summary>
+        internal static string ACV_Step3_Button_VerifyMe {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Button_VerifyMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once you&apos;ve posted the token to the community Forums, click the button below to start the verification process..
+        /// </summary>
+        internal static string ACV_Step3_Label_AfterPostExplanation {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_AfterPostExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Post your token in the Activity feed of Ingress Community forums..
+        /// </summary>
+        internal static string ACV_Step3_Label_PostTokenOnCommunityForums {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_PostTokenOnCommunityForums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Wasabee account is now verified with the Community forums..
+        /// </summary>
+        internal static string ACV_Step3_Label_Verified_AccountVerified {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_Verified_AccountVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your profile now displays a 🐝!.
+        /// </summary>
+        internal static string ACV_Step3_Label_Verified_BeeExplanation {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_Verified_BeeExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Well done!.
+        /// </summary>
+        internal static string ACV_Step3_Label_Verified_WellDone {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_Verified_WellDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See Teams.
         /// </summary>
         internal static string Dialog_Warning_GoToTeamsList {
@@ -102,6 +318,42 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string Dialogs_Title_AvailableOpsList {
             get {
                 return ResourceManager.GetString("Dialogs_Title_AvailableOpsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom server URL :.
+        /// </summary>
+        internal static string Dialogs_Title_CustomServerUrl {
+            get {
+                return ResourceManager.GetString("Dialogs_Title_CustomServerUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agent Community Verification failed. Please make sure you posted the token and retry..
+        /// </summary>
+        internal static string Dialogs_Warning_ACVFailed {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_ACVFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It seems that this Ingress name has already been verified..
+        /// </summary>
+        internal static string Dialogs_Warning_InGameNameAlreadyVerified {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_InGameNameAlreadyVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your in-game name is required!.
+        /// </summary>
+        internal static string Dialogs_Warning_InGameNameRequired {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_InGameNameRequired", resourceCulture);
             }
         }
         
@@ -151,11 +403,38 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dev mode activated.
+        /// </summary>
+        internal static string Global_DevModeActivated {
+            get {
+                return ResourceManager.GetString("Global_DevModeActivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occured, please retry.
         /// </summary>
         internal static string Global_ErrorOccuredPleaseRetry {
             get {
                 return ResourceManager.GetString("Global_ErrorOccuredPleaseRetry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        internal static string Global_Exit {
+            get {
+                return ResourceManager.GetString("Global_Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t ask again.
+        /// </summary>
+        internal static string Global_NeverAskAgain {
+            get {
+                return ResourceManager.GetString("Global_NeverAskAgain", resourceCulture);
             }
         }
         

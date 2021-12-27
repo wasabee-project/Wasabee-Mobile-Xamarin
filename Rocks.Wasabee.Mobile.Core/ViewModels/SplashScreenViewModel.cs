@@ -390,12 +390,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand ShowSettingCommand => new MvxCommand(ShowSettingExecuted);
         private async void ShowSettingExecuted()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.ShowSettingCommand");
+
             var customBackendUri = string.Empty;
             var hasCustomBackendUri = _preferences.Get(UserSettingsKeys.HasCustomBackendUri, false);
             if (hasCustomBackendUri)
                 customBackendUri = _preferences.Get(UserSettingsKeys.CustomBackendUri, string.Empty);
 
-            var result = await _userDialogs.PromptAsync(customBackendUri, "Custom sever URL :", "Ok", "Cancel");
+            var result = await _userDialogs.PromptAsync(customBackendUri, 
+                Strings.Dialogs_Title_CustomServerUrl, 
+                Strings.Global_Ok, 
+                Strings.Global_Cancel);
             try
             {
                 var value = result?.Text ?? string.Empty;
@@ -411,15 +416,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     LoadCustomBackendServer();
                 }
             }
-            catch
+            catch (Exception e)
             {
-                // ignore
+                LoggingService.Error(e, "Error Executing SplashScreenViewModel.ShowSettingCommand");
             }
         }
 
         public IMvxCommand VersionTappedCommand => new MvxCommand(VersionTappedExecuted);
         private void VersionTappedExecuted()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.VersionTappedCommand");
+
             if (IsSettingButtonVisible)
                 return;
 
@@ -430,7 +437,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsSettingButtonVisible = true;
             _preferences.Set(UserSettingsKeys.DevModeActivated, true);
 
-            _userDialogs.Toast("Dev mode activated");
+            _userDialogs.Toast(Strings.Global_DevModeActivated);
+
+            LoggingService.Trace("SplashScreenViewModel : Dev mode activated");
         }
 
         #endregion

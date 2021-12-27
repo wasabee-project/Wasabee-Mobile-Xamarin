@@ -1,6 +1,7 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross;
 using MvvmCross.Commands;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -60,7 +61,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels
                 IsExitButtonVisible = true;
             }
             else
-                _userDialogs.Alert("Agent Community Verification failed. Please make sure you posted the token and retry.");
+                _userDialogs.Alert(Strings.Dialogs_Warning_ACVFailed);
 
             IsBusy = false;
         }
