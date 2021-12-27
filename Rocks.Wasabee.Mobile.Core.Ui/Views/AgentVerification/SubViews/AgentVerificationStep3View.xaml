@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep3SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -66,12 +66,12 @@
                       <Label HorizontalTextAlignment="Center">
                           <Label.FormattedText>
                               <FormattedString>
-                                  <Span Text="Well done !"/>
+                                  <Span Text="Well done!"/>
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
-                                  <Span Text="Your Wasabee account in now verified against Community Forums !"/>
+                                  <Span Text="Your Wasabee account is now verified with the Community forums."/>
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
-                                  <Span Text="Your profile now displays a 🐝 !"/>
+                                  <Span Text="Your profile now displays a 🐝!"/>
                               </FormattedString>
                           </Label.FormattedText>
                       </Label>

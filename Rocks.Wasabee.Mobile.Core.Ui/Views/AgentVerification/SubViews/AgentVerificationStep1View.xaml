@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep1SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -45,7 +45,7 @@
                         <Label Margin="15,0">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="1. Wasabee generate a secure token (can't be faked or guessed) associated to your in-game name" />
+                                    <Span Text="Wasabee generates a secure token (that can't be faked or guessed) to associate with your in-game name." />
                                     <Span Text="{x:Static system:Environment.NewLine}"/>
                                     <Span Text="2. Log in to the Ingress Community forums and post the token in the Activity feed" />
                                     <Span Text="{x:Static system:Environment.NewLine}"/>
@@ -53,8 +53,8 @@
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
-                        <Label Text="This will give Wasabee the proof that you're the owner of both the Wasabee and the Ingress accounts."/>
-                        <Label Text="Attention : This doesn't verify you as an Enlightened player."/>
+                        <Label Text="This will prove to Wasabee that you are the owner of both the Wasabee and Ingress accounts."/>
+                        <Label Text="Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts."/>
                     </StackLayout>
 
                     <Grid Grid.Row="1" ColumnDefinitions="90,*,90" RowDefinitions="Auto, *" RowSpacing="0">
