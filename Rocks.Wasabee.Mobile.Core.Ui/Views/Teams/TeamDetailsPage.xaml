@@ -18,6 +18,7 @@
     <ContentPage.Resources>
         <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
         <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+        <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -83,7 +84,10 @@
                                             </ffimageloading:CachedImage.Transformations>
                                         </ffimageloading:CachedImage>
 
-                                        <Label Grid.Column="1" Grid.Row="0" Text="{Binding Name}" FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                        <StackLayout Grid.Column="1" Grid.Row="0" Padding="0" Margin="0" Orientation="Horizontal" Spacing="5">
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                            <Label Text="🐝" FontSize="10" VerticalOptions="Center" IsVisible="{Binding CommunityName, Converter={StaticResource StringToBoolNegateConverter}}"/>
+                                        </StackLayout>
                                         <Label Grid.Column="1" Grid.Row="1" Text="{Binding Squad}" LineBreakMode="TailTruncation" MaxLines="1"/>
 
                                         <StackLayout Orientation="Horizontal" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">

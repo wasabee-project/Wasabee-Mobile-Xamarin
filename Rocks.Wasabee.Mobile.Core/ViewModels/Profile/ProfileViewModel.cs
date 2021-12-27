@@ -1,10 +1,13 @@
-﻿using Microsoft.AppCenter.Analytics;
+﻿using Acr.UserDialogs;
+using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -26,15 +29,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         private readonly UsersDatabase _usersDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly IUserSettingsService _userSettingsService;
+        private readonly IUserDialogs _userDialogs;
+        private readonly IMvxNavigationService _navigationService;
 
         private ProfileViewModelNavigationParameter? _parameter;
 
         public ProfileViewModel(UsersDatabase usersDatabase, WasabeeApiV1Service wasabeeApiV1Service,
-            IUserSettingsService userSettingsService)
+            IUserSettingsService userSettingsService, IUserDialogs userDialogs, IMvxNavigationService navigationService)
         {
             _usersDatabase = usersDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _userSettingsService = userSettingsService;
+            _userDialogs = userDialogs;
+            _navigationService = navigationService;
         }
 
         public void Prepare(ProfileViewModelNavigationParameter parameter)
@@ -69,6 +76,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             {
                 User = userModel;
                 QrCodeValue = userModel.GoogleId;
+
+                if (string.IsNullOrWhiteSpace(User.CommunityName))
+                    IsLinkIngressAccountVisible = true;
             }
             else
             {
@@ -83,6 +93,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         public bool IsSelfProfile { get; set; } = true;
         public bool IsQrCodeVisible { get; set; }
         public bool IsQrCodeEnabled { get; set; }
+        public bool IsLinkIngressAccountVisible { get; set; }
 
         private string _qrCodeValue = string.Empty;
         public string QrCodeValue
@@ -124,6 +135,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             User = new UserModel()
             {
                 IngressName = agent.Name,
+                CommunityName = agent.CommunityName,
                 ProfileImage = agent.Pic,
                 Level = agent.Level,
                 GoogleId = agent.Id,
@@ -132,6 +144,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
                 VVerified = agent.VVerified,
                 Blacklisted = agent.Blacklisted
             };
+
+            var loggedUserId = _userSettingsService.GetLoggedUserGoogleId();
+            if (string.Equals(User.GoogleId, loggedUserId))
+            {
+                IsSelfProfile = true;
+                if (string.IsNullOrWhiteSpace(User.CommunityName))
+                    IsLinkIngressAccountVisible = true;
+            }
 
             IsBusy = false;
         }
@@ -196,6 +216,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         private void ShowQrCodeExecuted()
         {
             IsQrCodeVisible = !IsQrCodeVisible;
+        }
+
+        public IMvxCommand StartAgentVerificationCommand => new MvxCommand(StartAgentVerificationExecuted);
+        private void StartAgentVerificationExecuted()
+        {
+            if (IsSelfProfile is false) 
+            {
+                _userDialogs.Alert("Sorry, this shouldn't be available here !", "Wooops", "Close");
+                return;
+            }
+
+            _navigationService.Navigate<AgentVerificationViewModel, AgentVerificationNavigationParameter>(
+                new AgentVerificationNavigationParameter(comingFromLogin: false));
         }
 
         #endregion

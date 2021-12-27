@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
@@ -9,7 +10,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MvvmCross;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
@@ -24,6 +24,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
 
         private MvxSubscriptionToken? _token;
+        private List<BasePageInTabbedPageViewModel> Children;
 
         public OperationRootTabbedViewModel(IMvxNavigationService navigationService, IUserDialogs userDialogs,
             IPreferences preferences, IMvxMessenger messenger, OperationsDatabase operationsDatabase,
@@ -35,6 +36,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _messenger = messenger;
             _operationsDatabase = operationsDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+
+            Children = new List<BasePageInTabbedPageViewModel>();
         }
 
         public override void ViewAppearing()
@@ -44,9 +47,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _token ??= _messenger.Subscribe<OperationDataChangedMessage>(mgs => _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this)));
         }
 
-        public override void ViewDisappeared()
+        public override void ViewDestroy(bool viewFinishing = true)
         {
-            base.ViewDisappeared();
+            base.ViewDestroy(viewFinishing);
+
+            foreach (var child in Children) 
+                child.Destroy();
 
             _token?.Dispose();
             _token = null;
@@ -62,8 +68,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             IsBusy = true;
             _userDialogs.ShowLoading();
-
-
+            
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
             if (string.IsNullOrWhiteSpace(selectedOpId))
                 return;
@@ -90,12 +95,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                 _userDialogs.HideLoading();
                 _userDialogs.Toast(hasUpdated ? "Operation data updated" : "You already have latest OP version");
-
-                if (hasUpdated)
-                {
-                    _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this));
-                }
-
+                
+                _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this));
                 _messenger.Publish(new RefreshAllAgentsLocationsMessage(this));
             }
         }
@@ -103,11 +104,21 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public IMvxAsyncCommand ShowInitialViewModelsCommand => new MvxAsyncCommand(ShowInitialViewModels);
         private async Task ShowInitialViewModels()
         {
+            Children.Clear();
+
+            var mapViewModel = Mvx.IoCProvider.Resolve<MapViewModel>();
+            var assignmentsListViewModel = Mvx.IoCProvider.Resolve<AssignmentsListViewModel>();
+            var checklistViewModel = Mvx.IoCProvider.Resolve<ChecklistViewModel>();
+
+            Children.Add(mapViewModel);
+            Children.Add(assignmentsListViewModel);
+            Children.Add(checklistViewModel);
+
             var tasks = new List<Task>
             {
-                _navigationService.Navigate(Mvx.IoCProvider.Resolve<MapViewModel>()),
-                _navigationService.Navigate(Mvx.IoCProvider.Resolve<AssignmentsListViewModel>()),
-                _navigationService.Navigate(Mvx.IoCProvider.Resolve<ChecklistViewModel>())
+                _navigationService.Navigate(mapViewModel),
+                _navigationService.Navigate(assignmentsListViewModel),
+                _navigationService.Navigate(checklistViewModel)
             };
             await Task.WhenAll(tasks);
         }

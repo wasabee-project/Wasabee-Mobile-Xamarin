@@ -17,7 +17,7 @@ using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
-    public class ChecklistViewModel : BaseViewModel
+    public class ChecklistViewModel : BasePageInTabbedPageViewModel
     {
         private readonly OperationsDatabase _operationsDatabase;
         private readonly TeamAgentsDatabase _teamAgentsDatabase;
@@ -26,6 +26,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         private readonly IPreferences _preferences;
         
         private MvxSubscriptionToken? _token;
+        private MvxSubscriptionToken? _tokenRefresh;
         private MvxSubscriptionToken? _tokenRefreshLink;
         private MvxSubscriptionToken? _tokenRefreshMarker;
 
@@ -53,19 +54,20 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             base.ViewAppearing();
             
-            _token ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
+            _token ??= _messenger.Subscribe<SelectedOpChangedMessage>(async msg => await RefreshCommand.ExecuteAsync());
+            _tokenRefresh ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
             _tokenRefreshLink ??= _messenger.Subscribe<LinkDataChangedMessage>(msg => RefreshLinkCommand.Execute(msg.LinkData));
             _tokenRefreshMarker ??= _messenger.Subscribe<MarkerDataChangedMessage>(msg => RefreshMarkerCommand.Execute(msg.MarkerData));
             
             await RefreshCommand.ExecuteAsync();
         }
-
-        public override void ViewDisappeared()
+        
+        public override void Destroy()
         {
-            base.ViewDisappeared();
-
             _token?.Dispose();
             _token = null;
+            _tokenRefresh?.Dispose();
+            _tokenRefresh = null;
             _tokenRefreshLink?.Dispose();
             _tokenRefreshLink = null;
             _tokenRefreshMarker?.Dispose();

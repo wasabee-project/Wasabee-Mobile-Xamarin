@@ -18,7 +18,9 @@ using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -61,6 +63,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private bool _working = false;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
         private bool _isUsingOneTimeToken = false;
+        
+        private int _tapCount = 0;
 
         private SplashScreenNavigationParameter? _parameter;
 
@@ -110,6 +114,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             LoggingService.Trace("Initializing SplashScreenViewModel");
 
+            IsSettingButtonVisible = _preferences.Get(UserSettingsKeys.DevModeActivated, false);
+            LoadCustomBackendServer();
+
             // TODO Handle app opening from notification
 
 
@@ -144,6 +151,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public bool IsSelectingServer { get; set; }
         public bool RememberServerChoice { get; set; }
         public bool HasNoTeamOrOpsAssigned { get; set; }
+        public bool IsSettingButtonVisible { get; set; }
         public string LoadingStepLabel { get; set; } = string.Empty;
         public string AppEnvironnement { get; set; } = string.Empty;
         public string DisplayVersion { get; set; } = string.Empty;
@@ -164,12 +172,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
         }
 
-        public MvxObservableCollection<ServerItem> ServersCollection => new MvxObservableCollection<ServerItem>()
+        private MvxObservableCollection<ServerItem> _serversCollection = new MvxObservableCollection<ServerItem>()
         {
-            new ServerItem("America", WasabeeServer.US, "US.png"),
-            new ServerItem("Europe", WasabeeServer.EU, "EU.png"),
-            new ServerItem("Asia/Pacific", WasabeeServer.APAC, "APAC.png")
+            new("America", WasabeeServer.US, "US.png"),
+            new("Europe", WasabeeServer.EU, "EU.png"),
+            new("Asia/Pacific", WasabeeServer.APAC, "APAC.png")
         };
+        public MvxObservableCollection<ServerItem> ServersCollection
+        {
+            get => _serversCollection;
+            private set => SetProperty(ref _serversCollection, value);
+        }
 
         #endregion
 
@@ -197,8 +210,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _usersDatabase.DeleteAllData();
 
-            var wasabeeCookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
-            if (!string.IsNullOrWhiteSpace(wasabeeCookie) && RememberServerChoice)
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
+            if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
+                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
+
+            var wtoken = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeToken);
+            if (!string.IsNullOrWhiteSpace(wtoken) && RememberServerChoice)
             {
                 await BypassGoogleAndWasabeeLogin();
                 return;
@@ -211,11 +228,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 LoadingStepLabel = Strings.SignIn_Label_LoadingStep_GoogleSuccess;
                 await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
-
-                var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
-                if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
-                    SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
-
+                
                 if (SelectedServerItem.Server == WasabeeServer.Undefined)
                     ChangeServerCommand.Execute();
                 else
@@ -374,6 +387,52 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             RememberServerChoice = !RememberServerChoice;
         });
 
+        public IMvxCommand ShowSettingCommand => new MvxCommand(ShowSettingExecuted);
+        private async void ShowSettingExecuted()
+        {
+            var customBackendUri = string.Empty;
+            var hasCustomBackendUri = _preferences.Get(UserSettingsKeys.HasCustomBackendUri, false);
+            if (hasCustomBackendUri)
+                customBackendUri = _preferences.Get(UserSettingsKeys.CustomBackendUri, string.Empty);
+
+            var result = await _userDialogs.PromptAsync(customBackendUri, "Custom sever URL :", "Ok", "Cancel");
+            try
+            {
+                var value = result?.Text ?? string.Empty;
+                if (value.StartsWith("http://"))
+                    value = value.Replace("http", "https");
+
+                var parsed = Uri.TryCreate(value, UriKind.Absolute, out Uri uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
+                if (parsed)
+                {
+                    _preferences.Set(UserSettingsKeys.HasCustomBackendUri, true);
+                    _preferences.Set(UserSettingsKeys.CustomBackendUri, value);
+
+                    LoadCustomBackendServer();
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        public IMvxCommand VersionTappedCommand => new MvxCommand(VersionTappedExecuted);
+        private void VersionTappedExecuted()
+        {
+            if (IsSettingButtonVisible)
+                return;
+
+            _tapCount++;
+            if (_tapCount < 5)
+                return;
+
+            IsSettingButtonVisible = true;
+            _preferences.Set(UserSettingsKeys.DevModeActivated, true);
+
+            _userDialogs.Toast("Dev mode activated");
+        }
+
         #endregion
 
         #region Private methods
@@ -403,14 +462,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 {
                     // will get a refreshed auth token from Google
                     case LoginMethod.Google:
-                        await ConnectWasabee();
+                        await ConnectUserCommand.ExecuteAsync();
                         break;
                     // will use previous Cookie to bypass auth process
                     case LoginMethod.OneTimeToken:
                     case LoginMethod.Bypass:
                         await BypassGoogleAndWasabeeLogin();
                         break;
-                    // use will choose
+                    // user will choose login method
                     default:
                         IsLoginVisible = true;
                         break;
@@ -462,14 +521,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     IsAuthInError = true;
                     IsLoading = false;
                     IsLoginVisible = true;
+
+                    SelectedServerItem = ServerItem.Undefined;
                 }
             }
         }
 
         private async Task BypassGoogleAndWasabeeLogin()
         {
-            var cookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
-            if (string.IsNullOrWhiteSpace(cookie))
+            var wtoken = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeToken);
+            if (string.IsNullOrWhiteSpace(wtoken))
             {
                 IsLoginVisible = true;
                 IsLoading = false;
@@ -499,6 +560,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 try
                 {
+                    var jwt = new JwtSecurityToken(wtoken);
+                    var span = DateTime.UtcNow - jwt.IssuedAt;
+                    if (span >= TimeSpan.FromHours(24))
+                    {
+                        var refreshedToken = await _wasabeeApiV1Service.User_RefreshWasabeeToken();
+                        await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, refreshedToken);
+                    }
+
                     var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
                     if (userModel != null)
                     {
@@ -510,17 +579,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 catch
                 {
-                    // Auto login failed (expired cookie ?)
-                    // force relogin using saved googleToken if exist. If google token is expired, it will refresh it
+                    // Auto login failed (expired token ?)
                     try
                     {
                         var lastLoginMethod = (LoginMethod) _preferences.Get(UserSettingsKeys.LastLoginMethod, (int) LoginMethod.Unknown);
                         if (lastLoginMethod == LoginMethod.OneTimeToken)
                             throw new Exception("Can't refresh Google token when Wasabee One Time Token was used previously");
-
-                        var token = await GetGoogleToken();
-                        await SaveGoogleToken(token);
-
+                        
                         await ConnectWasabee();
                     }
                     catch (Exception e)
@@ -538,7 +603,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
 
                         _isBypassingGoogleAndWasabeeLogin = false;
-                        _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
+                        _secureStorage.Remove(SecureStorageConstants.WasabeeToken);
 
                         await ChangeAccountCommand.ExecuteAsync();
                     }
@@ -586,11 +651,35 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 else
                 {
-                    await PullDataFromServer(userModel)
-                        .ContinueWith(async task =>
+                    await PullDataFromServer(userModel).ContinueWith(async task =>
+                    {
+                        var shouldGoToAgentCommunityVerification = false;
+                        if (string.IsNullOrEmpty(userModel.CommunityName))
                         {
-                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
-                        });
+                            shouldGoToAgentCommunityVerification = true;
+
+                            if (_preferences.ContainsKey(UserSettingsKeys.NeverShowAgentCommunityVerificationAgain))
+                            {
+                                var dontAskAgainRawConfig = _preferences.Get(UserSettingsKeys.NeverShowAgentCommunityVerificationAgain, string.Empty);
+                                if (string.IsNullOrEmpty(dontAskAgainRawConfig) is false)
+                                {
+                                    var config = JsonConvert.DeserializeObject<DontAskAgainConfig>(dontAskAgainRawConfig);
+                                    if (config is not null)
+                                    {
+                                        var loggedUserId = _userSettingsService.GetLoggedUserGoogleId();
+                                        if (config.Values.ContainsKey(loggedUserId))
+                                            shouldGoToAgentCommunityVerification = !config.Values[loggedUserId];
+                                    }
+                                }
+                            }
+                        }
+                        
+                        await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
+
+                        if (shouldGoToAgentCommunityVerification)
+                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(), 
+                                new AgentVerificationNavigationParameter(comingFromLogin: true));
+                    });
 
                 }
             }
@@ -612,7 +701,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
-            await _operationsDatabase.DeleteAllData();
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {
@@ -657,36 +745,54 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     selectedOp = string.Empty;
                 }
 
-                _ = Task.Factory.StartNew(async () =>
+                var opsToLoad = opsIds.Except(new[] { selectedOp }).ToList();
+                if (opsToLoad.Any())
                 {
-                    _userDialogs.Toast(Strings.Toasts_LoadingOpsInBackground);
-
-                    foreach (var id in opsIds.Except(new[] { selectedOp }))
+                    _ = Task.Factory.StartNew(async () =>
                     {
-                        op = await _wasabeeApiV1Service.Operations_GetOperation(id);
-                        if (op != null)
+                        _userDialogs.Toast(Strings.Toasts_LoadingOpsInBackground);
+                        
+                        foreach (var id in opsToLoad)
                         {
-                            // previously selected Operation can't be retrieved, set a new one as selected
-                            if (string.IsNullOrEmpty(selectedOp))
+                            var localOp = await _operationsDatabase.GetOperationModel(id);
+                            var userModelOp = userModel.Ops.FirstOrDefault(x => x.Id.Equals(id));
+                            if (userModelOp != null && localOp != null)
                             {
-                                selectedOp = op.Id;
-                                _preferences.Set(UserSettingsKeys.SelectedOp, selectedOp);
+                                if (localOp.Modified.Equals(userModelOp.Modified) || localOp.LastEditID.Equals(userModelOp.LastEditID))
+                                    continue;
                             }
 
-                            await _operationsDatabase.SaveOperationModel(op);
-                            _messenger.Publish(new NewOpAvailableMessage(this));
-                        }
-                    }
+                            op = await _wasabeeApiV1Service.Operations_GetOperation(id);
+                            if (op != null)
+                            {
+                                // previously selected Operation can't be retrieved, set a new one as selected
+                                if (string.IsNullOrEmpty(selectedOp))
+                                {
+                                    selectedOp = op.Id;
+                                    _preferences.Set(UserSettingsKeys.SelectedOp, selectedOp);
+                                }
 
-                    _userDialogs.Toast(Strings.Toasts_LoadingOpsSuccess);
-                }).ConfigureAwait(false);
-            }
-            else
-            {
-                _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
+                                await _operationsDatabase.SaveOperationModel(op);
+                                _messenger.Publish(new NewOpAvailableMessage(this));
+                            }
+                        }
+
+                        _userDialogs.Toast(Strings.Toasts_LoadingOpsSuccess);
+                    }).ConfigureAwait(false);
+                }
+                else
+                {
+                    _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
+                }
             }
         }
 
+        /// <summary>
+        /// This will get the current GoogleToken saved in SecureStorage and verify if it's expired or not.
+        /// If expired, it'll be automatically refreshed using the Refreshtoken in the GoogleToken.
+        /// Else, it just returns as is.
+        /// </summary>
+        /// <returns>Current valid or new refreshed <see cref="GoogleToken"/></returns>
         private async Task<GoogleToken?> GetGoogleToken()
         {
             var rawGoogleToken = await _secureStorage.GetAsync(SecureStorageConstants.GoogleToken);
@@ -695,7 +801,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 var googleToken = JsonConvert.DeserializeObject<GoogleToken>(rawGoogleToken);
                 if (googleToken.CreatedAt.AddSeconds(double.Parse(googleToken.ExpiresIn)) <= DateTime.Now)
                 {
-                    var refreshedToken = await _authentificationService.RefreshTokenAsync(googleToken.RefreshToken);
+                    var refreshedToken = await _authentificationService.RefreshGoogleTokenAsync(googleToken.RefreshToken);
                     if (refreshedToken != null)
                     {
                         googleToken = new GoogleToken()
@@ -707,6 +813,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                             TokenType = refreshedToken.Scope,
                             RefreshToken = googleToken.RefreshToken
                         };
+
+                        await SaveGoogleToken(googleToken);
                     }
                 }
 
@@ -719,6 +827,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task SaveGoogleToken(GoogleToken? token)
         {
             await _secureStorage.SetAsync(SecureStorageConstants.GoogleToken, token != null ? JsonConvert.SerializeObject(token) : string.Empty);
+        }
+
+        private void LoadCustomBackendServer()
+        {
+            var hasCustomBackendUri = _preferences.Get(UserSettingsKeys.HasCustomBackendUri, false);
+            if (!hasCustomBackendUri) 
+                return;
+            
+            if (ServersCollection.Any(x => x.Server is WasabeeServer.Custom))
+                ServersCollection.Remove(ServersCollection.First(x => x.Server is WasabeeServer.Custom));
+
+            ServersCollection.Add(new ServerItem("Custom", WasabeeServer.Custom, ""));
+            RaisePropertyChanged(nameof(ServersCollection));
         }
 
         #endregion

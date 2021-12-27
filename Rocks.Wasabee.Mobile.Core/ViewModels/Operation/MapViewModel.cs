@@ -25,7 +25,7 @@ using Xamarin.Forms.GoogleMaps;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
-    public class MapViewModel : BaseViewModel
+    public class MapViewModel : BasePageInTabbedPageViewModel
     {
         private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon, France
         private static readonly CultureInfo ConversionCulture = CultureInfo.GetCultureInfo("en-US");
@@ -134,11 +134,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             await LoadOperationCommand.ExecuteAsync(false);
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
         }
-
-        public override void ViewDisappeared()
+        
+        public override void Destroy()
         {
-            base.ViewDisappeared();
-
             _token?.Dispose();
             _token = null;
             _tokenReload?.Dispose();
@@ -356,10 +354,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     }
                 }
 
+                var hideCompletedMarkersSetting = _preferences.Get(UserSettingsKeys.HideCompletedMarkers, false);
                 foreach (var marker in Operation.Markers)
                 {
                     try
                     {
+                        if (hideCompletedMarkersSetting && marker.State.Equals("completed"))
+                            continue;
+                        
                         var portal = Operation.Portals.First(x => x.Id.Equals(marker.PortalId));
                         double.TryParse(portal.Lat, NumberStyles.Float, ConversionCulture, out var portalLat);
                         double.TryParse(portal.Lng, NumberStyles.Float, ConversionCulture, out var portalLng);
@@ -415,6 +417,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             finally
             {
+                await RaisePropertyChanged(() => Links);
+                await RaisePropertyChanged(() => Anchors);
+                await RaisePropertyChanged(() => Markers);
+                await RaisePropertyChanged(() => Zones);
+
                 UpdateMapRegion();
                 
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, forceResetMapView));
@@ -924,32 +931,43 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             var marker = Markers.FirstOrDefault(x => x.Marker.Id.Equals(updateMessage.MarkerData.Id));
             if (marker != null)
             {
-                var culture = CultureInfo.GetCultureInfo("en-US");
-                var portal = Operation.Portals.First(x => x.Id.Equals(updateMessage.MarkerData.PortalId));
-                double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
-                double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
-
-                var pin = new WasabeePin(
-                    new Pin()
-                    {
-                        Position = new Position(portalLat, portalLng),
-                        Icon = BitmapDescriptorFactory.FromBundle($"{updateMessage.MarkerData.Type}|{updateMessage.MarkerData.State}"),
-                        Label = GetMarkerNameFromTypeAndState(updateMessage.MarkerData.Type, updateMessage.MarkerData.State)
-                    })
-                {
-                    Portal = portal,
-                    Marker = updateMessage.MarkerData
-                };
-
-                if (!string.IsNullOrWhiteSpace(updateMessage.MarkerData.AssignedTo))
-                {
-                    var assignedTo = await _teamAgentsDatabase.GetTeamAgent(updateMessage.MarkerData.AssignedTo);
-                    if (assignedTo != null)
-                        pin.AssignedTo = assignedTo.Name;
-                }
-
                 Markers.Remove(marker);
-                Markers.Add(pin);
+                
+                var hideCompletedMarkersSetting = _preferences.Get(UserSettingsKeys.HideCompletedMarkers, false);
+                if (hideCompletedMarkersSetting && updateMessage.MarkerData.State.Equals("completed"))
+                {
+                    CloseDetailPanelCommand.Execute();
+                }
+                else
+                {
+                    var culture = CultureInfo.GetCultureInfo("en-US");
+                    var portal = Operation.Portals.First(x => x.Id.Equals(updateMessage.MarkerData.PortalId));
+                    double.TryParse(portal.Lat, NumberStyles.Float, culture, out var portalLat);
+                    double.TryParse(portal.Lng, NumberStyles.Float, culture, out var portalLng);
+
+                    var pin = new WasabeePin(
+                        new Pin()
+                        {
+                            Position = new Position(portalLat, portalLng),
+                            Icon = BitmapDescriptorFactory.FromBundle(
+                                $"{updateMessage.MarkerData.Type}|{updateMessage.MarkerData.State}"),
+                            Label = GetMarkerNameFromTypeAndState(updateMessage.MarkerData.Type,
+                                updateMessage.MarkerData.State)
+                        })
+                    {
+                        Portal = portal,
+                        Marker = updateMessage.MarkerData
+                    };
+
+                    if (!string.IsNullOrWhiteSpace(updateMessage.MarkerData.AssignedTo))
+                    {
+                        var assignedTo = await _teamAgentsDatabase.GetTeamAgent(updateMessage.MarkerData.AssignedTo);
+                        if (assignedTo != null)
+                            pin.AssignedTo = assignedTo.Name;
+                    }
+
+                    Markers.Add(pin);
+                }
 
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 

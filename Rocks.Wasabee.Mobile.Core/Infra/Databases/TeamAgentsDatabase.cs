@@ -178,6 +178,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             [PrimaryKey, Unique]
             public string AgentId { get; set; }
             public string Name { get; set; }
+            public string CommunityName { get; set; }
             public int Level { get; set; }
             public string Enlid { get; set; }
             public string Pic { get; set; }
@@ -203,6 +204,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     Id = teamAgentDatabaseModel.AgentId,
                     Name = teamAgentDatabaseModel.Name,
+                    CommunityName = teamAgentDatabaseModel.CommunityName,
                     Level = teamAgentDatabaseModel.Level,
                     Enlid = teamAgentDatabaseModel.Enlid,
                     Pic = teamAgentDatabaseModel.Pic,
@@ -225,6 +227,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 {
                     AgentId = teamAgentModel.Id,
                     Name = teamAgentModel.Name,
+                    CommunityName = teamAgentModel.CommunityName,
                     Level = teamAgentModel.Level,
                     Enlid = teamAgentModel.Enlid,
                     Pic = teamAgentModel.Pic,

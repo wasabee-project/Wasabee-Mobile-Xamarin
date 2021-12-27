@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep1SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:subViewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:system="clr-namespace:System;assembly=netstandard"
+                       xmlns:controls="clr-namespace:Xamarin.Forms.Controls;assembly=CircularProgressBar"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep1View"
+                       x:DataType="subViewModels:AgentVerificationStep1SubViewModel">
+    
+    <ContentView.Resources>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+    </ContentView.Resources>
+    
+    <ContentView.Content>
+        <Frame Padding="0" Margin="10,0" HasShadow="False" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+            <ScrollView>
+                <Grid RowDefinitions="*, Auto">
+                    <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand" Padding="10">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineHeight="1.25">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Welcome to the" FontSize="Large"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="Agent Community Verification" FontSize="22" FontAttributes="Bold"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Label Text="🐝     🐝     🐝" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" />
+
+                        <Label Margin="0,20,0,0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Your Wasabee account isn't yet verified against Ingress Community forums." />
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="This process is easy and fast to complete." />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Label Text="Step-by-step guide :" FontSize="Medium" Margin="0,20,0,0"/>
+                        <Label Margin="15,0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Wasabee generates a secure token (that can't be faked or guessed) to associate with your in-game name." />
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="2. Log in to the Ingress Community forums and post the token in the Activity feed" />
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="3. Wasabee will verify that the token is posted by the account with the same in-game name." />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Text="This will prove to Wasabee that you are the owner of both the Wasabee and Ingress accounts."/>
+                        <Label Text="Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts."/>
+                    </StackLayout>
+
+                    <Grid Grid.Row="1" ColumnDefinitions="90,*,90" RowDefinitions="Auto, *" RowSpacing="0">
+                        <StackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Spacing="0"
+                                     IsVisible="{Binding IsDontAskAgainVisible}">
+                            <StackLayout Orientation="Horizontal" Spacing="0">
+                                <CheckBox VerticalOptions="Center"
+                                          IsChecked="{Binding IsDontAskAgainChecked}"/>
+                                <Label Text="Don't ask again" VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="DontAskAgainLabel_OnTapped" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </StackLayout>
+                        </StackLayout>
+                      
+                        <Button Grid.Column="0" Grid.Row="1" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
+                                Text="✗   Later"
+                                Command="{Binding Parent.ExitCommand}"/>
+
+                        <controls:CircularProgressBar Grid.Column="1" Grid.Row="1"
+                                                      WidthRequest="20" HeightRequest="20"
+                                                      HorizontalOptions="End" VerticalOptions="Center"
+                                                      Stroke="4"
+                                                      Color="{DynamicResource PrimaryGreen}"
+                                                      Progress="{Binding Progress}"
+                                                      IsVisible="{Binding IsNextStepEnabled, Converter={StaticResource BoolNegateConverter}}"/>
+
+                        <Button Grid.Column="2" Grid.Row="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                                Text="Next   ›"
+                                Command="{Binding Parent.NextStepCommand}"
+                                IsEnabled="{Binding IsNextStepEnabled}"/>
+                    </Grid>
+                </Grid>
+            </ScrollView>
+        </Frame>
+    </ContentView.Content>
+</views:BaseContentView>

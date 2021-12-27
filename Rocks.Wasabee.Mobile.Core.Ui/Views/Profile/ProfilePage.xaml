@@ -18,6 +18,7 @@
 
     <ContentPage.Resources>
         <converters:AgentVerificationBoolToStringConverter x:Key="AgentVerificationBoolToStringConverter"/>
+        <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -48,18 +49,29 @@
                             </Grid.RowDefinitions>
 
 
-                            <Label Grid.Column="0" Grid.Row="0" Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
+                            <StackLayout Grid.Column="0" Grid.Row="0" Padding="0" Margin="0" Orientation="Horizontal" Spacing="5">
+                                <Label Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
+                                <Label Text="🐝" FontSize="14" VerticalOptions="Center" IsVisible="{Binding User.CommunityName, Converter={StaticResource StringToBoolNegateConverter}}"/>
+                            </StackLayout>
                             <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat='Level : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>
                             <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='Id : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="12"/>
 
                             <iconize:IconButton Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
-                                        Text="mdi-qrcode" TextColor="{DynamicResource PrimaryTextColor}" FontSize="28"
-                                        HorizontalOptions="Center" VerticalOptions="Center"
-                                        BackgroundColor="Transparent"
-                                        Command="{Binding ShowQrCodeCommand}"
-                                        IsVisible="{Binding IsQrCodeEnabled}"/>
+                                                Text="mdi-qrcode" TextColor="{DynamicResource PrimaryTextColor}" FontSize="28"
+                                                HorizontalOptions="Center" VerticalOptions="Center"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ShowQrCodeCommand}"
+                                                IsVisible="{Binding IsQrCodeEnabled}"/>
                         </Grid>
                     </Grid>
+
+                    <Button Text="Link Ingress Account"
+                            HorizontalOptions="Center"
+                            TextColor="White"
+                            CornerRadius="5"
+                            BackgroundColor="{DynamicResource PrimaryGreen}"
+                            Command="{Binding StartAgentVerificationCommand}"
+                            IsVisible="True"/>
 
                     <TableView Intent="Settings" HasUnevenRows="True" VerticalOptions="Start">
                         <TableRoot>
