@@ -62,6 +62,10 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
 
         [JsonProperty("jwt")]
         public string Jwt { get; set; }
+        
+        [JsonProperty("communityname")]
+        public string CommunityName { get; set; }
+
     }
 
     public class TelegramModel : BaseModel

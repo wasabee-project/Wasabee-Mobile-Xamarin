@@ -28,6 +28,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Teams
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("communityname")]
+        public string CommunityName { get; set; }
+
         [JsonProperty("level")]
         public int Level { get; set; }
 

@@ -17,6 +17,7 @@ using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -648,11 +649,35 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 else
                 {
-                    await PullDataFromServer(userModel)
-                        .ContinueWith(async task =>
+                    await PullDataFromServer(userModel).ContinueWith(async task =>
+                    {
+                        var shouldGoToAgentCommunityVerification = false;
+                        if (string.IsNullOrEmpty(userModel.CommunityName))
                         {
-                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
-                        });
+                            shouldGoToAgentCommunityVerification = true;
+
+                            if (_preferences.ContainsKey(UserSettingsKeys.NeverShowAgentCommunityVerificationAgain))
+                            {
+                                var dontAskAgainRawConfig = _preferences.Get(UserSettingsKeys.NeverShowAgentCommunityVerificationAgain, string.Empty);
+                                if (string.IsNullOrEmpty(dontAskAgainRawConfig) is false)
+                                {
+                                    var config = JsonConvert.DeserializeObject<DontAskAgainConfig>(dontAskAgainRawConfig);
+                                    if (config is not null)
+                                    {
+                                        var loggedUserId = _userSettingsService.GetLoggedUserGoogleId();
+                                        if (config.Values.ContainsKey(loggedUserId))
+                                            shouldGoToAgentCommunityVerification = !config.Values[loggedUserId];
+                                    }
+                                }
+                            }
+                        }
+                        
+                        await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
+
+                        if (shouldGoToAgentCommunityVerification)
+                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(), 
+                                new AgentVerificationNavigationParameter(comingFromLogin: true));
+                    });
 
                 }
             }
@@ -674,7 +699,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
-            await _operationsDatabase.DeleteAllExceptOwnedBy(userModel.GoogleId);
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {

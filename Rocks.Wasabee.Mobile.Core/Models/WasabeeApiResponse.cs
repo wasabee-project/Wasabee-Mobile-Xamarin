@@ -22,7 +22,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models
         public string UpdateId { get; set; }
     }
 
-    public class WasabeeJwtRefreshApiResponse : WasabeeApiResponse
+    public class WasabeeJwtApiResponse : WasabeeApiResponse
     {
         [JsonProperty("jwt")]
         public string Token { get; set; }

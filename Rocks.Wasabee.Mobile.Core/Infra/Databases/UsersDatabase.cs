@@ -115,6 +115,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             public string EnlId { get; set; }
 
             public string IngressName { get; set; }
+            public string CommunityName { get; set; }
 
             public int Level { get; set; }
 
@@ -155,6 +156,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         GoogleId = userDatabaseModel.GoogleId,
                         EnlId = userDatabaseModel.EnlId,
                         IngressName = userDatabaseModel.IngressName,
+                        CommunityName = userDatabaseModel.CommunityName,
                         Level = userDatabaseModel.Level,
                         LocationKey = userDatabaseModel.LocationKey,
                         RocksVerified = userDatabaseModel.RocksVerified,
@@ -183,6 +185,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     GoogleId = userModel.GoogleId,
                     EnlId = userModel.EnlId,
                     IngressName = userModel.IngressName,
+                    CommunityName = userModel.CommunityName,
                     Level = userModel.Level,
                     LocationKey = userModel.LocationKey,
                     RocksVerified = userModel.RocksVerified,

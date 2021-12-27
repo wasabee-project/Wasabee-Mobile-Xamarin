@@ -21,6 +21,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.User
         public static string HideCompletedMarkers => "HIDE_COMPLETED_MARKERS";
         public static string CustomBackendUri => "CUSTOM_BACKEND_URI";
         public static string HasCustomBackendUri => "HAS_CUSTOM_BACKEND_URI";
+        public static string NeverShowAgentCommunityVerificationAgain => "NEVER_SHOW_AGENT_COMMUNITY_VERIFICATION_AGAIN";
 
     }
 }
