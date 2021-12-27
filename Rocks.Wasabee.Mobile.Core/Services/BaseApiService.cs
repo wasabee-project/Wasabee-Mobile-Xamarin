@@ -54,16 +54,17 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             var wasabeeRawCookie = Mvx.IoCProvider.Resolve<ISecureStorage>().GetAsync(SecureStorageConstants.WasabeeCookie).Result;
             var cookie = JsonConvert.DeserializeObject<Cookie>(wasabeeRawCookie);
 
-            
-#if DEBUG_NETWORK_LOGS
-            var httpClientHandler = new HttpClientHandler() {CookieContainer = new CookieContainer()};
-            httpClientHandler.CookieContainer.Add(cookie);
+            var cookieContainer = new CookieContainer();
+            cookieContainer.Add(new Uri(url), cookie);
 
+            var httpClientHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer);
+
+#if DEBUG_NETWORK_LOGS
             var httpHandler = new HttpLoggingHandler(httpClientHandler);
 #else
-            var httpHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(new CookieContainer());
-            httpHandler.CookieContainer.Add(cookie);
+            var httpHandler = httpClientHandler;
 #endif
+            
             var appVersion = Mvx.IoCProvider.Resolve<IVersionTracking>().CurrentVersion;
             var device = Mvx.IoCProvider.Resolve<IDeviceInfo>();
             var client = new HttpClient(httpHandler)
@@ -118,7 +119,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             }
 
             var start = DateTime.Now;
-
+            
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             var end = DateTime.Now;

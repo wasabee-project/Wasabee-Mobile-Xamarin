@@ -117,7 +117,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             var cookieContainer = new CookieContainer();
 
 #if DEBUG_NETWORK_LOGS
-            var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
+            var httpHandler = new HttpLoggingHandler(_httpClientFactory.CreateHandler(cookieContainer));
 #else
             var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
 #endif
@@ -220,7 +220,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             var cookieContainer = new CookieContainer();
 
 #if DEBUG_NETWORK_LOGS
-            var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
+            var httpHandler = new HttpLoggingHandler(_httpClientFactory.CreateHandler(cookieContainer));
 #else
             var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
 #endif
