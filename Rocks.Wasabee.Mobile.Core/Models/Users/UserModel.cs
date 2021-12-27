@@ -59,6 +59,13 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
 
         [JsonProperty("Assignments")]
         public List<AssignmentModel> Assignments { get; set; }
+
+        [JsonProperty("jwt")]
+        public string Jwt { get; set; }
+        
+        [JsonProperty("communityname")]
+        public string CommunityName { get; set; }
+
     }
 
     public class TelegramModel : BaseModel
@@ -119,6 +126,12 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
 
         [JsonProperty("TeamID")]
         public string TeamId { get; set; }
+
+        [JsonProperty("Modified")]
+        public string Modified { get; set; }
+
+        [JsonProperty("LastEditID")]
+        public string LastEditID { get; set; }
     }
 
     public class AssignmentModel : BaseModel

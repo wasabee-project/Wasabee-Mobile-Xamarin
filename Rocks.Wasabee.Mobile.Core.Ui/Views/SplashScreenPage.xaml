@@ -1,16 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentPage x:TypeArguments="viewModels:SplashScreenViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
                        x:DataType="viewModels:SplashScreenViewModel"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                      xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                      xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-                      xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
-                      xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
-                      xmlns:models="clr-namespace:Rocks.Wasabee.Mobile.Core.Models;assembly=Rocks.Wasabee.Mobile.Core"
-                      mc:Ignorable="d"
-                      x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.SplashScreenPage"
-                      BackgroundColor="{DynamicResource BackgroundColorLevel0}">
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:models="clr-namespace:Rocks.Wasabee.Mobile.Core.Models;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.SplashScreenPage"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
     <ContentPage.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter" />
         <converters:EnvironnementToColorConverter x:Key="EnvironnementToColorConverter" />
@@ -18,47 +16,48 @@
 
     <ContentPage.Content>
         <RelativeLayout>
-            <Image
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel, Property=Y, Factor=1, Constant=-120}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                HeightRequest="100"
-                HorizontalOptions="Center"
-                Source="wasabee.png" />
 
-            <Label
-                x:Name="TitleLabel"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.3, Constant=0}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                Text="Wasabee"
-                HorizontalTextAlignment="Center"
-                FontSize="30" />
+            <iconize:IconButton RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-80}"
+                                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Y, Factor=0, Constant=10}"
+                                Text="mdi-cogs" BackgroundColor="Transparent" FontSize="24"
+                                IsVisible="{Binding IsSettingButtonVisible}"
+                                Command="{Binding ShowSettingCommand}"/>
+
+            <Image RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel, Property=Y, Factor=1, Constant=-120}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                   HeightRequest="100"
+                   HorizontalOptions="Center"
+                   Source="wasabee.png" />
+
+            <Label x:Name="TitleLabel"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.3, Constant=0}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                   Text="Wasabee"
+                   HorizontalTextAlignment="Center"
+                   FontSize="30" />
 
             <!-- Loader and login step -->
-            <StackLayout
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                IsVisible="{Binding IsLoading}">
-                <ActivityIndicator
-                    Color="{DynamicResource PrimaryGreen}"
-                    IsRunning="True"
-                    HeightRequest="80"/>
-                <Label
-                    HorizontalTextAlignment="Center"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="CenterAndExpand"
-                    Text="{Binding LoadingStepLabel}"/>
+            <StackLayout RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                         RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                         IsVisible="{Binding IsLoading}">
+                <ActivityIndicator Color="{DynamicResource PrimaryGreen}"
+                                   IsRunning="True"
+                                   HeightRequest="80"/>
+                <Label HorizontalTextAlignment="Center"
+                       HorizontalOptions="FillAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       Text="{Binding LoadingStepLabel}"/>
             </StackLayout>
             
             
             <!-- Login buttons -->
-            <StackLayout
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                IsVisible="{Binding IsLoginVisible}">
+            <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                         IsVisible="{Binding IsLoginVisible}">
 
                 <Frame CornerRadius="2"
                        HorizontalOptions="CenterAndExpand" 
@@ -124,33 +123,29 @@
                     </Grid>
                 </Frame>
 
-                <Label
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsAuthInError}"
-                    Text="{Binding ErrorMessage}"
-                    Margin="0, 20, 0, 0"
-                    TextColor="{DynamicResource AccentColor}" />
+                <Label HorizontalTextAlignment="Center"
+                       IsVisible="{Binding IsAuthInError}"
+                       Text="{Binding ErrorMessage}"
+                       Margin="0, 20, 0, 0"
+                       TextColor="{DynamicResource AccentColor}" />
 
-                <Label
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsConnected, Converter={StaticResource BoolNegateConverter}}"
-                    Text="You must be connected to Internet over Wi-Fi or cellular network to use this application"
-                    Margin="0, 20, 0, 0"
-                    TextColor="{DynamicResource AccentColor}" />
+                <Label HorizontalTextAlignment="Center"
+                       IsVisible="{Binding IsConnected, Converter={StaticResource BoolNegateConverter}}"
+                       Text="You must be connected to Internet over Wi-Fi or cellular network to use this application"
+                       Margin="0, 20, 0, 0"
+                       TextColor="{DynamicResource AccentColor}" />
             </StackLayout>
             
             <!-- One Time Token input -->
-            <StackLayout
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=100}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                IsVisible="{Binding IsEnteringToken}">
-                <Label
-                    HorizontalTextAlignment="Center"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="CenterAndExpand"
-                    Text="Enter the token :"
-                    FontSize="Large"/>
+            <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=100}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                         IsVisible="{Binding IsEnteringToken}">
+                <Label HorizontalTextAlignment="Center"
+                       HorizontalOptions="FillAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       Text="Enter the token :"
+                       FontSize="Large"/>
 
                 <Entry Text="{Binding OneTimeToken}"/>
                 <Button Style="{DynamicResource WasabeeStyleValidateButton}"
@@ -158,17 +153,15 @@
             </StackLayout>
             
             <!-- Server selection -->
-            <StackLayout
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=100}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                IsVisible="{Binding IsSelectingServer}">
-                <Label
-                    HorizontalTextAlignment="Center"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="CenterAndExpand"
-                    Text="{Binding LoadingStepLabel}"
-                    FontSize="Large"/>
+            <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=100}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                         IsVisible="{Binding IsSelectingServer}">
+                <Label HorizontalTextAlignment="Center"
+                       HorizontalOptions="FillAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       Text="{Binding LoadingStepLabel}"
+                       FontSize="Large"/>
 
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                     <CheckBox Color="{DynamicResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
@@ -212,17 +205,15 @@
 
 
             <!-- No team or OPS assigned section -->
-            <StackLayout
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
-                IsVisible="{Binding HasNoTeamOrOpsAssigned}">
+            <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
+                         IsVisible="{Binding HasNoTeamOrOpsAssigned}">
 
-                <Label
-                    HorizontalTextAlignment="Center"
-                    Margin="0, 20, 0, 0"
-                    TextColor="{DynamicResource AccentColor}"
-                    FontSize="Medium">
+                <Label HorizontalTextAlignment="Center"
+                       Margin="0, 20, 0, 0"
+                       TextColor="{DynamicResource AccentColor}"
+                       FontSize="Medium">
                     <!-- DO NOT touch Label.Text indentation !-->
                     <Label.Text>
 Attention please !
@@ -239,17 +230,19 @@ You don't have any assigned team or operation, contact your Operator before usin
 
 
             <!-- Version number -->
-            <StackLayout
-                HeightRequest="40"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-40}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
-                BackgroundColor="{Binding AppEnvironnement, Converter={StaticResource EnvironnementToColorConverter}}">
-                <Label
-                    HorizontalTextAlignment="Center"
-                    VerticalTextAlignment="Center"
-                    VerticalOptions="CenterAndExpand"
-                    Text="{Binding DisplayVersion, Mode=OneWay}"
-                    TextColor="White" />
+            <StackLayout HeightRequest="40"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-40}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                         BackgroundColor="{Binding AppEnvironnement, Converter={StaticResource EnvironnementToColorConverter}}">
+                <Label HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       VerticalOptions="CenterAndExpand"
+                       Text="{Binding DisplayVersion, Mode=OneWay}"
+                       TextColor="White">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VersionTappedCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
             </StackLayout>
         </RelativeLayout>
     </ContentPage.Content>

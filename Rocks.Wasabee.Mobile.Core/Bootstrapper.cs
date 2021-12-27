@@ -28,6 +28,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<IMap>(() => new MapImplementation());
             Mvx.IoCProvider.RegisterSingleton<ILauncher>(() => new LauncherImplementation());
             Mvx.IoCProvider.RegisterSingleton<IDeviceInfo>(() => new DeviceInfoImplementation());
+            Mvx.IoCProvider.RegisterSingleton<IBrowser>(() => new BrowserImplementation());
 
             Mvx.IoCProvider.RegisterSingleton<Plugin.Permissions.Abstractions.IPermissions>(Plugin.Permissions.CrossPermissions.Current);
         }

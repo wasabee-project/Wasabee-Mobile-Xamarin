@@ -46,12 +46,20 @@
     </Style>
 
     <!--Boutons-->
-    <!--Valider/Accepter-->
-    <Style TargetType="Button" x:Key="WasabeeStyleValidateButton">
-        <Setter Property="Text" Value="✓   Validate"/>
+    <Style TargetType="Button" x:Key="WasabeeStyleMainActionButton">
         <Setter Property="TextColor" Value="White"/>
         <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+    <Style TargetType="Button" x:Key="WasabeeStyleSecondaryActionButton">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryOrange}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+
+    <!--Valider/Accepter-->
+    <Style TargetType="Button" x:Key="WasabeeStyleValidateButton" BasedOn="{StaticResource WasabeeStyleMainActionButton}">
+        <Setter Property="Text" Value="✓   Validate"/>
     </Style>
     <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningNextButton" BasedOn="{StaticResource WasabeeStyleValidateButton}">
         <Setter Property="Text" Value="✓   Next"/>

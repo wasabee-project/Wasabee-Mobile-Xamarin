@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep3SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:subViewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:system="clr-namespace:System;assembly=netstandard"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep3View"
+                       x:DataType="subViewModels:AgentVerificationStep3SubViewModel">
+
+    <ContentView.Resources>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+      <Frame Padding="0" Margin="10,0" HasShadow="False" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+          
+          <ScrollView>
+              <Grid RowDefinitions="Auto, *, Auto">
+                  <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand" Padding="10">
+                      <Label HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineHeight="2">
+                          <Label.FormattedText>
+                              <FormattedString>
+                                  <Span Text="Agent Community Verification" FontSize="22" FontAttributes="Bold"/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="🐝     🐝     🐝" FontSize="Large"/>
+                              </FormattedString>
+                          </Label.FormattedText>
+                      </Label>
+                  </StackLayout>
+
+                  <StackLayout Grid.Row="1" Padding="10" VerticalOptions="Center" Spacing="30" IsVisible="{Binding IsVerified, Converter={StaticResource BoolNegateConverter}}">
+                      <StackLayout Spacing="15">
+                          <Label Text="Post your token in the Activity feed of Ingress Community forums."/>
+
+                          <Button Text="Open Community Forums"
+                                  HorizontalOptions="Center"
+                                  CornerRadius="5"
+                                  TextColor="White"
+                                  Command="{Binding OpenCommunityCommand}">
+                              <Button.Background>
+                                  <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                      <GradientStop Color="#79409E"
+                                                    Offset="0.0" />
+                                      <GradientStop Color="#5A2D92"
+                                                    Offset="1.0" />
+                                  </LinearGradientBrush>
+                              </Button.Background>
+                          </Button>
+                      </StackLayout>
+                      
+                      <StackLayout Spacing="15" IsVisible="{Binding HasOpenedCommunity}">
+                          <Label Text="Once you've posted the token to the community Forums, click the button below to start the verification process." />
+
+                          <Button Text="Verify me"
+                                  HorizontalOptions="Center"
+                                  Style="{DynamicResource WasabeeStyleMainActionButton}"
+                                  Command="{Binding RefreshStatusCommand}"/>
+
+                          <ActivityIndicator IsRunning="True"
+                                             IsVisible="{Binding IsBusy}"/>
+                      </StackLayout>
+                  </StackLayout>
+
+                  <StackLayout Grid.Row="1" Padding="10" VerticalOptions="Center" IsVisible="{Binding IsVerified}">
+                      <Label HorizontalTextAlignment="Center">
+                          <Label.FormattedText>
+                              <FormattedString>
+                                  <Span Text="Well done!"/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="Your Wasabee account is now verified with the Community forums."/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="Your profile now displays a 🐝!"/>
+                              </FormattedString>
+                          </Label.FormattedText>
+                      </Label>
+                  </StackLayout>
+
+                  <Grid Grid.Row="2" ColumnDefinitions="*,*">
+                      <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
+                              Text="‹   Back"
+                              HorizontalOptions="Start"
+                              Command="{Binding Parent.BackStepCommand}"
+                              IsVisible="{Binding IsExitButtonVisible, Converter={StaticResource BoolNegateConverter}}"/>
+                      <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                              Text="Exit"
+                              HorizontalOptions="End"
+                              IsVisible="{Binding IsExitButtonVisible}"
+                              Command="{Binding Parent.ExitCommand}"/>
+                  </Grid>
+              </Grid>
+          </ScrollView>
+      </Frame>
+  </ContentView.Content>
+</views:BaseContentView>

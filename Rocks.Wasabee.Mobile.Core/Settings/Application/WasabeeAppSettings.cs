@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Settings.User;
+using System;
+using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 {
@@ -34,16 +37,28 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.Application
 
         private void UpdateWasabeeUrls()
         {
-            var server = Server switch
+            if (Server is WasabeeServer.Custom)
             {
-                WasabeeServer.US => "am",
-                WasabeeServer.EU => "eu",
-                WasabeeServer.APAC => "ap",
-                WasabeeServer.Undefined => string.Empty,
-                _ => throw new ArgumentOutOfRangeException(nameof(Server))
-            };
+                var customUrl = Mvx.IoCProvider.Resolve<IPreferences>().Get(UserSettingsKeys.CustomBackendUri, string.Empty);
+                if (string.IsNullOrEmpty(customUrl))
+                    throw new Exception("Custom backend url is null");
 
-            WasabeeBaseUrl = $"https://{server}.wasabee.rocks";
+                WasabeeBaseUrl = customUrl;
+            }
+            else
+            {
+                var server = Server switch
+                {
+                    WasabeeServer.US => "am",
+                    WasabeeServer.EU => "eu",
+                    WasabeeServer.APAC => "ap",
+                    WasabeeServer.Undefined => string.Empty,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Server))
+                };
+
+                WasabeeBaseUrl = $"https://{server}.wasabee.rocks";
+            }
+
             WasabeeTokenUrl = $"{WasabeeBaseUrl}/aptok";
             WasabeeOneTimeTokenUrl = $"{WasabeeBaseUrl}/oneTimeToken";
         }

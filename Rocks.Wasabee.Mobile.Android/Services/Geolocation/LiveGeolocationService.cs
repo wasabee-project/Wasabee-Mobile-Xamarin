@@ -33,14 +33,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             {
                 if (extras.GetBoolean("WasabeeNotification", false))
                 {
-                    var preferences = Mvx.IoCProvider.Resolve<IPreferences>();
                     var messenger = Mvx.IoCProvider.Resolve<IMvxMessenger>();
-
-                    if (preferences != null && preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
-                    {
-                        preferences.Set(UserSettingsKeys.LiveLocationSharingEnabled, false);
-                        messenger?.Publish(new LiveGeolocationTrackingMessage(this, Core.Messages.Action.Stop));
-                    }
+                    messenger?.Publish(new LiveGeolocationTrackingMessage(this, Core.Messages.Action.Stop));
                 }
             }
         }

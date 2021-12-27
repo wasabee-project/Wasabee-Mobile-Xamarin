@@ -52,23 +52,22 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _preferences.Remove(UserSettingsKeys.SavedServerChoice);
             _preferences.Remove(UserSettingsKeys.LastLoginMethod);
 
-            await ClearUserTokenAndCookie(_loginProvider);
+            await ClearTokens();
             await ClearDatabases();
         }
 
-        public async Task<GoogleToken?> RefreshTokenAsync(string refreshToken)
+        public async Task<GoogleToken?> RefreshGoogleTokenAsync(string refreshToken)
         {
-            _loggingService.Trace("Executing AuthentificationService.RefreshTokenAsync");
+            _loggingService.Trace("Executing AuthentificationService.RefreshGoogleTokenAsync");
 
-            return await _loginProvider.RefreshTokenAsync(refreshToken);
+            return await _loginProvider.RefreshGoogleTokenAsync(refreshToken);
         }
 
-        private async Task ClearUserTokenAndCookie(ILoginProvider loginProvider)
+        private async Task ClearTokens()
         {
             _loggingService.Trace("Executing AuthentificationService.ClearUserTokenAndCookie");
 
-            await loginProvider.RemoveTokenFromSecureStore();
-            loginProvider.ClearCookie();
+            await _loginProvider.RemoveTokensFromSecureStore();
         }
 
         private async Task ClearDatabases()
@@ -79,7 +78,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             {
                 await Mvx.IoCProvider.Resolve<UsersDatabase>().DeleteAllData();
                 await Mvx.IoCProvider.Resolve<TeamsDatabase>().DeleteAllData();
+                await Mvx.IoCProvider.Resolve<TeamAgentsDatabase>().DeleteAllData();
                 await Mvx.IoCProvider.Resolve<OperationsDatabase>().DeleteAllData();
+                await Mvx.IoCProvider.Resolve<LinksDatabase>().DeleteAllData();
+                await Mvx.IoCProvider.Resolve<MarkersDatabase>().DeleteAllData();
             }
             catch (Exception e)
             {

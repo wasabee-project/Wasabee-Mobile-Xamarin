@@ -25,7 +25,7 @@ using Xamarin.Forms.GoogleMaps;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 {
-    public class MapViewModel : BaseViewModel
+    public class MapViewModel : BasePageInTabbedPageViewModel
     {
         private static readonly Position DefaultPosition = new Position(45.767723, 4.835711); // Centers over Lyon, France
         private static readonly CultureInfo ConversionCulture = CultureInfo.GetCultureInfo("en-US");
@@ -134,11 +134,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             await LoadOperationCommand.ExecuteAsync(false);
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
         }
-
-        public override void ViewDisappeared()
+        
+        public override void Destroy()
         {
-            base.ViewDisappeared();
-
             _token?.Dispose();
             _token = null;
             _tokenReload?.Dispose();

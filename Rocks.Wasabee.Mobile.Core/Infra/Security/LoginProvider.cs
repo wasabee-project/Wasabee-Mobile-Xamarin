@@ -9,7 +9,6 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +17,7 @@ using Xamarin.Essentials.Interfaces;
 
 #if DEBUG_NETWORK_LOGS
 using Rocks.Wasabee.Mobile.Core.Services;
+using MvvmCross;
 #endif
 
 namespace Rocks.Wasabee.Mobile.Core.Infra.Security
@@ -47,7 +47,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         ///     - First step : retrieves the unique OAuth code from login UI web page
         ///     - Second step : send the unique OAuth code to Google's token server to get the OAuth token
         /// </summary>
-        /// <returns>Returns a GoogleOAuthResponse containing the OAuth token</returns>
+        /// <returns>Returns a <see cref="GoogleToken"/> containing the OAuth token</returns>
         public async Task<GoogleToken?> DoGoogleOAuthLoginAsync()
         {
             _loggingService.Trace("Executing LoginProvider.DoGoogleOAuthLoginAsync");
@@ -108,22 +108,22 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
         /// Runs the Wasabee login process to retrieve Wasabeee data
         /// </summary>
         /// <param name="googleToken">Google OAuth response object containing the AccessToken</param>
-        /// <returns>Returns a WasabeeLoginResponse with account data</returns>
+        /// <returns>Returns a <see cref="UserModel"/> with account data if login is succesfull</returns>
         public async Task<UserModel?> DoWasabeeLoginAsync(GoogleToken googleToken)
         {
             _loggingService.Trace("Executing LoginProvider.DoWasabeeLoginAsync");
 
             HttpResponseMessage response;
-            var cookieContainer = new CookieContainer();
 
 #if DEBUG_NETWORK_LOGS
-            var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
+            var httpHandler = new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler());
 #else
-            var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
+            var httpHandler = _httpClientFactory.CreateHandler();
 #endif
 
             using var client = new HttpClient(httpHandler)
             {
+                Timeout = TimeSpan.FromSeconds(5),
                 DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{_versionTracking.CurrentVersion} ({_deviceInfo.Platform} {_deviceInfo.VersionString})" } }
             };
 
@@ -144,89 +144,34 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(responseContent);
 
-            var uri = new Uri(_appSettings.WasabeeBaseUrl);
-            var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()
-                .AsEnumerable()
-                .FirstOrDefault();
-
-            if (wasabeeCookie != null)
-                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, JsonConvert.SerializeObject(wasabeeCookie));
+            if (wasabeeUserModel != null && !string.IsNullOrWhiteSpace(wasabeeUserModel.Jwt))
+                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, wasabeeUserModel.Jwt);
+            else
+                return null;
 
             return wasabeeUserModel;
-        }
-
-        /// <summary>
-        /// Sends the FCM subscription token to Wasabee server in order to get notified when required
-        /// </summary>
-        /// <param name="token">FCM token</param>
-        /// <returns></returns>
-        public async Task<bool> SendFirebaseTokenAsync(string token)
-        {
-            _loggingService.Trace("Executing LoginProvider.SendFirebaseTokenAsync");
-
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                _loggingService.Info("Token is null, returning");
-
-                return false;
-            }
-
-            var cookie = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeCookie);
-            if (string.IsNullOrWhiteSpace(cookie))
-                return false;
-            //TODO : catch this : throw new KeyNotFoundException(SecureStorageConstants.WasabeeCookie);
-
-            try
-            {
-                var wasabeeCookie = JsonConvert.DeserializeObject<Cookie>(cookie);
-                var cookieContainer = new CookieContainer();
-                cookieContainer.Add(new Uri(_appSettings.WasabeeBaseUrl), wasabeeCookie);
-
-                using var handler = _httpClientFactory.CreateHandler(cookieContainer);
-                using var client = new HttpClient(handler);
-
-                var url = $"{_appSettings.WasabeeBaseUrl}{WasabeeRoutesConstants.Firebase}";
-                var postContent = new StringContent(token, Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync(url, postContent).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    return responseContent.Contains("\"status\":\"ok\"");
-                }
-            }
-            catch (Exception e)
-            {
-                _loggingService.Error(e, "Error Executing LoginProvider.SendFirebaseTokenAsync");
-
-                return false;
-            }
-
-            return false;
         }
 
         /// <summary>
         /// Runs the Wasabee login process with one time token to retrieve Wasabeee data
         /// </summary>
         /// <param name="oneTimeToken">Wasabee one time token</param>
-        /// <returns>Returns a WasabeeLoginResponse with account data</returns>
+        /// <returns>Returns a <see cref="UserModel"/> with account data if login is succesfull</returns>
         public async Task<UserModel?> DoWasabeeOneTimeTokenLoginAsync(string oneTimeToken)
         {
             _loggingService.Trace("Executing LoginProvider.DoWasabeeOneTimeTokenLoginAsync");
 
             HttpResponseMessage response;
-            var cookieContainer = new CookieContainer();
 
 #if DEBUG_NETWORK_LOGS
-            var httpHandler = new HttpLoggingHandler(new HttpClientHandler() { CookieContainer = cookieContainer });
+            var httpHandler = new HttpLoggingHandler(new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler()));
 #else
-            var httpHandler = _httpClientFactory.CreateHandler(cookieContainer);
+            var httpHandler = _httpClientFactory.CreateHandler();
 #endif
 
             using var client = new HttpClient(httpHandler)
             {
+                Timeout = TimeSpan.FromSeconds(5),
                 DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{_versionTracking.CurrentVersion} ({_deviceInfo.Platform} {_deviceInfo.VersionString})" } }
             };
 
@@ -249,32 +194,21 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var wasabeeUserModel = JsonConvert.DeserializeObject<UserModel?>(responseContent);
-
-            var uri = new Uri(_appSettings.WasabeeBaseUrl);
-            var wasabeeCookie = cookieContainer.GetCookies(uri).Cast<Cookie>()
-                .AsEnumerable()
-                .FirstOrDefault();
-
-            if (wasabeeCookie != null)
-                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeCookie, JsonConvert.SerializeObject(wasabeeCookie));
+            
+            if (wasabeeUserModel != null && !string.IsNullOrWhiteSpace(wasabeeUserModel.Jwt))
+                await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, wasabeeUserModel.Jwt);
+            else
+                return null;
 
             return wasabeeUserModel;
         }
-
-        public Task RemoveTokenFromSecureStore()
-        {
-            _loggingService.Trace("Executing LoginProvider.RemoveTokenFromSecureStore");
-
-            return Task.CompletedTask;
-        }
-
-        public void ClearCookie()
-        {
-            _loggingService.Trace("Executing LoginProvider.ClearCookie");
-            _secureStorage.Remove(SecureStorageConstants.WasabeeCookie);
-        }
-
-        public async Task<GoogleToken?> RefreshTokenAsync(string refreshToken)
+        
+        /// <summary>
+        /// Refreshes the GoogleToken using a RefreshToken
+        /// </summary>
+        /// <param name="refreshToken">Google's refresh token</param>
+        /// <returns>Returns a <see cref="GoogleToken"/></returns>
+        public async Task<GoogleToken?> RefreshGoogleTokenAsync(string refreshToken)
         {
             _loggingService.Trace("Executing LoginProvider.RefreshTokenAsync");
 
@@ -283,7 +217,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
                 { "refresh_token", refreshToken },
                 { "client_id", _appSettings.ClientId },
                 { "grant_type", "refresh_token"}
-
             };
 
             HttpResponseMessage response;
@@ -304,6 +237,15 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             var googleToken = JsonConvert.DeserializeObject<GoogleToken>(responseContent);
 
             return googleToken;
+        }
+
+        public Task RemoveTokensFromSecureStore()
+        {
+            _loggingService.Trace("Executing LoginProvider.RemoveTokenFromSecureStore");
+            _secureStorage.Remove(SecureStorageConstants.WasabeeToken);
+            _secureStorage.Remove(SecureStorageConstants.GoogleToken);
+
+            return Task.CompletedTask;
         }
     }
 }

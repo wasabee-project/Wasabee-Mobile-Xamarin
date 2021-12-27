@@ -302,7 +302,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
         /// <returns></returns>
-        private async Task UpdateMarkerAndNotify(WasabeeApiResponse response)
+        private async Task UpdateMarkerAndNotify(WasabeeOpUpdateApiResponse response)
         {
             if (MarkerAssignment != null && Marker != null)
             {
@@ -406,13 +406,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             return string.Empty;
         }
 
-        private static void StoreResponseUpdateId(WasabeeApiResponse response)
+        private static void StoreResponseUpdateId(WasabeeOpUpdateApiResponse response)
         {
-            if (response.HasUpdateId())
-            {
-                var updateId = response.UpdateId;
-                OperationsUpdatesCache.Data.Add(updateId, false);
-            }
+            if (string.IsNullOrWhiteSpace(response.UpdateId))
+                return;
+            
+            var updateId = response.UpdateId;
+            OperationsUpdatesCache.Data.Add(updateId, false);
         }
 
         #endregion
