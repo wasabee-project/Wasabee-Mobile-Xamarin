@@ -12,6 +12,13 @@
     
     <ContentView.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+
+        <Keyboard x:Key="NoCapitalizationKeyboard"
+                  x:FactoryMethod="Create">
+            <x:Arguments>
+                <KeyboardFlags>None</KeyboardFlags>
+            </x:Arguments>
+        </Keyboard>
     </ContentView.Resources>
 
     <ContentView.Content>
@@ -36,11 +43,14 @@
                       <StackLayout Spacing="15" 
                                    IsVisible="{Binding IsTokenReady, Converter={StaticResource BoolNegateConverter}}">
 
-                          <controls:FloatingLabelEntry Title="In-game name"
+                          <controls:FloatingLabelEntry x:Name="AgentNameEntry"
+                                                       Title="In-game name"
+                                                       IsTextPredictionEnabled="False"
                                                        Text="{Binding Parent.AgentName}"
                                                        TextColor="{DynamicResource PrimaryTextColor}"
                                                        TitleColor="{DynamicResource PrimaryTextColor}"
-                                                       BorderColor="{DynamicResource PrimaryTextColor}"/>
+                                                       BorderColor="{DynamicResource PrimaryTextColor}"
+                                                       Keyboard="{StaticResource NoCapitalizationKeyboard}"/>
 
                           <Label Text="Be sure to write it exactly as in Ingress !" HorizontalOptions="Center"/>
 
@@ -72,9 +82,10 @@
                           <Grid Margin="0,30,0,0" ColumnDefinitions="*,Auto">
                               
                               <Frame CornerRadius="4" BorderColor="{DynamicResource PrimaryTextColor}"
-                                     Margin="0" Padding="5" BackgroundColor="Transparent">
+                                     Margin="0" Padding="5" BackgroundColor="Transparent" HasShadow="False">
 
                                   <controls:BorderlessEditor HeightRequest="100" Margin="0" FontSize="Small"
+                                                             BackgroundColor="Transparent"
                                                              Text="{Binding Token}"/>
                               </Frame>
 
@@ -92,12 +103,12 @@
 
                   </StackLayout>
 
-                  <Grid Grid.Row="2" ColumnDefinitions="*,*">
+                  <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto">
                       <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
                               Text="‹   Back"
                               HorizontalOptions="Start"
                               Command="{Binding Parent.BackStepCommand}"/>
-                      <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                      <Button Grid.Column="2" Style="{DynamicResource WasabeeStyleMainActionButton}"
                               Text="Next   ›"
                               HorizontalOptions="End"
                               Command="{Binding Parent.NextStepCommand}"

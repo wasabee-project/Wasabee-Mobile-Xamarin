@@ -7,9 +7,9 @@
   <ContentView.Content>
       <Grid>
           <Frame CornerRadius="4" BorderColor="{Binding BorderColor, Source={x:Reference This}}" Margin="0" Padding="0" BackgroundColor="Transparent" 
-                 InputTransparent="True" CascadeInputTransparent="False">
+                 HasShadow="False" InputTransparent="True" CascadeInputTransparent="False">
 
-              <controls:BorderlessEntry x:Name="EntryField" 
+              <controls:BorderlessEntry x:Name="EntryField" x:FieldModifier="public"
                                         Completed="Handle_Completed" 
                                         HeightRequest="46"
                                         Margin="3,0"
@@ -18,9 +18,10 @@
                                         IsPassword="{Binding IsPassword, Source={x:Reference This}}"
                                         Keyboard="{Binding Keyboard, Source={x:Reference This}}"
                                         HorizontalTextAlignment="{Binding HorizontalTextAlignment, Source={x:Reference This}}"
+                                        TextColor="{Binding TextColor, Source={x:Reference This}}"
+                                        IsTextPredictionEnabled="{Binding IsTextPredictionEnabled, Source={x:Reference This}}"
                                         Unfocused="Handle_Unfocused" 
-                                        Focused="Handle_Focused"
-                                        TextColor="{Binding TextColor, Source={x:Reference This}}" />
+                                        Focused="Handle_Focused" />
           </Frame>
 
           <Label x:Name="LabelTitle" 
