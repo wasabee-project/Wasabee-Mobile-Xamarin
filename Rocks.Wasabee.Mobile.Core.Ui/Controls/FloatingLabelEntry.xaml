@@ -9,7 +9,7 @@
           <Frame CornerRadius="4" BorderColor="{Binding BorderColor, Source={x:Reference This}}" Margin="0" Padding="0" BackgroundColor="Transparent" 
                  HasShadow="False" InputTransparent="True" CascadeInputTransparent="False">
 
-              <controls:BorderlessEntry x:Name="EntryField" 
+              <controls:BorderlessEntry x:Name="EntryField" x:FieldModifier="public"
                                         Completed="Handle_Completed" 
                                         HeightRequest="46"
                                         Margin="3,0"
