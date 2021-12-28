@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -7,7 +7,7 @@
   <ContentView.Content>
       <Grid>
           <Frame CornerRadius="4" BorderColor="{Binding BorderColor, Source={x:Reference This}}" Margin="0" Padding="0" BackgroundColor="Transparent" 
-                 InputTransparent="True" CascadeInputTransparent="False">
+                 HasShadow="False" InputTransparent="True" CascadeInputTransparent="False">
 
               <controls:BorderlessEntry x:Name="EntryField" 
                                         Completed="Handle_Completed" 

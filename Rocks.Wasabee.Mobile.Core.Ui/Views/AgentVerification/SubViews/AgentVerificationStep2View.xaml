@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep2SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
@@ -72,9 +72,10 @@
                           <Grid Margin="0,30,0,0" ColumnDefinitions="*,Auto">
                               
                               <Frame CornerRadius="4" BorderColor="{DynamicResource PrimaryTextColor}"
-                                     Margin="0" Padding="5" BackgroundColor="Transparent">
+                                     Margin="0" Padding="5" BackgroundColor="Transparent" HasShadow="False">
 
                                   <controls:BorderlessEditor HeightRequest="100" Margin="0" FontSize="Small"
+                                                             BackgroundColor="Transparent"
                                                              Text="{Binding Token}"/>
                               </Frame>
 
@@ -92,12 +93,12 @@
 
                   </StackLayout>
 
-                  <Grid Grid.Row="2" ColumnDefinitions="*,*">
+                  <Grid Grid.Row="2" ColumnDefinitions="90,*,90">
                       <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
                               Text="‹   Back"
                               HorizontalOptions="Start"
                               Command="{Binding Parent.BackStepCommand}"/>
-                      <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                      <Button Grid.Column="2" Style="{DynamicResource WasabeeStyleMainActionButton}"
                               Text="Next   ›"
                               HorizontalOptions="End"
                               Command="{Binding Parent.NextStepCommand}"
