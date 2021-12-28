@@ -75,9 +75,9 @@
                                 Text="✗   Later"
                                 Command="{Binding Parent.ExitCommand}"/>
 
-                        <controls:CircularProgressBar Grid.Column="1" Grid.Row="1"
-                                                      WidthRequest="20" HeightRequest="20"
-                                                      HorizontalOptions="End" VerticalOptions="Center"
+                        <controls:CircularProgressBar Grid.Column="2" Grid.Row="1"
+                                                      WidthRequest="20" HeightRequest="20" Margin="0,0,20,0"
+                                                      HorizontalOptions="Center" VerticalOptions="Center"
                                                       Stroke="4"
                                                       Color="{DynamicResource PrimaryGreen}"
                                                       Progress="{Binding Progress}"
@@ -86,7 +86,7 @@
                         <Button Grid.Column="2" Grid.Row="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
                                 Text="Next   ›"
                                 Command="{Binding Parent.NextStepCommand}"
-                                IsEnabled="{Binding IsNextStepEnabled}"/>
+                                IsVisible="{Binding IsNextStepEnabled}"/>
                     </Grid>
                 </Grid>
             </ScrollView>
