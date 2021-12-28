@@ -12,6 +12,13 @@
     
     <ContentView.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+
+        <Keyboard x:Key="NoCapitalizationKeyboard"
+                  x:FactoryMethod="Create">
+            <x:Arguments>
+                <KeyboardFlags>None</KeyboardFlags>
+            </x:Arguments>
+        </Keyboard>
     </ContentView.Resources>
 
     <ContentView.Content>
@@ -42,7 +49,8 @@
                                                        Text="{Binding Parent.AgentName}"
                                                        TextColor="{DynamicResource PrimaryTextColor}"
                                                        TitleColor="{DynamicResource PrimaryTextColor}"
-                                                       BorderColor="{DynamicResource PrimaryTextColor}" />
+                                                       BorderColor="{DynamicResource PrimaryTextColor}"
+                                                       Keyboard="{StaticResource NoCapitalizationKeyboard}"/>
 
                           <Label Text="Be sure to write it exactly as in Ingress !" HorizontalOptions="Center"/>
 

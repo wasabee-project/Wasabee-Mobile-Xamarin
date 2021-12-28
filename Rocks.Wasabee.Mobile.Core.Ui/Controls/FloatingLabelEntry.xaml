@@ -18,10 +18,10 @@
                                         IsPassword="{Binding IsPassword, Source={x:Reference This}}"
                                         Keyboard="{Binding Keyboard, Source={x:Reference This}}"
                                         HorizontalTextAlignment="{Binding HorizontalTextAlignment, Source={x:Reference This}}"
-                                        Unfocused="Handle_Unfocused" 
-                                        Focused="Handle_Focused"
                                         TextColor="{Binding TextColor, Source={x:Reference This}}"
-                                        IsTextPredictionEnabled="{Binding IsTextPredictionEnabled, Source={x:Reference This}}" />
+                                        IsTextPredictionEnabled="{Binding IsTextPredictionEnabled, Source={x:Reference This}}"
+                                        Unfocused="Handle_Unfocused" 
+                                        Focused="Handle_Focused" />
           </Frame>
 
           <Label x:Name="LabelTitle" 
