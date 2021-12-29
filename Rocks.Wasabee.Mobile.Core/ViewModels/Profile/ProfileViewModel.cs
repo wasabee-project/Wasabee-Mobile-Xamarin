@@ -216,7 +216,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         }
 
         public IMvxCommand StartAgentVerificationCommand => new MvxCommand(StartAgentVerificationExecuted);
-        private void StartAgentVerificationExecuted()
+        private async void StartAgentVerificationExecuted()
         {
             if (IsSelfProfile is false) 
             {
@@ -224,8 +224,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
                 return;
             }
 
-            _navigationService.Navigate<AgentVerificationViewModel, AgentVerificationNavigationParameter>(
+            var navigationResult = await _navigationService.Navigate<AgentVerificationViewModel, AgentVerificationNavigationParameter, AgentVerificationCloseResult>(
                 new AgentVerificationNavigationParameter(comingFromLogin: false));
+
+            if (navigationResult is { IsSuccess: true })
+            {
+                var googleId = _userSettingsService.GetLoggedUserGoogleId();
+                await LoadAgentProfileCommand.ExecuteAsync(googleId);
+            }
         }
 
         #endregion
