@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -64,8 +64,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
                 IsBusy = true;
 
                 QrCodeValue = _parameter.UserGoogleId;
-
-
+                
                 await LoadAgentProfileCommand.ExecuteAsync(_parameter.UserGoogleId);
                 return;
             }
@@ -76,9 +75,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             {
                 User = userModel;
                 QrCodeValue = userModel.GoogleId;
-
-                if (string.IsNullOrWhiteSpace(User.CommunityName))
-                    IsLinkIngressAccountVisible = true;
+                
+                IsLinkIngressAccountVisible = string.IsNullOrWhiteSpace(User.CommunityName);
             }
             else
             {
@@ -149,8 +147,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             if (string.Equals(User.GoogleId, loggedUserId))
             {
                 IsSelfProfile = true;
-                if (string.IsNullOrWhiteSpace(User.CommunityName))
-                    IsLinkIngressAccountVisible = true;
+                IsLinkIngressAccountVisible = string.IsNullOrWhiteSpace(User.CommunityName);
             }
 
             IsBusy = false;
