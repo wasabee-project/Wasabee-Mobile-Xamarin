@@ -3,6 +3,7 @@ using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -48,7 +49,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             MarkerAssignment = parameter;
             Marker = MarkerAssignment.Marker;
 
-            IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker?.AssignedTo);
+            IsSelfAssignment = Marker!.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
             UpdateButtonsState();
         }
 
@@ -56,7 +57,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             UpdateButtonsState();
 
-            Goal = GetGoalFromMarkerType(Marker?.Type);
+            if (Marker is not null)
+                Goal = GetGoalFromMarkerType(Marker.Type);
 
             return base.Initialize();
         }
@@ -314,7 +316,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Marker = updated;
-                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker.AssignedTo);
+                    IsSelfAssignment = Marker.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
 
                     UpdateButtonsState();
 
@@ -335,24 +337,24 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             if (Marker == null)
                 return;
 
-            switch (Marker.State.ToLower())
+            switch (Marker.State)
             {
-                case "pending":
-                case "completed":
+                case TaskState.Pending:
+                case TaskState.Completed:
                     AcknowledgedEnabled = false;
                     CompletedEnabled = false;
                     IncompleteEnabled = true;
                     RejectEnabled = false;
                     ClaimEnabled = false;
                     break;
-                case "assigned":
+                case TaskState.Assigned:
                     AcknowledgedEnabled = true;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
                     RejectEnabled = true;
                     ClaimEnabled = false;
                     break;
-                case "acknowledged":
+                case TaskState.Acknowledged:
                     AcknowledgedEnabled = false;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
@@ -371,40 +373,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             }
         }
 
-        private string GetGoalFromMarkerType(string? markerType)
+        private string GetGoalFromMarkerType(MarkerType markerType)
         {
-            if (markerType == null)
-                return string.Empty;
-
-            switch (markerType)
-            {
-                case "CapturePortalMarker":
-                    return "Capture";
-                case "LetDecayPortalAlert":
-                    return "Let Decay";
-                case "DestroyPortalAlert":
-                    return "Destroy";
-                case "FarmPortalMarker":
-                    return "Farm";
-                case "GotoPortalMarker":
-                    return "Go to";
-                case "GetKeyPortalMarker":
-                    return "Get key";
-                case "CreateLinkAlert":
-                    return "Create Link";
-                case "MeetAgentPortalMarker":
-                    return "Meet Agent";
-                case "OtherPortalAlert":
-                    return "Other";
-                case "RechargePortalAlert":
-                    return "Recharge";
-                case "UpgradePortalAlert":
-                    return "Upgrade";
-                case "UseVirusPortalAlert":
-                    return "Use virus";
-            }
-
-            return string.Empty;
+            return markerType.ToFriendlyString();
         }
 
         private static void StoreResponseUpdateId(WasabeeOpUpdateApiResponse response)

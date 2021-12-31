@@ -37,7 +37,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             try
             {
                 var agentDatabaseModel = AgentDatabaseModel.ToAgentDatabaseModel(agentModel);
-                
+
                 databaseConnection.GetConnection().InsertOrReplace(agentDatabaseModel);
 
                 return 0;
@@ -84,7 +84,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<AgentModel?> GetAgent(string agentId)
         {
             LoggingService.Trace("Querying AgentsDatabase.GetAgent");
-            
+
             if (string.IsNullOrEmpty(agentId))
                 return null;
 
@@ -93,7 +93,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             try
             {
                 var agentDatabaseModel = databaseConnection.GetConnection().Get<AgentDatabaseModel>(agentId);
-                
+
                 return agentDatabaseModel != null ?
                     AgentDatabaseModel.ToTeamAgentModel(agentDatabaseModel) :
                     null;
@@ -111,10 +111,42 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
         }
 
+        public async Task<List<AgentModel>> GetAgents(IList<string> agentIds)
+        {
+            LoggingService.Trace("Querying AgentsDatabase.GetAgents");
+
+            if (agentIds.Count == 0)
+                return new List<AgentModel>();
+
+            var databaseConnection = await GetDatabaseConnection<AgentDatabaseModel>().ConfigureAwait(false);
+            var dbLock = databaseConnection.GetConnection().Lock();
+            try
+            {
+                var agentDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<AgentDatabaseModel>();
+                dbLock.Dispose();
+
+                return agentDatabaseModels?
+                    .Where(x => agentIds.Contains(x.AgentId))
+                    .Select(x => AgentDatabaseModel.ToTeamAgentModel(x))
+                    .ToList() ?? new List<AgentModel>();
+            }
+            catch (Exception e)
+            {
+                LoggingService.Error(e, "Error Querying AgentsDatabase.GetAgent");
+
+                return null;
+            }
+            finally
+            {
+                dbLock.Dispose();
+            }
+
+        }
+
         public async Task<List<AgentModel>> GetAgentsInTeam(string teamId)
         {
             LoggingService.Trace("Querying AgentsDatabase.GetAgentsInTeam");
-            
+
             if (string.IsNullOrEmpty(teamId))
                 return new List<AgentModel>();
 
@@ -191,7 +223,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             public string Date { get; set; }
             public bool ShareWD { get; set; }
             public bool LoadWD { get; set; }
-            
+
             [ManyToMany(typeof(TeamAgent), CascadeOperations = CascadeOperation.CascadeRead)]
             public List<TeamsDatabase.TeamDatabaseModel> Teams { get; set; }
 

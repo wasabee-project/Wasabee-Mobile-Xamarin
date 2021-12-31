@@ -55,11 +55,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _userDialogs = userDialogs;
         }
-        
+
         public override async void ViewAppearing()
         {
             base.ViewAppearing();
-            
+
             _token ??= _messenger.Subscribe<SelectedOpChangedMessage>(async msg => await RefreshCommand.ExecuteAsync());
             _tokenFromMap ??= _messenger.Subscribe<MessageFor<AssignmentsListViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
             _tokenRefresh ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await RefreshCommand.ExecuteAsync());
@@ -88,7 +88,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsLoading { get; set; }
 
         public OperationModel? Operation { get; set; }
-        
+
         public MvxObservableCollection<AssignmentData> Elements { get; set; } = new MvxObservableCollection<AssignmentData>();
 
         #endregion
@@ -126,19 +126,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 var assignedLinks = new List<LinkAssignmentData>();
                 var assignedMarkers = new List<MarkerAssignmentData>();
                 if (!Operation.Links.IsNullOrEmpty())
-                    assignedLinks = Operation.Links.Where(l => l.AssignedTo.Equals(userGid))
-                        .Select(CreateLinkAssignmentData).OrderBy(x => x.Link!.ThrowOrderPos).ToList();
-                
+                    assignedLinks = Operation.Links.Where(l => l.Assignments.Contains(userGid))
+                        .Select(CreateLinkAssignmentData).OrderBy(x => x.Link!.Order).ToList();
+
                 if (!Operation.Markers.IsNullOrEmpty())
-                    assignedMarkers = Operation.Markers.Where(l => l.AssignedTo.Equals(userGid))
+                    assignedMarkers = Operation.Markers.Where(l => l.Assignments.Contains(userGid))
                         .Select(CreateMarkerAssignmentData).OrderBy(x => x.Marker!.Order).ToList();
-                
+
                 var orderedAssignments = new List<AssignmentData>();
                 if (!assignedLinks.IsNullOrEmpty())
                     orderedAssignments.AddRange(assignedLinks);
                 if (!assignedMarkers.IsNullOrEmpty())
                     orderedAssignments.AddRange(assignedMarkers);
-                
+
                 Elements.Clear();
 
                 if (!orderedAssignments.IsNullOrEmpty())
@@ -161,7 +161,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     await RefreshCommand.ExecuteAsync().ConfigureAwait(false);
             }
         }
-        
+
         public IMvxCommand<LinkModel> RefreshLinkCommand => new MvxCommand<LinkModel>(RefreshLinkExecuted);
         private void RefreshLinkExecuted(LinkModel linkModel)
         {
@@ -176,7 +176,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (toRemove != null)
                 {
                     var index = Elements.IndexOf(toRemove);
-                    if (string.IsNullOrWhiteSpace(linkModel.AssignedTo))
+                    if (linkModel.Assignments.Count == 0)
                     {
                         Elements.RemoveAt(index);
                         return;
@@ -184,7 +184,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
                     var newAssignment = CreateLinkAssignmentData(linkModel);
 
-                    Elements.ReplaceRange(new [] { newAssignment }, index, 1);
+                    Elements.ReplaceRange(new[] { newAssignment }, index, 1);
                 }
             }
             catch (Exception e)
@@ -196,7 +196,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 IsLoading = false;
             }
         }
-        
+
         public IMvxCommand<MarkerModel> RefreshMarkerCommand => new MvxCommand<MarkerModel>(RefreshMarkerExecuted);
         private void RefreshMarkerExecuted(MarkerModel markerModel)
         {
@@ -211,14 +211,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 if (toRemove != null)
                 {
                     var index = Elements.IndexOf(toRemove);
-                    if (string.IsNullOrWhiteSpace(markerModel.AssignedTo))
+                    if (markerModel.Assignments.Count == 0)
                     {
                         Elements.RemoveAt(index);
                         return;
                     }
-                    
+
                     var newAssignment = CreateMarkerAssignmentData(markerModel);
-                    Elements.ReplaceRange(new [] { newAssignment }, index, 1);
+                    Elements.ReplaceRange(new[] { newAssignment }, index, 1);
                 }
             }
             catch (Exception e)
@@ -243,16 +243,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         #endregion
 
         #region Private methods
-        
+
         private LinkAssignmentData CreateLinkAssignmentData(LinkModel link)
         {
             if (Operation == null)
                 throw new Exception("Operation is null");
 
-            return new LinkAssignmentData(Operation!.Id, link.ThrowOrderPos)
+            return new LinkAssignmentData(Operation!.Id, link.Order)
             {
                 Link = link,
-                AssignedAgent = string.IsNullOrEmpty(link.AssignedTo) ? null : _agentsDatabase.GetAgent(link.AssignedTo).Result,
+                AssignedAgents = link.Assignments is null || link.Assignments.Count == 0 ?
+                    new List<AgentModel>() :
+                    _agentsDatabase.GetAgents(link.Assignments).Result,
                 FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.FromPortalId)),
                 ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.ToPortalId)),
                 Color = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color)
@@ -267,11 +269,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _agentsDatabase.GetAgent(marker.AssignedTo).Result,
+                AssignedAgents = marker.Assignments is null || marker.Assignments.Count == 0 ?
+                    new List<AgentModel>() :
+                    _agentsDatabase.GetAgents(marker.Assignments).Result,
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
-        
+
         #endregion
     }
 
@@ -289,7 +293,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public LinkModel? Link { get; set; }
         public MarkerModel? Marker { get; set; }
 
-        public AgentModel? AssignedAgent { get; set; }
+        public List<AgentModel> AssignedAgents { get; set; }
         public bool ShowAssignee { get; set; } = false;
     }
 

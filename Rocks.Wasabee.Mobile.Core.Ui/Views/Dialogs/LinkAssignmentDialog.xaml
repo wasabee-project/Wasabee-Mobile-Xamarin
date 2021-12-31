@@ -63,7 +63,7 @@
                         <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSelfAssignment}" />
 
                         <StackLayout IsVisible="{Binding IsSelfAssignment}">
-                            <Label Text="{Binding Link.Completed, StringFormat={xaml:Translate LinkDialog_Text_Completed}}"/>
+                            <Label Text="{Binding Link.State, StringFormat={xaml:Translate LinkDialog_Text_State}}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                 <Button Text="{xaml:Translate TaskDialog_Button_Done}" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
                                         Command="{Binding CompleteCommand}"

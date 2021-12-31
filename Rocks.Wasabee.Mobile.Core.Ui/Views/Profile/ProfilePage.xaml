@@ -50,7 +50,7 @@
 
 
                             <StackLayout Grid.Column="0" Grid.Row="0" Padding="0" Margin="0" Orientation="Horizontal" Spacing="5">
-                                <Label Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
+                                <Label Text="{Binding User.Name}" FontAttributes="Bold" FontSize="Large"/>
                                 <Label Text="🐝" FontSize="14" VerticalOptions="Center" IsVisible="{Binding IsLinkIngressAccountVisible, Converter={StaticResource BoolNegateConverter}}"/>
                             </StackLayout>
                             <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat={xaml:Translate Profile_Label_Level}}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>

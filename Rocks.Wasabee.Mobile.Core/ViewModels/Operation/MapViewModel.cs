@@ -9,6 +9,7 @@ using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Helpers.Xaml;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.QueryModels;
 using Rocks.Wasabee.Mobile.Core.Resources.I18n;
@@ -361,7 +362,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 {
                     try
                     {
-                        if (hideCompletedMarkersSetting && marker.State.Equals("completed"))
+                        if (hideCompletedMarkersSetting && marker.State is TaskState.Completed)
                             continue;
 
                         var portal = Operation.Portals.First(x => x.Id.Equals(marker.PortalId));
@@ -380,12 +381,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                             Marker = marker,
                         };
 
-                        if (!string.IsNullOrWhiteSpace(marker.AssignedTo))
-                        {
-                            var assignedTo = await _agentsDatabase.GetAgent(marker.AssignedTo);
-                            if (assignedTo != null)
-                                pin.AssignedTo = assignedTo.Name;
-                        }
+                        if (marker.Assignments.Any())
+                            pin.Assignments = await _agentsDatabase.GetAgents(marker.Assignments);
 
                         Markers.Add(pin);
                     }
@@ -715,7 +712,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgent = string.IsNullOrEmpty(marker.AssignedTo) ? null : _agentsDatabase.GetAgent(marker.AssignedTo).Result,
+                AssignedAgents = marker.Assignments is null || marker.Assignments.Count == 0 ?
+                    new List<AgentModel>() :
+                    _agentsDatabase.GetAgents(marker.Assignments).Result,
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
@@ -778,7 +777,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             double.TryParse(toPortal.Lng, NumberStyles.Float, culture, out var toLng);
 
             var baseLinkColor = WasabeeColorsHelper.GetColorFromWasabeeName(linkModel.Color, Operation.Color);
-            if (linkModel.Completed)
+            if (linkModel.State is TaskState.Completed)
                 baseLinkColor = baseLinkColor.MultiplyAlpha(0.5);
 
             var wasabeeLink = new WasabeeLink(
@@ -786,7 +785,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 {
                     IsGeodesic = true,
                     StrokeColor = baseLinkColor,
-                    StrokeWidth = linkModel.Completed ? 1 : 2,
+                    StrokeWidth = linkModel.State is TaskState.Completed ? 1 : 2,
                     Positions =
                     {
                         new Position(fromLat, fromLng),
@@ -801,7 +800,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return wasabeeLink;
         }
 
-        private WasabeeAgentPin CreateAgentPin(Models.Agent.AgentModel agent, bool isAgentAssignedToOperation, bool isCurrentUser = false)
+        private WasabeeAgentPin CreateAgentPin(AgentModel agent, bool isAgentAssignedToOperation, bool isCurrentUser = false)
         {
             var pin = new Pin()
             {
@@ -919,7 +918,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
-                if (updateMessage.LinkData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
+                if (updateMessage.LinkData.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()))
                     _messenger.Publish(new MessageFor<AssignmentsListViewModel>(this));
             }
         }
@@ -938,7 +937,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Markers.Remove(marker);
 
                 var hideCompletedMarkersSetting = _preferences.Get(UserSettingsKeys.HideCompletedMarkers, false);
-                if (hideCompletedMarkersSetting && updateMessage.MarkerData.State.Equals("completed"))
+                if (hideCompletedMarkersSetting && updateMessage.MarkerData.State is TaskState.Completed)
                 {
                     CloseDetailPanelCommand.Execute();
                 }
@@ -963,12 +962,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         Marker = updateMessage.MarkerData
                     };
 
-                    if (!string.IsNullOrWhiteSpace(updateMessage.MarkerData.AssignedTo))
-                    {
-                        var assignedTo = await _agentsDatabase.GetAgent(updateMessage.MarkerData.AssignedTo);
-                        if (assignedTo != null)
-                            pin.AssignedTo = assignedTo.Name;
-                    }
+                    if (updateMessage.MarkerData.Assignments.Any())
+                        pin.Assignments = await _agentsDatabase.GetAgents(updateMessage.MarkerData.Assignments);
 
                     Markers.Add(pin);
                 }
@@ -976,35 +971,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
-                if (updateMessage.MarkerData.AssignedTo.Equals(_userSettingsService.GetLoggedUserGoogleId()))
+                if (updateMessage.MarkerData.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()))
                     _messenger.Publish(new MessageFor<AssignmentsListViewModel>(this));
             }
         }
 
-        private string GetMarkerNameFromTypeAndState(string markerType, string markerState)
+        private string GetMarkerNameFromTypeAndState(MarkerType markerType, TaskState markerState)
         {
-            return markerType switch
-            {
-                "DestroyPortalAlert" => $"Destroy portal - {markerState}",
-                "UseVirusPortalAlert" => $"Use virus - {markerState}",
-                "CapturePortalMarker" => $"Capture portal - {markerState}",
-                "FarmPortalMarker" => $"Farm keys - {markerState}",
-                "LetDecayPortalAlert" => $"Let decay - {markerState}",
-                "MeetAgentPortalMarker" => $"Meet Agent - {markerState}",
-                "OtherPortalAlert" => $"Other - {markerState}",
-                "RechargePortalAlert" => $"Recharge portal - {markerState}",
-                "UpgradePortalAlert" => $"Upgrade portal - {markerState}",
-                "CreateLinkAlert" => $"Create link - {markerState}",
-                "ExcludeMarker" => "Exclude Marker",
-                "GetKeyPortalMarker" => $"Get Key - {markerState}",
-                "GotoPortalMarker" => $"Go to portal - {markerState}",
-                _ => throw new ArgumentOutOfRangeException(markerType)
-            };
+            return $"{markerType.ToFriendlyString()} - {markerState.ToFriendlyString()}";
         }
 
         #endregion
 
-        private readonly object _mapLayerConfigLock = new object();
+        private readonly object _mapLayerConfigLock = new();
         private void UpdateMapLayersConfig()
         {
             lock (_mapLayerConfigLock)

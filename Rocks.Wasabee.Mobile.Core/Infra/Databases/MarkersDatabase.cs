@@ -27,7 +27,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<MarkerModel?> GetMarkerModel(string markerId)
         {
             LoggingService.Trace("Querying MarkersDatabase.GetMarkerModel");
-            
+
             if (string.IsNullOrEmpty(markerId))
                 return null;
 
@@ -88,17 +88,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public string PortalId { get; set; }
 
-            public string Type { get; set; }
+            public MarkerType Type { get; set; }
 
             public string Comment { get; set; }
 
-            public string AssignedTo { get; set; }
-
-            public string AssignedTeam { get; set; }
-
-            public string CompletedId { get; set; }
-
-            public string State { get; set; }
+            public TaskState State { get; set; }
 
             public int Order { get; set; }
 
@@ -115,9 +109,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     PortalId = markerDatabaseModel.PortalId,
                     Type = markerDatabaseModel.Type,
                     Comment = markerDatabaseModel.Comment,
-                    AssignedTo = markerDatabaseModel.AssignedTo,
-                    AssignedTeam = markerDatabaseModel.AssignedTeam,
-                    CompletedId = markerDatabaseModel.CompletedId,
                     State = markerDatabaseModel.State,
                     Order = markerDatabaseModel.Order,
                     Zone = markerDatabaseModel.Zone
@@ -132,9 +123,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     PortalId = markerModel.PortalId,
                     Type = markerModel.Type,
                     Comment = markerModel.Comment,
-                    AssignedTo = markerModel.AssignedTo,
-                    AssignedTeam = markerModel.AssignedTeam,
-                    CompletedId = markerModel.CompletedId,
                     State = markerModel.State,
                     Order = markerModel.Order,
                     Zone = markerModel.Zone

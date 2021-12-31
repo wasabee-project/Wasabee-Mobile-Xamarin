@@ -27,7 +27,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<LinkModel?> GetLinkModel(string linkId)
         {
             LoggingService.Trace("Querying LinksDatabase.GetLinkModel");
-            
+
             if (string.IsNullOrEmpty(linkId))
                 return null;
 
@@ -87,10 +87,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             public string Id { get; set; }
             public string FromPortalId { get; set; }
             public string ToPortalId { get; set; }
-            public string Description { get; set; }
-            public string AssignedTo { get; set; }
-            public int ThrowOrderPos { get; set; }
-            public bool Completed { get; set; }
             public string Color { get; set; }
             public int Zone { get; set; }
 
@@ -105,10 +101,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Id = linkDatabaseModel.Id,
                     FromPortalId = linkDatabaseModel.FromPortalId,
                     ToPortalId = linkDatabaseModel.ToPortalId,
-                    Description = linkDatabaseModel.Description,
-                    AssignedTo = linkDatabaseModel.AssignedTo,
-                    ThrowOrderPos = linkDatabaseModel.ThrowOrderPos,
-                    Completed = linkDatabaseModel.Completed,
                     Color = linkDatabaseModel.Color,
                     Zone = linkDatabaseModel.Zone
                 };
@@ -121,10 +113,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Id = linkModel.Id,
                     FromPortalId = linkModel.FromPortalId,
                     ToPortalId = linkModel.ToPortalId,
-                    Description = linkModel.Description,
-                    AssignedTo = linkModel.AssignedTo,
-                    ThrowOrderPos = linkModel.ThrowOrderPos,
-                    Completed = linkModel.Completed,
                     Color = linkModel.Color,
                     Zone = linkModel.Zone
                 };

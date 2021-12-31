@@ -47,7 +47,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             LinkAssignment = parameter;
             Link = LinkAssignment.Link;
 
-            IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link?.AssignedTo);
+            IsSelfAssignment = Link!.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
             UpdateButtonsState();
         }
 
@@ -308,7 +308,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Link = updated;
-                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link.AssignedTo);
+                    IsSelfAssignment = Link!.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()); ;
 
                     UpdateButtonsState();
 
@@ -331,9 +331,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             if (IsSelfAssignment)
             {
-                CompletedEnabled = !Link.Completed;
-                IncompleteEnabled = Link.Completed;
-                RejectEnabled = !Link.Completed;
+                CompletedEnabled = Link.State is not TaskState.Completed;
+                IncompleteEnabled = Link.State is TaskState.Completed;
+                RejectEnabled = Link.State is not TaskState.Completed;
                 ClaimEnabled = false;
             }
             else

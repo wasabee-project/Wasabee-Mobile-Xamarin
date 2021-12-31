@@ -63,7 +63,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private bool _working = false;
         private bool _isBypassingGoogleAndWasabeeLogin = false;
         private bool _isUsingOneTimeToken = false;
-        
+
         private int _tapCount = 0;
 
         private SplashScreenNavigationParameter? _parameter;
@@ -228,7 +228,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                 LoadingStepLabel = Strings.SignIn_Label_LoadingStep_GoogleSuccess;
                 await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
-                
+
                 if (SelectedServerItem.Server == WasabeeServer.Undefined)
                     ChangeServerCommand.Execute();
                 else
@@ -259,7 +259,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             else
             {
                 _isUsingOneTimeToken = true;
-                
+
                 IsEnteringToken = false;
 
                 LoadingStepLabel = Strings.SignIn_Label_LoadingStep_SelectServerToken;
@@ -287,7 +287,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 IsEnteringToken = false;
                 IsSelectingServer = false;
-                
+
                 IsLoading = true;
                 LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_ContactingServer, SelectedServerItem.Name);
 
@@ -466,7 +466,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 ChangeServer();
             else
             {
-                var lastLoginMethod = (LoginMethod) _preferences.Get(UserSettingsKeys.LastLoginMethod, (int) LoginMethod.Unknown);
+                var lastLoginMethod = (LoginMethod)_preferences.Get(UserSettingsKeys.LastLoginMethod, (int)LoginMethod.Unknown);
                 switch (lastLoginMethod)
                 {
                     // will get a refreshed auth token from Google
@@ -591,10 +591,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     // Auto login failed (expired token ?)
                     try
                     {
-                        var lastLoginMethod = (LoginMethod) _preferences.Get(UserSettingsKeys.LastLoginMethod, (int) LoginMethod.Unknown);
+                        var lastLoginMethod = (LoginMethod)_preferences.Get(UserSettingsKeys.LastLoginMethod, (int)LoginMethod.Unknown);
                         if (lastLoginMethod == LoginMethod.OneTimeToken)
                             throw new Exception("Can't refresh Google token when Wasabee One Time Token was used previously");
-                        
+
                         await ConnectWasabee();
                     }
                     catch (Exception e)
@@ -634,8 +634,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
 
             _messenger.Publish(new UserLoggedInMessage(this));
-            _preferences.Set(UserSettingsKeys.LastLoginMethod, (int) loginMethod);
-            
+            _preferences.Set(UserSettingsKeys.LastLoginMethod, (int)loginMethod);
+
             if (RememberServerChoice)
             {
                 _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
@@ -682,11 +682,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                                 }
                             }
                         }
-                        
+
                         await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
 
                         if (shouldGoToAgentCommunityVerification)
-                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(), 
+                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(),
                                 new AgentVerificationNavigationParameter(comingFromLogin: true));
                     });
 
@@ -841,9 +841,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private void LoadCustomBackendServer()
         {
             var hasCustomBackendUri = _preferences.Get(UserSettingsKeys.HasCustomBackendUri, false);
-            if (!hasCustomBackendUri) 
+            if (!hasCustomBackendUri)
                 return;
-            
+
             if (ServersCollection.Any(x => x.Server is WasabeeServer.Custom))
                 ServersCollection.Remove(ServersCollection.First(x => x.Server is WasabeeServer.Custom));
 

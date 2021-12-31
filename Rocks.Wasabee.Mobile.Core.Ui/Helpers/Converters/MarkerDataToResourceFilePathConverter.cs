@@ -8,7 +8,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
     public class MarkerDataToResourceFilePathConverter : IValueConverter
     {
         private static string DefaultMarker => Device.RuntimePlatform == Device.Android ? "wasabee_markers_other_pending.svg" : "wasabee/markers/other/pending.svg";
-        
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (Equals(value, null))
@@ -21,118 +21,118 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters
                     var state = marker.State;
                     var svgFilename = type switch
                     {
-                        "DestroyPortalAlert" => state switch
+                        MarkerType.DestroyPortal => state switch
                         {
-                            "pending" => "wasabee_markers_destroy_pending.svg",
-                            "acknowledged" => "wasabee_markers_destroy_acknowledged.svg",
-                            "completed" => "wasabee_markers_destroy_completed.svg",
-                            "assigned" => "wasabee_markers_destroy_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_destroy_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_destroy_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_destroy_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_destroy_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "UseVirusPortalAlert" => state switch
+                        MarkerType.UseVirus => state switch
                         {
-                            "pending" => "wasabee_markers_virus_pending.svg",
-                            "acknowledged" => "wasabee_markers_virus_acknowledged.svg",
-                            "completed" => "wasabee_markers_virus_completed.svg",
-                            "assigned" => "wasabee_markers_virus_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_virus_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_virus_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_virus_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_virus_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "CapturePortalMarker" => state switch
+                        MarkerType.CapturePortal => state switch
                         {
-                            "pending" => "wasabee_markers_capture_pending.svg",
-                            "acknowledged" => "wasabee_markers_capture_acknowledged.svg",
-                            "completed" => "wasabee_markers_capture_completed.svg",
-                            "assigned" => "wasabee_markers_capture_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_capture_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_capture_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_capture_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_capture_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "FarmPortalMarker" => state switch
+                        MarkerType.FarmPortal => state switch
                         {
-                            "pending" => "wasabee_markers_farm_pending.svg",
-                            "acknowledged" => "wasabee_markers_farm_acknowledged.svg",
-                            "completed" => "wasabee_markers_farm_completed.svg",
-                            "assigned" => "wasabee_markers_farm_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_farm_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_farm_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_farm_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_farm_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "LetDecayPortalAlert" => state switch
+                        MarkerType.LetDecay => state switch
                         {
-                            "pending" => "wasabee_markers_decay_pending.svg",
-                            "acknowledged" => "wasabee_markers_decay_acknowledged.svg",
-                            "completed" => "wasabee_markers_decay_completed.svg",
-                            "assigned" => "wasabee_markers_decay_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_decay_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_decay_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_decay_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_decay_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "MeetAgentPortalMarker" => state switch
+                        MarkerType.MeetAgent => state switch
                         {
-                            "pending" => "wasabee_markers_meetagent_pending.svg",
-                            "acknowledged" => "wasabee_markers_meetagent_acknowledged.svg",
-                            "completed" => "wasabee_markers_meetagent_completed.svg",
-                            "assigned" => "wasabee_markers_meetagent_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_meetagent_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_meetagent_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_meetagent_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_meetagent_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "OtherPortalAlert" => state switch
+                        MarkerType.Other => state switch
                         {
-                            "pending" => "wasabee_markers_other_pending.svg",
-                            "acknowledged" => "wasabee_markers_other_acknowledged.svg",
-                            "completed" => "wasabee_markers_other_completed.svg",
-                            "assigned" => "wasabee_markers_other_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_other_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_other_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_other_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_other_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "RechargePortalAlert" => state switch
+                        MarkerType.RechargePortal => state switch
                         {
-                            "pending" => "wasabee_markers_recharge_pending.svg",
-                            "acknowledged" => "wasabee_markers_recharge_acknowledged.svg",
-                            "completed" => "wasabee_markers_recharge_completed.svg",
-                            "assigned" => "wasabee_markers_recharge_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_recharge_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_recharge_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_recharge_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_recharge_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "UpgradePortalAlert" => state switch
+                        MarkerType.UpgradePortal => state switch
                         {
-                            "pending" => "wasabee_markers_upgrade_pending.svg",
-                            "acknowledged" => "wasabee_markers_upgrade_acknowledged.svg",
-                            "completed" => "wasabee_markers_upgrade_completed.svg",
-                            "assigned" => "wasabee_markers_upgrade_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_upgrade_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_upgrade_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_upgrade_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_upgrade_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "CreateLinkAlert" => state switch
+                        MarkerType.CreateLink => state switch
                         {
-                            "pending" => "wasabee_markers_link_pending.svg",
-                            "acknowledged" => "wasabee_markers_link_acknowledged.svg",
-                            "completed" => "wasabee_markers_link_completed.svg",
-                            "assigned" => "wasabee_markers_link_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_link_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_link_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_link_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_link_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "ExcludeMarker" => state switch
+                        MarkerType.Exclude => state switch
                         {
-                            "pending" => "wasabee_markers_exclude_pending.svg",
-                            "acknowledged" => "wasabee_markers_exclude_acknowledged.svg",
-                            "completed" => "wasabee_markers_exclude_completed.svg",
-                            "assigned" => "wasabee_markers_exclude_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_exclude_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_exclude_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_exclude_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_exclude_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "GetKeyPortalMarker" => state switch
+                        MarkerType.GetKey => state switch
                         {
-                            "pending" => "wasabee_markers_key_pending.svg",
-                            "acknowledged" => "wasabee_markers_key_acknowledged.svg",
-                            "completed" => "wasabee_markers_key_completed.svg",
-                            "assigned" => "wasabee_markers_key_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_key_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_key_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_key_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_key_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        "GotoPortalMarker" => state switch
+                        MarkerType.GoToPortal => state switch
                         {
-                            "pending" => "wasabee_markers_goto_pending.svg",
-                            "acknowledged" => "wasabee_markers_goto_acknowledged.svg",
-                            "completed" => "wasabee_markers_goto_completed.svg",
-                            "assigned" => "wasabee_markers_goto_assigned.svg",
-                            _ => throw new ArgumentOutOfRangeException(state)
+                            TaskState.Pending => "wasabee_markers_goto_pending.svg",
+                            TaskState.Acknowledged => "wasabee_markers_goto_acknowledged.svg",
+                            TaskState.Completed => "wasabee_markers_goto_completed.svg",
+                            TaskState.Assigned => "wasabee_markers_goto_assigned.svg",
+                            _ => throw new ArgumentOutOfRangeException($"{type} : {state}")
                         },
-                        _ => throw new ArgumentOutOfRangeException(type)
+                        _ => throw new ArgumentOutOfRangeException(type.ToString())
                     };
 
                     return Device.RuntimePlatform == Device.Android ? svgFilename : svgFilename.Replace('_', '/').Replace(".svg", ".png");
 
                 }
-                else
-                    return DefaultMarker;
+
+                return DefaultMarker;
             }
             catch (Exception)
             {
