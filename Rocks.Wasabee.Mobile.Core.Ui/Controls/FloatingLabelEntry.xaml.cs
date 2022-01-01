@@ -27,6 +27,7 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Controls
         public static readonly BindableProperty TextColorProperty = BindableProperty.Create("TextColor", typeof(Color), typeof(Color), Color.Black, BindingMode.TwoWay, null);
         public static readonly BindableProperty TitleColorProperty = BindableProperty.Create("TitleColor", typeof(Color), typeof(Color), Color.Black, BindingMode.TwoWay, null);
         public static readonly BindableProperty BorderColorProperty = BindableProperty.Create("BorderColor", typeof(Color), typeof(Color), Color.Black, BindingMode.TwoWay, null);
+        public static readonly BindableProperty IsTextPredictionEnabledProperty = BindableProperty.Create("IsTextPredictionEnabled", typeof(bool), typeof(FloatingLabelEntry), true);
 
         static async void HandleBindingPropertyChangedDelegate(BindableObject bindable, object oldValue, object newValue)
         {
@@ -96,6 +97,12 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Controls
         {
             get => (Color)GetValue(BorderColorProperty);
             set => SetValue(BorderColorProperty, value);
+        }
+
+        public bool IsTextPredictionEnabled
+        {
+            get => (bool)GetValue(IsTextPredictionEnabledProperty);
+            set => SetValue(IsTextPredictionEnabledProperty, value);
         }
 
         #endregion

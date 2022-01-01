@@ -78,13 +78,13 @@
                       </Label>
                   </StackLayout>
 
-                  <Grid Grid.Row="2" ColumnDefinitions="*,*">
+                  <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto">
                       <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
                               Text="{xaml:Translate ACV_Button_Back}"
                               HorizontalOptions="Start"
                               Command="{Binding Parent.BackStepCommand}"
                               IsVisible="{Binding IsExitButtonVisible, Converter={StaticResource BoolNegateConverter}}"/>
-                      <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                      <Button Grid.Column="2" Style="{DynamicResource WasabeeStyleMainActionButton}"
                               Text="{xaml:Translate Global_Exit}"
                               HorizontalOptions="End"
                               IsVisible="{Binding IsExitButtonVisible}"

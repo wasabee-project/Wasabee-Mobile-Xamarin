@@ -46,6 +46,11 @@
         <Setter Property="TextColor" Value="{StaticResource PrimaryBlue}" />
     </Style>
 
+    <!--CheckBoxes-->
+    <Style TargetType="CheckBox">
+        <Setter Property="Color" Value="{StaticResource PrimaryGreen}"/>
+    </Style>
+    
     <!--Boutons-->
     <Style TargetType="Button" x:Key="WasabeeStyleMainActionButton">
         <Setter Property="TextColor" Value="White"/>

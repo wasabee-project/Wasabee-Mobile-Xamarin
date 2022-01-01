@@ -18,7 +18,7 @@
 
     <ContentPage.Resources>
         <converters:AgentVerificationBoolToStringConverter x:Key="AgentVerificationBoolToStringConverter"/>
-        <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -51,7 +51,7 @@
 
                             <StackLayout Grid.Column="0" Grid.Row="0" Padding="0" Margin="0" Orientation="Horizontal" Spacing="5">
                                 <Label Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
-                                <Label Text="🐝" FontSize="14" VerticalOptions="Center" IsVisible="{Binding User.CommunityName, Converter={StaticResource StringToBoolNegateConverter}}"/>
+                                <Label Text="🐝" FontSize="14" VerticalOptions="Center" IsVisible="{Binding IsLinkIngressAccountVisible, Converter={StaticResource BoolNegateConverter}}"/>
                             </StackLayout>
                             <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat='Level : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>
                             <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='Id : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="12"/>
@@ -65,13 +65,11 @@
                         </Grid>
                     </Grid>
 
-                    <Button Text="Link Ingress Account"
+                    <Button Style="{DynamicResource WasabeeStyleMainActionButton}"
+                            Text="Link Ingress Account"
                             HorizontalOptions="Center"
-                            TextColor="White"
-                            CornerRadius="5"
-                            BackgroundColor="{DynamicResource PrimaryGreen}"
                             Command="{Binding StartAgentVerificationCommand}"
-                            IsVisible="True"/>
+                            IsVisible="{Binding IsLinkIngressAccountVisible}"/>
 
                     <TableView Intent="Settings" HasUnevenRows="True" VerticalOptions="Start">
                         <TableRoot>

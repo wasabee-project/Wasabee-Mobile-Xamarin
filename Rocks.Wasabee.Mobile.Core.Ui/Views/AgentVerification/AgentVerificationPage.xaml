@@ -52,11 +52,12 @@
             <IndicatorView x:Name="CarouselIndicatorView"
                            Grid.Row="1"
                            IndicatorsShape="Circle"
-                           SelectedIndicatorColor="White"
+                           SelectedIndicatorColor="{DynamicResource PrimaryTextColor}"
                            IndicatorColor="Green"
                            HorizontalOptions="Center"
                            VerticalOptions="Center"
-                           Margin="0,0,0,5"/>                   
+                           Margin="0,0,0,5"
+                           InputTransparent="True" />                   
         </Grid>
     </ContentPage.Content>
 </mvx:MvxContentPage>

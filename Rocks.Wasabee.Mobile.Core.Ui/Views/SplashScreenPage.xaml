@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<views:BaseContentPage x:TypeArguments="viewModels:SplashScreenViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+<views:BaseContentPage x:TypeArguments="viewModels:SplashScreenViewModel"
+                       xmlns="http://xamarin.com/schemas/2014/forms" 
                        x:DataType="viewModels:SplashScreenViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                       xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:models="clr-namespace:Rocks.Wasabee.Mobile.Core.Models;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
-                       mc:Ignorable="d"
+                       xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+                       ios:Page.UseSafeArea="True"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.SplashScreenPage"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
                        

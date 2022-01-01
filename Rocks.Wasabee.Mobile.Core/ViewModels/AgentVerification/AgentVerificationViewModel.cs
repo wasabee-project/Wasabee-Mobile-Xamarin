@@ -21,7 +21,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
         }
     }
 
-    public class AgentVerificationViewModel : BaseViewModel, IMvxViewModel<AgentVerificationNavigationParameter>
+    public class AgentVerificationCloseResult
+    {
+        public bool IsSuccess { get; }
+
+        public AgentVerificationCloseResult(bool isSuccess)
+        {
+            IsSuccess = isSuccess;
+        }
+    }
+    
+    public class AgentVerificationViewModel : BaseViewModel, IMvxViewModel<AgentVerificationNavigationParameter, AgentVerificationCloseResult>
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly ILoggingService _loggingService;
@@ -106,6 +116,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
         {
             SaveDontAskAgainSetting();
 
+            if (_parameter.ComingFromLogin is false && CurrentStep is AgentVerificationStep3SubViewModel { IsVerified: true })
+                CloseCompletionSource?.SetResult(new AgentVerificationCloseResult(isSuccess: true));
+
             _navigationService.Close(this);
         }
 
@@ -137,6 +150,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
             rawConfig = JsonConvert.SerializeObject(config);
             _preferences.Set(UserSettingsKeys.NeverShowAgentCommunityVerificationAgain, rawConfig);
         }
+
+        #endregion
+
+        #region IMvxViewModelResult<TResult> implementation
+
+        public TaskCompletionSource<object?>? CloseCompletionSource { get; set; } = new();
 
         #endregion
     }
