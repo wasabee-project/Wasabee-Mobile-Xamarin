@@ -439,6 +439,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Never show again.
+        /// </summary>
+        internal static string Global_NeverShowAgain {
+            get {
+                return ResourceManager.GetString("Global_NeverShowAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         internal static string Global_No {
@@ -516,6 +525,96 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string LinkDialog_Title {
             get {
                 return ResourceManager.GetString("LinkDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re going to enable the Live Location Sharing feature. This means that your real position is going to be send on a regular basis to the Wasabee server..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line1 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All the teams to which you enabled location sharing will be able to see your position when the feature is enabled..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line2 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To configure which team can see you or not, you must go to the Teams menu..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line3 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also, while the feature is enabled, your location will be sent to Wasabee Server even if you&apos;re not using the app, aka. when the app is in background or closed..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line4 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data storage.
+        /// </summary>
+        internal static string LocationDialog_Text_DataStorage {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_DataStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only your last known location (the last location sent by the app) is stored on the servers. No location history is made and we can&apos;t retrace your route..
+        /// </summary>
+        internal static string LocationDialog_Text_DataStorage_Details {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_DataStorage-Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Why do I see this message ?.
+        /// </summary>
+        internal static string LocationDialog_Text_Question {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read more about Wasabee Server&apos;s privacy policy :.
+        /// </summary>
+        internal static string LocationDialog_Text_ReadMore {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_ReadMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here.
+        /// </summary>
+        internal static string LocationDialog_Text_ReadMore_ClickHere {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_ReadMore-ClickHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attention please.
+        /// </summary>
+        internal static string LocationDialog_Title {
+            get {
+                return ResourceManager.GetString("LocationDialog_Title", resourceCulture);
             }
         }
         

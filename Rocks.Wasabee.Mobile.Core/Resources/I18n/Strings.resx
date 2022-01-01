@@ -281,6 +281,10 @@
     <value>Don't ask again</value>
     <comment>Don't ask again label</comment>
   </data>
+  <data name="Global_NeverShowAgain" xml:space="preserve">
+    <value>Never show again</value>
+    <comment>Local setting for never showing context again</comment>
+  </data>
   <data name="Global_No" xml:space="preserve">
     <value>No</value>
   </data>
@@ -311,6 +315,46 @@
   <data name="LinkDialog_Title" xml:space="preserve">
     <value>Link informations</value>
     <comment>Title for link info popup</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line1" xml:space="preserve">
+    <value>You're going to enable the Live Location Sharing feature. This means that your real position is going to be send on a regular basis to the Wasabee server.</value>
+    <comment>Big text line 1</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line2" xml:space="preserve">
+    <value>All the teams to which you enabled location sharing will be able to see your position when the feature is enabled.</value>
+    <comment>Big text line 2</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line3" xml:space="preserve">
+    <value>To configure which team can see you or not, you must go to the Teams menu.</value>
+    <comment>Big text line 3</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line4" xml:space="preserve">
+    <value>Also, while the feature is enabled, your location will be sent to Wasabee Server even if you're not using the app, aka. when the app is in background or closed.</value>
+    <comment>Big text line 4</comment>
+  </data>
+  <data name="LocationDialog_Text_DataStorage" xml:space="preserve">
+    <value>Data storage</value>
+    <comment>Section title</comment>
+  </data>
+  <data name="LocationDialog_Text_DataStorage-Details" xml:space="preserve">
+    <value>Only your last known location (the last location sent by the app) is stored on the servers. No location history is made and we can't retrace your route.</value>
+    <comment>Section text</comment>
+  </data>
+  <data name="LocationDialog_Text_Question" xml:space="preserve">
+    <value>Why do I see this message ?</value>
+    <comment>Text</comment>
+  </data>
+  <data name="LocationDialog_Text_ReadMore" xml:space="preserve">
+    <value>Read more about Wasabee Server's privacy policy :</value>
+    <comment>Text</comment>
+  </data>
+  <data name="LocationDialog_Text_ReadMore-ClickHere" xml:space="preserve">
+    <value>Click here</value>
+    <comment>Clickable text</comment>
+  </data>
+  <data name="LocationDialog_Title" xml:space="preserve">
+    <value>Attention please</value>
+    <comment>Live Location warning popup title</comment>
   </data>
   <data name="MarkerDialog_Text_State" xml:space="preserve">
     <value>State: {0}</value>
