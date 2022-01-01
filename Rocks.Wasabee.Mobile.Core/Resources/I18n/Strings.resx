@@ -296,6 +296,10 @@
   <data name="Global_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="LinkDialog_Text_Completed" xml:space="preserve">
+    <value>Completed? : {0}</value>
+    <comment>Link text for completion state (true or false)</comment>
+  </data>
   <data name="LinkDialog_Text_Destination" xml:space="preserve">
     <value>Destination</value>
     <comment>Text for link destination</comment>
@@ -309,7 +313,7 @@
     <comment>Title for link info popup</comment>
   </data>
   <data name="MarkerDialog_Text_State" xml:space="preserve">
-    <value>State : {0}</value>
+    <value>State: {0}</value>
     <comment>Marker state text</comment>
   </data>
   <data name="MarkerDialog_Title" xml:space="preserve">
@@ -562,6 +566,30 @@
   <data name="SignIn_Label_Warning" xml:space="preserve">
     <value>Attention please !</value>
     <comment>Text for when user attention is required after login</comment>
+  </data>
+  <data name="TargetDialog_Button_GoTo" xml:space="preserve">
+    <value>Go to!</value>
+    <comment>Target button to open maps</comment>
+  </data>
+  <data name="TargetDialog_Button_Ignore" xml:space="preserve">
+    <value>Ignore</value>
+    <comment>Target button to ignore</comment>
+  </data>
+  <data name="TargetDialog_Text_Goal" xml:space="preserve">
+    <value>Goal:</value>
+    <comment>Target goal</comment>
+  </data>
+  <data name="TargetDialog_Text_Portal" xml:space="preserve">
+    <value>Portal:</value>
+    <comment>Target portal name</comment>
+  </data>
+  <data name="TargetDialog_Text_Sender" xml:space="preserve">
+    <value>Sent by:</value>
+    <comment>Target sender</comment>
+  </data>
+  <data name="TargetDialog_Title" xml:space="preserve">
+    <value>Important target received</value>
+    <comment>Target popup title</comment>
   </data>
   <data name="TaskDialog_Button_Ack" xml:space="preserve">
     <value>👍🏻   Ack</value>

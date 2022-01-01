@@ -484,6 +484,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Completed? : {0}.
+        /// </summary>
+        internal static string LinkDialog_Text_Completed {
+            get {
+                return ResourceManager.GetString("LinkDialog_Text_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Destination.
         /// </summary>
         internal static string LinkDialog_Text_Destination {
@@ -511,7 +520,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to State : {0}.
+        ///   Looks up a localized string similar to State: {0}.
         /// </summary>
         internal static string MarkerDialog_Text_State {
             get {
@@ -1128,6 +1137,60 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string SignIn_Label_Warning {
             get {
                 return ResourceManager.GetString("SignIn_Label_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to!.
+        /// </summary>
+        internal static string TargetDialog_Button_GoTo {
+            get {
+                return ResourceManager.GetString("TargetDialog_Button_GoTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore.
+        /// </summary>
+        internal static string TargetDialog_Button_Ignore {
+            get {
+                return ResourceManager.GetString("TargetDialog_Button_Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Goal:.
+        /// </summary>
+        internal static string TargetDialog_Text_Goal {
+            get {
+                return ResourceManager.GetString("TargetDialog_Text_Goal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Portal:.
+        /// </summary>
+        internal static string TargetDialog_Text_Portal {
+            get {
+                return ResourceManager.GetString("TargetDialog_Text_Portal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sent by:.
+        /// </summary>
+        internal static string TargetDialog_Text_Sender {
+            get {
+                return ResourceManager.GetString("TargetDialog_Text_Sender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Important target received.
+        /// </summary>
+        internal static string TargetDialog_Title {
+            get {
+                return ResourceManager.GetString("TargetDialog_Title", resourceCulture);
             }
         }
         
