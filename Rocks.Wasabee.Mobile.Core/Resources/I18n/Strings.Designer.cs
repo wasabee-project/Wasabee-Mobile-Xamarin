@@ -484,6 +484,51 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Destination.
+        /// </summary>
+        internal static string LinkDialog_Text_Destination {
+            get {
+                return ResourceManager.GetString("LinkDialog_Text_Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        internal static string LinkDialog_Text_Source {
+            get {
+                return ResourceManager.GetString("LinkDialog_Text_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link informations.
+        /// </summary>
+        internal static string LinkDialog_Title {
+            get {
+                return ResourceManager.GetString("LinkDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State : {0}.
+        /// </summary>
+        internal static string MarkerDialog_Text_State {
+            get {
+                return ResourceManager.GetString("MarkerDialog_Text_State", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Marker informations.
+        /// </summary>
+        internal static string MarkerDialog_Title {
+            get {
+                return ResourceManager.GetString("MarkerDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change.
         /// </summary>
         internal static string Menu_Button_ChangeOp {
@@ -1087,6 +1132,51 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 👍🏻   Ack.
+        /// </summary>
+        internal static string TaskDialog_Button_Ack {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Ack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓   Claim.
+        /// </summary>
+        internal static string TaskDialog_Button_Claim {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Claim", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓   Done.
+        /// </summary>
+        internal static string TaskDialog_Button_Done {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⚠   Reject.
+        /// </summary>
+        internal static string TaskDialog_Button_Reject {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Reject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗   Undone.
+        /// </summary>
+        internal static string TaskDialog_Button_Undone {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Undone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Agent.
         /// </summary>
         internal static string TeamDetail_Button_AddAgent {
@@ -1227,6 +1317,24 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string TeamsList_Warning_TeamWillDelete {
             get {
                 return ResourceManager.GetString("TeamsList_Warning_TeamWillDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinates copied to clipboard..
+        /// </summary>
+        internal static string Toast_CoordinatesCopied {
+            get {
+                return ResourceManager.GetString("Toast_CoordinatesCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assignment rejected.
+        /// </summary>
+        internal static string Toast_RejectedAssignment {
+            get {
+                return ResourceManager.GetString("Toast_RejectedAssignment", resourceCulture);
             }
         }
         

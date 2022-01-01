@@ -7,6 +7,7 @@
                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;assembly=Rocks.Wasabee.Mobile.Core"
                       xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.LinkAssignmentDialog">
 
     <ContentPage.Resources>
@@ -20,12 +21,12 @@
             <pancakeView:PancakeView x:Name="Popup" CornerRadius="5" BackgroundColor="{DynamicResource PrimaryGreen}" Margin="0, 15">
                 <StackLayout Padding="0" Margin="0">
 
-                    <Label Text="Link informations" TextColor="White" FontSize="Large" FontAttributes="Bold" Margin="8, 8, 0, 4" />
+                    <Label Text="{xaml:Translate LinkDialog_Title}" TextColor="White" FontSize="Large" FontAttributes="Bold" Margin="8, 8, 0, 4" />
 
                     <StackLayout BackgroundColor="{DynamicResource DialogsBackgroundColor}" Padding="10, 5, 10, 10">
                         <StackLayout Orientation="Horizontal" Spacing="10">
                             <StackLayout VerticalOptions="Center" Spacing="0">
-                                <Label Text="Source" />
+                                <Label Text="{xaml:Translate LinkDialog_Text_Source}" />
                                 <Label Text="{Binding LinkAssignment.FromPortalName}" MaxLines="5" WidthRequest="250" />
                             </StackLayout>
                             <StackLayout HorizontalOptions="EndAndExpand">
@@ -44,7 +45,7 @@
 
                         <StackLayout Orientation="Horizontal" Spacing="10">
                             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Center" Spacing="0">
-                                <Label Text="Destination" />
+                                <Label Text="{xaml:Translate LinkDialog_Text_Destination}" />
                                 <Label Text="{Binding LinkAssignment.ToPortalName}" MaxLines="5" WidthRequest="250" />
                             </StackLayout>
                             <StackLayout HorizontalOptions="EndAndExpand">
@@ -62,18 +63,18 @@
                         <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSelfAssignment}" />
 
                         <StackLayout IsVisible="{Binding IsSelfAssignment}">
-                            <Label Text="{Binding Link.Completed, StringFormat='Completed ? : {0}'}"/>
+                            <Label Text="{Binding Link.Completed, StringFormat={xaml:Translate LinkDialog_Text_Completed}}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                <Button Text="✓   Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
+                                <Button Text="{xaml:Translate TaskDialog_Button_Done}" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
                                         Command="{Binding CompleteCommand}"
                                         IsVisible="{Binding CompletedEnabled}"/>
-                                <Button Text="✗   Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
+                                <Button Text="{xaml:Translate TaskDialog_Button_Undone}" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
                                         Command="{Binding IncompleteCommand}"
                                         IsVisible="{Binding IncompleteEnabled}"/>
                             </StackLayout>
 
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                <Button Text="⚠   Reject" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
+                                <Button Text="{xaml:Translate TaskDialog_Button_Reject}" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
                                         Command="{Binding RejectCommand}"
                                         IsVisible="{Binding RejectEnabled}"/>
                             </StackLayout>
@@ -81,7 +82,7 @@
 
                         <StackLayout IsVisible="{Binding IsSelfAssignment, Converter={StaticResource BoolNegateConverter}}"
                                      Orientation="Horizontal" HorizontalOptions="Center">
-                            <Button Text="✓   Claim" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
+                            <Button Text="{xaml:Translate TaskDialog_Button_Claim}" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
                                     Command="{Binding ClaimCommand}"
                                     IsVisible="{Binding ClaimEnabled}"/>
                         </StackLayout>

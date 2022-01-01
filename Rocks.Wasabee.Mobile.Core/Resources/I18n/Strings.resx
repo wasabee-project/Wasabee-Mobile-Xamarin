@@ -296,6 +296,26 @@
   <data name="Global_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="LinkDialog_Text_Destination" xml:space="preserve">
+    <value>Destination</value>
+    <comment>Text for link destination</comment>
+  </data>
+  <data name="LinkDialog_Text_Source" xml:space="preserve">
+    <value>Source</value>
+    <comment>Text for link origin</comment>
+  </data>
+  <data name="LinkDialog_Title" xml:space="preserve">
+    <value>Link informations</value>
+    <comment>Title for link info popup</comment>
+  </data>
+  <data name="MarkerDialog_Text_State" xml:space="preserve">
+    <value>State : {0}</value>
+    <comment>Marker state text</comment>
+  </data>
+  <data name="MarkerDialog_Title" xml:space="preserve">
+    <value>Marker informations</value>
+    <comment>Marker info dialog title</comment>
+  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Change</value>
     <comment>Text on the button to change selected OP</comment>
@@ -543,6 +563,26 @@
     <value>Attention please !</value>
     <comment>Text for when user attention is required after login</comment>
   </data>
+  <data name="TaskDialog_Button_Ack" xml:space="preserve">
+    <value>👍🏻   Ack</value>
+    <comment>Task Acknowledge button</comment>
+  </data>
+  <data name="TaskDialog_Button_Claim" xml:space="preserve">
+    <value>✓   Claim</value>
+    <comment>Task claim button</comment>
+  </data>
+  <data name="TaskDialog_Button_Done" xml:space="preserve">
+    <value>✓   Done</value>
+    <comment>Task done button</comment>
+  </data>
+  <data name="TaskDialog_Button_Reject" xml:space="preserve">
+    <value>⚠   Reject</value>
+    <comment>Task reject button</comment>
+  </data>
+  <data name="TaskDialog_Button_Undone" xml:space="preserve">
+    <value>✗   Undone</value>
+    <comment>Task undo button</comment>
+  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Add Agent</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -613,6 +653,14 @@
   </data>
   <data name="Toasts_LoadingOpsSuccess" xml:space="preserve">
     <value>OPs loaded succesfully</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_CoordinatesCopied" xml:space="preserve">
+    <value>Coordinates copied to clipboard.</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_RejectedAssignment" xml:space="preserve">
+    <value>Assignment rejected</value>
     <comment>Toast message</comment>
   </data>
 </root>
