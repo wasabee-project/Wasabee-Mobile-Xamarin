@@ -117,51 +117,179 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ACV_Button_Back" xml:space="preserve">
+    <value>‹   Retour</value>
+    <comment>Go back</comment>
+  </data>
+  <data name="ACV_Button_Later" xml:space="preserve">
+    <value>✗   Quitter</value>
+    <comment>ACV Button to exit process and od it later</comment>
+  </data>
+  <data name="ACV_Button_Next" xml:space="preserve">
+    <value>Suivant   ›</value>
+    <comment>Go next</comment>
+  </data>
+  <data name="ACV_Step1_Label_AccountNotVerified" xml:space="preserve">
+    <value>Votre compte Wasabee n'est pas encore vérifié avec Ingress Community</value>
+    <comment>ACV explains account isn't verified</comment>
+  </data>
+  <data name="ACV_Step1_Label_FastProcess" xml:space="preserve">
+    <value>Ce processus est facile et rapide à réaliser.</value>
+    <comment>ACV is quick and fast</comment>
+  </data>
+  <data name="ACV_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>Cela prouvera à Wasabee que vous êtes le propriétaire des comptes Wasabee et Ingress.</value>
+    <comment>ACV Notice, what does linking do</comment>
+  </data>
+  <data name="ACV_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>Remarque : Cela ne prouve pas que vous êtes un Enlightened , seulement que vous contrôlez les deux comptes.</value>
+    <comment>ACV Notice, linking doesn't get your faction</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide" xml:space="preserve">
+    <value>Guide étape par étape :</value>
+    <comment>ACV guide</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee génère un jeton sécurisé (qui ne peut pas être falsifié ou deviné) à associer à votre nom en jeu.</value>
+    <comment>ACV Guide step 1</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. Connectez-vous aux forums de la Ingress Community et publiez le jeton dans le flux Activity</value>
+    <comment>ACV Guide step 2</comment>
+  </data>
+  <data name="ACV_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee vérifiera que le jeton est publié par le compte avec le même nom en jeu.</value>
+    <comment>ACV Guide step 3</comment>
+  </data>
+  <data name="ACV_Step1_Label_Welcome" xml:space="preserve">
+    <value>Bienvenue dans</value>
+    <comment>Agent Community Verification welcome</comment>
+  </data>
+  <data name="ACV_Step2_Button_GetToken" xml:space="preserve">
+    <value>Obtenir un jeton</value>
+    <comment>Button to get verification token</comment>
+  </data>
+  <data name="ACV_Step2_Input_InGameName" xml:space="preserve">
+    <value>Nom en jeu :</value>
+    <comment>Input for in-game name</comment>
+  </data>
+  <data name="ACV_Step2_Label_CaseSensitive" xml:space="preserve">
+    <value>Ecrivez-le exactement comme dans Ingress !</value>
+    <comment>Label to tell user it's case sensitive</comment>
+  </data>
+  <data name="ACV_Step2_Label_TokenFor" xml:space="preserve">
+    <value>Jeton pour : {0}</value>
+    <comment>Showing user which in-game name is used for the token</comment>
+  </data>
+  <data name="ACV_Step2_Label_TokenIs" xml:space="preserve">
+    <value>Votre jeton est</value>
+    <comment>Showing token</comment>
+  </data>
+  <data name="ACV_Step3_Button_OpenCommunityForums" xml:space="preserve">
+    <value>Ouvrir Ingress Community</value>
+    <comment>ACV button to open Community Forums</comment>
+  </data>
+  <data name="ACV_Step3_Button_VerifyMe" xml:space="preserve">
+    <value>Vérifiez-moi</value>
+    <comment>ACV Button to get verified </comment>
+  </data>
+  <data name="ACV_Step3_Label_AfterPostExplanation" xml:space="preserve">
+    <value>Une fois que vous avez posté le jeton sur Ingress Community, cliquez sur le bouton ci-dessous pour démarrer le processus de vérification.</value>
+    <comment>ACV explains what to do after posting token</comment>
+  </data>
+  <data name="ACV_Step3_Label_PostTokenOnCommunityForums" xml:space="preserve">
+    <value>Publiez votre jeton dans le flux Activity du forum Ingress Community.</value>
+    <comment>ACV explains what to do with the token</comment>
+  </data>
+  <data name="ACV_Step3_Label_Verified_AccountVerified" xml:space="preserve">
+    <value>Votre compte Wasabee est maintenant vérifié avec Ingress Community.</value>
+    <comment>ACV explains agent account is now verified</comment>
+  </data>
+  <data name="ACV_Step3_Label_Verified_BeeExplanation" xml:space="preserve">
+    <value>Votre profil affiche à présent un 🐝 !</value>
+    <comment>ACV explains verified profiles will have a bee displayed</comment>
+  </data>
+  <data name="ACV_Step3_Label_Verified_WellDone" xml:space="preserve">
+    <value>Bien joué !</value>
+    <comment>ACV succeeded</comment>
+  </data>
   <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
-    <value>Available OP's :</value>
+    <value>OP's disponibles :</value>
     <comment>Title for the popup where user select an OP</comment>
   </data>
+  <data name="Dialogs_Title_CustomServerUrl" xml:space="preserve">
+    <value>URL de serveur personnalisé :</value>
+    <comment>Input title for setting custom server URL</comment>
+  </data>
+  <data name="Dialogs_Warning_ACVFailed" xml:space="preserve">
+    <value>L'Agent Community Verification a échoué. Veuillez vous assurer que vous avez posté le jeton et réessayez.</value>
+    <comment>Warning popup when Wasabee failed verification process in ACV</comment>
+  </data>
+  <data name="Dialogs_Warning_InGameNameAlreadyVerified" xml:space="preserve">
+    <value>Il semble que ce pseudo ait déjà été vérifié.</value>
+    <comment>Warning popup when user tries to verify an already verified in-game name</comment>
+  </data>
+  <data name="Dialogs_Warning_InGameNameRequired" xml:space="preserve">
+    <value>Votre nom dans le jeu est requis !</value>
+    <comment>Warning popup when user didn't set his in-game name for ACV process</comment>
+  </data>
   <data name="Dialogs_Warning_LocationPermissionRequired" xml:space="preserve">
-    <value>Geolocation permission is required !</value>
+    <value>Autorisation de géolocalisation requise !</value>
     <comment>Warning message for when geolocation permission is needed and not granted</comment>
   </data>
   <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
-    <value>To use the live location sharing, please set the permission to 'Allow all the time'.</value>
+    <value>Pour utiliser le partage de position en direct, veuillez définir la permission sur "Autoriser tout le temps".</value>
     <comment>Message for changing location permissions</comment>
   </data>
   <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
-    <value>See Teams</value>
+    <value>Voir les Équipes</value>
     <comment>Button to access teams list</comment>
   </data>
   <data name="Dialog_Warning_NoOpsAvailable" xml:space="preserve">
-    <value>No OP's available</value>
+    <value>Aucune OP disponible</value>
     <comment>Warning popup when user want to change selected OP but nothing else is available</comment>
   </data>
   <data name="Dialog_Warning_NoTeamSharingEnabled" xml:space="preserve">
-    <value>None of your teams has been set to share your location. Go to Teams list and enable at least one team.</value>
+    <value>Aucune de vos équipes n'a été configurée pour partager votre emplacement. Allez dans la liste des équipes et activez au moins une équipe.</value>
     <comment>Warning popup when agent tries to enable location sharing but no team has been previously enabled for location sharing.</comment>
   </data>
   <data name="Dialog_Warning_PermissionsRequired" xml:space="preserve">
-    <value>Permissions required</value>
+    <value>Permissions requises</value>
     <comment>Title for warning popup when app needs permissions</comment>
   </data>
   <data name="Global_Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Ajouter</value>
   </data>
   <data name="Global_Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
   <data name="Global_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Supprimer</value>
+  </data>
+  <data name="Global_DevModeActivated" xml:space="preserve">
+    <value>Mode Dev activé</value>
+    <comment>User enabled dev mode</comment>
   </data>
   <data name="Global_ErrorOccuredPleaseRetry" xml:space="preserve">
-    <value>Error occured, please retry</value>
+    <value>Une erreur est survenue, veuillez réessayer</value>
+  </data>
+  <data name="Global_Exit" xml:space="preserve">
+    <value>Quitter</value>
+    <comment>Exit label</comment>
+  </data>
+  <data name="Global_NeverAskAgain" xml:space="preserve">
+    <value>Ne plus demander</value>
+    <comment>Don't ask again label</comment>
+  </data>
+  <data name="Global_NeverShowAgain" xml:space="preserve">
+    <value>Ne plus afficher</value>
+    <comment>Local setting for never showing context again</comment>
   </data>
   <data name="Global_No" xml:space="preserve">
-    <value>No</value>
+    <value>Non</value>
   </data>
   <data name="Global_NoInternet" xml:space="preserve">
-    <value>No Internet, please verify your network access</value>
+    <value>Aucune connexion Internet, veuillez vérifier votre accès au réseau</value>
   </data>
   <data name="Global_Ok" xml:space="preserve">
     <value>Ok</value>
@@ -170,38 +298,102 @@
     <value>Version</value>
   </data>
   <data name="Global_Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Oui</value>
+  </data>
+  <data name="LinkDialog_Text_Completed" xml:space="preserve">
+    <value>Terminé ? : {0}</value>
+    <comment>Link text for completion state (true or false)</comment>
+  </data>
+  <data name="LinkDialog_Text_Destination" xml:space="preserve">
+    <value>Destination</value>
+    <comment>Text for link destination</comment>
+  </data>
+  <data name="LinkDialog_Text_Source" xml:space="preserve">
+    <value>Source</value>
+    <comment>Text for link origin</comment>
+  </data>
+  <data name="LinkDialog_Title" xml:space="preserve">
+    <value>Informations sur le lien</value>
+    <comment>Title for link info popup</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line1" xml:space="preserve">
+    <value>Vous allez activer la fonction de partage de localisation en direct. Cela signifie que votre position réelle va être envoyée régulièrement au serveur Wasabee.</value>
+    <comment>Big text line 1</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line2" xml:space="preserve">
+    <value>Toutes les équipes dans lesquelles vous avez activé le partage de position seront en mesure de voir votre position lorsque la fonctionnalité est activée.</value>
+    <comment>Big text line 2</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line3" xml:space="preserve">
+    <value>Pour configurer quelle équipe peut vous voir ou non, vous devez aller dans le menu Équipes.</value>
+    <comment>Big text line 3</comment>
+  </data>
+  <data name="LocationDialog_Text_BigText-Line4" xml:space="preserve">
+    <value>De plus, alors que la fonctionnalité est activée, votre position sera envoyée au serveur Wasabee même si vous n'utilisez pas l'application, i.e. lorsque l'application est en arrière-plan ou fermée.</value>
+    <comment>Big text line 4</comment>
+  </data>
+  <data name="LocationDialog_Text_DataStorage" xml:space="preserve">
+    <value>Stockage des données</value>
+    <comment>Section title</comment>
+  </data>
+  <data name="LocationDialog_Text_DataStorage-Details" xml:space="preserve">
+    <value>Seul votre dernier emplacement connu (le dernier emplacement envoyé par l'application) est stocké sur les serveurs. Aucun historique de localisation n'a été fait et nous ne pouvons pas retracer votre itinéraire.</value>
+    <comment>Section text</comment>
+  </data>
+  <data name="LocationDialog_Text_Question" xml:space="preserve">
+    <value>Pourquoi je vois ce message ?</value>
+    <comment>Text</comment>
+  </data>
+  <data name="LocationDialog_Text_ReadMore" xml:space="preserve">
+    <value>En savoir plus sur la politique de confidentialité de Wasabee Server :</value>
+    <comment>Text</comment>
+  </data>
+  <data name="LocationDialog_Text_ReadMore-ClickHere" xml:space="preserve">
+    <value>Cliquez ici</value>
+    <comment>Clickable text</comment>
+  </data>
+  <data name="LocationDialog_Title" xml:space="preserve">
+    <value>Attention s'il vous plaît</value>
+    <comment>Live Location warning popup title</comment>
+  </data>
+  <data name="MarkerDialog_Text_State" xml:space="preserve">
+    <value>État : {0}</value>
+    <comment>Marker state text</comment>
+  </data>
+  <data name="MarkerDialog_Title" xml:space="preserve">
+    <value>Informations sur le marqueur</value>
+    <comment>Marker info dialog title</comment>
   </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
-    <value>Change</value>
+    <value>Changer</value>
     <comment>Text on the button to change selected OP</comment>
   </data>
   <data name="Menu_Button_Logout" xml:space="preserve">
-    <value>Log out</value>
+    <value>Déconnexion</value>
     <comment>Button for logging out</comment>
   </data>
   <data name="Menu_Button_RefreshOps" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Actualiser</value>
     <comment>Button for pulling OPs from server when nothing is stored locally</comment>
   </data>
   <data name="Menu_Item_OperationMap" xml:space="preserve">
-    <value>Operation Map</value>
+    <value>Carte de l'Opération</value>
     <comment>Menu button for the Operation map</comment>
   </data>
   <data name="Menu_Item_OperationsList" xml:space="preserve">
-    <value>My Operations</value>
+    <value>Mes Opérations</value>
     <comment>Menu button for the Operations list</comment>
   </data>
   <data name="Menu_Item_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
     <comment>Menu button for Profile</comment>
   </data>
   <data name="Menu_Item_Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Paramètres</value>
     <comment>Menu button for Settings</comment>
   </data>
   <data name="Menu_Item_Teams" xml:space="preserve">
-    <value>Teams</value>
+    <value>Équipes</value>
     <comment>Menu button for Teams list</comment>
   </data>
   <data name="Menu_Label_CurrentOp" xml:space="preserve">
@@ -209,70 +401,70 @@
     <comment>Label next to current selected OP name</comment>
   </data>
   <data name="Menu_Label_CurrentServer" xml:space="preserve">
-    <value>Server :</value>
+    <value>Serveur :</value>
     <comment>Label next to current logged in server</comment>
   </data>
   <data name="Menu_Label_ErrorLoadingOp" xml:space="preserve">
-    <value>ERROR loading OP</value>
+    <value>ERREUR de chargement de l'OP</value>
     <comment>Error when loading OP</comment>
   </data>
   <data name="Menu_Label_LocationSharing" xml:space="preserve">
-    <value>Location sharing :</value>
+    <value>Partage de position :</value>
     <comment>Text next to the switch that turns on location sharing</comment>
   </data>
   <data name="Menu_Label_NoLocalOpsStored" xml:space="preserve">
-    <value>You don't have any local OP's stored</value>
+    <value>Vous n'avez aucune OP locale stockée</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
-    <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
+    <value>Ces informations proviennent de V et/ou de .Rocks. Si vous avez un nom UnverifiedAgent_, assurez-vous que vos informations .Rocks et V sont correctes.</value>
     <comment>Message indicating from where data came from</comment>
   </data>
   <data name="Profile_Label_Status" xml:space="preserve">
-    <value>Status :</value>
+    <value>Statut :</value>
     <comment>Label for current status</comment>
   </data>
   <data name="Profile_Label_VStatus" xml:space="preserve">
-    <value>V Status</value>
+    <value>Statut V</value>
     <comment>Label before status on V</comment>
   </data>
   <data name="Profile_Page_Title" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
     <comment>Title for Profile page</comment>
   </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
-    <value>Open app system settings</value>
+    <value>Ouvrir les paramètres système</value>
     <comment>Button for opening system settings for the app</comment>
   </data>
   <data name="Settings_Label_AnonymousAnalytics" xml:space="preserve">
-    <value>Enable Anonymous Analytics</value>
+    <value>Activer les rapports d'analyses anonymes</value>
   </data>
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
-    <value>(this helps the developers improve Wasabee)</value>
+    <value>(cela aidera les développeurs à améliorer Wasabee)</value>
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
-    <value>Switch light/dark theme</value>
+    <value>Changer de thème clair/foncé</value>
   </data>
   <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
-    <value>Refresh FCM token</value>
+    <value>Actualiser le token FCM</value>
   </data>
   <data name="Settings_Label_SendLogs" xml:space="preserve">
-    <value>Send logs</value>
+    <value>Envoyer les logs</value>
   </data>
   <data name="Settings_Label_SendLogsHint" xml:space="preserve">
-    <value>No personnal data are sent. You can include Wasabee data.</value>
+    <value>Aucune donnée personnelle n'est envoyée. Vous pouvez inclure les données Wasabee.</value>
   </data>
   <data name="Settings_Label_ShowAgentsFromAnyTeam" xml:space="preserve">
-    <value>Show Agents from any team on Map</value>
+    <value>Afficher les agents de n'importe quelle équipe sur la carte</value>
   </data>
   <data name="Settings_Label_ShowDebugToasts" xml:space="preserve">
-    <value>Show debug messages</value>
+    <value>Afficher des messages de debug</value>
   </data>
   <data name="Settings_Label_WasabeeWebpage" xml:space="preserve">
-    <value>Wasabee Webpage</value>
+    <value>Page Web Wasabee</value>
   </data>
   <data name="Settings_Section_About" xml:space="preserve">
-    <value>About</value>
+    <value>À propos</value>
     <comment>Title for about section</comment>
   </data>
   <data name="Settings_Section_Application" xml:space="preserve">
@@ -280,7 +472,7 @@
     <comment>Title for application section</comment>
   </data>
   <data name="Settings_Section_Miscellaneous" xml:space="preserve">
-    <value>Misc.</value>
+    <value>Divers</value>
     <comment>Title for miscellaneous section</comment>
   </data>
   <data name="Settings_Section_Permissions" xml:space="preserve">
@@ -288,35 +480,35 @@
     <comment>Title for permissions section</comment>
   </data>
   <data name="Settings_Title" xml:space="preserve">
-    <value>Settings</value>
+    <value>Paramètres</value>
     <comment>Title for Settings page</comment>
   </data>
   <data name="Settings_Toast_FcmtokenUpdated" xml:space="preserve">
-    <value>Token updated</value>
+    <value>Token mis à jour</value>
   </data>
   <data name="Settings_Toast_LogsAutomaticallySent" xml:space="preserve">
-    <value>Data is beeing sent automatically</value>
+    <value>Les données sont envoyées automatiquement</value>
   </data>
   <data name="Settings_Warning_NoLogs" xml:space="preserve">
-    <value>Can't find any log files</value>
+    <value>Aucun fichier log trouvé</value>
   </data>
   <data name="Settings_Warning_SendFileOverTelegram" xml:space="preserve">
-    <value>Please send the file to @fisher01 on Telegram</value>
+    <value>Veuillez envoyer le fichier à @fisher01 sur Telegram</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase" xml:space="preserve">
-    <value>Include local DB copy ? This will include ALL your teams and OPS related data, please take care !</value>
+    <value>Inclure la copie de la base de données locale ? Cela inclura toutes vos équipes et vos OPs, faites attention !</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase_Title" xml:space="preserve">
-    <value>#OpSec Warning !</value>
+    <value>Avertissement #OpSec !</value>
   </data>
   <data name="Settings_Warning_SendLogs_NoDb" xml:space="preserve">
-    <value>Don't include !</value>
+    <value>Ne pas inclure !</value>
   </data>
   <data name="Settings_Warning_SendLogs_WithDb" xml:space="preserve">
-    <value>Ok, include it !</value>
+    <value>Ok, incluez-le!</value>
   </data>
   <data name="Settings_Warning_StoragePermissionsNeeded" xml:space="preserve">
-    <value>Storage permissions are required !</value>
+    <value>Les permissions de stockage sont requises !</value>
   </data>
   <data name="SignIn_Button_Cancel" xml:space="preserve">
     <value>✗   Annuler</value>
@@ -419,68 +611,112 @@
     <value>Attention !</value>
     <comment>Text for when user attention is required after login</comment>
   </data>
+  <data name="TargetDialog_Button_GoTo" xml:space="preserve">
+    <value>Y aller !</value>
+    <comment>Target button to open maps</comment>
+  </data>
+  <data name="TargetDialog_Button_Ignore" xml:space="preserve">
+    <value>Ignorer</value>
+    <comment>Target button to ignore</comment>
+  </data>
+  <data name="TargetDialog_Text_Goal" xml:space="preserve">
+    <value>Objectif :</value>
+    <comment>Target goal</comment>
+  </data>
+  <data name="TargetDialog_Text_Portal" xml:space="preserve">
+    <value>Portail :</value>
+    <comment>Target portal name</comment>
+  </data>
+  <data name="TargetDialog_Text_Sender" xml:space="preserve">
+    <value>Envoyé par :</value>
+    <comment>Target sender</comment>
+  </data>
+  <data name="TargetDialog_Title" xml:space="preserve">
+    <value>Cible importante reçue</value>
+    <comment>Target popup title</comment>
+  </data>
+  <data name="TaskDialog_Button_Ack" xml:space="preserve">
+    <value>👍🏻   Vu</value>
+    <comment>Task Acknowledge button</comment>
+  </data>
+  <data name="TaskDialog_Button_Claim" xml:space="preserve">
+    <value>✓   Prendre</value>
+    <comment>Task claim button</comment>
+  </data>
+  <data name="TaskDialog_Button_Done" xml:space="preserve">
+    <value>✓   Fait</value>
+    <comment>Task done button</comment>
+  </data>
+  <data name="TaskDialog_Button_Reject" xml:space="preserve">
+    <value>⚠   Rejeter</value>
+    <comment>Task reject button</comment>
+  </data>
+  <data name="TaskDialog_Button_Undone" xml:space="preserve">
+    <value>✗   Annulé</value>
+    <comment>Task undo button</comment>
+  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
-    <value>Add Agent</value>
+    <value>Ajouter un Agent</value>
     <comment>Button in toolbar for adding agent</comment>
   </data>
   <data name="TeamDetail_Button_RenameTeam" xml:space="preserve">
-    <value>Change name</value>
+    <value>Changer le nom</value>
     <comment>Button in toolbar for renaming team</comment>
   </data>
   <data name="TeamDetail_Prompt_AddAgentTitle" xml:space="preserve">
-    <value>Agent name</value>
+    <value>Nom de l'Agent</value>
     <comment>Title for adding agent by name popup</comment>
   </data>
   <data name="TeamDetail_Warning_AgentAlreadyInTeam" xml:space="preserve">
-    <value>{0} is already in the team !</value>
+    <value>{0} est déjà dans l'équipe !</value>
     <comment>Error when agent already is in team. Parameter is agent name</comment>
   </data>
   <data name="TeamDetail_Warning_AgentNotFound" xml:space="preserve">
-    <value>Agent not found</value>
+    <value>Agent introuvable</value>
     <comment>Error when adding agent in team</comment>
   </data>
   <data name="TeamDetail_Warning_RemoveAgent" xml:space="preserve">
-    <value>Remove '{0}' from the team ?</value>
+    <value>Retirer '{0}' de l'équipe ?</value>
     <comment>Warning before removing agent from team. Parameter is agent name</comment>
   </data>
   <data name="TeamsList_Label_ErrorLoadingTeams" xml:space="preserve">
-    <value>Error occured while loading your teams</value>
+    <value>Une erreur est survenue lors du chargement de vos équipes</value>
     <comment>Error while loading teams list</comment>
   </data>
   <data name="TeamsList_Page_Title" xml:space="preserve">
-    <value>Teams</value>
+    <value>Équipes</value>
     <comment>Title for Teams list page</comment>
   </data>
   <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>Location sharing state changed for team {0}</value>
+    <value>L'état du partage de position a changé pour l'équipe {0}</value>
     <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
-    <value>Successfully deleted team '{0}'</value>
+    <value>L'équipe '{0}' a été supprimée avec succès</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>State can't be changed, please try again</value>
+    <value>L'état ne peut pas être modifié, veuillez réessayer</value>
     <comment>Error when location sharing state can't be changed</comment>
   </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
-    <value>Danger zone</value>
+    <value>Zone dangereuse</value>
     <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
   </data>
   <data name="TeamsList_Warning_TeamDeleteLastWarning" xml:space="preserve">
-    <value>Please confirm one last time before deletion</value>
+    <value>Merci de confirmer une dernière fois avant la suppression</value>
     <comment>Last warning before deleting a team</comment>
   </data>
   <data name="TeamsList_Warning_TeamDeleteSecondWarning" xml:space="preserve">
-    <value>Are you REALLY sure ?</value>
+    <value>Êtes-vous VRAIMENT sûr ?</value>
     <comment>Another warning before deleting team</comment>
   </data>
   <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
-    <value>You're going to delete the team '{0}'. Are you sure ?</value>
+    <value>Vous êtes sur le point de supprimer l'équipe '{0}'. Êtes-vous sûr ?</value>
     <comment>Warning message before deleting a team. Parameter is team name</comment>
   </data>
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
-    <value>Change team name</value>
+    <value>Changer le nom de l'équipe</value>
     <comment>Title for changing team name popup</comment>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
@@ -489,6 +725,14 @@
   </data>
   <data name="Toasts_LoadingOpsSuccess" xml:space="preserve">
     <value>OPs chargés avec succès</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_CoordinatesCopied" xml:space="preserve">
+    <value>Coordonnées copiées dans le presse-papier.</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_RejectedAssignment" xml:space="preserve">
+    <value>Affectation rejetée</value>
     <comment>Toast message</comment>
   </data>
 </root>
