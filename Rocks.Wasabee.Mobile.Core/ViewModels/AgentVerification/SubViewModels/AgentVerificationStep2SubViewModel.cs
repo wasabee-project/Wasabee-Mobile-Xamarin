@@ -1,6 +1,7 @@
 ﻿using Acr.UserDialogs;
 using MvvmCross;
 using MvvmCross.Commands;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Xamarin.Essentials.Interfaces;
 
@@ -41,7 +42,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels
 
             if (string.IsNullOrWhiteSpace(Parent.AgentName))
             {
-                _userDialogs.Alert("Your in-game name is required !");
+                _userDialogs.Alert(Strings.Dialogs_Warning_InGameNameRequired);
                 return;
             }
 
@@ -49,7 +50,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels
 
             var token = await _wasabeeApiV1Service.User_GetVerificationToken(Parent.AgentName);
             if (string.IsNullOrWhiteSpace(token))
-                _userDialogs.Toast("It seems that this Ingress name has already been verified");
+                _userDialogs.Toast(Strings.Dialogs_Warning_InGameNameAlreadyVerified);
             else
             {
                 Token = token;

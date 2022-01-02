@@ -61,7 +61,988 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to ‹   Back.
+        /// </summary>
+        internal static string ACV_Button_Back {
+            get {
+                return ResourceManager.GetString("ACV_Button_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗   Later.
+        /// </summary>
+        internal static string ACV_Button_Later {
+            get {
+                return ResourceManager.GetString("ACV_Button_Later", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next   ›.
+        /// </summary>
+        internal static string ACV_Button_Next {
+            get {
+                return ResourceManager.GetString("ACV_Button_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Wasabee account isn&apos;t yet verified with Ingress Community forums..
+        /// </summary>
+        internal static string ACV_Step1_Label_AccountNotVerified {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_AccountNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This process is easy and fast to complete..
+        /// </summary>
+        internal static string ACV_Step1_Label_FastProcess {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_FastProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will prove to Wasabee that you are the owner of both the Wasabee and Ingress accounts..
+        /// </summary>
+        internal static string ACV_Step1_Label_NoticeLine1 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_NoticeLine1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts..
+        /// </summary>
+        internal static string ACV_Step1_Label_NoticeLine2 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_NoticeLine2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step-by-step guide :.
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1. Wasabee generates a secure token (that can&apos;t be faked or guessed) to associate with your in-game name..
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide_1 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2. Log in to the Ingress Community forums and post the token in the Activity feed.
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide_2 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3. Wasabee will verify that the token is posted by the account with the same in-game name..
+        /// </summary>
+        internal static string ACV_Step1_Label_StepByStepGuide_3 {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_StepByStepGuide_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to the.
+        /// </summary>
+        internal static string ACV_Step1_Label_Welcome {
+            get {
+                return ResourceManager.GetString("ACV_Step1_Label_Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get my token.
+        /// </summary>
+        internal static string ACV_Step2_Button_GetToken {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Button_GetToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In-game name.
+        /// </summary>
+        internal static string ACV_Step2_Input_InGameName {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Input_InGameName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Be sure to write it exactly as in Ingress !.
+        /// </summary>
+        internal static string ACV_Step2_Label_CaseSensitive {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Label_CaseSensitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token for : {0}.
+        /// </summary>
+        internal static string ACV_Step2_Label_TokenFor {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Label_TokenFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your token is.
+        /// </summary>
+        internal static string ACV_Step2_Label_TokenIs {
+            get {
+                return ResourceManager.GetString("ACV_Step2_Label_TokenIs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Community Forums.
+        /// </summary>
+        internal static string ACV_Step3_Button_OpenCommunityForums {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Button_OpenCommunityForums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verify me.
+        /// </summary>
+        internal static string ACV_Step3_Button_VerifyMe {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Button_VerifyMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once you&apos;ve posted the token to the community Forums, click the button below to start the verification process..
+        /// </summary>
+        internal static string ACV_Step3_Label_AfterPostExplanation {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_AfterPostExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Post your token in the Activity feed of Ingress Community forums..
+        /// </summary>
+        internal static string ACV_Step3_Label_PostTokenOnCommunityForums {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_PostTokenOnCommunityForums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Wasabee account is now verified with the Community forums..
+        /// </summary>
+        internal static string ACV_Step3_Label_Verified_AccountVerified {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_Verified_AccountVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your profile now displays a 🐝!.
+        /// </summary>
+        internal static string ACV_Step3_Label_Verified_BeeExplanation {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_Verified_BeeExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Well done!.
+        /// </summary>
+        internal static string ACV_Step3_Label_Verified_WellDone {
+            get {
+                return ResourceManager.GetString("ACV_Step3_Label_Verified_WellDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See Teams.
+        /// </summary>
+        internal static string Dialog_Warning_GoToTeamsList {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_GoToTeamsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No OP&apos;s available.
+        /// </summary>
+        internal static string Dialog_Warning_NoOpsAvailable {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_NoOpsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None of your teams has been set to share your location. Go to Teams list and enable at least one team..
+        /// </summary>
+        internal static string Dialog_Warning_NoTeamSharingEnabled {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_NoTeamSharingEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permissions required.
+        /// </summary>
+        internal static string Dialog_Warning_PermissionsRequired {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_PermissionsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available OP&apos;s :.
+        /// </summary>
+        internal static string Dialogs_Title_AvailableOpsList {
+            get {
+                return ResourceManager.GetString("Dialogs_Title_AvailableOpsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom server URL :.
+        /// </summary>
+        internal static string Dialogs_Title_CustomServerUrl {
+            get {
+                return ResourceManager.GetString("Dialogs_Title_CustomServerUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agent Community Verification failed. Please make sure you posted the token and retry..
+        /// </summary>
+        internal static string Dialogs_Warning_ACVFailed {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_ACVFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It seems that this Ingress name has already been verified..
+        /// </summary>
+        internal static string Dialogs_Warning_InGameNameAlreadyVerified {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_InGameNameAlreadyVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your in-game name is required!.
+        /// </summary>
+        internal static string Dialogs_Warning_InGameNameRequired {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_InGameNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geolocation permission is required !.
+        /// </summary>
+        internal static string Dialogs_Warning_LocationPermissionRequired {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_LocationPermissionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To use the live location sharing, please set the permission to &apos;Allow all the time&apos;..
+        /// </summary>
+        internal static string Dialogs_Warning_SetLocationPermissionsAllTheTime {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_SetLocationPermissionsAllTheTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        internal static string Global_Add {
+            get {
+                return ResourceManager.GetString("Global_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Global_Cancel {
+            get {
+                return ResourceManager.GetString("Global_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Global_Delete {
+            get {
+                return ResourceManager.GetString("Global_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dev mode activated.
+        /// </summary>
+        internal static string Global_DevModeActivated {
+            get {
+                return ResourceManager.GetString("Global_DevModeActivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error occured, please retry.
+        /// </summary>
+        internal static string Global_ErrorOccuredPleaseRetry {
+            get {
+                return ResourceManager.GetString("Global_ErrorOccuredPleaseRetry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        internal static string Global_Exit {
+            get {
+                return ResourceManager.GetString("Global_Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t ask again.
+        /// </summary>
+        internal static string Global_NeverAskAgain {
+            get {
+                return ResourceManager.GetString("Global_NeverAskAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Never show again.
+        /// </summary>
+        internal static string Global_NeverShowAgain {
+            get {
+                return ResourceManager.GetString("Global_NeverShowAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string Global_No {
+            get {
+                return ResourceManager.GetString("Global_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Internet, please verify your network access.
+        /// </summary>
+        internal static string Global_NoInternet {
+            get {
+                return ResourceManager.GetString("Global_NoInternet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string Global_Ok {
+            get {
+                return ResourceManager.GetString("Global_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string Global_Version {
+            get {
+                return ResourceManager.GetString("Global_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string Global_Yes {
+            get {
+                return ResourceManager.GetString("Global_Yes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed? : {0}.
+        /// </summary>
+        internal static string LinkDialog_Text_Completed {
+            get {
+                return ResourceManager.GetString("LinkDialog_Text_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destination.
+        /// </summary>
+        internal static string LinkDialog_Text_Destination {
+            get {
+                return ResourceManager.GetString("LinkDialog_Text_Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        internal static string LinkDialog_Text_Source {
+            get {
+                return ResourceManager.GetString("LinkDialog_Text_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link informations.
+        /// </summary>
+        internal static string LinkDialog_Title {
+            get {
+                return ResourceManager.GetString("LinkDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re going to enable the Live Location Sharing feature. This means that your real position is going to be send on a regular basis to the Wasabee server..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line1 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All the teams to which you enabled location sharing will be able to see your position when the feature is enabled..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line2 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To configure which team can see you or not, you must go to the Teams menu..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line3 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also, while the feature is enabled, your location will be sent to Wasabee Server even if you&apos;re not using the app, aka. when the app is in background or closed..
+        /// </summary>
+        internal static string LocationDialog_Text_BigText_Line4 {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_BigText-Line4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data storage.
+        /// </summary>
+        internal static string LocationDialog_Text_DataStorage {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_DataStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only your last known location (the last location sent by the app) is stored on the servers. No location history is made and we can&apos;t retrace your route..
+        /// </summary>
+        internal static string LocationDialog_Text_DataStorage_Details {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_DataStorage-Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Why do I see this message ?.
+        /// </summary>
+        internal static string LocationDialog_Text_Question {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read more about Wasabee Server&apos;s privacy policy :.
+        /// </summary>
+        internal static string LocationDialog_Text_ReadMore {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_ReadMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here.
+        /// </summary>
+        internal static string LocationDialog_Text_ReadMore_ClickHere {
+            get {
+                return ResourceManager.GetString("LocationDialog_Text_ReadMore-ClickHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attention please.
+        /// </summary>
+        internal static string LocationDialog_Title {
+            get {
+                return ResourceManager.GetString("LocationDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State: {0}.
+        /// </summary>
+        internal static string MarkerDialog_Text_State {
+            get {
+                return ResourceManager.GetString("MarkerDialog_Text_State", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Marker informations.
+        /// </summary>
+        internal static string MarkerDialog_Title {
+            get {
+                return ResourceManager.GetString("MarkerDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change.
+        /// </summary>
+        internal static string Menu_Button_ChangeOp {
+            get {
+                return ResourceManager.GetString("Menu_Button_ChangeOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        internal static string Menu_Button_Logout {
+            get {
+                return ResourceManager.GetString("Menu_Button_Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        internal static string Menu_Button_RefreshOps {
+            get {
+                return ResourceManager.GetString("Menu_Button_RefreshOps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation Map.
+        /// </summary>
+        internal static string Menu_Item_OperationMap {
+            get {
+                return ResourceManager.GetString("Menu_Item_OperationMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Operations.
+        /// </summary>
+        internal static string Menu_Item_OperationsList {
+            get {
+                return ResourceManager.GetString("Menu_Item_OperationsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        internal static string Menu_Item_Profile {
+            get {
+                return ResourceManager.GetString("Menu_Item_Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string Menu_Item_Settings {
+            get {
+                return ResourceManager.GetString("Menu_Item_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teams.
+        /// </summary>
+        internal static string Menu_Item_Teams {
+            get {
+                return ResourceManager.GetString("Menu_Item_Teams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OP :.
+        /// </summary>
+        internal static string Menu_Label_CurrentOp {
+            get {
+                return ResourceManager.GetString("Menu_Label_CurrentOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server :.
+        /// </summary>
+        internal static string Menu_Label_CurrentServer {
+            get {
+                return ResourceManager.GetString("Menu_Label_CurrentServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR loading OP.
+        /// </summary>
+        internal static string Menu_Label_ErrorLoadingOp {
+            get {
+                return ResourceManager.GetString("Menu_Label_ErrorLoadingOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location sharing :.
+        /// </summary>
+        internal static string Menu_Label_LocationSharing {
+            get {
+                return ResourceManager.GetString("Menu_Label_LocationSharing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have any local OP&apos;s stored.
+        /// </summary>
+        internal static string Menu_Label_NoLocalOpsStored {
+            get {
+                return ResourceManager.GetString("Menu_Label_NoLocalOpsStored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct..
+        /// </summary>
+        internal static string Profile_Label_DataOrigin {
+            get {
+                return ResourceManager.GetString("Profile_Label_DataOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status :.
+        /// </summary>
+        internal static string Profile_Label_Status {
+            get {
+                return ResourceManager.GetString("Profile_Label_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to V Status.
+        /// </summary>
+        internal static string Profile_Label_VStatus {
+            get {
+                return ResourceManager.GetString("Profile_Label_VStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        internal static string Profile_Page_Title {
+            get {
+                return ResourceManager.GetString("Profile_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open app system settings.
+        /// </summary>
+        internal static string Settings_Button_OpenSystemSettings {
+            get {
+                return ResourceManager.GetString("Settings_Button_OpenSystemSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Anonymous Analytics.
+        /// </summary>
+        internal static string Settings_Label_AnonymousAnalytics {
+            get {
+                return ResourceManager.GetString("Settings_Label_AnonymousAnalytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (this helps the developers improve Wasabee).
+        /// </summary>
+        internal static string Settings_Label_AnonymousAnalyticsHint {
+            get {
+                return ResourceManager.GetString("Settings_Label_AnonymousAnalyticsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch light/dark theme.
+        /// </summary>
+        internal static string Settings_Label_DarkMode {
+            get {
+                return ResourceManager.GetString("Settings_Label_DarkMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh FCM token.
+        /// </summary>
+        internal static string Settings_Label_RefreshFcmToken {
+            get {
+                return ResourceManager.GetString("Settings_Label_RefreshFcmToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send logs.
+        /// </summary>
+        internal static string Settings_Label_SendLogs {
+            get {
+                return ResourceManager.GetString("Settings_Label_SendLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No personnal data are sent. You can include Wasabee data..
+        /// </summary>
+        internal static string Settings_Label_SendLogsHint {
+            get {
+                return ResourceManager.GetString("Settings_Label_SendLogsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Agents from any team on Map.
+        /// </summary>
+        internal static string Settings_Label_ShowAgentsFromAnyTeam {
+            get {
+                return ResourceManager.GetString("Settings_Label_ShowAgentsFromAnyTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show debug messages.
+        /// </summary>
+        internal static string Settings_Label_ShowDebugToasts {
+            get {
+                return ResourceManager.GetString("Settings_Label_ShowDebugToasts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wasabee Webpage.
+        /// </summary>
+        internal static string Settings_Label_WasabeeWebpage {
+            get {
+                return ResourceManager.GetString("Settings_Label_WasabeeWebpage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string Settings_Section_About {
+            get {
+                return ResourceManager.GetString("Settings_Section_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application.
+        /// </summary>
+        internal static string Settings_Section_Application {
+            get {
+                return ResourceManager.GetString("Settings_Section_Application", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Misc..
+        /// </summary>
+        internal static string Settings_Section_Miscellaneous {
+            get {
+                return ResourceManager.GetString("Settings_Section_Miscellaneous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permissions.
+        /// </summary>
+        internal static string Settings_Section_Permissions {
+            get {
+                return ResourceManager.GetString("Settings_Section_Permissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string Settings_Title {
+            get {
+                return ResourceManager.GetString("Settings_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token updated.
+        /// </summary>
+        internal static string Settings_Toast_FcmtokenUpdated {
+            get {
+                return ResourceManager.GetString("Settings_Toast_FcmtokenUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data is beeing sent automatically.
+        /// </summary>
+        internal static string Settings_Toast_LogsAutomaticallySent {
+            get {
+                return ResourceManager.GetString("Settings_Toast_LogsAutomaticallySent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t find any log files.
+        /// </summary>
+        internal static string Settings_Warning_NoLogs {
+            get {
+                return ResourceManager.GetString("Settings_Warning_NoLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please send the file to @fisher01 on Telegram.
+        /// </summary>
+        internal static string Settings_Warning_SendFileOverTelegram {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendFileOverTelegram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t include !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogs_NoDb {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogs_NoDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok, include it !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogs_WithDb {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogs_WithDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include local DB copy ? This will include ALL your teams and OPS related data, please take care !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogsWithDatabase {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogsWithDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #OpSec Warning !.
+        /// </summary>
+        internal static string Settings_Warning_SendLogsWithDatabase_Title {
+            get {
+                return ResourceManager.GetString("Settings_Warning_SendLogsWithDatabase_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storage permissions are required !.
+        /// </summary>
+        internal static string Settings_Warning_StoragePermissionsNeeded {
+            get {
+                return ResourceManager.GetString("Settings_Warning_StoragePermissionsNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗   Cancel.
+        /// </summary>
+        internal static string SignIn_Button_Cancel {
+            get {
+                return ResourceManager.GetString("SignIn_Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change account.
+        /// </summary>
+        internal static string SignIn_Button_ChangeAccount {
+            get {
+                return ResourceManager.GetString("SignIn_Button_ChangeAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change server.
+        /// </summary>
+        internal static string SignIn_Button_ChangeServer {
+            get {
+                return ResourceManager.GetString("SignIn_Button_ChangeServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓   Next.
+        /// </summary>
+        internal static string SignIn_Button_Next {
+            get {
+                return ResourceManager.GetString("SignIn_Button_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use One Time Token.
         /// </summary>
         internal static string SignIn_Button_OneTimeToken {
             get {
@@ -70,7 +1051,25 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Retry.
+        /// </summary>
+        internal static string SignIn_Button_Retry {
+            get {
+                return ResourceManager.GetString("SignIn_Button_Retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓   Validate.
+        /// </summary>
+        internal static string SignIn_Button_Validate {
+            get {
+                return ResourceManager.GetString("SignIn_Button_Validate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign in with Google.
         /// </summary>
         internal static string SignIn_Button_WithGoogle {
             get {
@@ -79,7 +1078,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Enter the token :.
         /// </summary>
         internal static string SignIn_Label_EnterToken {
             get {
@@ -88,7 +1087,115 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Google login failed !.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_GoogleError {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_GoogleError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal error.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_Internal {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_Internal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error loading Wasabee OPs data.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_LoadingOpsData {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_LoadingOpsData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wasabee login failed !.
+        /// </summary>
+        internal static string SignIn_Label_ErrorMsg_WasabeeFail {
+            get {
+                return ResourceManager.GetString("SignIn_Label_ErrorMsg_WasabeeFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application loading....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_AppLoading {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_AppLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contacting &apos;{0}&apos; Wasabee server....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_ContactingServer {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_ContactingServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google login success....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_GoogleSuccess {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_GoogleSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Harvesting beehive,.
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_LoadingData {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_LoadingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging in....
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_LoggingIn {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_LoggingIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose your server :.
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_SelectServer {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_SelectServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose token&apos;s server :.
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_SelectServerToken {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_SelectServerToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome {0}.
+        /// </summary>
+        internal static string SignIn_Label_LoadingStep_WelcomeAgent {
+            get {
+                return ResourceManager.GetString("SignIn_Label_LoadingStep_WelcomeAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must be connected to Internet over Wi-Fi or cellular network to use this application.
         /// </summary>
         internal static string SignIn_Label_NoInternet {
             get {
@@ -97,11 +1204,317 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to You don&apos;t have any assigned team or operation, contact your Operator before using Wasabee Mobile !.
+        /// </summary>
+        internal static string SignIn_Label_NoTeamsOrOperation {
+            get {
+                return ResourceManager.GetString("SignIn_Label_NoTeamsOrOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        internal static string SignIn_Label_PleaseWait {
+            get {
+                return ResourceManager.GetString("SignIn_Label_PleaseWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember my choice (quick login if enabled).
         /// </summary>
         internal static string SignIn_Label_RememberServerChoice {
             get {
                 return ResourceManager.GetString("SignIn_Label_RememberServerChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attention please !.
+        /// </summary>
+        internal static string SignIn_Label_Warning {
+            get {
+                return ResourceManager.GetString("SignIn_Label_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to!.
+        /// </summary>
+        internal static string TargetDialog_Button_GoTo {
+            get {
+                return ResourceManager.GetString("TargetDialog_Button_GoTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore.
+        /// </summary>
+        internal static string TargetDialog_Button_Ignore {
+            get {
+                return ResourceManager.GetString("TargetDialog_Button_Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Goal:.
+        /// </summary>
+        internal static string TargetDialog_Text_Goal {
+            get {
+                return ResourceManager.GetString("TargetDialog_Text_Goal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Portal:.
+        /// </summary>
+        internal static string TargetDialog_Text_Portal {
+            get {
+                return ResourceManager.GetString("TargetDialog_Text_Portal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sent by:.
+        /// </summary>
+        internal static string TargetDialog_Text_Sender {
+            get {
+                return ResourceManager.GetString("TargetDialog_Text_Sender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Important target received.
+        /// </summary>
+        internal static string TargetDialog_Title {
+            get {
+                return ResourceManager.GetString("TargetDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 👍🏻   Ack.
+        /// </summary>
+        internal static string TaskDialog_Button_Ack {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Ack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓   Claim.
+        /// </summary>
+        internal static string TaskDialog_Button_Claim {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Claim", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓   Done.
+        /// </summary>
+        internal static string TaskDialog_Button_Done {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⚠   Reject.
+        /// </summary>
+        internal static string TaskDialog_Button_Reject {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Reject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗   Undone.
+        /// </summary>
+        internal static string TaskDialog_Button_Undone {
+            get {
+                return ResourceManager.GetString("TaskDialog_Button_Undone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Agent.
+        /// </summary>
+        internal static string TeamDetail_Button_AddAgent {
+            get {
+                return ResourceManager.GetString("TeamDetail_Button_AddAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change name.
+        /// </summary>
+        internal static string TeamDetail_Button_RenameTeam {
+            get {
+                return ResourceManager.GetString("TeamDetail_Button_RenameTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agent name.
+        /// </summary>
+        internal static string TeamDetail_Prompt_AddAgentTitle {
+            get {
+                return ResourceManager.GetString("TeamDetail_Prompt_AddAgentTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is already in the team !.
+        /// </summary>
+        internal static string TeamDetail_Warning_AgentAlreadyInTeam {
+            get {
+                return ResourceManager.GetString("TeamDetail_Warning_AgentAlreadyInTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agent not found.
+        /// </summary>
+        internal static string TeamDetail_Warning_AgentNotFound {
+            get {
+                return ResourceManager.GetString("TeamDetail_Warning_AgentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove &apos;{0}&apos; from the team ?.
+        /// </summary>
+        internal static string TeamDetail_Warning_RemoveAgent {
+            get {
+                return ResourceManager.GetString("TeamDetail_Warning_RemoveAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change team name.
+        /// </summary>
+        internal static string Teams_Prompt_ChangeTeamNameTitle {
+            get {
+                return ResourceManager.GetString("Teams_Prompt_ChangeTeamNameTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error occured while loading your teams.
+        /// </summary>
+        internal static string TeamsList_Label_ErrorLoadingTeams {
+            get {
+                return ResourceManager.GetString("TeamsList_Label_ErrorLoadingTeams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teams.
+        /// </summary>
+        internal static string TeamsList_Page_Title {
+            get {
+                return ResourceManager.GetString("TeamsList_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location sharing state changed for team {0}.
+        /// </summary>
+        internal static string TeamsList_Toast_LocationSharingStateChanged {
+            get {
+                return ResourceManager.GetString("TeamsList_Toast_LocationSharingStateChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully deleted team &apos;{0}&apos;.
+        /// </summary>
+        internal static string TeamsList_Toast_TeamDeleted {
+            get {
+                return ResourceManager.GetString("TeamsList_Toast_TeamDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State can&apos;t be changed, please try again.
+        /// </summary>
+        internal static string TeamsList_Toast_Warning_CantChangeState {
+            get {
+                return ResourceManager.GetString("TeamsList_Toast_Warning_CantChangeState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Danger zone.
+        /// </summary>
+        internal static string TeamsList_Warning_DeleteTeamTitle {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_DeleteTeamTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please confirm one last time before deletion.
+        /// </summary>
+        internal static string TeamsList_Warning_TeamDeleteLastWarning {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_TeamDeleteLastWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you REALLY sure ?.
+        /// </summary>
+        internal static string TeamsList_Warning_TeamDeleteSecondWarning {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_TeamDeleteSecondWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re going to delete the team &apos;{0}&apos;. Are you sure ?.
+        /// </summary>
+        internal static string TeamsList_Warning_TeamWillDelete {
+            get {
+                return ResourceManager.GetString("TeamsList_Warning_TeamWillDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinates copied to clipboard..
+        /// </summary>
+        internal static string Toast_CoordinatesCopied {
+            get {
+                return ResourceManager.GetString("Toast_CoordinatesCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assignment rejected.
+        /// </summary>
+        internal static string Toast_RejectedAssignment {
+            get {
+                return ResourceManager.GetString("Toast_RejectedAssignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your OPs are loading in background.
+        /// </summary>
+        internal static string Toasts_LoadingOpsInBackground {
+            get {
+                return ResourceManager.GetString("Toasts_LoadingOpsInBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OPs loaded succesfully.
+        /// </summary>
+        internal static string Toasts_LoadingOpsSuccess {
+            get {
+                return ResourceManager.GetString("Toasts_LoadingOpsSuccess", resourceCulture);
             }
         }
     }

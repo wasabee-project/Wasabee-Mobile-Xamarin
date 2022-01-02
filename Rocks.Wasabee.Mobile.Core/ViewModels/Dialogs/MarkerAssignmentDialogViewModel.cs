@@ -8,6 +8,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
@@ -46,7 +47,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             MarkerAssignment = parameter;
             Marker = MarkerAssignment.Marker;
-            
+
             IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker?.AssignedTo);
             UpdateButtonsState();
         }
@@ -67,7 +68,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public bool AcknowledgedEnabled { get; set; }
         public bool CompletedEnabled { get; set; }
         public bool IncompleteEnabled { get; set; }
-        public bool ClaimEnabled{ get; set; }
+        public bool ClaimEnabled { get; set; }
         public bool RejectEnabled { get; set; }
 
         public string Goal { get; set; } = string.Empty;
@@ -120,7 +121,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.CompleteCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Complete(MarkerAssignment.OpId, Marker.Id);
@@ -153,7 +154,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.IncompleteCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Incomplete(MarkerAssignment.OpId, Marker.Id);
@@ -183,7 +184,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.ClaimCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Claim(MarkerAssignment.OpId, Marker.Id);
@@ -213,13 +214,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.RejectCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id);
                     if (response != null)
                     {
-                        _userDialogs.Toast("Assignment rejected");
+                        _userDialogs.Toast(Strings.Toast_RejectedAssignment);
 
                         StoreResponseUpdateId(response);
                         await UpdateMarkerAndNotify(response);
@@ -246,7 +247,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             if (Marker != null)
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowMarkerOnMapMessage(this, Marker));
-            
+
             IsBusy = false;
             await CloseCommand.ExecuteAsync();
         }
@@ -266,22 +267,22 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             {
                 if (MarkerAssignment.Portal == null)
                     return;
-                        
+
                 var culture = CultureInfo.GetCultureInfo("en-US");
                 string coordinates = $"{MarkerAssignment.Portal.Lat},{MarkerAssignment.Portal.Lng}";
 
                 double.TryParse(MarkerAssignment.Portal.Lat, NumberStyles.Float, culture, out var lat);
                 double.TryParse(MarkerAssignment.Portal.Lng, NumberStyles.Float, culture, out var lng);
-                        
+
                 Location location = new Location(lat, lng);
 
                 if (string.IsNullOrEmpty(coordinates) is false)
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
-                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                        _userDialogs.Toast(Strings.Toast_CoordinatesCopied);
                 }
-                
+
                 await _map.OpenAsync(location);
             }
             catch (Exception e)
@@ -297,7 +298,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         #endregion
 
         #region Private methods
-        
+
         /// <summary>
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
@@ -314,7 +315,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 {
                     Marker = updated;
                     IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker.AssignedTo);
-                    
+
                     UpdateButtonsState();
 
                     await _markersDatabase.SaveMarkerModel(Marker, MarkerAssignment.OpId);
@@ -410,7 +411,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             if (string.IsNullOrWhiteSpace(response.UpdateId))
                 return;
-            
+
             var updateId = response.UpdateId;
             OperationsUpdatesCache.Data.Add(updateId, false);
         }

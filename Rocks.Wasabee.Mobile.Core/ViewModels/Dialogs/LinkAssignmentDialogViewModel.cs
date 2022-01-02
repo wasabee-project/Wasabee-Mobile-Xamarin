@@ -7,6 +7,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
@@ -45,18 +46,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             LinkAssignment = parameter;
             Link = LinkAssignment.Link;
-            
+
             IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link?.AssignedTo);
             UpdateButtonsState();
         }
 
         #region Properties
-        
+
         public bool IsSelfAssignment { get; set; }
-        
+
         public bool CompletedEnabled { get; set; }
         public bool IncompleteEnabled { get; set; }
-        public bool ClaimEnabled{ get; set; }
+        public bool ClaimEnabled { get; set; }
         public bool RejectEnabled { get; set; }
 
         public LinkAssignmentData? LinkAssignment { get; set; }
@@ -70,19 +71,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private async void ShowOnMapExecuted(string fromOrToPortal)
         {
             if (IsBusy) return;
-            
+
             switch (fromOrToPortal)
             {
                 case "From":
                     if (LinkAssignment?.FromPortal != null)
                         _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.FromPortal));
-                    
+
                     await CloseCommand.ExecuteAsync();
                     break;
                 case "To":
                     if (LinkAssignment?.ToPortal != null)
                         _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.ToPortal));
-                    
+
                     await CloseCommand.ExecuteAsync();
                     break;
             }
@@ -110,37 +111,36 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     case "From":
                         if (LinkAssignment.FromPortal == null)
                             return;
-                        
+
                         coordinates = $"{LinkAssignment.FromPortal.Lat},{LinkAssignment.FromPortal.Lng}";
 
                         double.TryParse(LinkAssignment.FromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
                         double.TryParse(LinkAssignment.FromPortal.Lng, NumberStyles.Float, culture, out var fromLng);
-                        
+
                         location = new Location(fromLat, fromLng);
                         break;
                     case "To":
                         if (LinkAssignment.ToPortal == null)
                             return;
-                        
+
                         coordinates = $"{LinkAssignment.ToPortal.Lat},{LinkAssignment.ToPortal.Lng}";
 
                         double.TryParse(LinkAssignment.ToPortal.Lat, NumberStyles.Float, culture, out var toLat);
                         double.TryParse(LinkAssignment.ToPortal.Lng, NumberStyles.Float, culture, out var toLng);
-                        
+
                         location = new Location(toLat, toLng);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(fromOrToPortal), fromOrToPortal,
-                            "Incorrect value");
+                        throw new ArgumentOutOfRangeException(nameof(fromOrToPortal), fromOrToPortal);
                 }
 
                 if (string.IsNullOrEmpty(coordinates) is false)
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
-                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                        _userDialogs.Toast(Strings.Toast_CoordinatesCopied);
                 }
-                
+
                 await _map.OpenAsync(location);
             }
             catch (Exception e)
@@ -173,7 +173,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 {
                     StoreResponseUpdateId(response);
                     await UpdateLinkAndNotify(response);
-                    
+
                     IsBusy = false;
                     await CloseCommand.ExecuteAsync();
                 }
@@ -270,11 +270,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 var response = await _wasabeeApiV1Service.Operation_Link_Reject(LinkAssignment.OpId, LinkAssignment.Link.Id);
                 if (response != null)
                 {
-                    _userDialogs.Toast("Assignment rejected");
+                    _userDialogs.Toast(Strings.Toast_RejectedAssignment);
 
                     StoreResponseUpdateId(response);
                     await UpdateLinkAndNotify(response);
-                    
+
                     IsBusy = false;
                     await CloseCommand.ExecuteAsync();
                 }
@@ -292,7 +292,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         #endregion
 
         #region Private methods
-        
+
         /// <summary>
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
@@ -344,12 +344,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 ClaimEnabled = true;
             }
         }
-        
+
         private static void StoreResponseUpdateId(WasabeeOpUpdateApiResponse response)
         {
             if (string.IsNullOrWhiteSpace(response.UpdateId))
                 return;
-            
+
             var updateId = response.UpdateId;
             OperationsUpdatesCache.Data.Add(updateId, false);
         }

@@ -11,8 +11,9 @@
                        xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
                        xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Profile.ProfilePage"
-                       Title="Profile" x:Name="Page"
+                       Title="{xaml:Translate Profile_Page_Title}" x:Name="Page"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Resources>
@@ -85,7 +86,15 @@
                                         </Grid.RowDefinitions>
 
                                         <controls:LinkLabel Grid.Column="0" Grid.Row="0" Text="enl.rocks" Clicked="EnlRocksLink_Clicked" FontSize="18"/>
-                                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.RocksVerified, StringFormat='Status : {0}', Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
+                                        <Label Grid.Column="0" Grid.Row="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{xaml:Translate Profile_Label_Status}"/>
+                                                    <Span Text=" "/>
+                                                    <Span Text="{Binding User.RocksVerified, Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
                                         <iconize:IconLabel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="mdi-chevron-right" FontSize="40" VerticalOptions="Center" HorizontalOptions="End"/>
                                     </Grid>
@@ -101,9 +110,16 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <controls:LinkLabel Grid.Column="0" Grid.Row="0" Text="V Status" Clicked="ProjectVLink_Clicked" FontSize="18"/>
-                                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.VVerified, StringFormat='Status : {0}', Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
-
+                                        <controls:LinkLabel Grid.Column="0" Grid.Row="0" Text="{xaml:Translate Profile_Label_VStatus}" Clicked="ProjectVLink_Clicked" FontSize="18"/>
+                                        <Label Grid.Column="0" Grid.Row="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{xaml:Translate Profile_Label_Status}"/>
+                                                    <Span Text=" "/>
+                                                    <Span Text="{Binding User.VVerified, Converter={StaticResource AgentVerificationBoolToStringConverter}}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
                                         <iconize:IconLabel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="mdi-chevron-right" FontSize="40" VerticalOptions="Center" HorizontalOptions="End"/>
                                     </Grid>
                                 </ViewCell>
@@ -115,7 +131,7 @@
 
                     <Label Padding="10" FontAttributes="Italic" VerticalOptions="EndAndExpand"
                            IsVisible="{Binding IsSelfProfile}"
-                           Text="This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct."/>
+                           Text="{xaml:Translate Profile_Label_DataOrigin}"/>
                 </StackLayout>
             </ScrollView>
 

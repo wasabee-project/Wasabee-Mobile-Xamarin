@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -118,63 +118,63 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ACV_Button_Back" xml:space="preserve">
-    <value>‹   Back</value>
+    <value>‹   Tilbage</value>
     <comment>Go back</comment>
   </data>
   <data name="ACV_Button_Later" xml:space="preserve">
-    <value>✗   Later</value>
+    <value>✗   Senere</value>
     <comment>ACV Button to exit process and od it later</comment>
   </data>
   <data name="ACV_Button_Next" xml:space="preserve">
-    <value>Next   ›</value>
+    <value>Næste   ›</value>
     <comment>Go next</comment>
   </data>
   <data name="ACV_Step1_Label_AccountNotVerified" xml:space="preserve">
-    <value>Your Wasabee account isn't yet verified with Ingress Community forums.</value>
+    <value>Din Wasabee-konto er endnu ikke bekræftet med Ingress Community forummer.</value>
     <comment>ACV explains account isn't verified</comment>
   </data>
   <data name="ACV_Step1_Label_FastProcess" xml:space="preserve">
-    <value>This process is easy and fast to complete.</value>
+    <value>Denne proces er nem og hurtig at færdiggøre.</value>
     <comment>ACV is quick and fast</comment>
   </data>
   <data name="ACV_Step1_Label_NoticeLine1" xml:space="preserve">
-    <value>This will prove to Wasabee that you are the owner of both the Wasabee and Ingress accounts.</value>
+    <value>Dette vil vise sig for Wasabee, at du er ejer af både Wasabee og Ingress konti.</value>
     <comment>ACV Notice, what does linking do</comment>
   </data>
   <data name="ACV_Step1_Label_NoticeLine2" xml:space="preserve">
-    <value>Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts.</value>
+    <value>Bemærk: Dette viser ikke, at du er en Enlightened agent, kun at du kontrollerer begge konti.</value>
     <comment>ACV Notice, linking doesn't get your faction</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide" xml:space="preserve">
-    <value>Step-by-step guide :</value>
+    <value>Trin-for-trin vejledning :</value>
     <comment>ACV guide</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_1" xml:space="preserve">
-    <value>1. Wasabee generates a secure token (that can't be faked or guessed) to associate with your in-game name.</value>
+    <value>1. Wasabee genererer en sikker token (som ikke kan forfalskes eller gættes) for at knytte til dit navn i spillet.</value>
     <comment>ACV Guide step 1</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_2" xml:space="preserve">
-    <value>2. Log in to the Ingress Community forums and post the token in the Activity feed</value>
+    <value>2. Log ind på Ingress Community fora og send token i aktivitets feeded</value>
     <comment>ACV Guide step 2</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_3" xml:space="preserve">
-    <value>3. Wasabee will verify that the token is posted by the account with the same in-game name.</value>
+    <value>3. Wasabee vil verificere, at token er postet af kontoen med det samme navn i spillet.</value>
     <comment>ACV Guide step 3</comment>
   </data>
   <data name="ACV_Step1_Label_Welcome" xml:space="preserve">
-    <value>Welcome to the</value>
+    <value>Velkommen til </value>
     <comment>Agent Community Verification welcome</comment>
   </data>
   <data name="ACV_Step2_Button_GetToken" xml:space="preserve">
-    <value>Get my token</value>
+    <value>Hent mit token</value>
     <comment>Button to get verification token</comment>
   </data>
   <data name="ACV_Step2_Input_InGameName" xml:space="preserve">
-    <value>In-game name</value>
+    <value>Navn i spillet</value>
     <comment>Input for in-game name</comment>
   </data>
   <data name="ACV_Step2_Label_CaseSensitive" xml:space="preserve">
-    <value>Be sure to write it exactly as in Ingress !</value>
+    <value>Vær sikker på at skrive det præcis som i Ingress !</value>
     <comment>Label to tell user it's case sensitive</comment>
   </data>
   <data name="ACV_Step2_Label_TokenFor" xml:space="preserve">
@@ -182,126 +182,126 @@
     <comment>Showing user which in-game name is used for the token</comment>
   </data>
   <data name="ACV_Step2_Label_TokenIs" xml:space="preserve">
-    <value>Your token is</value>
+    <value>Dit token er</value>
     <comment>Showing token</comment>
   </data>
   <data name="ACV_Step3_Button_OpenCommunityForums" xml:space="preserve">
-    <value>Open Community Forums</value>
+    <value>Åbn Fællesskabsfora</value>
     <comment>ACV button to open Community Forums</comment>
   </data>
   <data name="ACV_Step3_Button_VerifyMe" xml:space="preserve">
-    <value>Verify me</value>
+    <value>Bekræft mig</value>
     <comment>ACV Button to get verified </comment>
   </data>
   <data name="ACV_Step3_Label_AfterPostExplanation" xml:space="preserve">
-    <value>Once you've posted the token to the community Forums, click the button below to start the verification process.</value>
+    <value>Når du har sendt token til community Forums, skal du klikke på knappen nedenfor for at starte verifikationsprocessen.</value>
     <comment>ACV explains what to do after posting token</comment>
   </data>
   <data name="ACV_Step3_Label_PostTokenOnCommunityForums" xml:space="preserve">
-    <value>Post your token in the Activity feed of Ingress Community forums.</value>
+    <value>Send din token i Ingress Fælleskabs forum aktivitets kanal.</value>
     <comment>ACV explains what to do with the token</comment>
   </data>
   <data name="ACV_Step3_Label_Verified_AccountVerified" xml:space="preserve">
-    <value>Your Wasabee account is now verified with the Community forums.</value>
+    <value>Din Wasabee-konto er nu verificeret med fællesskabsfora.</value>
     <comment>ACV explains agent account is now verified</comment>
   </data>
   <data name="ACV_Step3_Label_Verified_BeeExplanation" xml:space="preserve">
-    <value>Your profile now displays a 🐝!</value>
+    <value>Din profil viser nu en 🐝!</value>
     <comment>ACV explains verified profiles will have a bee displayed</comment>
   </data>
   <data name="ACV_Step3_Label_Verified_WellDone" xml:space="preserve">
-    <value>Well done!</value>
+    <value>Godt gået!</value>
     <comment>ACV succeeded</comment>
   </data>
   <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
-    <value>Available OP's :</value>
+    <value>Tilgængelige OPs :</value>
     <comment>Title for the popup where user select an OP</comment>
   </data>
   <data name="Dialogs_Title_CustomServerUrl" xml:space="preserve">
-    <value>Custom server URL :</value>
+    <value>Brugerdefineret server URL :</value>
     <comment>Input title for setting custom server URL</comment>
   </data>
   <data name="Dialogs_Warning_ACVFailed" xml:space="preserve">
-    <value>Agent Community Verification failed. Please make sure you posted the token and retry.</value>
+    <value>Agentens fællesskabsbekræftelse mislykkedes. Sørg for at du har lagt token op og prøv igen.</value>
     <comment>Warning popup when Wasabee failed verification process in ACV</comment>
   </data>
   <data name="Dialogs_Warning_InGameNameAlreadyVerified" xml:space="preserve">
-    <value>It seems that this Ingress name has already been verified.</value>
+    <value>Dette navn er tilsyneladende allerede blevet verificeret.</value>
     <comment>Warning popup when user tries to verify an already verified in-game name</comment>
   </data>
   <data name="Dialogs_Warning_InGameNameRequired" xml:space="preserve">
-    <value>Your in-game name is required!</value>
+    <value>Dit navn i spil er påkrævet!</value>
     <comment>Warning popup when user didn't set his in-game name for ACV process</comment>
   </data>
   <data name="Dialogs_Warning_LocationPermissionRequired" xml:space="preserve">
-    <value>Geolocation permission is required !</value>
+    <value>Geolocation tilladelse er påkrævet!</value>
     <comment>Warning message for when geolocation permission is needed and not granted</comment>
   </data>
   <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
-    <value>To use the live location sharing, please set the permission to 'Allow all the time'.</value>
+    <value>For at bruge den levende placeringsdeling, angiv venligst tilladelsen til 'Tillad hele tiden'.</value>
     <comment>Message for changing location permissions</comment>
   </data>
   <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
-    <value>See Teams</value>
+    <value>Se Hold</value>
     <comment>Button to access teams list</comment>
   </data>
   <data name="Dialog_Warning_NoOpsAvailable" xml:space="preserve">
-    <value>No OP's available</value>
+    <value>Ingen OP's tilgængelige</value>
     <comment>Warning popup when user want to change selected OP but nothing else is available</comment>
   </data>
   <data name="Dialog_Warning_NoTeamSharingEnabled" xml:space="preserve">
-    <value>None of your teams has been set to share your location. Go to Teams list and enable at least one team.</value>
+    <value>Ingen af dine hold er indstillet til at dele din placering. Gå til Hold -liste og aktivér mindst ét hold .</value>
     <comment>Warning popup when agent tries to enable location sharing but no team has been previously enabled for location sharing.</comment>
   </data>
   <data name="Dialog_Warning_PermissionsRequired" xml:space="preserve">
-    <value>Permissions required</value>
+    <value>Tilladelser påkrævet</value>
     <comment>Title for warning popup when app needs permissions</comment>
   </data>
   <data name="Global_Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Tilføj </value>
   </data>
   <data name="Global_Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annuller</value>
   </data>
   <data name="Global_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Slet</value>
   </data>
   <data name="Global_DevModeActivated" xml:space="preserve">
-    <value>Dev mode activated</value>
+    <value>Udvikler tilstand aktiveret</value>
     <comment>User enabled dev mode</comment>
   </data>
   <data name="Global_ErrorOccuredPleaseRetry" xml:space="preserve">
-    <value>Error occured, please retry</value>
+    <value>Der opstod en fejl. Prøv igen</value>
   </data>
   <data name="Global_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>Luk</value>
     <comment>Exit label</comment>
   </data>
   <data name="Global_NeverAskAgain" xml:space="preserve">
-    <value>Don't ask again</value>
+    <value>Spørg ikke igen</value>
     <comment>Don't ask again label</comment>
   </data>
   <data name="Global_NeverShowAgain" xml:space="preserve">
-    <value>Never show again</value>
+    <value>Vis ikke igen.</value>
     <comment>Local setting for never showing context again</comment>
   </data>
   <data name="Global_No" xml:space="preserve">
-    <value>No</value>
+    <value>Nej</value>
   </data>
   <data name="Global_NoInternet" xml:space="preserve">
-    <value>No Internet, please verify your network access</value>
+    <value>Intet internet, tjek venligst din netværksadgang</value>
   </data>
   <data name="Global_Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
   <data name="Global_Version" xml:space="preserve">
-    <value>Version</value>
+    <value>Version:</value>
   </data>
   <data name="Global_Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Ja</value>
   </data>
   <data name="LinkDialog_Text_Completed" xml:space="preserve">
-    <value>Completed? : {0}</value>
+    <value>Fuldført? : {0}</value>
     <comment>Link text for completion state (true or false)</comment>
   </data>
   <data name="LinkDialog_Text_Destination" xml:space="preserve">
@@ -309,91 +309,91 @@
     <comment>Text for link destination</comment>
   </data>
   <data name="LinkDialog_Text_Source" xml:space="preserve">
-    <value>Source</value>
+    <value>Kilde</value>
     <comment>Text for link origin</comment>
   </data>
   <data name="LinkDialog_Title" xml:space="preserve">
-    <value>Link informations</value>
+    <value>Link informationer</value>
     <comment>Title for link info popup</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line1" xml:space="preserve">
-    <value>You're going to enable the Live Location Sharing feature. This means that your real position is going to be send on a regular basis to the Wasabee server.</value>
+    <value>Du vil aktivere funktionen Live Placering Deling. Det betyder, at din reelle position vil blive sendt på regelmæssig basis til Wasabee-server.</value>
     <comment>Big text line 1</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line2" xml:space="preserve">
-    <value>All the teams to which you enabled location sharing will be able to see your position when the feature is enabled.</value>
+    <value>Alle de hold, som du har aktiveret placeringsdeling til, vil kunne se din position, når funktionen er aktiveret.</value>
     <comment>Big text line 2</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line3" xml:space="preserve">
-    <value>To configure which team can see you or not, you must go to the Teams menu.</value>
+    <value>For at konfigurere hvilket hold kan se dig eller ej, skal du gå til Hold menuen.</value>
     <comment>Big text line 3</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line4" xml:space="preserve">
-    <value>Also, while the feature is enabled, your location will be sent to Wasabee Server even if you're not using the app, aka. when the app is in background or closed.</value>
+    <value>Også, mens funktionen er aktiveret, vil din placering blive sendt til Wasabee Server, selv om du ikke bruger appen, aka. når app'en er i baggrunden eller er lukket.</value>
     <comment>Big text line 4</comment>
   </data>
   <data name="LocationDialog_Text_DataStorage" xml:space="preserve">
-    <value>Data storage</value>
+    <value>Datalager</value>
     <comment>Section title</comment>
   </data>
   <data name="LocationDialog_Text_DataStorage-Details" xml:space="preserve">
-    <value>Only your last known location (the last location sent by the app) is stored on the servers. No location history is made and we can't retrace your route.</value>
+    <value>Kun din sidst kendte placering (den sidste placering sendt af appen) gemmes på serverne. Ingen placeringshistorik er lavet, og vi kan ikke spore din rute.</value>
     <comment>Section text</comment>
   </data>
   <data name="LocationDialog_Text_Question" xml:space="preserve">
-    <value>Why do I see this message ?</value>
+    <value>Hvorfor ser jeg denne meddelelse?</value>
     <comment>Text</comment>
   </data>
   <data name="LocationDialog_Text_ReadMore" xml:space="preserve">
-    <value>Read more about Wasabee Server's privacy policy :</value>
+    <value>Læs mere om Wasabee Servers privatlivspolitik :</value>
     <comment>Text</comment>
   </data>
   <data name="LocationDialog_Text_ReadMore-ClickHere" xml:space="preserve">
-    <value>Click here</value>
+    <value>Tryk her</value>
     <comment>Clickable text</comment>
   </data>
   <data name="LocationDialog_Title" xml:space="preserve">
-    <value>Attention please</value>
+    <value>Bemærk venligst</value>
     <comment>Live Location warning popup title</comment>
   </data>
   <data name="MarkerDialog_Text_State" xml:space="preserve">
-    <value>State: {0}</value>
+    <value>Tilstand: {0}</value>
     <comment>Marker state text</comment>
   </data>
   <data name="MarkerDialog_Title" xml:space="preserve">
-    <value>Marker informations</value>
+    <value>Oplysninger om markøren</value>
     <comment>Marker info dialog title</comment>
   </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
-    <value>Change</value>
+    <value>Skift</value>
     <comment>Text on the button to change selected OP</comment>
   </data>
   <data name="Menu_Button_Logout" xml:space="preserve">
-    <value>Log out</value>
+    <value>Log af</value>
     <comment>Button for logging out</comment>
   </data>
   <data name="Menu_Button_RefreshOps" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Opdater</value>
     <comment>Button for pulling OPs from server when nothing is stored locally</comment>
   </data>
   <data name="Menu_Item_OperationMap" xml:space="preserve">
-    <value>Operation Map</value>
+    <value>Operationskort</value>
     <comment>Menu button for the Operation map</comment>
   </data>
   <data name="Menu_Item_OperationsList" xml:space="preserve">
-    <value>My Operations</value>
+    <value>Mine Operationer</value>
     <comment>Menu button for the Operations list</comment>
   </data>
   <data name="Menu_Item_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
     <comment>Menu button for Profile</comment>
   </data>
   <data name="Menu_Item_Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Indstilling</value>
     <comment>Menu button for Settings</comment>
   </data>
   <data name="Menu_Item_Teams" xml:space="preserve">
-    <value>Teams</value>
+    <value>Hold</value>
     <comment>Menu button for Teams list</comment>
   </data>
   <data name="Menu_Label_CurrentOp" xml:space="preserve">
@@ -401,27 +401,27 @@
     <comment>Label next to current selected OP name</comment>
   </data>
   <data name="Menu_Label_CurrentServer" xml:space="preserve">
-    <value>Server :</value>
+    <value>Server:</value>
     <comment>Label next to current logged in server</comment>
   </data>
   <data name="Menu_Label_ErrorLoadingOp" xml:space="preserve">
-    <value>ERROR loading OP</value>
+    <value>fejlindlæsning af OP</value>
     <comment>Error when loading OP</comment>
   </data>
   <data name="Menu_Label_LocationSharing" xml:space="preserve">
-    <value>Location sharing :</value>
+    <value>Placeringsdeling</value>
     <comment>Text next to the switch that turns on location sharing</comment>
   </data>
   <data name="Menu_Label_NoLocalOpsStored" xml:space="preserve">
-    <value>You don't have any local OP's stored</value>
+    <value>Du har ikke nogen lokal OP's gemt</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
-    <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
+    <value>Disse oplysninger kommer fra V og/eller .rocks. Hvis du har et UnverifiedAgent_ navn, så sørg venligst for at dine .Rocks og V oplysninger er korrekte.</value>
     <comment>Message indicating from where data came from</comment>
   </data>
   <data name="Profile_Label_Status" xml:space="preserve">
-    <value>Status :</value>
+    <value>Status:</value>
     <comment>Label for current status</comment>
   </data>
   <data name="Profile_Label_VStatus" xml:space="preserve">
@@ -429,310 +429,310 @@
     <comment>Label before status on V</comment>
   </data>
   <data name="Profile_Page_Title" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
     <comment>Title for Profile page</comment>
   </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
-    <value>Open app system settings</value>
+    <value>Åbn app-systemindstillinger</value>
     <comment>Button for opening system settings for the app</comment>
   </data>
   <data name="Settings_Label_AnonymousAnalytics" xml:space="preserve">
-    <value>Enable Anonymous Analytics</value>
+    <value>Aktiver Anonym Analytics</value>
   </data>
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
-    <value>(this helps the developers improve Wasabee)</value>
+    <value>(Dette hjælper udviklerne med at forbedre Wasabee)</value>
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
-    <value>Switch light/dark theme</value>
+    <value>Skift lys/mørkt tema</value>
   </data>
   <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
-    <value>Refresh FCM token</value>
+    <value>Genopfrisk FCM token</value>
   </data>
   <data name="Settings_Label_SendLogs" xml:space="preserve">
-    <value>Send logs</value>
+    <value>Send log</value>
   </data>
   <data name="Settings_Label_SendLogsHint" xml:space="preserve">
-    <value>No personnal data are sent. You can include Wasabee data.</value>
+    <value>Ingen personlige data er sendt. Du kan inkludere Wasabee data.</value>
   </data>
   <data name="Settings_Label_ShowAgentsFromAnyTeam" xml:space="preserve">
-    <value>Show Agents from any team on Map</value>
+    <value>Vis agenter fra alle hold på kort</value>
   </data>
   <data name="Settings_Label_ShowDebugToasts" xml:space="preserve">
-    <value>Show debug messages</value>
+    <value>Aktivér fejlfinding (debug) meddelelser</value>
   </data>
   <data name="Settings_Label_WasabeeWebpage" xml:space="preserve">
-    <value>Wasabee Webpage</value>
+    <value>Wasabee Hjemmeside</value>
   </data>
   <data name="Settings_Section_About" xml:space="preserve">
-    <value>About</value>
+    <value>Om</value>
     <comment>Title for about section</comment>
   </data>
   <data name="Settings_Section_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>Program</value>
     <comment>Title for application section</comment>
   </data>
   <data name="Settings_Section_Miscellaneous" xml:space="preserve">
-    <value>Misc.</value>
+    <value>Div.</value>
     <comment>Title for miscellaneous section</comment>
   </data>
   <data name="Settings_Section_Permissions" xml:space="preserve">
-    <value>Permissions</value>
+    <value>Tilladelser</value>
     <comment>Title for permissions section</comment>
   </data>
   <data name="Settings_Title" xml:space="preserve">
-    <value>Settings</value>
+    <value>Indstillinger</value>
     <comment>Title for Settings page</comment>
   </data>
   <data name="Settings_Toast_FcmtokenUpdated" xml:space="preserve">
-    <value>Token updated</value>
+    <value>Token opdateret</value>
   </data>
   <data name="Settings_Toast_LogsAutomaticallySent" xml:space="preserve">
-    <value>Data is beeing sent automatically</value>
+    <value>Data bliver sendt automatisk</value>
   </data>
   <data name="Settings_Warning_NoLogs" xml:space="preserve">
-    <value>Can't find any log files</value>
+    <value>Kan ikke finde nogen logfiler</value>
   </data>
   <data name="Settings_Warning_SendFileOverTelegram" xml:space="preserve">
-    <value>Please send the file to @fisher01 on Telegram</value>
+    <value>Send venligst filen til @fisher01 på Telegram</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase" xml:space="preserve">
-    <value>Include local DB copy ? This will include ALL your teams and OPS related data, please take care !</value>
+    <value>Inkludér lokal DB-kopi? Dette vil omfatte alle dine hold og OPS-relaterede data, vær omhyggelig med det!</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase_Title" xml:space="preserve">
-    <value>#OpSec Warning !</value>
+    <value>#OpSec Advarsel!</value>
   </data>
   <data name="Settings_Warning_SendLogs_NoDb" xml:space="preserve">
-    <value>Don't include !</value>
+    <value>Medtag ikke!</value>
   </data>
   <data name="Settings_Warning_SendLogs_WithDb" xml:space="preserve">
-    <value>Ok, include it !</value>
+    <value>OK, inkluder det!</value>
   </data>
   <data name="Settings_Warning_StoragePermissionsNeeded" xml:space="preserve">
-    <value>Storage permissions are required !</value>
+    <value>Lagringstilladelser kræves !</value>
   </data>
   <data name="SignIn_Button_Cancel" xml:space="preserve">
-    <value>✗   Cancel</value>
+    <value>✗   Annuller</value>
   </data>
   <data name="SignIn_Button_ChangeAccount" xml:space="preserve">
-    <value>Change account</value>
+    <value>Skift konto</value>
     <comment>Text for change account button</comment>
   </data>
   <data name="SignIn_Button_ChangeServer" xml:space="preserve">
-    <value>Change server</value>
+    <value>Skift server</value>
     <comment>Text for changing server button</comment>
   </data>
   <data name="SignIn_Button_Next" xml:space="preserve">
-    <value>✓   Next</value>
+    <value>✓   Næste</value>
   </data>
   <data name="SignIn_Button_OneTimeToken" xml:space="preserve">
-    <value>Use One Time Token</value>
+    <value>Brug Én-Gangs Token</value>
     <comment>Text for the "One time token" button</comment>
   </data>
   <data name="SignIn_Button_Retry" xml:space="preserve">
-    <value>Retry</value>
+    <value>Prøv igen</value>
     <comment>Text for retry button</comment>
   </data>
   <data name="SignIn_Button_Validate" xml:space="preserve">
-    <value>✓   Validate</value>
+    <value>✓   Bekræft</value>
   </data>
   <data name="SignIn_Button_WithGoogle" xml:space="preserve">
-    <value>Sign in with Google</value>
+    <value>Log ind med Google</value>
     <comment>Text for the "Sign In with Google" button</comment>
   </data>
   <data name="SignIn_Label_EnterToken" xml:space="preserve">
-    <value>Enter the token :</value>
+    <value>Angiv token:</value>
     <comment>Text above one time token entry field</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_GoogleError" xml:space="preserve">
-    <value>Google login failed !</value>
+    <value>Google login mislykkedes!</value>
     <comment>Logging in Google servers failed</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_Internal" xml:space="preserve">
-    <value>Internal error</value>
+    <value>Intern fejl</value>
     <comment>An error occured</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_LoadingOpsData" xml:space="preserve">
-    <value>Error loading Wasabee OPs data</value>
+    <value>Fejl under indlæsning af Wasabee OP data</value>
     <comment>Error occured while processing OPs data</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_WasabeeFail" xml:space="preserve">
-    <value>Wasabee login failed !</value>
+    <value>Wasabee login mislykkedes!</value>
     <comment>Logging in Wasabee server failed</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_AppLoading" xml:space="preserve">
-    <value>Application loading...</value>
+    <value>Applikation indlæser...</value>
     <comment>Application is loading</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_ContactingServer" xml:space="preserve">
-    <value>Contacting '{0}' Wasabee server...</value>
+    <value>Kontakter '{0}' Wasabee server...</value>
     <comment>App is contacting Wasabee server. Parameter is server name</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_GoogleSuccess" xml:space="preserve">
-    <value>Google login success...</value>
+    <value>Google login gennemført...</value>
     <comment>Logging in with Google success</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoadingData" xml:space="preserve">
-    <value>Harvesting beehive,</value>
+    <value>Høster bikuben</value>
     <comment>Final Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoggingIn" xml:space="preserve">
-    <value>Logging in...</value>
+    <value>Logger ind...</value>
     <comment>App is logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServer" xml:space="preserve">
-    <value>Choose your server :</value>
+    <value>Vælg din server :</value>
     <comment>Server selection for logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServerToken" xml:space="preserve">
-    <value>Choose token's server :</value>
+    <value>Vælg token's server:</value>
     <comment>Server selection for the token</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_WelcomeAgent" xml:space="preserve">
-    <value>Welcome {0}</value>
+    <value>Velkommen {0}</value>
     <comment>Welcome message. Parameter is Agent name</comment>
   </data>
   <data name="SignIn_Label_NoInternet" xml:space="preserve">
-    <value>You must be connected to Internet over Wi-Fi or cellular network to use this application</value>
+    <value>Du skal være forbundet til internettet via Wi-Fi eller mobilnetværk for at bruge denne applikation</value>
     <comment>Error message when no internet connection</comment>
   </data>
   <data name="SignIn_Label_NoTeamsOrOperation" xml:space="preserve">
-    <value>You don't have any assigned team or operation, contact your Operator before using Wasabee Mobile !</value>
+    <value>Du er ikke tildelt nogle hold eller operationer, kontakt din operatør, før du bruger Wasabee Mobile !</value>
     <comment>Text for when user don't have any teams or ops and can't use app</comment>
   </data>
   <data name="SignIn_Label_PleaseWait" xml:space="preserve">
-    <value>Please wait...</value>
+    <value>Vent venligst...</value>
     <comment>Wait message</comment>
   </data>
   <data name="SignIn_Label_RememberServerChoice" xml:space="preserve">
-    <value>Remember my choice (quick login if enabled)</value>
+    <value>Husk mit valg (hurtig login, hvis aktiveret)</value>
     <comment>Text for the quicklogin checkbox</comment>
   </data>
   <data name="SignIn_Label_Warning" xml:space="preserve">
-    <value>Attention please !</value>
+    <value>Bemærk venligst!</value>
     <comment>Text for when user attention is required after login</comment>
   </data>
   <data name="TargetDialog_Button_GoTo" xml:space="preserve">
-    <value>Go to!</value>
+    <value>Gå til!</value>
     <comment>Target button to open maps</comment>
   </data>
   <data name="TargetDialog_Button_Ignore" xml:space="preserve">
-    <value>Ignore</value>
+    <value>Ignorer</value>
     <comment>Target button to ignore</comment>
   </data>
   <data name="TargetDialog_Text_Goal" xml:space="preserve">
-    <value>Goal:</value>
+    <value>Formål:</value>
     <comment>Target goal</comment>
   </data>
   <data name="TargetDialog_Text_Portal" xml:space="preserve">
-    <value>Portal:</value>
+    <value>Portal</value>
     <comment>Target portal name</comment>
   </data>
   <data name="TargetDialog_Text_Sender" xml:space="preserve">
-    <value>Sent by:</value>
+    <value>Sendt af:</value>
     <comment>Target sender</comment>
   </data>
   <data name="TargetDialog_Title" xml:space="preserve">
-    <value>Important target received</value>
+    <value>Vigtigt mål modtaget</value>
     <comment>Target popup title</comment>
   </data>
   <data name="TaskDialog_Button_Ack" xml:space="preserve">
-    <value>👍🏻   Ack</value>
+    <value>👍🏻 Godtag</value>
     <comment>Task Acknowledge button</comment>
   </data>
   <data name="TaskDialog_Button_Claim" xml:space="preserve">
-    <value>✓   Claim</value>
+    <value>Påtag opgave</value>
     <comment>Task claim button</comment>
   </data>
   <data name="TaskDialog_Button_Done" xml:space="preserve">
-    <value>✓   Done</value>
+    <value>✓   Udført</value>
     <comment>Task done button</comment>
   </data>
   <data name="TaskDialog_Button_Reject" xml:space="preserve">
-    <value>⚠   Reject</value>
+    <value>⚠   Afslå</value>
     <comment>Task reject button</comment>
   </data>
   <data name="TaskDialog_Button_Undone" xml:space="preserve">
-    <value>✗   Undone</value>
+    <value>✗ Uafsluttet</value>
     <comment>Task undo button</comment>
   </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
-    <value>Add Agent</value>
+    <value>Tilføj Agent</value>
     <comment>Button in toolbar for adding agent</comment>
   </data>
   <data name="TeamDetail_Button_RenameTeam" xml:space="preserve">
-    <value>Change name</value>
+    <value>Skift Navn</value>
     <comment>Button in toolbar for renaming team</comment>
   </data>
   <data name="TeamDetail_Prompt_AddAgentTitle" xml:space="preserve">
-    <value>Agent name</value>
+    <value>Agent navn</value>
     <comment>Title for adding agent by name popup</comment>
   </data>
   <data name="TeamDetail_Warning_AgentAlreadyInTeam" xml:space="preserve">
-    <value>{0} is already in the team !</value>
+    <value>{0} er allerede på holdet!</value>
     <comment>Error when agent already is in team. Parameter is agent name</comment>
   </data>
   <data name="TeamDetail_Warning_AgentNotFound" xml:space="preserve">
-    <value>Agent not found</value>
+    <value>Agenten blev ikke fundet</value>
     <comment>Error when adding agent in team</comment>
   </data>
   <data name="TeamDetail_Warning_RemoveAgent" xml:space="preserve">
-    <value>Remove '{0}' from the team ?</value>
+    <value>Fjern '{0}' fra holdet ?</value>
     <comment>Warning before removing agent from team. Parameter is agent name</comment>
   </data>
   <data name="TeamsList_Label_ErrorLoadingTeams" xml:space="preserve">
-    <value>Error occured while loading your teams</value>
+    <value>Der opstod en fejl under indlæsningen af dine hold</value>
     <comment>Error while loading teams list</comment>
   </data>
   <data name="TeamsList_Page_Title" xml:space="preserve">
-    <value>Teams</value>
+    <value>Hold</value>
     <comment>Title for Teams list page</comment>
   </data>
   <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>Location sharing state changed for team {0}</value>
+    <value>Placeringsdelingsstatus ændret for hold {0}</value>
     <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
-    <value>Successfully deleted team '{0}'</value>
+    <value>Slettede holdet '{0}'</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>State can't be changed, please try again</value>
+    <value>Status kan ikke ændres, prøv igen</value>
     <comment>Error when location sharing state can't be changed</comment>
   </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
-    <value>Danger zone</value>
+    <value>Farezone</value>
     <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
   </data>
   <data name="TeamsList_Warning_TeamDeleteLastWarning" xml:space="preserve">
-    <value>Please confirm one last time before deletion</value>
+    <value>Bekræft venligst en sidste gang inden sletning</value>
     <comment>Last warning before deleting a team</comment>
   </data>
   <data name="TeamsList_Warning_TeamDeleteSecondWarning" xml:space="preserve">
-    <value>Are you REALLY sure ?</value>
+    <value>Er du HELT sikker?</value>
     <comment>Another warning before deleting team</comment>
   </data>
   <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
-    <value>You're going to delete the team '{0}'. Are you sure ?</value>
+    <value>Du vil slette holdet '{0}'. Er du sikker?</value>
     <comment>Warning message before deleting a team. Parameter is team name</comment>
   </data>
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
-    <value>Change team name</value>
+    <value>Skift holdnavn</value>
     <comment>Title for changing team name popup</comment>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
-    <value>Your OPs are loading in background</value>
+    <value>Dine OPs indlæses i baggrunden</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toasts_LoadingOpsSuccess" xml:space="preserve">
-    <value>OPs loaded succesfully</value>
+    <value>OP's indlæst succesfuldt</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_CoordinatesCopied" xml:space="preserve">
-    <value>Coordinates copied to clipboard.</value>
+    <value>Koordinater kopieret til udklipsholder.</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_RejectedAssignment" xml:space="preserve">
-    <value>Assignment rejected</value>
+    <value>Opgave afvist</value>
     <comment>Toast message</comment>
   </data>
 </root>

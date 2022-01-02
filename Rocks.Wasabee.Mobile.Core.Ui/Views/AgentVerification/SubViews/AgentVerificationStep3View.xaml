@@ -5,6 +5,7 @@
                        xmlns:subViewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:system="clr-namespace:System;assembly=netstandard"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep3View"
                        x:DataType="subViewModels:AgentVerificationStep3SubViewModel">
 
@@ -31,9 +32,9 @@
 
                   <StackLayout Grid.Row="1" Padding="10" VerticalOptions="Center" Spacing="30" IsVisible="{Binding IsVerified, Converter={StaticResource BoolNegateConverter}}">
                       <StackLayout Spacing="15">
-                          <Label Text="Post your token in the Activity feed of Ingress Community forums."/>
+                          <Label Text="{xaml:Translate ACV_Step3_Label_PostTokenOnCommunityForums}"/>
 
-                          <Button Text="Open Community Forums"
+                          <Button Text="{xaml:Translate ACV_Step3_Button_OpenCommunityForums}"
                                   HorizontalOptions="Center"
                                   CornerRadius="5"
                                   TextColor="White"
@@ -50,9 +51,9 @@
                       </StackLayout>
                       
                       <StackLayout Spacing="15" IsVisible="{Binding HasOpenedCommunity}">
-                          <Label Text="Once you've posted the token to the community Forums, click the button below to start the verification process." />
+                          <Label Text="{xaml:Translate ACV_Step3_Label_AfterPostExplanation}" />
 
-                          <Button Text="Verify me"
+                          <Button Text="{xaml:Translate ACV_Step3_Button_VerifyMe}"
                                   HorizontalOptions="Center"
                                   Style="{DynamicResource WasabeeStyleMainActionButton}"
                                   Command="{Binding RefreshStatusCommand}"/>
@@ -66,12 +67,12 @@
                       <Label HorizontalTextAlignment="Center">
                           <Label.FormattedText>
                               <FormattedString>
-                                  <Span Text="Well done!"/>
+                                  <Span Text="{xaml:Translate ACV_Step3_Label_Verified_WellDone}"/>
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
-                                  <Span Text="Your Wasabee account is now verified with the Community forums."/>
+                                  <Span Text="{xaml:Translate ACV_Step3_Label_Verified_AccountVerified}"/>
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
                                   <Span Text="{x:Static system:Environment.NewLine}"/>
-                                  <Span Text="Your profile now displays a 🐝!"/>
+                                  <Span Text="{xaml:Translate ACV_Step3_Label_Verified_BeeExplanation}"/>
                               </FormattedString>
                           </Label.FormattedText>
                       </Label>
@@ -79,12 +80,12 @@
 
                   <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto">
                       <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
-                              Text="‹   Back"
+                              Text="{xaml:Translate ACV_Button_Back}"
                               HorizontalOptions="Start"
                               Command="{Binding Parent.BackStepCommand}"
                               IsVisible="{Binding IsExitButtonVisible, Converter={StaticResource BoolNegateConverter}}"/>
                       <Button Grid.Column="2" Style="{DynamicResource WasabeeStyleMainActionButton}"
-                              Text="Exit"
+                              Text="{xaml:Translate Global_Exit}"
                               HorizontalOptions="End"
                               IsVisible="{Binding IsExitButtonVisible}"
                               Command="{Binding Parent.ExitCommand}"/>

@@ -14,6 +14,7 @@ using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
 using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.QueryModels;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -118,7 +119,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             // TODO Handle app opening from notification
 
-            LoadingStepLabel = "Application loading...";
+
+            LoadingStepLabel = Strings.SignIn_Label_LoadingStep_AppLoading;
             _connectivity.ConnectivityChanged += ConnectivityOnConnectivityChanged;
 
             RememberServerChoice = _preferences.Get(UserSettingsKeys.RememberServerChoice, false);
@@ -204,7 +206,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             IsLoginVisible = false;
             IsLoading = true;
-            LoadingStepLabel = "Logging in...";
+            LoadingStepLabel = Strings.SignIn_Label_LoadingStep_LoggingIn;
 
             await _usersDatabase.DeleteAllData();
 
@@ -224,7 +226,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 await SaveGoogleToken(token);
 
-                LoadingStepLabel = "Google login success...";
+                LoadingStepLabel = Strings.SignIn_Label_LoadingStep_GoogleSuccess;
                 await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime));
                 
                 if (SelectedServerItem.Server == WasabeeServer.Undefined)
@@ -234,7 +236,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             }
             else
             {
-                ErrorMessage = "Google login failed !";
+                ErrorMessage = Strings.SignIn_Label_ErrorMsg_GoogleError;
                 IsAuthInError = true;
                 IsLoginVisible = true;
             }
@@ -260,7 +262,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 
                 IsEnteringToken = false;
 
-                LoadingStepLabel = "Choose token's server :";
+                LoadingStepLabel = Strings.SignIn_Label_LoadingStep_SelectServerToken;
                 IsSelectingServer = true;
             }
         }
@@ -277,7 +279,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 _isUsingOneTimeToken = true;
 
-                LoadingStepLabel = "Choose token's server :";
+                LoadingStepLabel = Strings.SignIn_Label_LoadingStep_SelectServerToken;
                 IsLoginVisible = false;
                 IsSelectingServer = true;
             }
@@ -287,7 +289,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsSelectingServer = false;
                 
                 IsLoading = true;
-                LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
+                LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_ContactingServer, SelectedServerItem.Name);
 
                 var wasabeeUserModel = await _authentificationService.WasabeeOneTimeTokenLoginAsync(OneTimeToken);
                 if (wasabeeUserModel != null)
@@ -303,7 +305,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 {
                     _isUsingOneTimeToken = false;
                     
-                    ErrorMessage = "Wasabee login failed !";
+                    ErrorMessage = Strings.SignIn_Label_ErrorMsg_WasabeeFail;
                     IsAuthInError = true;
                     IsLoading = false;
                     IsLoginVisible = true;
@@ -345,7 +347,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             HasNoTeamOrOpsAssigned = false;
 
-            LoadingStepLabel = "Choose your server :";
+            LoadingStepLabel = Strings.SignIn_Label_LoadingStep_SelectServer;
             IsLoading = false;
             IsLoginVisible = false;
             IsSelectingServer = true;
@@ -388,12 +390,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public IMvxCommand ShowSettingCommand => new MvxCommand(ShowSettingExecuted);
         private async void ShowSettingExecuted()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.ShowSettingCommand");
+
             var customBackendUri = string.Empty;
             var hasCustomBackendUri = _preferences.Get(UserSettingsKeys.HasCustomBackendUri, false);
             if (hasCustomBackendUri)
                 customBackendUri = _preferences.Get(UserSettingsKeys.CustomBackendUri, string.Empty);
 
-            var result = await _userDialogs.PromptAsync(customBackendUri, "Custom sever URL :", "Ok", "Cancel");
+            var result = await _userDialogs.PromptAsync(customBackendUri, 
+                Strings.Dialogs_Title_CustomServerUrl, 
+                Strings.Global_Ok, 
+                Strings.Global_Cancel);
             try
             {
                 var value = result?.Text ?? string.Empty;
@@ -409,15 +416,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     LoadCustomBackendServer();
                 }
             }
-            catch
+            catch (Exception e)
             {
-                // ignore
+                LoggingService.Error(e, "Error Executing SplashScreenViewModel.ShowSettingCommand");
             }
         }
 
         public IMvxCommand VersionTappedCommand => new MvxCommand(VersionTappedExecuted);
         private void VersionTappedExecuted()
         {
+            LoggingService.Trace("Executing SplashScreenViewModel.VersionTappedCommand");
+
             if (IsSettingButtonVisible)
                 return;
 
@@ -428,7 +437,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsSettingButtonVisible = true;
             _preferences.Set(UserSettingsKeys.DevModeActivated, true);
 
-            _userDialogs.Toast("Dev mode activated");
+            _userDialogs.Toast(Strings.Global_DevModeActivated);
+
+            LoggingService.Trace("SplashScreenViewModel : Dev mode activated");
         }
 
         #endregion
@@ -480,7 +491,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             var token = await GetGoogleToken();
             if (token is null)
             {
-                ErrorMessage = "Internal error";
+                ErrorMessage = Strings.SignIn_Label_ErrorMsg_Internal;
                 IsAuthInError = true;
                 IsLoginVisible = true;
                 IsLoading = false;
@@ -501,7 +512,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 ChangeServerCommand.Execute();
             else
             {
-                LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
+                LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_ContactingServer, SelectedServerItem.Name);
 
                 var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(token);
                 if (wasabeeUserModel != null)
@@ -515,7 +526,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 }
                 else
                 {
-                    ErrorMessage = "Wasabee login failed !";
+                    ErrorMessage = Strings.SignIn_Label_ErrorMsg_WasabeeFail;
                     IsAuthInError = true;
                     IsLoading = false;
                     IsLoginVisible = true;
@@ -554,7 +565,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             else
             {
                 IsLoading = true;
-                LoadingStepLabel = $"Contacting '{SelectedServerItem.Name}' Wasabee server...";
+                LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_ContactingServer, SelectedServerItem.Name);
 
                 try
                 {
@@ -591,7 +602,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         LoggingService.Error(e, "Error Executing SplashScreenViewModel.BypassGoogleAndWasabeeLogin");
 
 
-                        ErrorMessage = "Wasabee login failed !";
+                        ErrorMessage = Strings.SignIn_Label_ErrorMsg_WasabeeFail;
                         IsAuthInError = true;
                         IsLoading = false;
 
@@ -613,7 +624,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             if (userModel.Blacklisted || userModel.IntelFaction.Equals("RESISTANCE"))
             {
-                ErrorMessage = "Error occured";
+                ErrorMessage = Strings.SignIn_Label_ErrorMsg_Internal;
                 IsAuthInError = true;
                 IsLoginVisible = true;
                 IsGButtonVisible = false;
@@ -636,7 +647,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 _preferences.Remove(UserSettingsKeys.SavedServerChoice);
             }
 
-            LoadingStepLabel = $"Welcome {userModel.IngressName}";
+            LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_WelcomeAgent, userModel.IngressName);
             await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime * 2));
 
             try
@@ -688,14 +699,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsAuthInError = true;
                 IsLoginVisible = true;
                 IsLoading = false;
-                ErrorMessage = "Error loading Wasabee OPs data";
+                ErrorMessage = Strings.SignIn_Label_ErrorMsg_LoadingOpsData;
             }
         }
 
         private async Task PullDataFromServer(UserModel userModel)
         {
-            LoadingStepLabel = "Harvesting beehive,\r\n" +
-                               "Please wait...";
+            LoadingStepLabel = Strings.SignIn_Label_LoadingStep_LoadingData + "\r\n" +
+                               Strings.SignIn_Label_PleaseWait;
 
             await _teamsDatabase.DeleteAllData();
             await _teamAgentsDatabase.DeleteAllData();
@@ -748,7 +759,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 {
                     _ = Task.Factory.StartNew(async () =>
                     {
-                        _userDialogs.Toast("Your OPs are loading in background");
+                        _userDialogs.Toast(Strings.Toasts_LoadingOpsInBackground);
                         
                         foreach (var id in opsToLoad)
                         {
@@ -775,13 +786,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                             }
                         }
 
-                        _userDialogs.Toast("OPs loaded succesfully");
+                        _userDialogs.Toast(Strings.Toasts_LoadingOpsSuccess);
                     }).ConfigureAwait(false);
                 }
-            }
-            else
-            {
-                _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
+                else
+                {
+                    _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
+                }
             }
         }
 
