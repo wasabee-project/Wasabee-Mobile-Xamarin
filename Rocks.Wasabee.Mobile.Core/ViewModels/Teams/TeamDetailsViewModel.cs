@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.AppCenter.Analytics;
 using MvvmCross;
 using MvvmCross.Commands;
@@ -226,7 +226,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(nameOrId) || x.Name.Equals(nameOrId)) ?? null;
             if (user != null)
             {
-                _userDialogs.Toast(Strings.TeamDetail_Warning_AgentAlreadyInTeam);
+                _userDialogs.Toast(string.Format(Strings.TeamDetail_Warning_AgentAlreadyInTeam, nameOrId));
                 return;
             }
 
