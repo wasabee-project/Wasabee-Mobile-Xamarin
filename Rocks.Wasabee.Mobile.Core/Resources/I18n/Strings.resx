@@ -241,6 +241,14 @@
     <value>To use the live location sharing, please set the permission to 'Allow all the time'.</value>
     <comment>Message for changing location permissions</comment>
   </data>
+  <data name="Dialog_Warning_GeolocationDisabled" xml:space="preserve">
+    <value>Geolocation Disabled</value>
+    <comment>Warning popup when geolocation is disabled on device</comment>
+  </data>
+  <data name="Dialog_Warning_GeolocationDisabled-Text" xml:space="preserve">
+    <value>Please ensure that geolocation is enabled and permissions are allowed for Wasabee to start sharing your location.</value>
+    <comment>Text for warning popup when geolocation is disabled on device</comment>
+  </data>
   <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
     <value>See Teams</value>
     <comment>Button to access teams list</comment>
@@ -770,8 +778,20 @@
     <value>OPs loaded succesfully</value>
     <comment>Toast message</comment>
   </data>
+  <data name="Toast_CantStartLiveLocSharing" xml:space="preserve">
+    <value>Can't start location sharing, no permissions</value>
+    <comment>Toast message</comment>
+  </data>
   <data name="Toast_CoordinatesCopied" xml:space="preserve">
     <value>Coordinates copied to clipboard.</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_LiveLocPositionUpdated" xml:space="preserve">
+    <value>Location updated</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_LiveLocSharingStarted" xml:space="preserve">
+    <value>Live Location Sharing has started</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_RejectedAssignment" xml:space="preserve">

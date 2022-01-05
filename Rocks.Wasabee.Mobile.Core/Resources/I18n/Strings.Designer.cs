@@ -277,6 +277,24 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Geolocation Disabled.
+        /// </summary>
+        internal static string Dialog_Warning_GeolocationDisabled {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_GeolocationDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please ensure that geolocation is enabled and permissions are allowed for Wasabee to start sharing your location..
+        /// </summary>
+        internal static string Dialog_Warning_GeolocationDisabled_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Warning_GeolocationDisabled-Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See Teams.
         /// </summary>
         internal static string Dialog_Warning_GoToTeamsList {
@@ -1582,11 +1600,38 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t start location sharing, no permissions.
+        /// </summary>
+        internal static string Toast_CantStartLiveLocSharing {
+            get {
+                return ResourceManager.GetString("Toast_CantStartLiveLocSharing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coordinates copied to clipboard..
         /// </summary>
         internal static string Toast_CoordinatesCopied {
             get {
                 return ResourceManager.GetString("Toast_CoordinatesCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location updated.
+        /// </summary>
+        internal static string Toast_LiveLocPositionUpdated {
+            get {
+                return ResourceManager.GetString("Toast_LiveLocPositionUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live Location Sharing has started.
+        /// </summary>
+        internal static string Toast_LiveLocSharingStarted {
+            get {
+                return ResourceManager.GetString("Toast_LiveLocSharingStarted", resourceCulture);
             }
         }
         
