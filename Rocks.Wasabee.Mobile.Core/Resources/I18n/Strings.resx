@@ -213,6 +213,14 @@
     <value>Well done!</value>
     <comment>ACV succeeded</comment>
   </data>
+  <data name="Assignments_Page_Title" xml:space="preserve">
+    <value>Assignments</value>
+    <comment>Assignments page title in bottom bar when in Operation Map</comment>
+  </data>
+  <data name="Checklist_Page_Title" xml:space="preserve">
+    <value>Checklist</value>
+    <comment>Checklist page title in bottom bar when in Operation Map</comment>
+  </data>
   <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
     <value>Available OP's :</value>
     <comment>Title for the popup where user select an OP</comment>
@@ -236,6 +244,9 @@
   <data name="Dialogs_Warning_LocationPermissionRequired" xml:space="preserve">
     <value>Geolocation permission is required !</value>
     <comment>Warning message for when geolocation permission is needed and not granted</comment>
+  </data>
+  <data name="Dialogs_Warning_PermissionWhenInUse" xml:space="preserve">
+    <value>To show your position on the map, please set the permission to 'When in use'.</value>
   </data>
   <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
     <value>To use the live location sharing, please set the permission to 'Allow all the time'.</value>
@@ -371,6 +382,42 @@
   <data name="LocationDialog_Title" xml:space="preserve">
     <value>Attention please</value>
     <comment>Live Location warning popup title</comment>
+  </data>
+  <data name="Map_Button_Infos" xml:space="preserve">
+    <value>ⓘ   Infos</value>
+    <comment>Button to show info popup about marker</comment>
+  </data>
+  <data name="Map_Label_AgentsList-ClickToShow" xml:space="preserve">
+    <value>CLICK TO SHOW</value>
+    <comment>Instruction label</comment>
+  </data>
+  <data name="Map_Page_Title" xml:space="preserve">
+    <value>Map</value>
+    <comment>Map page title in bottom bar when in Operation Map</comment>
+  </data>
+  <data name="Map_Text_Layers-Agents" xml:space="preserve">
+    <value>Agents</value>
+    <comment>Title for agents layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Anchors" xml:space="preserve">
+    <value>Anchors</value>
+    <comment>Title for anchors (portals) layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Links" xml:space="preserve">
+    <value>Links</value>
+    <comment>Title for links layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Markers" xml:space="preserve">
+    <value>Markers</value>
+    <comment>Title for markers layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Zones" xml:space="preserve">
+    <value>Zones</value>
+    <comment>Title for zones layer on map</comment>
+  </data>
+  <data name="Map_Text_TimeAgo" xml:space="preserve">
+    <value>{0} ago</value>
+    <comment>Time ago label, in the format "hh:mm:ss ago"</comment>
   </data>
   <data name="MarkerDialog_Text_State" xml:space="preserve">
     <value>State: {0}</value>
@@ -792,6 +839,14 @@
   </data>
   <data name="Toast_LiveLocSharingStarted" xml:space="preserve">
     <value>Live Location Sharing has started</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_OpDataAlreadyUptoDate" xml:space="preserve">
+    <value>You already have latest OP version</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_OpDataUpdated" xml:space="preserve">
+    <value>Operation data updated</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_RejectedAssignment" xml:space="preserve">

@@ -277,6 +277,24 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assignments.
+        /// </summary>
+        internal static string Assignments_Page_Title {
+            get {
+                return ResourceManager.GetString("Assignments_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checklist.
+        /// </summary>
+        internal static string Checklist_Page_Title {
+            get {
+                return ResourceManager.GetString("Checklist_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Geolocation Disabled.
         /// </summary>
         internal static string Dialog_Warning_GeolocationDisabled {
@@ -381,6 +399,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string Dialogs_Warning_LocationPermissionRequired {
             get {
                 return ResourceManager.GetString("Dialogs_Warning_LocationPermissionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To show your position on the map, please set the permission to &apos;When in use&apos;..
+        /// </summary>
+        internal static string Dialogs_Warning_PermissionWhenInUse {
+            get {
+                return ResourceManager.GetString("Dialogs_Warning_PermissionWhenInUse", resourceCulture);
             }
         }
         
@@ -651,6 +678,87 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string LocationDialog_Title {
             get {
                 return ResourceManager.GetString("LocationDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⓘ   Infos.
+        /// </summary>
+        internal static string Map_Button_Infos {
+            get {
+                return ResourceManager.GetString("Map_Button_Infos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CLICK TO SHOW.
+        /// </summary>
+        internal static string Map_Label_AgentsList_ClickToShow {
+            get {
+                return ResourceManager.GetString("Map_Label_AgentsList-ClickToShow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        internal static string Map_Page_Title {
+            get {
+                return ResourceManager.GetString("Map_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agents.
+        /// </summary>
+        internal static string Map_Text_Layers_Agents {
+            get {
+                return ResourceManager.GetString("Map_Text_Layers-Agents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anchors.
+        /// </summary>
+        internal static string Map_Text_Layers_Anchors {
+            get {
+                return ResourceManager.GetString("Map_Text_Layers-Anchors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Links.
+        /// </summary>
+        internal static string Map_Text_Layers_Links {
+            get {
+                return ResourceManager.GetString("Map_Text_Layers-Links", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Markers.
+        /// </summary>
+        internal static string Map_Text_Layers_Markers {
+            get {
+                return ResourceManager.GetString("Map_Text_Layers-Markers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zones.
+        /// </summary>
+        internal static string Map_Text_Layers_Zones {
+            get {
+                return ResourceManager.GetString("Map_Text_Layers-Zones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} ago.
+        /// </summary>
+        internal static string Map_Text_TimeAgo {
+            get {
+                return ResourceManager.GetString("Map_Text_TimeAgo", resourceCulture);
             }
         }
         
@@ -1632,6 +1740,24 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string Toast_LiveLocSharingStarted {
             get {
                 return ResourceManager.GetString("Toast_LiveLocSharingStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You already have latest OP version.
+        /// </summary>
+        internal static string Toast_OpDataAlreadyUptoDate {
+            get {
+                return ResourceManager.GetString("Toast_OpDataAlreadyUptoDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation data updated.
+        /// </summary>
+        internal static string Toast_OpDataUpdated {
+            get {
+                return ResourceManager.GetString("Toast_OpDataUpdated", resourceCulture);
             }
         }
         
