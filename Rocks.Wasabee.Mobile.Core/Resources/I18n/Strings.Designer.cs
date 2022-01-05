@@ -781,6 +781,33 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Involved teams.
+        /// </summary>
+        internal static string OperationDetail_Label_InvolvedTeams {
+            get {
+                return ResourceManager.GetString("OperationDetail_Label_InvolvedTeams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation Name.
+        /// </summary>
+        internal static string OperationDetail_Label_OpName {
+            get {
+                return ResourceManager.GetString("OperationDetail_Label_OpName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation.
+        /// </summary>
+        internal static string OperationDetail_Page_Title {
+            get {
+                return ResourceManager.GetString("OperationDetail_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Operations.
         /// </summary>
         internal static string OperationsList_Page_Title {
