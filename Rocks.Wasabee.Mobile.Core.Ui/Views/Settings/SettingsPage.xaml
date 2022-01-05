@@ -74,7 +74,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="Hide completed markers on Map" TextColor="{DynamicResource PrimaryTextColor}"
+                                    <Label Grid.Column="0" Text="{xaml:Translate Settings_Label_HideCompletedMarkers}" TextColor="{DynamicResource PrimaryTextColor}"
                                            FontSize="Small" Padding="15,0,0,0" LineBreakMode="WordWrap" VerticalOptions="Center"/>
                                     <Switch Grid.Column="1" OnColor="{DynamicResource PrimaryGreenDark}"
                                             ThumbColor="{Binding IsHideCompletedMarkersEnabled, Converter={StaticResource BoolToColorConverter}}"

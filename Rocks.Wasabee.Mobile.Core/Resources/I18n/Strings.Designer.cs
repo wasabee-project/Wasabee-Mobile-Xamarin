@@ -871,6 +871,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide completed markers on Map.
+        /// </summary>
+        internal static string Settings_Label_HideCompletedMarkers {
+            get {
+                return ResourceManager.GetString("Settings_Label_HideCompletedMarkers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh FCM token.
         /// </summary>
         internal static string Settings_Label_RefreshFcmToken {

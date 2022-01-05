@@ -465,6 +465,9 @@
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Switch light/dark theme</value>
   </data>
+  <data name="Settings_Label_HideCompletedMarkers" xml:space="preserve">
+    <value>Hide completed markers on Map</value>
+  </data>
   <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
     <value>Refresh FCM token</value>
   </data>
