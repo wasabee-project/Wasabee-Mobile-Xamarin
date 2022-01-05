@@ -682,6 +682,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Live FCM logs.
+        /// </summary>
+        internal static string Menu_Item_LiveFcmLogs {
+            get {
+                return ResourceManager.GetString("Menu_Item_LiveFcmLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Operation Map.
         /// </summary>
         internal static string Menu_Item_OperationMap {

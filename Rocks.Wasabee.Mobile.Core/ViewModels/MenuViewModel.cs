@@ -96,7 +96,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 _ => throw new ArgumentOutOfRangeException(nameof(Server))
             };
         }
-        
+
         public override void ViewAppeared()
         {
             base.ViewAppeared();
@@ -108,7 +108,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 if (MenuItems.Any(x => x.ViewModelType == typeof(LogsViewModel)))
                     return;
 
-                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) });
+                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = Strings.Menu_Item_LiveFcmLogs, ViewModelType = typeof(LogsViewModel) });
                 RaisePropertyChanged(() => MenuItems);
 
                 _preferences.Set(UserSettingsKeys.DevModeActivated, true);
@@ -118,7 +118,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 if (msg.Sender != this && msg.Action == Action.Stop)
                     ToggleLiveLocationSharingCommand.Execute(false);
             });
-            
+
             if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
             {
                 SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
@@ -298,7 +298,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (IsBusy) return;
             IsBusy = true;
-            
+
             await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>(), new SplashScreenNavigationParameter(doDataRefreshOnly: true));
 
             IsBusy = false;
@@ -351,14 +351,14 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task<bool> CheckAndAskForLocationPermissions()
         {
             LoggingService.Trace("MenuViewModel - Checking location permissions");
-            
+
             var statusLocationAlways = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();
 
             LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways}");
 
             if (statusLocationAlways == PermissionStatus.Granted)
                 return true;
-            
+
             var requestPermission = true;
             var showRationale = Permissions.ShouldShowRationale<Permissions.LocationAlways>();
             if (showRationale)

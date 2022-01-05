@@ -384,6 +384,10 @@
     <value>Refresh</value>
     <comment>Button for pulling OPs from server when nothing is stored locally</comment>
   </data>
+  <data name="Menu_Item_LiveFcmLogs" xml:space="preserve">
+    <value>Live FCM logs</value>
+    <comment>Debug menu to show FCM logs</comment>
+  </data>
   <data name="Menu_Item_OperationMap" xml:space="preserve">
     <value>Operation Map</value>
     <comment>Menu button for the Operation map</comment>
