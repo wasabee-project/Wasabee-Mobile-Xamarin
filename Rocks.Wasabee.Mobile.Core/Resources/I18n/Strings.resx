@@ -294,6 +294,14 @@
   <data name="Global_Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="Global_Unverified" xml:space="preserve">
+    <value>Unverified</value>
+    <comment>Text for "Unverified"</comment>
+  </data>
+  <data name="Global_Verified" xml:space="preserve">
+    <value>Verified</value>
+    <comment>Text for "Verified"</comment>
+  </data>
   <data name="Global_Version" xml:space="preserve">
     <value>Version</value>
   </data>
@@ -416,9 +424,21 @@
     <value>You don't have any local OP's stored</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
+  <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
+    <value>Link Ingress Account</value>
+    <comment>Text for link ingress account button</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
     <comment>Message indicating from where data came from</comment>
+  </data>
+  <data name="Profile_Label_Infos" xml:space="preserve">
+    <value>Infos</value>
+    <comment>Title for infos section in profile</comment>
+  </data>
+  <data name="Profile_Label_Level" xml:space="preserve">
+    <value>Level : {0}</value>
+    <comment>Text for displaying agent level</comment>
   </data>
   <data name="Profile_Label_Status" xml:space="preserve">
     <value>Status :</value>

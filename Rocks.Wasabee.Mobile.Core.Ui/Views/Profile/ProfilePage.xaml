@@ -53,8 +53,8 @@
                                 <Label Text="{Binding User.IngressName}" FontAttributes="Bold" FontSize="Large"/>
                                 <Label Text="🐝" FontSize="14" VerticalOptions="Center" IsVisible="{Binding IsLinkIngressAccountVisible, Converter={StaticResource BoolNegateConverter}}"/>
                             </StackLayout>
-                            <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat='Level : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>
-                            <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='Id : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="12"/>
+                            <Label Grid.Column="0" Grid.Row="1" Text="{Binding User.Level, StringFormat={xaml:Translate Profile_Label_Level}}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Medium"/>
+                            <Label Grid.Column="0" Grid.Row="2" Text="{Binding User.GoogleId, StringFormat='ID : {0}'}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="12"/>
 
                             <iconize:IconButton Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
                                                 Text="mdi-qrcode" TextColor="{DynamicResource PrimaryTextColor}" FontSize="28"
@@ -66,14 +66,14 @@
                     </Grid>
 
                     <Button Style="{DynamicResource WasabeeStyleMainActionButton}"
-                            Text="Link Ingress Account"
+                            Text="{xaml:Translate Profile_Button_LinkIngressAccount}"
                             HorizontalOptions="Center"
                             Command="{Binding StartAgentVerificationCommand}"
                             IsVisible="{Binding IsLinkIngressAccountVisible}"/>
 
                     <TableView Intent="Settings" HasUnevenRows="True" VerticalOptions="Start">
                         <TableRoot>
-                            <TableSection Title="Infos" TextColor="{DynamicResource PrimaryGreen}">
+                            <TableSection Title="{xaml:Translate Profile_Label_Infos}" TextColor="{DynamicResource PrimaryGreen}">
                                 <ViewCell Tapped="EnlRocksCell_Tapped">
                                     <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="15, 10" >
                                         <Grid.ColumnDefinitions>

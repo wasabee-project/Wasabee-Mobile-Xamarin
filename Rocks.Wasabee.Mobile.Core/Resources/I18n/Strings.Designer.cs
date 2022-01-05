@@ -475,6 +475,24 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unverified.
+        /// </summary>
+        internal static string Global_Unverified {
+            get {
+                return ResourceManager.GetString("Global_Unverified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verified.
+        /// </summary>
+        internal static string Global_Verified {
+            get {
+                return ResourceManager.GetString("Global_Verified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version.
         /// </summary>
         internal static string Global_Version {
@@ -754,11 +772,38 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Link Ingress Account.
+        /// </summary>
+        internal static string Profile_Button_LinkIngressAccount {
+            get {
+                return ResourceManager.GetString("Profile_Button_LinkIngressAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct..
         /// </summary>
         internal static string Profile_Label_DataOrigin {
             get {
                 return ResourceManager.GetString("Profile_Label_DataOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infos.
+        /// </summary>
+        internal static string Profile_Label_Infos {
+            get {
+                return ResourceManager.GetString("Profile_Label_Infos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level : {0}.
+        /// </summary>
+        internal static string Profile_Label_Level {
+            get {
+                return ResourceManager.GetString("Profile_Label_Level", resourceCulture);
             }
         }
         
