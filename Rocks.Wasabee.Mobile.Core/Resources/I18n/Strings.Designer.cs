@@ -781,6 +781,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My Operations.
+        /// </summary>
+        internal static string OperationsList_Page_Title {
+            get {
+                return ResourceManager.GetString("OperationsList_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Link Ingress Account.
         /// </summary>
         internal static string Profile_Button_LinkIngressAccount {

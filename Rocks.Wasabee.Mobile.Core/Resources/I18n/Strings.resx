@@ -428,6 +428,10 @@
     <value>You don't have any local OP's stored</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
+  <data name="OperationsList_Page_Title" xml:space="preserve">
+    <value>My Operations</value>
+    <comment>Operations list page title</comment>
+  </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Link Ingress Account</value>
     <comment>Text for link ingress account button</comment>
