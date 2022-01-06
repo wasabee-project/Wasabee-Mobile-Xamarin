@@ -154,7 +154,7 @@
     <comment>ACV Guide step 1</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_2" xml:space="preserve">
-    <value>2. Accedi al Community Forum forum di Ingress e pubblica il token nella sezione Activity</value>
+    <value>2. Accedi al Community Forum di Ingress e pubblica il token nella sezione Activity</value>
     <comment>ACV Guide step 2</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_3" xml:space="preserve">
@@ -162,7 +162,7 @@
     <comment>ACV Guide step 3</comment>
   </data>
   <data name="ACV_Step1_Label_Welcome" xml:space="preserve">
-    <value>Benvenuto su</value>
+    <value>Benvenuto alla</value>
     <comment>Agent Community Verification welcome</comment>
   </data>
   <data name="ACV_Step2_Button_GetToken" xml:space="preserve">
@@ -198,7 +198,7 @@
     <comment>ACV explains what to do after posting token</comment>
   </data>
   <data name="ACV_Step3_Label_PostTokenOnCommunityForums" xml:space="preserve">
-    <value>Inserisci il tuo token nel nella sezione Activity del Community Forum di Ingress.</value>
+    <value>Inserisci il tuo token nella sezione Activity del Community Forum di Ingress.</value>
     <comment>ACV explains what to do with the token</comment>
   </data>
   <data name="ACV_Step3_Label_Verified_AccountVerified" xml:space="preserve">
@@ -212,6 +212,14 @@
   <data name="ACV_Step3_Label_Verified_WellDone" xml:space="preserve">
     <value>Ben fatto!</value>
     <comment>ACV succeeded</comment>
+  </data>
+  <data name="Assignments_Page_Title" xml:space="preserve">
+    <value>Assegnazioni</value>
+    <comment>Assignments page title in bottom bar when in Operation Map</comment>
+  </data>
+  <data name="Checklist_Page_Title" xml:space="preserve">
+    <value>Checklist</value>
+    <comment>Checklist page title in bottom bar when in Operation Map</comment>
   </data>
   <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
     <value>OP Disponibili:</value>
@@ -237,9 +245,20 @@
     <value>È necessario il permesso alla geolocalizzazione !</value>
     <comment>Warning message for when geolocation permission is needed and not granted</comment>
   </data>
+  <data name="Dialogs_Warning_PermissionWhenInUse" xml:space="preserve">
+    <value>Per mostrare la tua posizione sulla mappa, imposta il permesso su 'mentre l'app è in uso'.</value>
+  </data>
   <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
     <value>Per utilizzare la condivisione della posizione live, imposta il permesso su 'Consenti sempre'.</value>
     <comment>Message for changing location permissions</comment>
+  </data>
+  <data name="Dialog_Warning_GeolocationDisabled" xml:space="preserve">
+    <value>Geolocalizzazione disattivata</value>
+    <comment>Warning popup when geolocation is disabled on device</comment>
+  </data>
+  <data name="Dialog_Warning_GeolocationDisabled-Text" xml:space="preserve">
+    <value>Assicurati che la geolocalizzazione sia abilitata e che le Wasabee abbia i permessi per iniziare a condividere la tua posizione.</value>
+    <comment>Text for warning popup when geolocation is disabled on device</comment>
   </data>
   <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
     <value>Vedi Squadre</value>
@@ -293,6 +312,14 @@
   </data>
   <data name="Global_Ok" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="Global_Unverified" xml:space="preserve">
+    <value>Non verificato</value>
+    <comment>Text for "Unverified"</comment>
+  </data>
+  <data name="Global_Verified" xml:space="preserve">
+    <value>Verificato</value>
+    <comment>Text for "Verified"</comment>
   </data>
   <data name="Global_Version" xml:space="preserve">
     <value>Versione</value>
@@ -356,6 +383,42 @@
     <value>Attenzione!</value>
     <comment>Live Location warning popup title</comment>
   </data>
+  <data name="Map_Button_Infos" xml:space="preserve">
+    <value>ⓘ   Info</value>
+    <comment>Button to show info popup about marker</comment>
+  </data>
+  <data name="Map_Label_AgentsList-ClickToShow" xml:space="preserve">
+    <value>CLICCA PER MOSTRARE</value>
+    <comment>Instruction label</comment>
+  </data>
+  <data name="Map_Page_Title" xml:space="preserve">
+    <value>Mappa</value>
+    <comment>Map page title in bottom bar when in Operation Map</comment>
+  </data>
+  <data name="Map_Text_Layers-Agents" xml:space="preserve">
+    <value>Agenti</value>
+    <comment>Title for agents layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Anchors" xml:space="preserve">
+    <value>Ancore</value>
+    <comment>Title for anchors (portals) layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Links" xml:space="preserve">
+    <value>Link</value>
+    <comment>Title for links layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Markers" xml:space="preserve">
+    <value>Marker</value>
+    <comment>Title for markers layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Zones" xml:space="preserve">
+    <value>Zone</value>
+    <comment>Title for zones layer on map</comment>
+  </data>
+  <data name="Map_Text_TimeAgo" xml:space="preserve">
+    <value>{0} fa</value>
+    <comment>Time ago label, in the format "hh:mm:ss ago"</comment>
+  </data>
   <data name="MarkerDialog_Text_State" xml:space="preserve">
     <value>Stato: {0}</value>
     <comment>Marker state text</comment>
@@ -375,6 +438,10 @@
   <data name="Menu_Button_RefreshOps" xml:space="preserve">
     <value>Aggiorna</value>
     <comment>Button for pulling OPs from server when nothing is stored locally</comment>
+  </data>
+  <data name="Menu_Item_LiveFcmLogs" xml:space="preserve">
+    <value>Log FCM in tempo reale</value>
+    <comment>Debug menu to show FCM logs</comment>
   </data>
   <data name="Menu_Item_OperationMap" xml:space="preserve">
     <value>Mappa Operazione</value>
@@ -416,9 +483,37 @@
     <value>Non hai nessuna OP locale in memoria</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
+  <data name="OperationDetail_Label_InvolvedTeams" xml:space="preserve">
+    <value>Squadre interessate</value>
+    <comment>Label before involved teams list</comment>
+  </data>
+  <data name="OperationDetail_Label_OpName" xml:space="preserve">
+    <value>Nome Operazione</value>
+    <comment>Label for operation name</comment>
+  </data>
+  <data name="OperationDetail_Page_Title" xml:space="preserve">
+    <value>Operazione</value>
+    <comment>Operation detail page title</comment>
+  </data>
+  <data name="OperationsList_Page_Title" xml:space="preserve">
+    <value>Le Mie Operazioni</value>
+    <comment>Operations list page title</comment>
+  </data>
+  <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
+    <value>Collega Account Ingress</value>
+    <comment>Text for link ingress account button</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Queste informazioni provengono da V e/o .rocks. Se hai un nome che inizia con UnverifiedAgent_, assicurati che le tue informazioni su .Rocks e V siano corrette.</value>
     <comment>Message indicating from where data came from</comment>
+  </data>
+  <data name="Profile_Label_Infos" xml:space="preserve">
+    <value>Info</value>
+    <comment>Title for infos section in profile</comment>
+  </data>
+  <data name="Profile_Label_Level" xml:space="preserve">
+    <value>Livello : {0}</value>
+    <comment>Text for displaying agent level</comment>
   </data>
   <data name="Profile_Label_Status" xml:space="preserve">
     <value>Stato :</value>
@@ -444,6 +539,9 @@
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Imposta tema chiaro/scuro</value>
+  </data>
+  <data name="Settings_Label_HideCompletedMarkers" xml:space="preserve">
+    <value>Nascondi i marker completati dalla mappa</value>
   </data>
   <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
     <value>Aggiorna token FCM</value>
@@ -727,8 +825,28 @@
     <value>OP caricate con successo</value>
     <comment>Toast message</comment>
   </data>
+  <data name="Toast_CantStartLiveLocSharing" xml:space="preserve">
+    <value>Impossibile avviare la condivisione della posizione, nessun permesso</value>
+    <comment>Toast message</comment>
+  </data>
   <data name="Toast_CoordinatesCopied" xml:space="preserve">
     <value>Coordinate copiate negli appunti.</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_LiveLocPositionUpdated" xml:space="preserve">
+    <value>Posizione aggiornata</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_LiveLocSharingStarted" xml:space="preserve">
+    <value>Condivisione della posizione iniziata</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_OpDataAlreadyUptoDate" xml:space="preserve">
+    <value>Hai già l'ultima versione della OP</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_OpDataUpdated" xml:space="preserve">
+    <value>Dati dell'operazione aggiornati</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_RejectedAssignment" xml:space="preserve">
