@@ -1,71 +1,38 @@
 using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using System.Collections.Generic;
 
 namespace Rocks.Wasabee.Mobile.Core.Models.Users
 {
 #nullable disable
-    public class UserModel : BaseModel
+    public class UserModel : AgentModel
     {
         [JsonProperty("GoogleID")]
         public string GoogleId { get; set; }
+        
+        [JsonProperty("lockey")]
+        public string LocationKey { get; set; }
 
         [JsonProperty("enlid")]
         public string EnlId { get; set; }
 
-        [JsonProperty("name")]
-        public string IngressName { get; set; }
-
-        [JsonProperty("vname")]
-        public string VName { get; set; }
-
-        [JsonProperty("rocksname")]
-        public string RocksName { get; set; }
-
-        [JsonProperty("level")]
-        public int Level { get; set; }
-
-        [JsonProperty("lockey")]
-        public string LocationKey { get; set; }
-
-        [JsonProperty("rocks")]
-        public bool RocksVerified { get; set; }
-
-        [JsonProperty("Vverified")]
-        public bool VVerified { get; set; }
-
-        [JsonProperty("blacklisted")]
-        public bool Blacklisted { get; set; }
-
         [JsonProperty("pic")]
         public string ProfileImage { get; set; }
 
-        [JsonProperty("RAID")]
-        public bool Raid { get; set; }
-
-        [JsonProperty("RISC")]
-        public bool Risc { get; set; }
-
-        [JsonProperty("intelfaction")]
-        public string IntelFaction { get; set; }
-
-        [JsonProperty("Telegram")]
-        public TelegramModel Telegram { get; set; }
-        
         [JsonProperty("Teams")]
         public List<UserTeamModel> Teams { get; set; }
 
         [JsonProperty("Ops")]
         public List<OpModel> Ops { get; set; }
 
-        [JsonProperty("Assignments")]
-        public List<AssignmentModel> Assignments { get; set; }
+        [JsonProperty("Telegram")]
+        public TelegramModel Telegram { get; set; }
+
+        [JsonProperty("querytoken")]
+        public string QueryToken { get; set; }
 
         [JsonProperty("jwt")]
         public string Jwt { get; set; }
-        
-        [JsonProperty("communityname")]
-        public string CommunityName { get; set; }
-
     }
 
     public class TelegramModel : BaseModel
@@ -73,11 +40,14 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
         [JsonProperty("ID")]
         public int Id { get; set; }
 
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
         [JsonProperty("Verified")]
         public bool Verified { get; set; }
 
         [JsonProperty("Authtoken")]
-        public string Authtoken { get; set; }
+        public string AuthToken { get; set; }
     }
 
     public class UserTeamModel : BaseModel
@@ -131,16 +101,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
         public string Modified { get; set; }
 
         [JsonProperty("LastEditID")]
-        public string LastEditID { get; set; }
-    }
-
-    public class AssignmentModel : BaseModel
-    {
-        [JsonProperty("OpID")]
-        public string OpId { get; set; }
-        
-        [JsonProperty("OperationName")]
-        public string OperationName { get; set; }
+        public string LastEditId { get; set; }
     }
 #nullable enable
 }

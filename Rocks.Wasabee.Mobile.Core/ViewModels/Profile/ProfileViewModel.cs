@@ -132,7 +132,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
             User = new UserModel()
             {
-                IngressName = agent.Name,
+                Name = agent.Name,
                 CommunityName = agent.CommunityName,
                 ProfileImage = agent.Pic,
                 Level = agent.Level,

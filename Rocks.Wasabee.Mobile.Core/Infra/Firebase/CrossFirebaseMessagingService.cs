@@ -26,15 +26,15 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
         private readonly IFirebaseService _firebaseService;
         private readonly ILocalNotificationService _localNotificationService;
         private readonly OperationsDatabase _operationsDatabase;
-        
+
         private MvxSubscriptionToken? _mvxToken;
 
         private string _fcmToken = string.Empty;
         private bool _isInitialized;
 
-        public CrossFirebaseMessagingService(IMvxMessenger mvxMessenger, WasabeeApiV1Service wasabeeApiV1, 
-            IBackgroundDataUpdaterService backgroundDataUpdaterService, ISecureStorage secureStorage, 
-            IUserSettingsService userSettingsService, IFirebaseService firebaseService, 
+        public CrossFirebaseMessagingService(IMvxMessenger mvxMessenger, WasabeeApiV1Service wasabeeApiV1,
+            IBackgroundDataUpdaterService backgroundDataUpdaterService, ISecureStorage secureStorage,
+            IUserSettingsService userSettingsService, IFirebaseService firebaseService,
             ILocalNotificationService localNotificationService, OperationsDatabase operationsDatabase)
         {
             _mvxMessenger = mvxMessenger;
@@ -56,7 +56,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
 
             _mvxToken ??= _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer(_firebaseService.GetFcmToken()));
         }
-        
+
         public async Task<bool> SendRegistrationToServer(string registrationToken)
         {
             if (!_isInitialized)
@@ -66,7 +66,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
                 return false;
 
             _fcmToken = registrationToken;
-            
+
             await _secureStorage.SetAsync(SecureStorageConstants.FcmToken, _fcmToken);
             return await _wasabeeApiV1.User_UpdateFirebaseToken(_fcmToken);
         }
@@ -114,7 +114,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
                     if (marker != null)
                     {
                         var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
-                        if (marker.AssignedTo.Equals(loggedUserGid))
+                        if (marker.Assignments.Contains(loggedUserGid))
                             _localNotificationService.Send($"{op!.Name} : Marker {msg}");
                     }
                 }
@@ -137,7 +137,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
                     if (link != null)
                     {
                         var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
-                        if (link.AssignedTo.Equals(loggedUserGid))
+                        if (link.Assignments.Contains(loggedUserGid))
                             _localNotificationService.Send($"{op!.Name} : Link {msg}");
                     }
                 }

@@ -17,6 +17,11 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
             
             return enumerable.Any();
         }
+
+        public static bool IsNotNullOrEmpty<T>(this IEnumerable<T>? enumerable)
+        {
+            return !IsNullOrEmpty(enumerable);
+        }
     }
 
 }

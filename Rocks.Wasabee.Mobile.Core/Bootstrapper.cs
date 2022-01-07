@@ -58,7 +58,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new LinksDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new OperationsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
 
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new TeamAgentsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new AgentsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new TeamsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
         }
 

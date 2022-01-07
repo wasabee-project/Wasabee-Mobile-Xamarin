@@ -3,6 +3,7 @@ using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -14,6 +15,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -28,11 +30,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IClipboard _clipboard;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly MarkersDatabase _markersDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly IUserSettingsService _userSettingsService;
 
         public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger,
             IUserDialogs userDialogs, IMap map, IClipboard clipboard, WasabeeApiV1Service wasabeeApiV1Service,
-            MarkersDatabase markersDatabase, IUserSettingsService userSettingsService) : base(dialogNavigationService)
+            MarkersDatabase markersDatabase, AgentsDatabase agentsDatabase, IUserSettingsService userSettingsService) : base(dialogNavigationService)
         {
             _messenger = messenger;
             _userDialogs = userDialogs;
@@ -40,6 +43,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             _clipboard = clipboard;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _markersDatabase = markersDatabase;
+            _agentsDatabase = agentsDatabase;
             _userSettingsService = userSettingsService;
         }
 
@@ -48,7 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             MarkerAssignment = parameter;
             Marker = MarkerAssignment.Marker;
 
-            IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker?.AssignedTo);
+            UpdateAssignments();
             UpdateButtonsState();
         }
 
@@ -56,7 +60,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             UpdateButtonsState();
 
-            Goal = GetGoalFromMarkerType(Marker?.Type);
+            if (Marker is not null)
+                Goal = GetGoalFromMarkerType(Marker.Type);
 
             return base.Initialize();
         }
@@ -75,6 +80,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         public MarkerAssignmentData? MarkerAssignment { get; set; }
         public MarkerModel? Marker { get; set; }
+
+        public string Assignments { get; set; } = string.Empty;
 
         #endregion
 
@@ -299,6 +306,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         #region Private methods
 
+        private async void UpdateAssignments()
+        {
+            if (Marker!.Assignments.IsNullOrEmpty())
+                return;
+            
+            IsSelfAssignment = Marker.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
+
+            var assignedAgents = await _agentsDatabase.GetAgents(Marker!.Assignments);
+            Assignments = string.Join(", ", assignedAgents.Select(x => x.Name).OrderBy(x => x));
+        }
+
         /// <summary>
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
@@ -314,8 +332,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Marker = updated;
-                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker.AssignedTo);
 
+                    UpdateAssignments();
                     UpdateButtonsState();
 
                     await _markersDatabase.SaveMarkerModel(Marker, MarkerAssignment.OpId);
@@ -335,24 +353,24 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             if (Marker == null)
                 return;
 
-            switch (Marker.State.ToLower())
+            switch (Marker.State)
             {
-                case "pending":
-                case "completed":
+                case TaskState.Pending:
+                case TaskState.Completed:
                     AcknowledgedEnabled = false;
                     CompletedEnabled = false;
                     IncompleteEnabled = true;
                     RejectEnabled = false;
                     ClaimEnabled = false;
                     break;
-                case "assigned":
+                case TaskState.Assigned:
                     AcknowledgedEnabled = true;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
                     RejectEnabled = true;
                     ClaimEnabled = false;
                     break;
-                case "acknowledged":
+                case TaskState.Acknowledged:
                     AcknowledgedEnabled = false;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
@@ -371,40 +389,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             }
         }
 
-        private string GetGoalFromMarkerType(string? markerType)
+        private string GetGoalFromMarkerType(MarkerType markerType)
         {
-            if (markerType == null)
-                return string.Empty;
-
-            switch (markerType)
-            {
-                case "CapturePortalMarker":
-                    return "Capture";
-                case "LetDecayPortalAlert":
-                    return "Let Decay";
-                case "DestroyPortalAlert":
-                    return "Destroy";
-                case "FarmPortalMarker":
-                    return "Farm";
-                case "GotoPortalMarker":
-                    return "Go to";
-                case "GetKeyPortalMarker":
-                    return "Get key";
-                case "CreateLinkAlert":
-                    return "Create Link";
-                case "MeetAgentPortalMarker":
-                    return "Meet Agent";
-                case "OtherPortalAlert":
-                    return "Other";
-                case "RechargePortalAlert":
-                    return "Recharge";
-                case "UpgradePortalAlert":
-                    return "Upgrade";
-                case "UseVirusPortalAlert":
-                    return "Use virus";
-            }
-
-            return string.Empty;
+            return markerType.ToFriendlyString();
         }
 
         private static void StoreResponseUpdateId(WasabeeOpUpdateApiResponse response)
