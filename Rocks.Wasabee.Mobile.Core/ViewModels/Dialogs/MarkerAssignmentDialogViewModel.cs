@@ -15,6 +15,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -29,11 +30,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IClipboard _clipboard;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly MarkersDatabase _markersDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly IUserSettingsService _userSettingsService;
 
         public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger,
             IUserDialogs userDialogs, IMap map, IClipboard clipboard, WasabeeApiV1Service wasabeeApiV1Service,
-            MarkersDatabase markersDatabase, IUserSettingsService userSettingsService) : base(dialogNavigationService)
+            MarkersDatabase markersDatabase, AgentsDatabase agentsDatabase, IUserSettingsService userSettingsService) : base(dialogNavigationService)
         {
             _messenger = messenger;
             _userDialogs = userDialogs;
@@ -41,6 +43,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             _clipboard = clipboard;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _markersDatabase = markersDatabase;
+            _agentsDatabase = agentsDatabase;
             _userSettingsService = userSettingsService;
         }
 
@@ -49,7 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             MarkerAssignment = parameter;
             Marker = MarkerAssignment.Marker;
 
-            IsSelfAssignment = Marker!.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
+            UpdateAssignments();
             UpdateButtonsState();
         }
 
@@ -77,6 +80,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         public MarkerAssignmentData? MarkerAssignment { get; set; }
         public MarkerModel? Marker { get; set; }
+
+        public string Assignments { get; set; } = string.Empty;
 
         #endregion
 
@@ -301,6 +306,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         #region Private methods
 
+        private async void UpdateAssignments()
+        {
+            if (Marker!.Assignments.IsNullOrEmpty())
+                return;
+            
+            IsSelfAssignment = Marker.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
+
+            var assignedAgents = await _agentsDatabase.GetAgents(Marker!.Assignments);
+            Assignments = string.Join(", ", assignedAgents.Select(x => x.Name).OrderBy(x => x));
+        }
+
         /// <summary>
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
@@ -316,8 +332,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Marker = updated;
-                    IsSelfAssignment = Marker.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
 
+                    UpdateAssignments();
                     UpdateButtonsState();
 
                     await _markersDatabase.SaveMarkerModel(Marker, MarkerAssignment.OpId);

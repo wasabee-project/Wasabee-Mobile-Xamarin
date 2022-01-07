@@ -143,12 +143,16 @@
                                 <Label Text="{Binding SelectedWasabeePin.Portal.Name}" FontSize="18" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
                             </StackLayout>
                         
-                            <!-- TODO -->
-                            <!--<StackLayout IsVisible="{Binding SelectedWasabeePin.AssignedTo, Converter={StaticResource StringToBoolNegateConverter}}"
-                                         Orientation="Horizontal" Margin="2, 0, 0, 0">
+                            <StackLayout Orientation="Horizontal" Margin="2, 0, 0, 0">
                                 <iconize:IconLabel Text="mdi-account-arrow-right" TextColor="{DynamicResource PrimaryTextColor}" FontSize="24"/>
-                                <Label Text="{Binding SelectedWasabeePin.AssignedTo}" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
-                            </StackLayout>-->
+                                <Label Text="{Binding SelectedWasabeePin.Assignments}" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
+
+                                <StackLayout.Triggers>
+                                    <DataTrigger TargetType="StackLayout" Binding="{Binding SelectedWasabeePin.Assignments.Length}" Value="0">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                </StackLayout.Triggers>
+                            </StackLayout>
 
                             <pancake:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel2}" IsVisible="{Binding SelectedWasabeePin.HasComment}" Padding="5" Margin="5, 5, 0, 0"
                                                  CornerRadius="0, 4, 4, 4" HorizontalOptions="Start">

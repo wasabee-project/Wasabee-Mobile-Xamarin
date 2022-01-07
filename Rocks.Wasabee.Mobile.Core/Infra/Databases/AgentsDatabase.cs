@@ -123,7 +123,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             try
             {
                 var agentDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<AgentDatabaseModel>();
-                dbLock.Dispose();
 
                 return agentDatabaseModels?
                     .Where(x => agentIds.Contains(x.AgentId))
@@ -134,13 +133,12 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             {
                 LoggingService.Error(e, "Error Querying AgentsDatabase.GetAgent");
 
-                return null;
+                return new List<AgentModel>();
             }
             finally
             {
                 dbLock.Dispose();
             }
-
         }
 
         public async Task<List<AgentModel>> GetAgentsInTeam(string teamId)
@@ -155,7 +153,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             try
             {
                 var agentDatabaseModels = databaseConnection.GetConnection().GetAllWithChildren<AgentDatabaseModel>();
-                dbLock.Dispose();
 
                 return agentDatabaseModels?
                     .Where(x => x.Teams.Any(t => t.TeamId.Equals(teamId)))

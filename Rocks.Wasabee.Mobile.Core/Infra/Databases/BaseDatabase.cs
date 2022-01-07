@@ -25,6 +25,8 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             var databasePath = Path.Combine(fileSystem.AppDataDirectory, BaseDatabase.Name);
             DatabaseConnection = new SQLiteAsyncConnection(databasePath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
+        
+            DatabaseConnection.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
         }
 
         public TimeSpan ExpiresAt { get; }
@@ -46,8 +48,6 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             if (DatabaseConnection.TableMappings.All(x => x.MappedType != typeof(T)))
             {
-                await DatabaseConnection.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
-
                 try
                 {
                     await DatabaseConnection.CreateTablesAsync(CreateFlags.None, typeof(T)).ConfigureAwait(false);

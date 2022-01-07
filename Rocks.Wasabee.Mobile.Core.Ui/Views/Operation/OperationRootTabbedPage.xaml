@@ -74,9 +74,14 @@
 
                         <StackLayout Grid.Column="2" Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0"
                                      IsVisible="{Binding ShowAssignee}">
-                            <Label Text="Assigned to :"/>
-                            <!-- TODO -->
-                            <!--<Label Text="{Binding AssignedAgent.Name}"/>-->
+                            <Label Text="Assignments :"/>
+                            <Label Text="{Binding Assignments}"/>
+
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding Assignments.Length}" Value="0">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
                         </StackLayout>
 
                         <Grid.Triggers>
@@ -125,9 +130,14 @@
 
                         <StackLayout Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0"
                                      IsVisible="{Binding ShowAssignee}">
-                            <Label Text="Assigned to :"/>
-                            <!-- TODO -->
-                            <!--<Label Text="{Binding AssignedAgent.Name}"/>-->
+                            <Label Text="Assignments :"/>
+                            <Label Text="{Binding Assignments}"/>
+
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding Assignments.Length}" Value="0">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
                         </StackLayout>
                     </Grid>
                 </ViewCell>

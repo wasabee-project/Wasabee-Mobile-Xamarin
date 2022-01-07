@@ -2,6 +2,7 @@ using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
@@ -13,6 +14,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -28,10 +30,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IMvxMessenger _messenger;
         private readonly LinksDatabase _linksDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly IUserSettingsService _userSettingsService;
 
-        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs, IClipboard clipboard,
-            IMap map, IMvxMessenger messenger, LinksDatabase linksDatabase, WasabeeApiV1Service wasabeeApiV1Service, IUserSettingsService userSettingsService) : base(dialogNavigationService)
+        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs, 
+            IClipboard clipboard, IMap map, IMvxMessenger messenger, LinksDatabase linksDatabase, 
+            WasabeeApiV1Service wasabeeApiV1Service, AgentsDatabase agentsDatabase,
+            IUserSettingsService userSettingsService) : base(dialogNavigationService)
         {
             _userDialogs = userDialogs;
             _clipboard = clipboard;
@@ -39,6 +44,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             _messenger = messenger;
             _linksDatabase = linksDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+            _agentsDatabase = agentsDatabase;
             _userSettingsService = userSettingsService;
         }
 
@@ -47,18 +53,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             LinkAssignment = parameter;
             Link = LinkAssignment.Link;
 
-            IsSelfAssignment = Link!.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
+            UpdateAssignments();
             UpdateButtonsState();
         }
 
         #region Properties
 
         public bool IsSelfAssignment { get; set; }
-
         public bool CompletedEnabled { get; set; }
         public bool IncompleteEnabled { get; set; }
         public bool ClaimEnabled { get; set; }
         public bool RejectEnabled { get; set; }
+        public string Assignments { get; set; } = string.Empty;
 
         public LinkAssignmentData? LinkAssignment { get; set; }
         public LinkModel? Link { get; set; }
@@ -293,6 +299,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
         #region Private methods
 
+        private async void UpdateAssignments()
+        {
+            if (Link!.Assignments.IsNullOrEmpty())
+                return;
+            
+            IsSelfAssignment = Link.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
+
+            var assignedAgents = await _agentsDatabase.GetAgents(Link!.Assignments);
+            Assignments = string.Join(", ", assignedAgents.Select(x => x.Name).OrderBy(x => x));
+        }
+
         /// <summary>
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
@@ -308,8 +325,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 if (updated != null)
                 {
                     Link = updated;
-                    IsSelfAssignment = Link!.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()); ;
-
+                    
+                    UpdateAssignments();
                     UpdateButtonsState();
 
                     await _linksDatabase.SaveLinkModel(Link, LinkAssignment.OpId);

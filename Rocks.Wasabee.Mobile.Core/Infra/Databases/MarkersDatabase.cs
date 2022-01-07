@@ -1,9 +1,12 @@
-﻿using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+﻿using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using SQLiteNetExtensions.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
 
@@ -85,18 +88,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             [PrimaryKey, Unique]
             public string Id { get; set; }
-
-            public string PortalId { get; set; }
-
-            public MarkerType Type { get; set; }
-
-            public string Comment { get; set; }
-
-            public TaskState State { get; set; }
-
-            public int Order { get; set; }
-
+            
+            public string Assignments { get; set; }
+            public string DependsOn { get; set; }
             public int Zone { get; set; }
+            public int DeltaMinutes { get; set; }
+            public TaskState State { get; set; }
+            public string Comment { get; set; }
+            public int Order { get; set; }
+            public string PortalId { get; set; }
+            public MarkerType Type { get; set; }
 
             [ForeignKey(typeof(OperationsDatabase.OperationDatabaseModel))]
             public string OpId { get; set; }
@@ -106,12 +107,17 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 return new MarkerModel()
                 {
                     Id = markerDatabaseModel.Id,
-                    PortalId = markerDatabaseModel.PortalId,
-                    Type = markerDatabaseModel.Type,
-                    Comment = markerDatabaseModel.Comment,
+                    Assignments = string.IsNullOrEmpty(markerDatabaseModel.Assignments) ? new List<string>() : 
+                        JsonConvert.DeserializeObject<List<string>>(markerDatabaseModel.Assignments),
+                    DependsOn = string.IsNullOrEmpty(markerDatabaseModel.DependsOn) ? new List<string>() : 
+                        JsonConvert.DeserializeObject<List<string>>(markerDatabaseModel.DependsOn),
+                    Zone = markerDatabaseModel.Zone,
+                    DeltaMinutes = markerDatabaseModel.DeltaMinutes,
                     State = markerDatabaseModel.State,
+                    Comment = markerDatabaseModel.Comment,
                     Order = markerDatabaseModel.Order,
-                    Zone = markerDatabaseModel.Zone
+                    PortalId = markerDatabaseModel.PortalId,
+                    Type = markerDatabaseModel.Type
                 };
             }
 
@@ -120,12 +126,17 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                 return new MarkerDatabaseModel()
                 {
                     Id = markerModel.Id,
-                    PortalId = markerModel.PortalId,
-                    Type = markerModel.Type,
-                    Comment = markerModel.Comment,
+                    Assignments = markerModel.Assignments.IsNullOrEmpty() ? string.Empty : 
+                        JsonConvert.SerializeObject(markerModel.Assignments),
+                    DependsOn = markerModel.DependsOn.IsNullOrEmpty() ? string.Empty : 
+                        JsonConvert.SerializeObject(markerModel.DependsOn),
+                    Zone = markerModel.Zone,
+                    DeltaMinutes = markerModel.DeltaMinutes,
                     State = markerModel.State,
+                    Comment = markerModel.Comment,
                     Order = markerModel.Order,
-                    Zone = markerModel.Zone
+                    PortalId = markerModel.PortalId,
+                    Type = markerModel.Type
                 };
             }
         }

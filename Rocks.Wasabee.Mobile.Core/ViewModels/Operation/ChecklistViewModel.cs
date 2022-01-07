@@ -5,7 +5,6 @@ using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
-using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -227,10 +226,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new LinkAssignmentData(Operation!.Id, link.Order)
             {
                 Link = link,
-                AssignedAgents = link.Assignments is null || link.Assignments.Count == 0 ?
-                    new List<AgentModel>() :
-                    _agentsDatabase.GetAgents(link.Assignments).Result,
-                ShowAssignee = link.Assignments != null && link.Assignments.Any(),
+                Assignments = link.Assignments.IsNullOrEmpty() ? string.Empty :
+                    string.Join(", ", _agentsDatabase.GetAgents(link.Assignments).Result.Select(x => x.Name).OrderBy(x => x)),
+                ShowAssignee = link.Assignments.IsNotNullOrEmpty(),
                 FromPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.FromPortalId)),
                 ToPortal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(link.ToPortalId)),
                 Color = WasabeeColorsHelper.GetColorFromWasabeeName(link.Color, Operation.Color)
@@ -245,10 +243,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgents = marker.Assignments is null || marker.Assignments.Count == 0 ?
-                    new List<AgentModel>() :
-                    _agentsDatabase.GetAgents(marker.Assignments).Result,
-                ShowAssignee = marker.Assignments != null && marker.Assignments.Any(),
+                Assignments = marker.Assignments.IsNullOrEmpty() ? string.Empty :
+                    string.Join(", ", _agentsDatabase.GetAgents(marker.Assignments).Result.Select(x => x.Name).OrderBy(x => x)),
+                ShowAssignee = marker.Assignments.IsNotNullOrEmpty(),
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }

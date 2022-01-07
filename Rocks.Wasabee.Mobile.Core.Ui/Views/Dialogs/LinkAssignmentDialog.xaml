@@ -60,6 +60,19 @@
                             </StackLayout>
                         </StackLayout>
 
+                        <StackLayout Padding="0" Margin="0">
+                            <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
+
+                            <Label Text="Assignments :"/>
+                            <Label Text="{Binding Assignments}"/>
+
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding Assignments.Length}" Value="0">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
+                        </StackLayout>
+
                         <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSelfAssignment}" />
 
                         <StackLayout IsVisible="{Binding IsSelfAssignment}">

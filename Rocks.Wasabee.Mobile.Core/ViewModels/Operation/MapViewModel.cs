@@ -131,7 +131,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _tokenReload ??= _messenger.Subscribe<MessageFrom<OperationRootTabbedViewModel>>(async msg => await LoadOperationCommand.ExecuteAsync(false));
             _tokenLiveLocation ??= _messenger.Subscribe<TeamAgentLocationUpdatedMessage>(async msg => await RefreshTeamAgentPositionCommand.ExecuteAsync(msg));
             _tokenLinkUpdated ??= _messenger.Subscribe<LinkDataChangedMessage>(UpdateLink);
-            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(async msg => await UpdateMarker(msg));
+            _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(UpdateMarker);
             _tokenRefreshAllAgentsLocations ??= _messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
 
             await LoadOperationCommand.ExecuteAsync(false);
@@ -381,8 +381,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                             Marker = marker,
                         };
 
-                        if (marker.Assignments.Any())
-                            pin.Assignments = await _agentsDatabase.GetAgents(marker.Assignments);
+                        if (marker.Assignments.IsNotNullOrEmpty())
+                            pin.Assignments = string.Join(", ", _agentsDatabase.GetAgents(marker.Assignments).Result
+                                .Select(x => x.Name).OrderBy(x => x));
 
                         Markers.Add(pin);
                     }
@@ -392,7 +393,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     }
                 }
 
-                foreach (var zone in Operation.Zones.Where(z => z.Points.IsNullOrEmpty() is false))
+                foreach (var zone in Operation.Zones.Where(z => z.Points.IsNotNullOrEmpty()))
                 {
                     try
                     {
@@ -712,9 +713,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             return new MarkerAssignmentData(Operation.Id, marker.Order)
             {
                 Marker = marker,
-                AssignedAgents = marker.Assignments is null || marker.Assignments.Count == 0 ?
-                    new List<AgentModel>() :
-                    _agentsDatabase.GetAgents(marker.Assignments).Result,
+                Assignments = marker.Assignments.IsNullOrEmpty() ? string.Empty :
+                    string.Join(", ", _agentsDatabase.GetAgents(marker.Assignments).Result.Select(x => x.Name).OrderBy(x => x)),
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
@@ -918,12 +918,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
-                if (updateMessage.LinkData.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()))
+                if (updateMessage.LinkData.Assignments.IsNotNullOrEmpty() &&
+                    updateMessage.LinkData.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()))
                     _messenger.Publish(new MessageFor<AssignmentsListViewModel>(this));
             }
         }
 
-        private async Task UpdateMarker(MarkerDataChangedMessage updateMessage)
+        private void UpdateMarker(MarkerDataChangedMessage updateMessage)
         {
             if (Operation == null)
                 return;
@@ -962,16 +963,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         Marker = updateMessage.MarkerData
                     };
 
-                    if (updateMessage.MarkerData.Assignments.Any())
-                        pin.Assignments = await _agentsDatabase.GetAgents(updateMessage.MarkerData.Assignments);
+                    if (updateMessage.MarkerData.Assignments.IsNotNullOrEmpty())
+                        pin.Assignments = string.Join(", ", _agentsDatabase.GetAgents(updateMessage.MarkerData.Assignments).Result
+                            .Select(x => x.Name).OrderBy(x => x));
 
                     Markers.Add(pin);
+                    SelectedWasabeePin = pin;
                 }
 
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, false));
 
                 // If assigned to current user
-                if (updateMessage.MarkerData.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()))
+                if (updateMessage.MarkerData.Assignments.IsNotNullOrEmpty() &&
+                    updateMessage.MarkerData.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId()))
                     _messenger.Publish(new MessageFor<AssignmentsListViewModel>(this));
             }
         }

@@ -789,10 +789,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                         _userDialogs.Toast(Strings.Toasts_LoadingOpsSuccess);
                     }).ConfigureAwait(false);
                 }
-                else
-                {
-                    _preferences.Set(UserSettingsKeys.SelectedOp, string.Empty);
-                }
             }
         }
 
