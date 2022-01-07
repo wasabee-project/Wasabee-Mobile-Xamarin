@@ -40,8 +40,14 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
         [JsonProperty("ID")]
         public int Id { get; set; }
 
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
         [JsonProperty("Verified")]
         public bool Verified { get; set; }
+
+        [JsonProperty("Authtoken")]
+        public string AuthToken { get; set; }
     }
 
     public class UserTeamModel : BaseModel

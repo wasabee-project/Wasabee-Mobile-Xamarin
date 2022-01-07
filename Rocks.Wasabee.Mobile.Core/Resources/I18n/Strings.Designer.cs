@@ -556,15 +556,6 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Completed? : {0}.
-        /// </summary>
-        internal static string LinkDialog_Text_Completed {
-            get {
-                return ResourceManager.GetString("LinkDialog_Text_Completed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Destination.
         /// </summary>
         internal static string LinkDialog_Text_Destination {
@@ -579,6 +570,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string LinkDialog_Text_Source {
             get {
                 return ResourceManager.GetString("LinkDialog_Text_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State: {0}.
+        /// </summary>
+        internal static string LinkDialog_Text_State {
+            get {
+                return ResourceManager.GetString("LinkDialog_Text_State", resourceCulture);
             }
         }
         
