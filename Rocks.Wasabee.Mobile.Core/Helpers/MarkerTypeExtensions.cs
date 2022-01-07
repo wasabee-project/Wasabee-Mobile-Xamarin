@@ -1,4 +1,5 @@
-﻿using Rocks.Wasabee.Mobile.Core.Models.Operations;
+﻿using Rocks.Wasabee.Mobile.Core.Helpers.Xaml;
+using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using System;
 
 namespace Rocks.Wasabee.Mobile.Core.Helpers
@@ -9,19 +10,19 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
         {
             return markerType switch
             {
-                MarkerType.DestroyPortal => "Destroy portal",
-                MarkerType.UseVirus => "Use virus",
-                MarkerType.CapturePortal => "Capture portal",
-                MarkerType.FarmPortal => "Farm keys",
-                MarkerType.LetDecay => "Let decay",
-                MarkerType.MeetAgent => "Meet Agent",
-                MarkerType.Other => "Other",
-                MarkerType.RechargePortal => "Recharge portal",
-                MarkerType.UpgradePortal => "Upgrade portal",
-                MarkerType.CreateLink => "Create link",
-                MarkerType.Exclude => "Exclude Marker",
-                MarkerType.GetKey => "Get Key",
-                MarkerType.GoToPortal => "Go to portal",
+                MarkerType.DestroyPortal => TranslateExtension.GetValue("MarkerType_Destroy"),
+                MarkerType.UseVirus => TranslateExtension.GetValue("MarkerType_UseVirus"),
+                MarkerType.CapturePortal => TranslateExtension.GetValue("MarkerType_Capture"),
+                MarkerType.FarmPortal => TranslateExtension.GetValue("MarkerType_Farm"),
+                MarkerType.LetDecay => TranslateExtension.GetValue("MarkerType_LetDecay"),
+                MarkerType.MeetAgent => TranslateExtension.GetValue("MarkerType_MeetAgent"),
+                MarkerType.Other => TranslateExtension.GetValue("MarkerType_Other"),
+                MarkerType.RechargePortal => TranslateExtension.GetValue("MarkerType_Recharge"),
+                MarkerType.UpgradePortal => TranslateExtension.GetValue("MarkerType_Upgrade"),
+                MarkerType.CreateLink => TranslateExtension.GetValue("MarkerType_CreateLink"),
+                MarkerType.Exclude => TranslateExtension.GetValue("MarkerType_Exclude"),
+                MarkerType.GetKey => TranslateExtension.GetValue("MarkerType_GetKey"),
+                MarkerType.GoToPortal => TranslateExtension.GetValue("MarkerType_GoTo"),
                 _ => throw new ArgumentOutOfRangeException(markerType.ToString())
             };
         }

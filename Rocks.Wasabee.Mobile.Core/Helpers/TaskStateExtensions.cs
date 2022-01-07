@@ -1,5 +1,6 @@
-﻿using System;
+﻿using Rocks.Wasabee.Mobile.Core.Helpers.Xaml;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using System;
 
 namespace Rocks.Wasabee.Mobile.Core.Helpers
 {
@@ -9,10 +10,10 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
         {
             return taskState switch
             {
-                TaskState.Pending => "Pending",
-                TaskState.Acknowledged => "Acknowledged",
-                TaskState.Assigned => "Assigned",
-                TaskState.Completed => "Completed",
+                TaskState.Pending => TranslateExtension.GetValue("TaskState_Pending"),
+                TaskState.Acknowledged => TranslateExtension.GetValue("TaskState_Acknowledged"),
+                TaskState.Assigned => TranslateExtension.GetValue("TaskState_Assigned"),
+                TaskState.Completed => TranslateExtension.GetValue("TaskState_Completed"),
                 _ => throw new ArgumentOutOfRangeException(taskState.ToString())
             };
         }

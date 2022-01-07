@@ -781,6 +781,123 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Capture.
+        /// </summary>
+        internal static string MarkerType_Capture {
+            get {
+                return ResourceManager.GetString("MarkerType_Capture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create link.
+        /// </summary>
+        internal static string MarkerType_CreateLink {
+            get {
+                return ResourceManager.GetString("MarkerType_CreateLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destroy.
+        /// </summary>
+        internal static string MarkerType_Destroy {
+            get {
+                return ResourceManager.GetString("MarkerType_Destroy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excluded.
+        /// </summary>
+        internal static string MarkerType_Exclude {
+            get {
+                return ResourceManager.GetString("MarkerType_Exclude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Farm keys.
+        /// </summary>
+        internal static string MarkerType_Farm {
+            get {
+                return ResourceManager.GetString("MarkerType_Farm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get key.
+        /// </summary>
+        internal static string MarkerType_GetKey {
+            get {
+                return ResourceManager.GetString("MarkerType_GetKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to.
+        /// </summary>
+        internal static string MarkerType_GoTo {
+            get {
+                return ResourceManager.GetString("MarkerType_GoTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let decay.
+        /// </summary>
+        internal static string MarkerType_LetDecay {
+            get {
+                return ResourceManager.GetString("MarkerType_LetDecay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meet Agent.
+        /// </summary>
+        internal static string MarkerType_MeetAgent {
+            get {
+                return ResourceManager.GetString("MarkerType_MeetAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        internal static string MarkerType_Other {
+            get {
+                return ResourceManager.GetString("MarkerType_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recharge.
+        /// </summary>
+        internal static string MarkerType_Recharge {
+            get {
+                return ResourceManager.GetString("MarkerType_Recharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upgrade.
+        /// </summary>
+        internal static string MarkerType_Upgrade {
+            get {
+                return ResourceManager.GetString("MarkerType_Upgrade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use virus.
+        /// </summary>
+        internal static string MarkerType_UseVirus {
+            get {
+                return ResourceManager.GetString("MarkerType_UseVirus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change.
         /// </summary>
         internal static string Menu_Button_ChangeOp {
@@ -903,6 +1020,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string Menu_Label_NoLocalOpsStored {
             get {
                 return ResourceManager.GetString("Menu_Label_NoLocalOpsStored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assigned to :.
+        /// </summary>
+        internal static string Operation_Text_AssignedTo {
+            get {
+                return ResourceManager.GetString("Operation_Text_AssignedTo", resourceCulture);
             }
         }
         
@@ -1560,6 +1686,42 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string TaskDialog_Button_Undone {
             get {
                 return ResourceManager.GetString("TaskDialog_Button_Undone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Acknowledged.
+        /// </summary>
+        internal static string TaskState_Acknowledged {
+            get {
+                return ResourceManager.GetString("TaskState_Acknowledged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assigned.
+        /// </summary>
+        internal static string TaskState_Assigned {
+            get {
+                return ResourceManager.GetString("TaskState_Assigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        internal static string TaskState_Completed {
+            get {
+                return ResourceManager.GetString("TaskState_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pending.
+        /// </summary>
+        internal static string TaskState_Pending {
+            get {
+                return ResourceManager.GetString("TaskState_Pending", resourceCulture);
             }
         }
         
