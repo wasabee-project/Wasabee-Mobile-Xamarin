@@ -336,7 +336,7 @@
     <comment>Text for link origin</comment>
   </data>
   <data name="LinkDialog_Text_State" xml:space="preserve">
-    <value>State: {0}</value>
+    <value>Status: {0}</value>
     <comment>Text for link state (complet, incomplete, unassigned...)</comment>
   </data>
   <data name="LinkDialog_Title" xml:space="preserve">
