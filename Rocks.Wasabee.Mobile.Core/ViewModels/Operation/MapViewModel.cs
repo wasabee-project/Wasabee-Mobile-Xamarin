@@ -6,10 +6,12 @@ using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Helpers.Xaml;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using Rocks.Wasabee.Mobile.Core.QueryModels;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs;
@@ -130,11 +132,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             _tokenLinkUpdated ??= _messenger.Subscribe<LinkDataChangedMessage>(UpdateLink);
             _tokenMarkerUpdated ??= _messenger.Subscribe<MarkerDataChangedMessage>(async msg => await UpdateMarker(msg));
             _tokenRefreshAllAgentsLocations ??= _messenger.Subscribe<RefreshAllAgentsLocationsMessage>(async msg => await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty));
-            
+
             await LoadOperationCommand.ExecuteAsync(false);
             await RefreshTeamsMembersPositionsCommand.ExecuteAsync(string.Empty);
         }
-        
+
         public override void Destroy()
         {
             _token?.Dispose();
@@ -164,7 +166,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     ? Anchors.FirstOrDefault(x => x.Pin == value) ?? Markers.FirstOrDefault(x => x.Pin == value)
                     : null;
                 RaisePropertyChanged(() => SelectedPin);
-                
+
                 IsMarkerDetailAvailable = !string.IsNullOrWhiteSpace(SelectedWasabeePin?.Marker.Id);
             }
         }
@@ -194,7 +196,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         public bool IsMarkerDetailAvailable { get; set; }
 
         public bool IsAgentListVisible { get; set; }
-        
+
         private bool _isLayerLinksActivated = true;
         public bool IsLayerLinksActivated
         {
@@ -319,7 +321,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                         var newLink = CreateWasabeeLink(link);
                         if (newLink is null)
                             return;
-                        
+
                         Links.Add(newLink);
                     }
                     catch (Exception e)
@@ -361,7 +363,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     {
                         if (hideCompletedMarkersSetting && marker.State.Equals("completed"))
                             continue;
-                        
+
                         var portal = Operation.Portals.First(x => x.Id.Equals(marker.PortalId));
                         double.TryParse(portal.Lat, NumberStyles.Float, ConversionCulture, out var portalLat);
                         double.TryParse(portal.Lng, NumberStyles.Float, ConversionCulture, out var portalLng);
@@ -423,7 +425,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 await RaisePropertyChanged(() => Zones);
 
                 UpdateMapRegion();
-                
+
                 _messenger.Publish(new MessageFrom<MapViewModel>(this, forceResetMapView));
                 IsLoading = false;
             }
@@ -680,7 +682,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
-                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                        _userDialogs.Toast(TranslateExtension.GetValue("Toast_CoordinatesCopied"));
                 }
 
                 await _map.OpenAsync(location);
@@ -717,25 +719,26 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 Portal = Operation.Portals?.FirstOrDefault(p => p.Id.Equals(marker.PortalId))
             };
         }
-        
+
         private async Task<bool> CheckAndAskForLocationPermissions()
         {
             LoggingService.Trace("MapViewModel - Checking location permissions");
-            
+
             var statusLocationAlways = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
 
             LoggingService.Trace($"Permissions Status : LocationWhenInUse={statusLocationAlways}");
 
             if (statusLocationAlways == PermissionStatus.Granted)
                 return true;
-            
+
             var requestPermission = true;
             var showRationale = Permissions.ShouldShowRationale<Permissions.LocationWhenInUse>();
             if (showRationale)
                 requestPermission = await _userDialogs.ConfirmAsync(
-                    "To show your position on the map, please set the permission to 'When in use'.",
-                    "Permissions required",
-                    "Ok", "Cancel");
+                    Strings.Dialogs_Warning_PermissionWhenInUse,
+                    Strings.Dialog_Warning_PermissionsRequired,
+                    Strings.Global_Ok,
+                    Strings.Global_Cancel);
 
             if (!requestPermission)
                 return false;
@@ -748,7 +751,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             {
                 LoggingService.Trace("User didn't granted geolocation permissions");
 
-                _userDialogs.Alert("Geolocation permission is required !");
+                _userDialogs.Alert(Strings.Dialogs_Warning_LocationPermissionRequired);
                 return false;
             }
 
@@ -760,7 +763,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             if (Operation is null)
                 return null;
-            
+
             var culture = CultureInfo.GetCultureInfo("en-US");
 
             var fromPortal = Operation.Portals.FirstOrDefault(x => x.Id.Equals(linkModel.FromPortalId));
@@ -779,7 +782,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 baseLinkColor = baseLinkColor.MultiplyAlpha(0.5);
 
             var wasabeeLink = new WasabeeLink(
-                new Polyline() 
+                new Polyline()
                 {
                     IsGeodesic = true,
                     StrokeColor = baseLinkColor,
@@ -816,7 +819,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                     return playerPin;
 
                 playerPin.TimeAgo = timeAgo.ToPrettyString();
-                playerPin.Pin.Label += $" - {playerPin.TimeAgo} ago";
+                if (string.IsNullOrEmpty(playerPin.TimeAgo) is false)
+                    playerPin.Pin.Label += $" - {string.Format(Strings.Map_Text_TimeAgo, playerPin.TimeAgo)}";
             }
 
             return playerPin;
@@ -838,7 +842,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             }
             catch (Exception e)
             {
-                LoggingService.Error(e, $"Error Executing MapViewModel.BuildZonePolygon");
+                LoggingService.Error(e, "Error Executing MapViewModel.BuildZonePolygon");
                 return false;
             }
         }
@@ -882,7 +886,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 lowestLong = hasValues ? Math.Min(lowestLong, zonesLowestLng) : zonesLowestLng;
                 highestLong = hasValues ? Math.Max(highestLong, zonesHighestLng) : zonesHighestLng;
             }
-            
+
             var finalLat = (lowestLat + highestLat) / 2;
             var finalLong = (lowestLong + highestLong) / 2;
             var distance = DistanceCalculation.GeoCodeCalc.CalcDistance(lowestLat, lowestLong, highestLat,
@@ -901,7 +905,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             if (!updateMessage.OperationId.Equals(Operation.Id))
                 return;
-            
+
             var oldLink = Links.FirstOrDefault(x => x.LinkId.Equals(updateMessage.LinkData.Id));
             if (oldLink != null)
             {
@@ -932,7 +936,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
             if (marker != null)
             {
                 Markers.Remove(marker);
-                
+
                 var hideCompletedMarkersSetting = _preferences.Get(UserSettingsKeys.HideCompletedMarkers, false);
                 if (hideCompletedMarkersSetting && updateMessage.MarkerData.State.Equals("completed"))
                 {

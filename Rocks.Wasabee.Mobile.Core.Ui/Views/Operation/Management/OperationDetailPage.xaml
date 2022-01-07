@@ -5,20 +5,21 @@
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation.Management;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.Management.OperationDetailPage"
                        x:Name="Page"
-                       Title="Operation"
+                       Title="{xaml:Translate OperationDetail_Page_Title}"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
     <ContentPage.Content>
         <StackLayout Spacing="0">
             <StackLayout Padding="10">
-                <Label Text="Operation Name" TextColor="{DynamicResource PrimaryGreen}"/>
+                <Label Text="{xaml:Translate OperationDetail_Label_OpName}" TextColor="{DynamicResource PrimaryGreen}"/>
                 <Label Text="{Binding Operation.Name}" Margin="10,0,10,30"/>
 
             </StackLayout>
 
             <StackLayout>
-                <Label Text="Involved teams" TextColor="{DynamicResource PrimaryGreen}" Margin="10,0,0,0"/>
+                <Label Text="{xaml:Translate OperationDetail_Label_InvolvedTeams}" TextColor="{DynamicResource PrimaryGreen}" Margin="10,0,0,0"/>
                 <BoxView BackgroundColor="{DynamicResource PrimaryGreen}" HeightRequest="1"/>
 
                 <ListView

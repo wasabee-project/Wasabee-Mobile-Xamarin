@@ -213,6 +213,14 @@
     <value>Отлично!</value>
     <comment>ACV succeeded</comment>
   </data>
+  <data name="Assignments_Page_Title" xml:space="preserve">
+    <value>Назначения</value>
+    <comment>Assignments page title in bottom bar when in Operation Map</comment>
+  </data>
+  <data name="Checklist_Page_Title" xml:space="preserve">
+    <value>Чеклист</value>
+    <comment>Checklist page title in bottom bar when in Operation Map</comment>
+  </data>
   <data name="Dialogs_Title_AvailableOpsList" xml:space="preserve">
     <value>Доступные ОПРЦ:</value>
     <comment>Title for the popup where user select an OP</comment>
@@ -237,9 +245,20 @@
     <value>Приложению нужно разрешение на определение локации!</value>
     <comment>Warning message for when geolocation permission is needed and not granted</comment>
   </data>
+  <data name="Dialogs_Warning_PermissionWhenInUse" xml:space="preserve">
+    <value>Чтобы отображать вашу позицию на карте, пожалуйста, установите разрешение на 'При использовании'.</value>
+  </data>
   <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
     <value>Чтобы использовать треккинг местоположения в реальном времени, пожалуйста, разрешите приложению использовать вашу геопозицию постоянно.</value>
     <comment>Message for changing location permissions</comment>
+  </data>
+  <data name="Dialog_Warning_GeolocationDisabled" xml:space="preserve">
+    <value>Геолокация выключена</value>
+    <comment>Warning popup when geolocation is disabled on device</comment>
+  </data>
+  <data name="Dialog_Warning_GeolocationDisabled-Text" xml:space="preserve">
+    <value>Для того, чтобы начать делиться вашим местоположением, пожалуйста, убедитесь, что геолокация включена, а Wasabee даны соответствующие разрешения.</value>
+    <comment>Text for warning popup when geolocation is disabled on device</comment>
   </data>
   <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
     <value>Смотреть команды</value>
@@ -293,6 +312,14 @@
   </data>
   <data name="Global_Ok" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="Global_Unverified" xml:space="preserve">
+    <value>Не верифицирован</value>
+    <comment>Text for "Unverified"</comment>
+  </data>
+  <data name="Global_Verified" xml:space="preserve">
+    <value>Верифицирован</value>
+    <comment>Text for "Verified"</comment>
   </data>
   <data name="Global_Version" xml:space="preserve">
     <value>Версия</value>
@@ -356,6 +383,42 @@
     <value>Внимание!</value>
     <comment>Live Location warning popup title</comment>
   </data>
+  <data name="Map_Button_Infos" xml:space="preserve">
+    <value>ⓘ   Инфо</value>
+    <comment>Button to show info popup about marker</comment>
+  </data>
+  <data name="Map_Label_AgentsList-ClickToShow" xml:space="preserve">
+    <value>НАЖМИТЕ ДЛЯ ПОКАЗА</value>
+    <comment>Instruction label</comment>
+  </data>
+  <data name="Map_Page_Title" xml:space="preserve">
+    <value>Карта</value>
+    <comment>Map page title in bottom bar when in Operation Map</comment>
+  </data>
+  <data name="Map_Text_Layers-Agents" xml:space="preserve">
+    <value>Агенты</value>
+    <comment>Title for agents layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Anchors" xml:space="preserve">
+    <value>Опорники</value>
+    <comment>Title for anchors (portals) layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Links" xml:space="preserve">
+    <value>Линки</value>
+    <comment>Title for links layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Markers" xml:space="preserve">
+    <value>Маркеры</value>
+    <comment>Title for markers layer on map</comment>
+  </data>
+  <data name="Map_Text_Layers-Zones" xml:space="preserve">
+    <value>Зоны</value>
+    <comment>Title for zones layer on map</comment>
+  </data>
+  <data name="Map_Text_TimeAgo" xml:space="preserve">
+    <value>{0} назад</value>
+    <comment>Time ago label, in the format "hh:mm:ss ago"</comment>
+  </data>
   <data name="MarkerDialog_Text_State" xml:space="preserve">
     <value>Состояние: {0}</value>
     <comment>Marker state text</comment>
@@ -375,6 +438,10 @@
   <data name="Menu_Button_RefreshOps" xml:space="preserve">
     <value>Обновить</value>
     <comment>Button for pulling OPs from server when nothing is stored locally</comment>
+  </data>
+  <data name="Menu_Item_LiveFcmLogs" xml:space="preserve">
+    <value>Логи FCM</value>
+    <comment>Debug menu to show FCM logs</comment>
   </data>
   <data name="Menu_Item_OperationMap" xml:space="preserve">
     <value>Карта ОПРЦ</value>
@@ -416,9 +483,37 @@
     <value>У вас нет ОПРЦ, сохраненных на устройстве</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
+  <data name="OperationDetail_Label_InvolvedTeams" xml:space="preserve">
+    <value>Участие команд</value>
+    <comment>Label before involved teams list</comment>
+  </data>
+  <data name="OperationDetail_Label_OpName" xml:space="preserve">
+    <value>Название операции</value>
+    <comment>Label for operation name</comment>
+  </data>
+  <data name="OperationDetail_Page_Title" xml:space="preserve">
+    <value>Операция</value>
+    <comment>Operation detail page title</comment>
+  </data>
+  <data name="OperationsList_Page_Title" xml:space="preserve">
+    <value>Мои операции</value>
+    <comment>Operations list page title</comment>
+  </data>
+  <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
+    <value>Привязать Ingress-аккаунт</value>
+    <comment>Text for link ingress account button</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Эта информация поступает от V и/или .rocks. Если вы отображаетесь как "UnverifiedAgent_цифры", пожалуйста, убедитесь в правильности информации на .rocks и V.</value>
     <comment>Message indicating from where data came from</comment>
+  </data>
+  <data name="Profile_Label_Infos" xml:space="preserve">
+    <value>Инфо</value>
+    <comment>Title for infos section in profile</comment>
+  </data>
+  <data name="Profile_Label_Level" xml:space="preserve">
+    <value>Уровень : {0}</value>
+    <comment>Text for displaying agent level</comment>
   </data>
   <data name="Profile_Label_Status" xml:space="preserve">
     <value>Статус:</value>
@@ -444,6 +539,9 @@
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Переключить на светлую\тёмную тему</value>
+  </data>
+  <data name="Settings_Label_HideCompletedMarkers" xml:space="preserve">
+    <value>Скрыть на карте маркеры завершенных задач</value>
   </data>
   <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
     <value>Обновить FCM токен</value>
@@ -496,13 +594,13 @@
     <value>Пожалуйста, отправьте файл @fisher01 в Telegram</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase" xml:space="preserve">
-    <value>Включая локальную копию базы данных? Обратите внимание, что она включает все ваши данные о командах и об ОПРЦ!</value>
+    <value>Отсылать ли локальную копию базы данных? Обратите внимание, что она включает все ваши данные о командах и об ОПРЦ!</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase_Title" xml:space="preserve">
     <value>Предупреждение: не нарушайте секьюрность ОПРЦ!</value>
   </data>
   <data name="Settings_Warning_SendLogs_NoDb" xml:space="preserve">
-    <value>Не включать!</value>
+    <value>Не отсылать!</value>
   </data>
   <data name="Settings_Warning_SendLogs_WithDb" xml:space="preserve">
     <value>Окей, добавляй!</value>
@@ -572,7 +670,7 @@
     <comment>Logging in with Google success</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoadingData" xml:space="preserve">
-    <value>Собираем мёд,</value>
+    <value>Кажется, ОПРЦ собирается</value>
     <comment>Final Loading step</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_LoggingIn" xml:space="preserve">
@@ -727,8 +825,28 @@
     <value>ОПРЦ успешно загружены</value>
     <comment>Toast message</comment>
   </data>
+  <data name="Toast_CantStartLiveLocSharing" xml:space="preserve">
+    <value>Невозможно передать геопозицию, нет разрешений</value>
+    <comment>Toast message</comment>
+  </data>
   <data name="Toast_CoordinatesCopied" xml:space="preserve">
     <value>Координаты скопированы в буфер обмена.</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_LiveLocPositionUpdated" xml:space="preserve">
+    <value>Геолокация обновлена</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_LiveLocSharingStarted" xml:space="preserve">
+    <value>Передача геопозиции начата</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_OpDataAlreadyUptoDate" xml:space="preserve">
+    <value>Ваша версия ОПРЦ актуальна</value>
+    <comment>Toast message</comment>
+  </data>
+  <data name="Toast_OpDataUpdated" xml:space="preserve">
+    <value>Данные операции обновлены</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_RejectedAssignment" xml:space="preserve">

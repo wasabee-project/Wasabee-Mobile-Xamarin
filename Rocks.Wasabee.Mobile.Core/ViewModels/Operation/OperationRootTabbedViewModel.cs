@@ -5,6 +5,7 @@ using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
@@ -51,7 +52,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
         {
             base.ViewDestroy(viewFinishing);
 
-            foreach (var child in Children) 
+            foreach (var child in Children)
                 child.Destroy();
 
             _token?.Dispose();
@@ -68,7 +69,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
 
             IsBusy = true;
             _userDialogs.ShowLoading();
-            
+
             var selectedOpId = _preferences.Get(UserSettingsKeys.SelectedOp, string.Empty);
             if (string.IsNullOrWhiteSpace(selectedOpId))
                 return;
@@ -94,8 +95,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Operation
                 IsBusy = false;
 
                 _userDialogs.HideLoading();
-                _userDialogs.Toast(hasUpdated ? "Operation data updated" : "You already have latest OP version");
-                
+                _userDialogs.Toast(hasUpdated ? Strings.Toast_OpDataUpdated : Strings.Toast_OpDataAlreadyUptoDate);
+
                 _messenger.Publish(new MessageFrom<OperationRootTabbedViewModel>(this));
                 _messenger.Publish(new RefreshAllAgentsLocationsMessage(this));
             }

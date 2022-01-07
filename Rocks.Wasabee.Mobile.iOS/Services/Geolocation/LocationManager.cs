@@ -1,15 +1,16 @@
-using System;
-using System.Globalization;
-using System.Threading.Tasks;
-using System.Timers;
 using Acr.UserDialogs;
 using CoreLocation;
 using MvvmCross;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
+using Rocks.Wasabee.Mobile.Core.Helpers.Xaml;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
+using System;
+using System.Globalization;
+using System.Threading.Tasks;
+using System.Timers;
 using UIKit;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -30,12 +31,12 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
 
         private bool _isRunning;
         private DateTime _lastUpdateTime;
-        
+
         private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
         private static IGeolocator Geolocator => CrossGeolocator.Current;
 
         public CLLocationManager LocMgr { get; }
-        
+
         public LocationManager()
         {
             LocMgr = new CLLocationManager
@@ -70,10 +71,10 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             if (await EnsureHasPermissions() is false)
             {
                 _loggingService.Trace("Can't Execute LocationManager.StartLocationUpdates, no permissions");
-                
+
                 if (_preferences.Get(UserSettingsKeys.ShowDebugToasts, false) is true)
-                    _userDialogs.Toast("Can't start location sharing, no permissions");
-    
+                    _userDialogs.Toast(TranslateExtension.GetValue("Toast_CantStartLiveLocSharing"));
+
                 return;
             }
 
@@ -82,7 +83,7 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             try
             {
                 if (_preferences.Get(UserSettingsKeys.ShowDebugToasts, false) is true)
-                    _userDialogs.Toast("Live Location Sharing has started");
+                    _userDialogs.Toast(TranslateExtension.GetValue("Toast_LiveLocSharingStarted"));
 
                 _isRunning = true;
 
@@ -128,8 +129,9 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
                 else
                 {
                     Mvx.IoCProvider.Resolve<IUserDialogs>().Alert(
-                        "Please ensure that geolocation is enabled and permissions are allowed for Wasabee to start sharing your location.",
-                        "Geolocation Disabled", "OK");
+                        TranslateExtension.GetValue("Dialog_Warning_GeolocationDisabled-Text"),
+                        TranslateExtension.GetValue("Dialog_Warning_GeolocationDisabled"),
+                        TranslateExtension.GetValue("Global_Ok"));
                 }
             }
             catch (Exception ex)
@@ -205,9 +207,9 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
             if (result)
             {
                 _lastUpdateTime = DateTime.Now;
-                
+
                 if (_preferences.Get(UserSettingsKeys.ShowDebugToasts, false) is true)
-                    _userDialogs.Toast("Location updated", TimeSpan.FromMilliseconds(750));
+                    _userDialogs.Toast(TranslateExtension.GetValue("Toast_LiveLocPositionUpdated"), TimeSpan.FromMilliseconds(750));
             }
             else
                 _loggingService.Trace("Failed Executing LocationManager.UpdateLocation");

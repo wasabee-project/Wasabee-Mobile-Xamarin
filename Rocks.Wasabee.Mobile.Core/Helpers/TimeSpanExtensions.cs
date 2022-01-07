@@ -8,19 +8,22 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers
         {
             var result = string.Empty;
             if (timeSpan.Hours > 0)
-                result += $"{timeSpan.Hours}h";
+                result += $"{timeSpan.Hours}";
+            else
+                result += "00";
+
             if (timeSpan.Minutes > 0)
-            {
-                if (!string.IsNullOrEmpty(result))
-                    result += " ";
+                result += $":{timeSpan.Minutes}";
+            else
+                result += ":00";
 
-                result += $"{timeSpan.Minutes}min";
-            }
+            if (timeSpan.Seconds > 0)
+                result += $":{timeSpan.Seconds}";
+            else
+                result += ":00";
 
-            if (string.IsNullOrEmpty(result)) {
-                if (timeSpan.Seconds > 0)
-                    result += $"{timeSpan.Seconds}sec";
-            }
+            if (string.Equals(result, "00:00:00"))
+                result = string.Empty;
 
             return result;
         }
