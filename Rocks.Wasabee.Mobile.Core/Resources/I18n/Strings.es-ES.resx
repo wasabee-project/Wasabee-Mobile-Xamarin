@@ -336,7 +336,7 @@
     <comment>Text for link origin</comment>
   </data>
   <data name="LinkDialog_Text_State" xml:space="preserve">
-    <value>State: {0}</value>
+    <value>Estado: {0}</value>
     <comment>Text for link state (complet, incomplete, unassigned...)</comment>
   </data>
   <data name="LinkDialog_Title" xml:space="preserve">
@@ -428,55 +428,55 @@
     <comment>Marker info dialog title</comment>
   </data>
   <data name="MarkerType_Capture" xml:space="preserve">
-    <value>Capture</value>
+    <value>Capturar</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_CreateLink" xml:space="preserve">
-    <value>Create link</value>
+    <value>Crear enlace</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Destroy" xml:space="preserve">
-    <value>Destroy</value>
+    <value>Destruir</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Exclude" xml:space="preserve">
-    <value>Excluded</value>
+    <value>Excluido</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Farm" xml:space="preserve">
-    <value>Farm keys</value>
+    <value>Obtener llaves</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_GetKey" xml:space="preserve">
-    <value>Get key</value>
+    <value>Obtener llave</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_GoTo" xml:space="preserve">
-    <value>Go to</value>
+    <value>Ir a</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_LetDecay" xml:space="preserve">
-    <value>Let decay</value>
+    <value>Dejar decaer</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_MeetAgent" xml:space="preserve">
-    <value>Meet Agent</value>
+    <value>Reunirse con agente</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Other" xml:space="preserve">
-    <value>Other</value>
+    <value>Otra</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Recharge" xml:space="preserve">
-    <value>Recharge</value>
+    <value>Recargar</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Upgrade" xml:space="preserve">
-    <value>Upgrade</value>
+    <value>Mejorar</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_UseVirus" xml:space="preserve">
-    <value>Use virus</value>
+    <value>Usar Virus</value>
     <comment>Marker type</comment>
   </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
@@ -552,7 +552,7 @@
     <comment>Operations list page title</comment>
   </data>
   <data name="Operation_Text_AssignedTo" xml:space="preserve">
-    <value>Assigned to :</value>
+    <value>Asignado a:</value>
     <comment>Text for assignments list (there may be many assigned agents)</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
@@ -810,19 +810,19 @@
     <comment>Task undo button</comment>
   </data>
   <data name="TaskState_Acknowledged" xml:space="preserve">
-    <value>Acknowledged</value>
+    <value>Recibido</value>
     <comment>Task state</comment>
   </data>
   <data name="TaskState_Assigned" xml:space="preserve">
-    <value>Assigned</value>
+    <value>Asignado</value>
     <comment>Task state</comment>
   </data>
   <data name="TaskState_Completed" xml:space="preserve">
-    <value>Completed</value>
+    <value>Completado</value>
     <comment>Task state</comment>
   </data>
   <data name="TaskState_Pending" xml:space="preserve">
-    <value>Pending</value>
+    <value>Pendiente</value>
     <comment>Task state</comment>
   </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
