@@ -19,6 +19,11 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views.Settings
             ViewModel.IsAnonymousAnalyticsEnabled = !ViewModel.IsAnonymousAnalyticsEnabled;
         }
 
+        private void SendLogsCell_OnTapped(object sender, EventArgs e)
+        {
+            ViewModel.SendLogsCommand.Execute();
+        }
+
         private void AgentsOnMapCell_OnTapped(object sender, EventArgs e)
         {
             ViewModel.ShowAgentsFromAnyTeam = !ViewModel.ShowAgentsFromAnyTeam;

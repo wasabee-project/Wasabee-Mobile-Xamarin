@@ -47,7 +47,12 @@
 
                                 </Grid>
                             </ViewCell>
-                            <TextCell Text="{xaml:Translate Settings_Label_SendLogs}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SendLogsCommand}" Detail="{xaml:Translate Settings_Label_SendLogsHint}" DetailColor="{DynamicResource SecondaryTextColor}"/>
+                            <ViewCell Tapped="SendLogsCell_OnTapped">
+                                <StackLayout Margin="0" Padding="0" Spacing="0">
+                                    <Label Text="{xaml:Translate Settings_Label_SendLogs}" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
+                                    <Label Text="{xaml:Translate Settings_Label_SendLogsHint}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
+                                </StackLayout>
+                            </ViewCell>
                             <TextCell Text="{xaml:Translate Settings_Label_RefreshFcmToken}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
                             <TextCell Text="{xaml:Translate Settings_Label_DarkMode}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
                         </TableSection>
