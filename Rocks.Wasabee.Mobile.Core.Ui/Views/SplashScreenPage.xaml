@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentPage x:TypeArguments="viewModels:SplashScreenViewModel"
                        xmlns="http://xamarin.com/schemas/2014/forms" 
                        x:DataType="viewModels:SplashScreenViewModel"
@@ -60,19 +60,18 @@
             
             
             <!-- Login buttons -->
-            <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=60}"
+            <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=1, Constant=20}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=80}"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                          IsVisible="{Binding IsLoginVisible}">
 
                 <Frame CornerRadius="2"
-                       HorizontalOptions="CenterAndExpand" 
+                       HorizontalOptions="FillAndExpand" 
                        VerticalOptions="EndAndExpand"
                        BackgroundColor="#4285F4" 
                        Margin="10"
                        Padding="1"
                        HasShadow="false"
-                       WidthRequest="270"
                        IsVisible="{Binding IsGButtonVisible}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -89,7 +88,8 @@
                             <Image Source="g_logo.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
                         <Label Text="{xaml:Translate SignIn_Button_WithGoogle}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
-                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" TextColor="White" FontAttributes="Bold" />
+                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                               FontSize="18" TextColor="White" FontAttributes="Bold" />
 
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ConnectUserCommand}" />
@@ -98,13 +98,12 @@
                 </Frame>
 
                 <Frame CornerRadius="2"
-                       HorizontalOptions="CenterAndExpand" 
+                       HorizontalOptions="FillAndExpand" 
                        VerticalOptions="EndAndExpand"
                        BackgroundColor="#3BA345" 
                        Margin="10"
                        Padding="1"
                        HasShadow="false"
-                       WidthRequest="270"
                        IsVisible="{Binding IsOTTButtonVisible}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -121,7 +120,8 @@
                             <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
                         <Label Text="{xaml:Translate SignIn_Button_OneTimeToken}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
-                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" TextColor="White" FontAttributes="Bold" />
+                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" 
+                               FontSize="18" TextColor="White" FontAttributes="Bold" />
 
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding UseOneTimeTokenCommand}" />
@@ -160,7 +160,7 @@
             
             <!-- Server selection -->
             <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
-                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=100}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=TitleLabel , Property=Y, Factor=1, Constant=80}"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-40}"
                          IsVisible="{Binding IsSelectingServer}">
                 <Label HorizontalTextAlignment="Center"
@@ -208,7 +208,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackLayout>
-
 
             <!-- No team or OPS assigned section -->
             <StackLayout RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=20}"
