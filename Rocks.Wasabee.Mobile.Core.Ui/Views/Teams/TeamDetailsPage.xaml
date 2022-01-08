@@ -42,7 +42,7 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:AgentModel">
-                            <SwipeView>
+                            <SwipeView BackgroundColor="Transparent">
 
                                 <SwipeView.RightItems>
                                     <SwipeItemView Command="{Binding ViewModel.RemoveAgentCommand, Source={x:Reference Page}}"

@@ -51,6 +51,7 @@
 
                                 <iconize:IconButton Grid.Column="2"
                                                     Text="mdi-chevron-right"
+                                                    TextColor="{DynamicResource PrimaryTextColor}"
                                                     Command="{Binding ViewModel.ShowOperationDetailCommand, Source={x:Reference Page}}"
                                                     CommandParameter="{Binding .}"
                                                     BackgroundColor="Transparent"

@@ -128,7 +128,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             if (IsBusy) return;
             IsBusy = true;
 
-            await Launcher.OpenAsync("https://cdn2.wasabee.rocks");
+            await Launcher.OpenAsync("https://wasabee.rocks");
 
             IsBusy = false;
         }

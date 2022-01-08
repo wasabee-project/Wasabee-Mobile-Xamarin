@@ -25,6 +25,7 @@
             <iconize:IconButton RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-80}"
                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Y, Factor=0, Constant=10}"
                                 Text="mdi-cogs" BackgroundColor="Transparent" FontSize="24"
+                                TextColor="{DynamicResource PrimaryTextColor}"
                                 IsVisible="{Binding IsSettingButtonVisible}"
                                 Command="{Binding ShowSettingCommand}"/>
 

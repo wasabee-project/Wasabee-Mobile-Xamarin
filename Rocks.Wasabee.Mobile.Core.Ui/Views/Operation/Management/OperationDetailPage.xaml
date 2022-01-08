@@ -42,6 +42,7 @@
 
                                     <iconize:IconButton Grid.Column="1"
                                                         Text="mdi-chevron-right"
+                                                        TextColor="{DynamicResource PrimaryTextColor}"
                                                         Command="{Binding ViewModel.ShowTeamDetailCommand, Source={x:Reference Page}}"
                                                         CommandParameter="{Binding .}"
                                                         BackgroundColor="Transparent"

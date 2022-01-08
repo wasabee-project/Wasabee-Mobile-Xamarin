@@ -40,7 +40,8 @@
                                     <Switch Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" OnColor="{DynamicResource PrimaryGreenDark}"
                                             ThumbColor="{Binding IsAnonymousAnalyticsEnabled, Converter={StaticResource BoolToColorConverter}}"
                                             IsToggled="{Binding IsAnonymousAnalyticsEnabled}"
-                                            HorizontalOptions="EndAndExpand" Margin="0, 0, 10, 0"/>
+                                            HorizontalOptions="EndAndExpand" VerticalOptions="Center"
+                                            Margin="0, 0, 10, 0"/>
 
                                     <Label Grid.Row="1" Grid.Column="0" Text="{xaml:Translate Settings_Label_AnonymousAnalyticsHint}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
 

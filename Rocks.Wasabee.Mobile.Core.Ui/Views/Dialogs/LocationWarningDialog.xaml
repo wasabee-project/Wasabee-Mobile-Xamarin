@@ -77,10 +77,10 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleLocationWarningCancelButton}" 
-                            HorizontalOptions="Start" WidthRequest="100" 
+                            HorizontalOptions="Start"
                             Command="{Binding DenyCommand}" />
                     <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleLocationWarningNextButton}" 
-                            HorizontalOptions="End" WidthRequest="100" 
+                            HorizontalOptions="End"
                             Command="{Binding AcceptCommand}" />
                 </Grid>
             </Grid>
