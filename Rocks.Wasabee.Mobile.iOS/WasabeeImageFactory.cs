@@ -61,8 +61,8 @@ namespace Rocks.Wasabee.Mobile.iOS
             return CreatePin(pinColor);
         }
 
-        private static UIImage CreatePin(string color) => CreateImageFromWasabeePinSvg(color, 50, 60);
-        private static UIImage CreateMarker(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 35, 60);
+        private static UIImage CreatePin(string color) => CreateImageFromWasabeePinSvg(color, 41, 50);
+        private static UIImage CreateMarker(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 37, 64);
         private static UIImage CreateImageFromBundleName(string bundleFilePath, int width, int height)
         {
             if (string.IsNullOrWhiteSpace(bundleFilePath))
