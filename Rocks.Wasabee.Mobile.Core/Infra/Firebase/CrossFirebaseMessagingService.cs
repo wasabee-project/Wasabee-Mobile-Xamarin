@@ -24,6 +24,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
         private readonly ISecureStorage _secureStorage;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IFirebaseService _firebaseService;
+        private readonly IPreferences _preferences;
         private readonly ILocalNotificationService _localNotificationService;
         private readonly OperationsDatabase _operationsDatabase;
 
@@ -34,7 +35,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
 
         public CrossFirebaseMessagingService(IMvxMessenger mvxMessenger, WasabeeApiV1Service wasabeeApiV1,
             IBackgroundDataUpdaterService backgroundDataUpdaterService, ISecureStorage secureStorage,
-            IUserSettingsService userSettingsService, IFirebaseService firebaseService,
+            IUserSettingsService userSettingsService, IFirebaseService firebaseService, IPreferences preferences,
             ILocalNotificationService localNotificationService, OperationsDatabase operationsDatabase)
         {
             _mvxMessenger = mvxMessenger;
@@ -43,6 +44,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
             _secureStorage = secureStorage;
             _userSettingsService = userSettingsService;
             _firebaseService = firebaseService;
+            _preferences = preferences;
             _localNotificationService = localNotificationService;
             _operationsDatabase = operationsDatabase;
         }
@@ -63,6 +65,10 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
                 Initialize();
 
             if (string.IsNullOrWhiteSpace(registrationToken))
+                return false;
+
+            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
+            if (string.IsNullOrEmpty(currentServer))
                 return false;
 
             _fcmToken = registrationToken;
