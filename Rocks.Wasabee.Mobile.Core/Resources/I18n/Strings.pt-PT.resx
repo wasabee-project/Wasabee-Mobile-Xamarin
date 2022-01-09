@@ -456,27 +456,27 @@
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_LetDecay" xml:space="preserve">
-    <value>Let decay</value>
+    <value>Deixar caír</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_MeetAgent" xml:space="preserve">
-    <value>Meet Agent</value>
+    <value>Encontrar Agente</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Other" xml:space="preserve">
-    <value>Other</value>
+    <value>Outro</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Recharge" xml:space="preserve">
-    <value>Recharge</value>
+    <value>Recarregar</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Upgrade" xml:space="preserve">
-    <value>Upgrade</value>
+    <value>Atualizar</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_UseVirus" xml:space="preserve">
-    <value>Use virus</value>
+    <value>Usar vírus</value>
     <comment>Marker type</comment>
   </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
@@ -552,7 +552,7 @@
     <comment>Operations list page title</comment>
   </data>
   <data name="Operation_Text_AssignedTo" xml:space="preserve">
-    <value>Assigned to :</value>
+    <value>Atribuído a:</value>
     <comment>Text for assignments list (there may be many assigned agents)</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
@@ -810,19 +810,19 @@
     <comment>Task undo button</comment>
   </data>
   <data name="TaskState_Acknowledged" xml:space="preserve">
-    <value>Acknowledged</value>
+    <value>Reconhecido</value>
     <comment>Task state</comment>
   </data>
   <data name="TaskState_Assigned" xml:space="preserve">
-    <value>Assigned</value>
+    <value>Atribuído</value>
     <comment>Task state</comment>
   </data>
   <data name="TaskState_Completed" xml:space="preserve">
-    <value>Completed</value>
+    <value>Concluído</value>
     <comment>Task state</comment>
   </data>
   <data name="TaskState_Pending" xml:space="preserve">
-    <value>Pending</value>
+    <value>Pendente</value>
     <comment>Task state</comment>
   </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
