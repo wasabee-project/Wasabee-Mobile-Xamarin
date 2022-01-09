@@ -336,7 +336,7 @@
     <comment>Text for link origin</comment>
   </data>
   <data name="LinkDialog_Text_State" xml:space="preserve">
-    <value>State: {0}</value>
+    <value>Estado: {0}</value>
     <comment>Text for link state (complet, incomplete, unassigned...)</comment>
   </data>
   <data name="LinkDialog_Title" xml:space="preserve">
@@ -428,31 +428,31 @@
     <comment>Marker info dialog title</comment>
   </data>
   <data name="MarkerType_Capture" xml:space="preserve">
-    <value>Capture</value>
+    <value>Capturar</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_CreateLink" xml:space="preserve">
-    <value>Create link</value>
+    <value>Criar link</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Destroy" xml:space="preserve">
-    <value>Destroy</value>
+    <value>Destruir</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Exclude" xml:space="preserve">
-    <value>Excluded</value>
+    <value>Excluído</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_Farm" xml:space="preserve">
-    <value>Farm keys</value>
+    <value>Farmar Chaves</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_GetKey" xml:space="preserve">
-    <value>Get key</value>
+    <value>Retirar Chaves</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_GoTo" xml:space="preserve">
-    <value>Go to</value>
+    <value>Ir para</value>
     <comment>Marker type</comment>
   </data>
   <data name="MarkerType_LetDecay" xml:space="preserve">
