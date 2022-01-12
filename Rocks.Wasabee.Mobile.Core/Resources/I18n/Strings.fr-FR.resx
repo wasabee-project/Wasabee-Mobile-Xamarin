@@ -427,58 +427,6 @@
     <value>Informations sur le marqueur</value>
     <comment>Marker info dialog title</comment>
   </data>
-  <data name="MarkerType_Capture" xml:space="preserve">
-    <value>Capturer</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_CreateLink" xml:space="preserve">
-    <value>Créer un lien</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Destroy" xml:space="preserve">
-    <value>Détruire</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Exclude" xml:space="preserve">
-    <value>Exclus</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Farm" xml:space="preserve">
-    <value>Farmer des clés</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_GetKey" xml:space="preserve">
-    <value>Obtenir des clés</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_GoTo" xml:space="preserve">
-    <value>Aller à</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_LetDecay" xml:space="preserve">
-    <value>Laisser decay</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_MeetAgent" xml:space="preserve">
-    <value>Rencontre d'Agents</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Other" xml:space="preserve">
-    <value>Autre</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Recharge" xml:space="preserve">
-    <value>Recharger</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Upgrade" xml:space="preserve">
-    <value>Upgrader</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_UseVirus" xml:space="preserve">
-    <value>Utiliser un Virus</value>
-    <comment>Marker type</comment>
-  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Changer</value>
     <comment>Text on the button to change selected OP</comment>
@@ -551,14 +499,11 @@
     <value>Mes Opérations</value>
     <comment>Operations list page title</comment>
   </data>
-  <data name="Operation_Text_AssignedTo" xml:space="preserve">
-    <value>Assigné à :</value>
-    <comment>Text for assignments list (there may be many assigned agents)</comment>
-  </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Lier le compte Ingress</value>
     <comment>Text for link ingress account button</comment>
   </data>
+  
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Ces informations proviennent de V et/ou de .Rocks. Si vous avez un nom UnverifiedAgent_, assurez-vous que vos informations .Rocks et V sont correctes.</value>
     <comment>Message indicating from where data came from</comment>
@@ -809,22 +754,6 @@
     <value>✗   Annulé</value>
     <comment>Task undo button</comment>
   </data>
-  <data name="TaskState_Acknowledged" xml:space="preserve">
-    <value>Accepté</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Assigned" xml:space="preserve">
-    <value>Assigné</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Completed" xml:space="preserve">
-    <value>Terminé</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Pending" xml:space="preserve">
-    <value>En attente</value>
-    <comment>Task state</comment>
-  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Ajouter un Agent</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -889,6 +818,22 @@
     <value>Changer le nom de l'équipe</value>
     <comment>Title for changing team name popup</comment>
   </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Vos OPs sont en cours de chargement en arrière-plan</value>
     <comment>Toast message</comment>
