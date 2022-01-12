@@ -142,7 +142,7 @@
     <comment>ACV Notice, what does linking do</comment>
   </data>
   <data name="ACV_Step1_Label_NoticeLine2" xml:space="preserve">
-    <value>Обратите внимание: это действие не докажет, что вы энлайт — лишь то, что вы владеете обоими аккаунтами.</value>
+    <value>Обрати внимание: это действие не докажет, что ты энлайт — лишь то, что ты владеешь обоими аккаунтами.</value>
     <comment>ACV Notice, linking doesn't get your faction</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide" xml:space="preserve">
@@ -154,7 +154,7 @@
     <comment>ACV Guide step 1</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_2" xml:space="preserve">
-    <value>2. Вы заходите на Ingress-форум и постите токен в ленту Activity.</value>
+    <value>2. Зайди на Ingress-форум и запости токен в ленту Activity</value>
     <comment>ACV Guide step 2</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_3" xml:space="preserve">
@@ -174,7 +174,7 @@
     <comment>Input for in-game name</comment>
   </data>
   <data name="ACV_Step2_Label_CaseSensitive" xml:space="preserve">
-    <value>Убедитесь, что вы пишете ник точно так же, как в игре! </value>
+    <value>Убедись, что пишешь ник точно так же, как в игре!</value>
     <comment>Label to tell user it's case sensitive</comment>
   </data>
   <data name="ACV_Step2_Label_TokenFor" xml:space="preserve">
@@ -198,7 +198,7 @@
     <comment>ACV explains what to do after posting token</comment>
   </data>
   <data name="ACV_Step3_Label_PostTokenOnCommunityForums" xml:space="preserve">
-    <value>Разместите ваш токен на ленте Activity Ingress-форума.</value>
+    <value>Размести токен на ленте Activity Ingress-форума.</value>
     <comment>ACV explains what to do with the token</comment>
   </data>
   <data name="ACV_Step3_Label_Verified_AccountVerified" xml:space="preserve">
@@ -206,7 +206,7 @@
     <comment>ACV explains agent account is now verified</comment>
   </data>
   <data name="ACV_Step3_Label_Verified_BeeExplanation" xml:space="preserve">
-    <value>Теперь в вашем профиле отображается 🐝!</value>
+    <value>Теперь в твоем профиле отображается 🐝!</value>
     <comment>ACV explains verified profiles will have a bee displayed</comment>
   </data>
   <data name="ACV_Step3_Label_Verified_WellDone" xml:space="preserve">
@@ -230,7 +230,7 @@
     <comment>Input title for setting custom server URL</comment>
   </data>
   <data name="Dialogs_Warning_ACVFailed" xml:space="preserve">
-    <value>Верификация на форуме не удалась. Пожалуйста, убедитесь, что вы выложили токен, и повторите попытку.</value>
+    <value>Верификация на форуме не удалась. Пожалуйста, убедись, что ты выложил токен, и повтори попытку.</value>
     <comment>Warning popup when Wasabee failed verification process in ACV</comment>
   </data>
   <data name="Dialogs_Warning_InGameNameAlreadyVerified" xml:space="preserve">
@@ -246,10 +246,10 @@
     <comment>Warning message for when geolocation permission is needed and not granted</comment>
   </data>
   <data name="Dialogs_Warning_PermissionWhenInUse" xml:space="preserve">
-    <value>Чтобы отображать вашу позицию на карте, пожалуйста, установите разрешение на 'При использовании'.</value>
+    <value>Чтобы отображать твою позицию на карте, пожалуйста, установи разрешение на 'При использовании'.</value>
   </data>
   <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
-    <value>Чтобы использовать треккинг местоположения в реальном времени, пожалуйста, разрешите приложению использовать вашу геопозицию постоянно.</value>
+    <value>Чтобы использовать треккинг местоположения в реальном времени, пожалуйста, разреши приложению использовать твою геопозицию постоянно.</value>
     <comment>Message for changing location permissions</comment>
   </data>
   <data name="Dialog_Warning_GeolocationDisabled" xml:space="preserve">
@@ -257,7 +257,7 @@
     <comment>Warning popup when geolocation is disabled on device</comment>
   </data>
   <data name="Dialog_Warning_GeolocationDisabled-Text" xml:space="preserve">
-    <value>Для того, чтобы начать делиться вашим местоположением, пожалуйста, убедитесь, что геолокация включена, а Wasabee даны соответствующие разрешения.</value>
+    <value>Для того, чтобы начать делиться вашим местоположением, пожалуйста, убедись, что геолокация включена, а Wasabee даны соответствующие разрешения.</value>
     <comment>Text for warning popup when geolocation is disabled on device</comment>
   </data>
   <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
@@ -269,7 +269,7 @@
     <comment>Warning popup when user want to change selected OP but nothing else is available</comment>
   </data>
   <data name="Dialog_Warning_NoTeamSharingEnabled" xml:space="preserve">
-    <value>Ни одна из ваших команд не использует данные о вашей геопозиции. Перейдите в список команд и дайте разрешение хотя бы одной команде. </value>
+    <value>Ни одной из твоих команд не разрешено использовать данные о твоей геопозиции. Перейди в список команд и дай разрешение хотя бы одной команде.</value>
     <comment>Warning popup when agent tries to enable location sharing but no team has been previously enabled for location sharing.</comment>
   </data>
   <data name="Dialog_Warning_PermissionsRequired" xml:space="preserve">
@@ -290,7 +290,7 @@
     <comment>User enabled dev mode</comment>
   </data>
   <data name="Global_ErrorOccuredPleaseRetry" xml:space="preserve">
-    <value>Произошла ошибка. Повторите попытку.</value>
+    <value>Произошла ошибка. Повтори попытку</value>
   </data>
   <data name="Global_Exit" xml:space="preserve">
     <value>Выход</value>
@@ -308,7 +308,7 @@
     <value>Нет</value>
   </data>
   <data name="Global_NoInternet" xml:space="preserve">
-    <value>Нет интернета; пожалуйста, проверьте доступ к сети</value>
+    <value>Нет интернета; пожалуйста, проверь доступ к сети</value>
   </data>
   <data name="Global_Ok" xml:space="preserve">
     <value>OK</value>
@@ -344,7 +344,7 @@
     <comment>Title for link info popup</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line1" xml:space="preserve">
-    <value>Вы собираетесь включить функцию треккинга локации в реальном времени. Это означает, что ваше реальное местоположение будет регулярно отправляться на сервер Wasabee.</value>
+    <value>Ты собирашься включить функцию треккинга локации в реальном времени. Это означает, что твое реальное местоположение будет регулярно отправляться на сервер Wasabee.</value>
     <comment>Big text line 1</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line2" xml:space="preserve">
@@ -356,7 +356,7 @@
     <comment>Big text line 3</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line4" xml:space="preserve">
-    <value>Кроме того, при включенной опции ваша локация будет отправляться на сервер Wasabee, даже если вы не используете приложение, т.е. когда приложение находится в фоновом режиме или закрыто.</value>
+    <value>Кроме того, при включенной опции твоя локация будет отправляться на сервер Wasabee, даже если ты не используешь приложение, т. е. когда приложение находится в фоновом режиме или закрыто.</value>
     <comment>Big text line 4</comment>
   </data>
   <data name="LocationDialog_Text_DataStorage" xml:space="preserve">
@@ -376,7 +376,7 @@
     <comment>Text</comment>
   </data>
   <data name="LocationDialog_Text_ReadMore-ClickHere" xml:space="preserve">
-    <value>Нажмите сюда</value>
+    <value>Нажми сюда</value>
     <comment>Clickable text</comment>
   </data>
   <data name="LocationDialog_Title" xml:space="preserve">
@@ -388,7 +388,7 @@
     <comment>Button to show info popup about marker</comment>
   </data>
   <data name="Map_Label_AgentsList-ClickToShow" xml:space="preserve">
-    <value>НАЖМИТЕ ДЛЯ ПОКАЗА</value>
+    <value>НАЖМИ ДЛЯ ПОКАЗА</value>
     <comment>Instruction label</comment>
   </data>
   <data name="Map_Page_Title" xml:space="preserve">
@@ -508,7 +508,7 @@
     <comment>Button to start Telegram linking process</comment>
   </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
-    <value>Эта информация поступает от V и/или .rocks. Если вы отображаетесь как "UnverifiedAgent_цифры", пожалуйста, убедитесь в правильности информации на .rocks и V.</value>
+    <value>Эта информация поступает от V и/или .rocks. Если ты отображаешься как "UnverifiedAgent_цифры", пожалуйста, убедись в правильности информации на .rocks и V.</value>
     <comment>Message indicating from where data came from</comment>
   </data>
   <data name="Profile_Label_Infos" xml:space="preserve">
@@ -595,13 +595,13 @@
     <value>Не удается найти ни одного лога</value>
   </data>
   <data name="Settings_Warning_SendFileOverTelegram" xml:space="preserve">
-    <value>Пожалуйста, отправьте файл @fisher01 в Telegram</value>
+    <value>Пожалуйста, отправь файл @fisher01 в Telegram</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase" xml:space="preserve">
     <value>Отсылать ли локальную копию базы данных? Обратите внимание, что она включает все ваши данные о командах и об ОПРЦ!</value>
   </data>
   <data name="Settings_Warning_SendLogsWithDatabase_Title" xml:space="preserve">
-    <value>Предупреждение: не нарушайте секьюрность ОПРЦ!</value>
+    <value>Предупреждение: не нарушай секьюрность ОПРЦ!</value>
   </data>
   <data name="Settings_Warning_SendLogs_NoDb" xml:space="preserve">
     <value>Не отсылать!</value>
@@ -642,7 +642,7 @@
     <comment>Text for the "Sign In with Google" button</comment>
   </data>
   <data name="SignIn_Label_EnterToken" xml:space="preserve">
-    <value>Введите токен:</value>
+    <value>Введи токен:</value>
     <comment>Text above one time token entry field</comment>
   </data>
   <data name="SignIn_Label_ErrorMsg_GoogleError" xml:space="preserve">
@@ -682,11 +682,11 @@
     <comment>App is logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServer" xml:space="preserve">
-    <value>Выберите сервер:</value>
+    <value>Выбери сервер:</value>
     <comment>Server selection for logging in</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_SelectServerToken" xml:space="preserve">
-    <value>Выберите сервер токена:</value>
+    <value>Выбери сервер токена:</value>
     <comment>Server selection for the token</comment>
   </data>
   <data name="SignIn_Label_LoadingStep_WelcomeAgent" xml:space="preserve">
@@ -698,7 +698,7 @@
     <comment>Error message when no internet connection</comment>
   </data>
   <data name="SignIn_Label_NoTeamsOrOperation" xml:space="preserve">
-    <value>Вы не добавлены в команду, и у вас нет загруженных планов. Свяжитесь с организаторами операций перед использованием Wasabee Mobile!</value>
+    <value>Ты не добавлен в команду, и у тебя нет загруженных планов. Свяжись с организаторами операций перед использованием Wasabee Mobile!</value>
     <comment>Text for when user don't have any teams or ops and can't use app</comment>
   </data>
   <data name="SignIn_Label_PleaseWait" xml:space="preserve">
@@ -797,24 +797,20 @@
     <value>Успешно удалена команда '{0}'</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
   </data>
-  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>Статус не может быть изменен, попробуйте еще раз</value>
-    <comment>Error when location sharing state can't be changed</comment>
-  </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
     <value>Осторожно!</value>
     <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
   </data>
   <data name="TeamsList_Warning_TeamDeleteLastWarning" xml:space="preserve">
-    <value>Пожалуйста, подтвердите последний раз перед удалением</value>
+    <value>Пожалуйста, подтверди последний раз перед удалением</value>
     <comment>Last warning before deleting a team</comment>
   </data>
   <data name="TeamsList_Warning_TeamDeleteSecondWarning" xml:space="preserve">
-    <value>Вы действительно уверены?</value>
+    <value>Ты действительно уверен?</value>
     <comment>Another warning before deleting team</comment>
   </data>
   <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
-    <value>Вы собираетесь удалить команду '{0}'. Вы уверены?</value>
+    <value>Ты собираешься удалить команду '{0}'. Ты уверен?</value>
     <comment>Warning message before deleting a team. Parameter is team name</comment>
   </data>
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
@@ -828,35 +824,35 @@
     <value>Это докажет Wasabee, что вам принадлежат аккаунты как в Wasabee, так и в Ingress.</value>
   </data>
   <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
-    <value>Это не обязательно, но это поможет организаторам ОПРЦ приглашать вас в команды.</value>
+    <value>Это не обязательно, но это поможет организаторам ОПРЦ приглашать тебя в команды.</value>
   </data>
   <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
-    <value>Вам понадобится работающий на вашем устройстве Telegram-аккаунт, чтобы продолжить привязку.</value>
+    <value>Тебе понадобится работающий на твоем устройстве Telegram-аккаунт, чтобы продолжить привязку.</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
     <value>1. Wasabee сгененировал уникальный токен, который нужно отправить Telegram-боту</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
-    <value>2. Вы отправляете токен боту</value>
+    <value>2. Ты отправляешь токен боту</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
-    <value>3. Затем Wasabee генерирует токен подтверждения, и вы отправляете его боту</value>
+    <value>3. Затем Wasabee генерирует токен подтверждения, и ты отправляешь его боту</value>
   </data>
   <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
-    <value>Бот ожидает вашего сообщения...</value>
+    <value>Бот ожидает твоего сообщения...</value>
   </data>
   <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
     <value>Начать {0}</value>
     <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
   </data>
   <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
-    <value>Вот ваш токен ! Скопируйте его, чтобы отправить его боту.</value>
+    <value>Вот ваш токен ! Скопируй его, чтобы отправить его боту.</value>
   </data>
   <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
     <value>Перейдите к следующему шагу, чтобы завершить процесс !</value>
   </data>
   <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
-    <value>Отправьте токен боту</value>
+    <value>Отправь токен боту</value>
   </data>
   <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
     <value>Открыть {0}</value>
@@ -869,7 +865,7 @@
     <value>Скопируйте этот токен подтверждения</value>
   </data>
   <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
-    <value>Отправьте токен подтверждения боту</value>
+    <value>Отправь токен подтверждения боту</value>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Ваши ОПРЦ загружаются в фоновом режиме</value>
