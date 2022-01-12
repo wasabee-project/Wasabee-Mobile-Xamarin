@@ -503,7 +503,10 @@
     <value>Link Ingress Konto</value>
     <comment>Text for link ingress account button</comment>
   </data>
-  
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Link Telegram konto</value>
+    <comment>Button to start Telegram linking process</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Disse oplysninger kommer fra V og/eller .rocks. Hvis du har et UnverifiedAgent_ navn, så sørg venligst for at dine .Rocks og V oplysninger er korrekte.</value>
     <comment>Message indicating from where data came from</comment>
@@ -818,22 +821,56 @@
     <value>Skift holdnavn</value>
     <comment>Title for changing team name popup</comment>
   </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Din Wasabee-konto er endnu ikke tilknyttet en Telegram-konto.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>Dette vil vise Wasabee at du er ejer af både Wasabee og Telegram konti.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>Dette er ikke obligatorisk, men vil hjælpe Operatører med at invitere dig til deres hold.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>Du har brug for en Telegram-konto klar og opsat på din enhed for at fortsætte.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee genereret en unik token til at sende til botten på Telegram</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. Du sender token til botten,</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee genererer derefter en bekræftelsestoken, og du sender den til botten</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>Botten afventer din besked...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Begynd {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>Her er dit token! Kopier det for at sende det til botten.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>Gå til næste trin for at afslutte processen!</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Send token til botten</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Åben {0}</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>Din Wasabee konto i nu knyttet til din Telegram konto!</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Kopier dette bekræftelsestoken</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Send bekræftelsestoken til botten</value>
+  </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Dine OPs indlæses i baggrunden</value>
     <comment>Toast message</comment>
