@@ -11,7 +11,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
         public string GoogleId { get; set; }
         
         [JsonProperty("lockey")]
-        public string LocationKey { get; set; }
+        public string OneTimeToken { get; set; }
 
         [JsonProperty("enlid")]
         public string EnlId { get; set; }

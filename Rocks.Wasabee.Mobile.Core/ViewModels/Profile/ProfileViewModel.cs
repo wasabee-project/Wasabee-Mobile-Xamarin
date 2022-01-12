@@ -8,6 +8,7 @@ using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;
+using Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -77,6 +78,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
                 QrCodeValue = userModel.GoogleId;
                 
                 IsLinkIngressAccountVisible = string.IsNullOrWhiteSpace(User.CommunityName);
+                IsLinkTelegramVisible = User.Telegram is null || User.Telegram.Verified is false;
             }
             else
             {
@@ -92,6 +94,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         public bool IsQrCodeVisible { get; set; }
         public bool IsQrCodeEnabled { get; set; }
         public bool IsLinkIngressAccountVisible { get; set; }
+        public bool IsLinkTelegramVisible { get; set; }
 
         private string _qrCodeValue = string.Empty;
         public string QrCodeValue
@@ -148,6 +151,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             {
                 IsSelfProfile = true;
                 IsLinkIngressAccountVisible = string.IsNullOrWhiteSpace(User.CommunityName);
+                IsLinkTelegramVisible = User.Telegram is null || User.Telegram.Verified is false;
             }
 
             IsBusy = false;
@@ -218,8 +222,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
         public IMvxCommand StartAgentVerificationCommand => new MvxCommand(StartAgentVerificationExecuted);
         private async void StartAgentVerificationExecuted()
         {
+            LoggingService.Trace("Executing ProfileViewModel.StartAgentVerificationCommand");
+
             if (IsSelfProfile is false) 
             {
+                LoggingService.Warn("The command shouldn't be available !");
+
                 _userDialogs.Alert("Sorry, this shouldn't be available here !", "Wooops", "Close");
                 return;
             }
@@ -229,9 +237,40 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
 
             if (navigationResult is { IsSuccess: true })
             {
+                LoggingService.Trace("Agent Community Verification successfull");
+
                 var googleId = _userSettingsService.GetLoggedUserGoogleId();
                 await LoadAgentProfileCommand.ExecuteAsync(googleId);
             }
+            else
+                LoggingService.Trace("Agent Community Verification closed without completion");
+        }
+
+        public IMvxCommand StartLinkTelegramCommand => new MvxCommand(StartLinkTelegramExecuted);
+        private async void StartLinkTelegramExecuted()
+        {
+            LoggingService.Trace("Executing ProfileViewModel.StartLinkTelegramCommand");
+
+            if (IsSelfProfile is false) 
+            {
+                LoggingService.Warn("The command shouldn't be available !");
+
+                _userDialogs.Alert("Sorry, this shouldn't be available here !", "Wooops", "Close");
+                return;
+            }
+
+            var navigationResult = await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
+                new TelegramLinkingNavigationParameter(comingFromLogin: false));
+
+            if (navigationResult is { IsSuccess: true })
+            {
+                LoggingService.Trace("Telegram Linking successfull");
+
+                var googleId = _userSettingsService.GetLoggedUserGoogleId();
+                await LoadAgentProfileCommand.ExecuteAsync(googleId);
+            }
+            else
+                LoggingService.Trace("Telegram Linking closed without completion");
         }
 
         #endregion

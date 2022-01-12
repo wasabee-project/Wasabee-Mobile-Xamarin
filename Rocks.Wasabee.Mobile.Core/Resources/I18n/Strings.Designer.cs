@@ -952,6 +952,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Link Telegram account.
+        /// </summary>
+        internal static string Profile_Button_LinkTelegram {
+            get {
+                return ResourceManager.GetString("Profile_Button_LinkTelegram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct..
         /// </summary>
         internal static string Profile_Label_DataOrigin {
@@ -1704,6 +1713,150 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string TeamsList_Warning_TeamWillDelete {
             get {
                 return ResourceManager.GetString("TeamsList_Warning_TeamWillDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Wasabee account isn&apos;t yet linked to any Telegram account..
+        /// </summary>
+        internal static string TGL_Step1_Label_AccountNotLinked {
+            get {
+                return ResourceManager.GetString("TGL_Step1_Label_AccountNotLinked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will prove to Wasabee that you are the owner of both the Wasabee and Telegram accounts..
+        /// </summary>
+        internal static string TGL_Step1_Label_NoticeLine1 {
+            get {
+                return ResourceManager.GetString("TGL_Step1_Label_NoticeLine1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This isn&apos;t mandatory, but will help Operators inviting you to their teams..
+        /// </summary>
+        internal static string TGL_Step1_Label_NoticeLine2 {
+            get {
+                return ResourceManager.GetString("TGL_Step1_Label_NoticeLine2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ll need a Telegram account ready and set up on your device to proceed..
+        /// </summary>
+        internal static string TGL_Step1_Label_RequireTelegramAccount {
+            get {
+                return ResourceManager.GetString("TGL_Step1_Label_RequireTelegramAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1. Wasabee generated a unique token to send to the bot on Telegram.
+        /// </summary>
+        internal static string TGL_Step1_Label_StepByStepGuide_1 {
+            get {
+                return ResourceManager.GetString("TGL_Step1_Label_StepByStepGuide_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2. You send the token to the bot.
+        /// </summary>
+        internal static string TGL_Step1_Label_StepByStepGuide_2 {
+            get {
+                return ResourceManager.GetString("TGL_Step1_Label_StepByStepGuide_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3. Wasabee then generates a confirmation token and you send it to the bot.
+        /// </summary>
+        internal static string TGL_Step1_Label_StepByStepGuide_3 {
+            get {
+                return ResourceManager.GetString("TGL_Step1_Label_StepByStepGuide_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bot is awaiting your message....
+        /// </summary>
+        internal static string TGL_Step2_3_Label_WaitingMessage {
+            get {
+                return ResourceManager.GetString("TGL_Step2-3_Label_WaitingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start {0}.
+        /// </summary>
+        internal static string TGL_Step2_Button_StartBot {
+            get {
+                return ResourceManager.GetString("TGL_Step2_Button_StartBot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Here is your token ! Copy it to send it to the bot..
+        /// </summary>
+        internal static string TGL_Step2_Label_CopyToken {
+            get {
+                return ResourceManager.GetString("TGL_Step2_Label_CopyToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to the next step to finish the process !.
+        /// </summary>
+        internal static string TGL_Step2_Label_GoNextToFinish {
+            get {
+                return ResourceManager.GetString("TGL_Step2_Label_GoNextToFinish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send the token to the bot.
+        /// </summary>
+        internal static string TGL_Step2_Label_SendToken {
+            get {
+                return ResourceManager.GetString("TGL_Step2_Label_SendToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open {0}.
+        /// </summary>
+        internal static string TGL_Step3_Button_OpenBot {
+            get {
+                return ResourceManager.GetString("TGL_Step3_Button_OpenBot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You Wasabee account in now linked to your Telegram account !.
+        /// </summary>
+        internal static string TGL_Step3_Label_AccountsLinked {
+            get {
+                return ResourceManager.GetString("TGL_Step3_Label_AccountsLinked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy this confirmation token.
+        /// </summary>
+        internal static string TGL_Step3_Label_CopyConfirmationToken {
+            get {
+                return ResourceManager.GetString("TGL_Step3_Label_CopyConfirmationToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send the confirmation token to the bot.
+        /// </summary>
+        internal static string TGL_Step3_Label_SendConfirmationToken {
+            get {
+                return ResourceManager.GetString("TGL_Step3_Label_SendConfirmationToken", resourceCulture);
             }
         }
         

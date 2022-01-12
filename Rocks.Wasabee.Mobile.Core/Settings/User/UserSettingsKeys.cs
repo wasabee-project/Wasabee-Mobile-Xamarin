@@ -22,6 +22,7 @@ namespace Rocks.Wasabee.Mobile.Core.Settings.User
         public static string CustomBackendUri => "CUSTOM_BACKEND_URI";
         public static string HasCustomBackendUri => "HAS_CUSTOM_BACKEND_URI";
         public static string NeverShowAgentCommunityVerificationAgain => "NEVER_SHOW_AGENT_COMMUNITY_VERIFICATION_AGAIN";
+        public static string NeverShowTelegramLinkingAgain => "NEVER_SHOW_TELEGRAM_LINKING_AGAIN";
 
     }
 }
