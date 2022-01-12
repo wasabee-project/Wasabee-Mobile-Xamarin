@@ -130,7 +130,7 @@
     <comment>Go next</comment>
   </data>
   <data name="ACV_Step1_Label_AccountNotVerified" xml:space="preserve">
-    <value>Din Wasabee-konto er endnu ikke bekræftet med Ingress Community forummer.</value>
+    <value>Din Wasabee-konto er endnu ikke bekræftet via Ingress Community forummet.</value>
     <comment>ACV explains account isn't verified</comment>
   </data>
   <data name="ACV_Step1_Label_FastProcess" xml:space="preserve">
@@ -138,7 +138,7 @@
     <comment>ACV is quick and fast</comment>
   </data>
   <data name="ACV_Step1_Label_NoticeLine1" xml:space="preserve">
-    <value>Dette vil vise sig for Wasabee, at du er ejer af både Wasabee og Ingress konti.</value>
+    <value>Dette vil vise Wasabee, at du er ejer af både Wasabee- og Ingresskontoen.</value>
     <comment>ACV Notice, what does linking do</comment>
   </data>
   <data name="ACV_Step1_Label_NoticeLine2" xml:space="preserve">
@@ -238,7 +238,7 @@
     <comment>Warning popup when user tries to verify an already verified in-game name</comment>
   </data>
   <data name="Dialogs_Warning_InGameNameRequired" xml:space="preserve">
-    <value>Dit navn i spil er påkrævet!</value>
+    <value>Dit navn i spillet er påkrævet!</value>
     <comment>Warning popup when user didn't set his in-game name for ACV process</comment>
   </data>
   <data name="Dialogs_Warning_LocationPermissionRequired" xml:space="preserve">
@@ -257,7 +257,7 @@
     <comment>Warning popup when geolocation is disabled on device</comment>
   </data>
   <data name="Dialog_Warning_GeolocationDisabled-Text" xml:space="preserve">
-    <value>Venligst sørg for, at location er aktiveret, og tilladelser er tilladt for Wasabee at begynde at dele din placering.</value>
+    <value>Venligst sørg for, at lokation er aktiveret, og tilladelser er tilladt for Wasabee for at begynde at dele din placering.</value>
     <comment>Text for warning popup when geolocation is disabled on device</comment>
   </data>
   <data name="Dialog_Warning_GoToTeamsList" xml:space="preserve">
@@ -286,7 +286,7 @@
     <value>Slet</value>
   </data>
   <data name="Global_DevModeActivated" xml:space="preserve">
-    <value>Udvikler tilstand aktiveret</value>
+    <value>Udviklertilstand aktiveret</value>
     <comment>User enabled dev mode</comment>
   </data>
   <data name="Global_ErrorOccuredPleaseRetry" xml:space="preserve">
@@ -356,7 +356,7 @@
     <comment>Big text line 3</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line4" xml:space="preserve">
-    <value>Også, mens funktionen er aktiveret, vil din placering blive sendt til Wasabee Server, selv om du ikke bruger appen, aka. når app'en er i baggrunden eller er lukket.</value>
+    <value>Også, mens funktionen er aktiveret, vil din placering blive sendt til Wasabee Server, selv om du ikke bruger appen, dvs. når app'en er i baggrunden eller er lukket.</value>
     <comment>Big text line 4</comment>
   </data>
   <data name="LocationDialog_Text_DataStorage" xml:space="preserve">
@@ -408,7 +408,7 @@
     <comment>Title for links layer on map</comment>
   </data>
   <data name="Map_Text_Layers-Markers" xml:space="preserve">
-    <value>Markørere</value>
+    <value>Markører</value>
     <comment>Title for markers layer on map</comment>
   </data>
   <data name="Map_Text_Layers-Zones" xml:space="preserve">
@@ -796,10 +796,6 @@
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>Slettede holdet '{0}'</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
-  </data>
-  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>Status kan ikke ændres, prøv igen</value>
-    <comment>Error when location sharing state can't be changed</comment>
   </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
     <value>Farezone</value>
