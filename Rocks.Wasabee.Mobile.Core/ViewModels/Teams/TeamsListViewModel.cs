@@ -160,7 +160,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                 }
                 else
                 {
-                    _userDialogs.Toast(Strings.TeamsList_Toast_Warning_CantChangeState, TimeSpan.FromSeconds(3));
+                    _userDialogs.Toast(Strings.Global_ErrorOccuredPleaseRetry, TimeSpan.FromSeconds(3));
                 }
             }
             catch (Exception e)

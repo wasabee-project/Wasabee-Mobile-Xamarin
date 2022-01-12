@@ -1672,15 +1672,6 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to State can&apos;t be changed, please try again.
-        /// </summary>
-        internal static string TeamsList_Toast_Warning_CantChangeState {
-            get {
-                return ResourceManager.GetString("TeamsList_Toast_Warning_CantChangeState", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Danger zone.
         /// </summary>
         internal static string TeamsList_Warning_DeleteTeamTitle {
@@ -1834,7 +1825,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You Wasabee account in now linked to your Telegram account !.
+        ///   Looks up a localized string similar to Your Wasabee account in now linked to your Telegram account !.
         /// </summary>
         internal static string TGL_Step3_Label_AccountsLinked {
             get {
