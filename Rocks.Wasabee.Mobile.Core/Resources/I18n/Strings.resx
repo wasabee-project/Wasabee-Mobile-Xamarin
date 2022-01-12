@@ -503,6 +503,10 @@
     <value>Link Ingress Account</value>
     <comment>Text for link ingress account button</comment>
   </data>
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Link Telegram account</value>
+    <comment>Button to start Telegram linking process</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
     <comment>Message indicating from where data came from</comment>
@@ -816,6 +820,56 @@
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
     <value>Change team name</value>
     <comment>Title for changing team name popup</comment>
+  </data>
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Your Wasabee account isn't yet linked to any Telegram account.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>This will prove to Wasabee that you are the owner of both the Wasabee and Telegram accounts.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>This isn't mandatory, but will help Operators inviting you to their teams.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>You'll need a Telegram account ready and set up on your device to proceed.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee generated a unique token to send to the bot on Telegram</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. You send the token to the bot</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee then generates a confirmation token and you send it to the bot</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>Bot is awaiting your message...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Start {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>Here is your token ! Copy it to send it to the bot.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>Go to the next step to finish the process !</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Send the token to the bot</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Open {0}</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>You Wasabee account in now linked to your Telegram account !</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Copy this confirmation token</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Send the confirmation token to the bot</value>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Your OPs are loading in background</value>

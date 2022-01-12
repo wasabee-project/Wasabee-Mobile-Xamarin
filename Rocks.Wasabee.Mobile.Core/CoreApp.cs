@@ -10,6 +10,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
 using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;
+using Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking.SubViewModels;
 using System;
 using Xamarin.Essentials.Interfaces;
 
@@ -27,6 +28,9 @@ namespace Rocks.Wasabee.Mobile.Core
                 .Except(typeof(AgentVerificationStep1SubViewModel))
                 .Except(typeof(AgentVerificationStep2SubViewModel))
                 .Except(typeof(AgentVerificationStep3SubViewModel))
+                .Except(typeof(TelegramLinkingStep1SubViewModel))
+                .Except(typeof(TelegramLinkingStep2SubViewModel))
+                .Except(typeof(TelegramLinkingStep3SubViewModel))
                 .AsTypes()
                 .RegisterAsDynamic();
 

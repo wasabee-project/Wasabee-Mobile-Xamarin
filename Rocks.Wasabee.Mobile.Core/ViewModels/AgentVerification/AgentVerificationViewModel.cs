@@ -1,8 +1,9 @@
-﻿using MvvmCross.Commands;
+﻿using Microsoft.AppCenter.Analytics;
+using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Newtonsoft.Json;
-using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;
 using System.Collections.Generic;
@@ -34,17 +35,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
     public class AgentVerificationViewModel : BaseViewModel, IMvxViewModel<AgentVerificationNavigationParameter, AgentVerificationCloseResult>
     {
         private readonly IMvxNavigationService _navigationService;
-        private readonly ILoggingService _loggingService;
         private readonly IPreferences _preferences;
         private readonly IUserSettingsService _userSettingsService;
 
         private AgentVerificationNavigationParameter _parameter = new ();
 
-        public AgentVerificationViewModel(IMvxNavigationService navigationService, ILoggingService loggingService,
+        public AgentVerificationViewModel(IMvxNavigationService navigationService,
             IPreferences preferences, IUserSettingsService userSettingsService)
         {
             _navigationService = navigationService;
-            _loggingService = loggingService;
             _preferences = preferences;
             _userSettingsService = userSettingsService;
         }
@@ -56,6 +55,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
 
         public override Task Initialize()
         {
+            Analytics.TrackEvent(GetType().Name);
+            LoggingService.Trace("Navigated to AgentVerificationViewModel");
+
             Steps = new MvxObservableCollection<BaseViewModel>()
             {
                 new AgentVerificationStep1SubViewModel(this, _parameter.ComingFromLogin),
@@ -117,7 +119,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
             SaveDontAskAgainSetting();
 
             if (_parameter.ComingFromLogin is false && CurrentStep is AgentVerificationStep3SubViewModel { IsVerified: true })
+            {
+                Analytics.TrackEvent(AnalyticsConstants.CommunityVerified);
                 CloseCompletionSource?.SetResult(new AgentVerificationCloseResult(isSuccess: true));
+            }
+            else
+                CloseCompletionSource?.SetResult(new AgentVerificationCloseResult(isSuccess: false));
 
             _navigationService.Close(this);
         }

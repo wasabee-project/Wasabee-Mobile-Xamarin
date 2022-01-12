@@ -72,6 +72,12 @@
                             Command="{Binding StartAgentVerificationCommand}"
                             IsVisible="{Binding IsLinkIngressAccountVisible}"/>
 
+                    <Button Style="{DynamicResource WasabeeStyleMainActionButton}"
+                            Text="{xaml:Translate Profile_Button_LinkTelegram}"
+                            HorizontalOptions="Center"
+                            Command="{Binding StartLinkTelegramCommand}"
+                            IsVisible="{Binding IsLinkTelegramVisible}"/>
+
                     <TableView Intent="Settings" HasUnevenRows="True" VerticalOptions="Start">
                         <TableRoot>
                             <TableSection Title="{xaml:Translate Profile_Label_Infos}" TextColor="{DynamicResource PrimaryGreen}">

@@ -19,6 +19,7 @@ using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;
+using Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -663,6 +664,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                     await PullDataFromServer(userModel).ContinueWith(async task =>
                     {
                         var shouldGoToAgentCommunityVerification = false;
+                        var shouldGoToTelegramLinking = false;
                         if (string.IsNullOrEmpty(userModel.CommunityName))
                         {
                             shouldGoToAgentCommunityVerification = true;
@@ -683,11 +685,27 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                             }
                         }
 
+                        if (SelectedServerItem.Server is not WasabeeServer.Custom or WasabeeServer.Undefined)
+                            if (userModel.Telegram is null || userModel.Telegram.Verified is false)
+                                shouldGoToTelegramLinking = true;
+
                         await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
 
                         if (shouldGoToAgentCommunityVerification)
-                            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<AgentVerificationViewModel>(),
+                        {
+                            var result = await _navigationService.Navigate<AgentVerificationViewModel, AgentVerificationNavigationParameter, AgentVerificationCloseResult>(
                                 new AgentVerificationNavigationParameter(comingFromLogin: true));
+
+                            if (shouldGoToTelegramLinking && result is not null)
+                                await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
+                                    new TelegramLinkingNavigationParameter(comingFromLogin: true));
+                        }
+                        else
+                        {
+                            if (shouldGoToTelegramLinking)
+                                await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
+                                    new TelegramLinkingNavigationParameter(comingFromLogin: true));
+                        }
                     });
 
                 }

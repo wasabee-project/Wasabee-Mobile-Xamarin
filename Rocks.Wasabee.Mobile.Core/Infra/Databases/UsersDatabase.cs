@@ -120,7 +120,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
 
             public int Level { get; set; }
 
-            public string LocationKey { get; set; }
+            public string OneTimeToken { get; set; }
 
             public bool RocksVerified { get; set; }
 
@@ -151,7 +151,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         Name = userDatabaseModel.Name,
                         CommunityName = userDatabaseModel.CommunityName,
                         Level = userDatabaseModel.Level,
-                        LocationKey = userDatabaseModel.LocationKey,
+                        OneTimeToken = userDatabaseModel.OneTimeToken,
                         RocksVerified = userDatabaseModel.RocksVerified,
                         VVerified = userDatabaseModel.VVerified,
                         Blacklisted = userDatabaseModel.Blacklisted,
@@ -177,7 +177,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Name = userModel.Name,
                     CommunityName = userModel.CommunityName,
                     Level = userModel.Level,
-                    LocationKey = userModel.LocationKey,
+                    OneTimeToken = userModel.OneTimeToken,
                     RocksVerified = userModel.RocksVerified,
                     VVerified = userModel.VVerified,
                     Blacklisted = userModel.Blacklisted,
