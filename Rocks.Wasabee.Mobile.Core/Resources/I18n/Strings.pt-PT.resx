@@ -794,10 +794,6 @@
     <value>{0} foi eliminada com sucesso</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
   </data>
-  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>O estado não pode ser alterado, por favor, tente novamente</value>
-    <comment>Error when location sharing state can't be changed</comment>
-  </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
     <value>Zona de risco</value>
     <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
