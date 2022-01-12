@@ -427,58 +427,6 @@
     <value>Marker informations</value>
     <comment>Marker info dialog title</comment>
   </data>
-  <data name="MarkerType_Capture" xml:space="preserve">
-    <value>Capture</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_CreateLink" xml:space="preserve">
-    <value>Create link</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Destroy" xml:space="preserve">
-    <value>Destroy</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Exclude" xml:space="preserve">
-    <value>Excluded</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Farm" xml:space="preserve">
-    <value>Farm keys</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_GetKey" xml:space="preserve">
-    <value>Get key</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_GoTo" xml:space="preserve">
-    <value>Go to</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_LetDecay" xml:space="preserve">
-    <value>Let decay</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_MeetAgent" xml:space="preserve">
-    <value>Meet Agent</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Other" xml:space="preserve">
-    <value>Other</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Recharge" xml:space="preserve">
-    <value>Recharge</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Upgrade" xml:space="preserve">
-    <value>Upgrade</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_UseVirus" xml:space="preserve">
-    <value>Use virus</value>
-    <comment>Marker type</comment>
-  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Change</value>
     <comment>Text on the button to change selected OP</comment>
@@ -551,13 +499,13 @@
     <value>My Operations</value>
     <comment>Operations list page title</comment>
   </data>
-  <data name="Operation_Text_AssignedTo" xml:space="preserve">
-    <value>Assigned to :</value>
-    <comment>Text for assignments list (there may be many assigned agents)</comment>
-  </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Link Ingress Account</value>
     <comment>Text for link ingress account button</comment>
+  </data>
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Link Telegram account</value>
+    <comment>Button to start Telegram linking process</comment>
   </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
@@ -809,22 +757,6 @@
     <value>✗   Undone</value>
     <comment>Task undo button</comment>
   </data>
-  <data name="TaskState_Acknowledged" xml:space="preserve">
-    <value>Acknowledged</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Assigned" xml:space="preserve">
-    <value>Assigned</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Completed" xml:space="preserve">
-    <value>Completed</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Pending" xml:space="preserve">
-    <value>Pending</value>
-    <comment>Task state</comment>
-  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Add Agent</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -888,6 +820,56 @@
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
     <value>Change team name</value>
     <comment>Title for changing team name popup</comment>
+  </data>
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Your Wasabee account isn't yet linked to any Telegram account.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>This will prove to Wasabee that you are the owner of both the Wasabee and Telegram accounts.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>This isn't mandatory, but will help Operators inviting you to their teams.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>You'll need a Telegram account ready and set up on your device to proceed.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee generated a unique token to send to the bot on Telegram</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. You send the token to the bot</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee then generates a confirmation token and you send it to the bot</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>Bot is awaiting your message...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Start {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>Here is your token ! Copy it to send it to the bot.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>Go to the next step to finish the process !</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Send the token to the bot</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Open {0}</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>You Wasabee account in now linked to your Telegram account !</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Copy this confirmation token</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Send the confirmation token to the bot</value>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Your OPs are loading in background</value>
