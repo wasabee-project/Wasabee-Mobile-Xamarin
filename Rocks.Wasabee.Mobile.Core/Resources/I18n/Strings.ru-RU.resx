@@ -503,7 +503,10 @@
     <value>Привязать Ingress-аккаунт</value>
     <comment>Text for link ingress account button</comment>
   </data>
-  
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Привязать Telegram-аккаунт</value>
+    <comment>Button to start Telegram linking process</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Эта информация поступает от V и/или .rocks. Если вы отображаетесь как "UnverifiedAgent_цифры", пожалуйста, убедитесь в правильности информации на .rocks и V.</value>
     <comment>Message indicating from where data came from</comment>
@@ -818,22 +821,56 @@
     <value>Изменить название команды</value>
     <comment>Title for changing team name popup</comment>
   </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Ваш аккаунт Wasabee еще не привязан к учетной записи Telegram.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>Это докажет Wasabee, что вам принадлежат аккаунты как в Wasabee, так и в Ingress.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>Это не обязательно, но это поможет организаторам ОПРЦ приглашать вас в команды.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>Вам понадобится работающий на вашем устройстве Telegram-аккаунт, чтобы продолжить привязку.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee сгененировал уникальный токен, который нужно отправить Telegram-боту</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. Вы отправляете токен боту</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Затем Wasabee генерирует токен подтверждения, и вы отправляете его боту</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>Бот ожидает вашего сообщения...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Начать {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>Вот ваш токен ! Скопируйте его, чтобы отправить его боту.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>Перейдите к следующему шагу, чтобы завершить процесс !</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Отправьте токен боту</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Открыть {0}</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>Ваш аккаунт в Wasabee привязан к Telegram-аккаунту !</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Скопируйте этот токен подтверждения</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Отправьте токен подтверждения боту</value>
+  </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Ваши ОПРЦ загружаются в фоновом режиме</value>
     <comment>Toast message</comment>
