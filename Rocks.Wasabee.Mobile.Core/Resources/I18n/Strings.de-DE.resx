@@ -427,19 +427,6 @@
     <value>Marker-Informationen</value>
     <comment>Marker info dialog title</comment>
   </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Wechseln</value>
     <comment>Text on the button to change selected OP</comment>
@@ -512,11 +499,11 @@
     <value>Meine Operatoren</value>
     <comment>Operations list page title</comment>
   </data>
-  
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Ingress-Konto verknüpfen</value>
     <comment>Text for link ingress account button</comment>
   </data>
+  
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Diese Informationen kommen von V und/oder .rocks. Wenn du einen UnverifiedAgent_ Namen hast, stelle bitte sicher, dass deine .Rocks und V-Informationen korrekt sind.</value>
     <comment>Message indicating from where data came from</comment>
@@ -767,10 +754,6 @@
     <value>✗  Unerledigt</value>
     <comment>Task undo button</comment>
   </data>
-  
-  
-  
-  
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Agent hinzufügen</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -835,6 +818,22 @@
     <value>Teamname ändern</value>
     <comment>Title for changing team name popup</comment>
   </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Ihre OPs werden im Hintergrund geladen</value>
     <comment>Toast message</comment>
