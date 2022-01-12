@@ -16,6 +16,13 @@ Not affiliated with Niantic.
 | Azure DevOps | iOS  | [![Build Status](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_apis/build/status/%5BPROD%5D%20iOS?branchName=master)](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_build/latest?definitionId=3&branchName=master)|
 
 ---
+## Project Setup
+1. Install Visual Studio 2019
+2. Clone the repo
+3. Make a copy of the file 'ApiKeys.example.cs' named 'ApiKeys.cs' and fill in your keys
+4. Build and enjoy!
+
+---
 ## FAQ
 - **When will it be available ?**
     - Soon TM
