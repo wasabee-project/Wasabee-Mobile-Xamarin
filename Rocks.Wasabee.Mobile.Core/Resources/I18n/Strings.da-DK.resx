@@ -427,58 +427,6 @@
     <value>Oplysninger om markøren</value>
     <comment>Marker info dialog title</comment>
   </data>
-  <data name="MarkerType_Capture" xml:space="preserve">
-    <value>Erobr</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_CreateLink" xml:space="preserve">
-    <value>Lav link</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Destroy" xml:space="preserve">
-    <value>Ødelæg/Skyd</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Exclude" xml:space="preserve">
-    <value>Ekskluderet</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Farm" xml:space="preserve">
-    <value>Høst nøgler</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_GetKey" xml:space="preserve">
-    <value>Få en nøgle</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_GoTo" xml:space="preserve">
-    <value>Gå til</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_LetDecay" xml:space="preserve">
-    <value>Lad forfalde</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_MeetAgent" xml:space="preserve">
-    <value>Mød Agent</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Other" xml:space="preserve">
-    <value>Andet</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Recharge" xml:space="preserve">
-    <value>Genoplad</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_Upgrade" xml:space="preserve">
-    <value>Upgrader</value>
-    <comment>Marker type</comment>
-  </data>
-  <data name="MarkerType_UseVirus" xml:space="preserve">
-    <value>Brug Virus</value>
-    <comment>Marker type</comment>
-  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Skift</value>
     <comment>Text on the button to change selected OP</comment>
@@ -551,14 +499,11 @@
     <value>Mine Operationer</value>
     <comment>Operations list page title</comment>
   </data>
-  <data name="Operation_Text_AssignedTo" xml:space="preserve">
-    <value>Tildelt til:</value>
-    <comment>Text for assignments list (there may be many assigned agents)</comment>
-  </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Link Ingress Konto</value>
     <comment>Text for link ingress account button</comment>
   </data>
+  
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Disse oplysninger kommer fra V og/eller .rocks. Hvis du har et UnverifiedAgent_ navn, så sørg venligst for at dine .Rocks og V oplysninger er korrekte.</value>
     <comment>Message indicating from where data came from</comment>
@@ -809,22 +754,6 @@
     <value>✗ Ikke Fuldført</value>
     <comment>Task undo button</comment>
   </data>
-  <data name="TaskState_Acknowledged" xml:space="preserve">
-    <value>Bekræftet</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Assigned" xml:space="preserve">
-    <value>Tildelt</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Completed" xml:space="preserve">
-    <value>Fuldført</value>
-    <comment>Task state</comment>
-  </data>
-  <data name="TaskState_Pending" xml:space="preserve">
-    <value>Afventer</value>
-    <comment>Task state</comment>
-  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Tilføj Agent</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -889,6 +818,22 @@
     <value>Skift holdnavn</value>
     <comment>Title for changing team name popup</comment>
   </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Dine OPs indlæses i baggrunden</value>
     <comment>Toast message</comment>
