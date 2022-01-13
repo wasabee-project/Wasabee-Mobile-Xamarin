@@ -531,7 +531,9 @@
     <value>Perfil</value>
     <comment>Title for Profile page</comment>
   </data>
-  
+  <data name="Settings_Alert_Text_RestartAppLanguageChanged" xml:space="preserve">
+    <value>Por favor, reinicie la aplicación para que se aplique el idioma seleccionado</value>
+  </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Abrir ajustes del sistema para la aplicación</value>
     <comment>Button for opening system settings for the app</comment>
@@ -542,7 +544,9 @@
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(esto ayuda a los desarrolladores a mejorar Wasabee)</value>
   </data>
-  
+  <data name="Settings_Label_ChangeLanguage" xml:space="preserve">
+    <value>Cambiar el idioma de la aplicación</value>
+  </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Alternar tema claro/oscuro</value>
   </data>
@@ -860,7 +864,9 @@
     <value>Abrir {0}</value>
     <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
   </data>
-  
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>¡Tu cuenta de Wasabee está ahora vinculada a tu cuenta de Telegram!</value>
+  </data>
   <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
     <value>Copia este token de confirmación</value>
   </data>
