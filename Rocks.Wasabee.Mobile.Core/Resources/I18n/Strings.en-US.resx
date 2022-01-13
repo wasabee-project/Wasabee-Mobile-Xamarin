@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -531,6 +531,9 @@
     <value>Profile</value>
     <comment>Title for Profile page</comment>
   </data>
+  <data name="Settings_Alert_Text_RestartAppLanguageChanged" xml:space="preserve">
+    <value>Please restart the application to take into account the new language</value>
+  </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Open app system settings</value>
     <comment>Button for opening system settings for the app</comment>
@@ -540,6 +543,9 @@
   </data>
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(this helps the developers improve Wasabee)</value>
+  </data>
+  <data name="Settings_Label_ChangeLanguage" xml:space="preserve">
+    <value>Change application language</value>
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Switch light/dark theme</value>
