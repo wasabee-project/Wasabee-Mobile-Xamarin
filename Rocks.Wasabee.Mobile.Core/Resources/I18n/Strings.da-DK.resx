@@ -456,7 +456,7 @@
     <comment>Menu button for Profile</comment>
   </data>
   <data name="Menu_Item_Settings" xml:space="preserve">
-    <value>Indstilling</value>
+    <value>Indstillinger</value>
     <comment>Menu button for Settings</comment>
   </data>
   <data name="Menu_Item_Teams" xml:space="preserve">
@@ -480,7 +480,7 @@
     <comment>Text next to the switch that turns on location sharing</comment>
   </data>
   <data name="Menu_Label_NoLocalOpsStored" xml:space="preserve">
-    <value>Du har ikke nogen lokal OP's gemt</value>
+    <value>Du har ikke nogen lokale OP's gemt</value>
     <comment>Warning message when no OPs are stored on phone</comment>
   </data>
   <data name="OperationDetail_Label_InvolvedTeams" xml:space="preserve">
@@ -500,7 +500,7 @@
     <comment>Operations list page title</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
-    <value>Link Ingress Konto</value>
+    <value>Link Ingresskonto</value>
     <comment>Text for link ingress account button</comment>
   </data>
   <data name="Profile_Button_LinkTelegram" xml:space="preserve">
@@ -830,7 +830,7 @@
     <value>Du har brug for en Telegram-konto klar og opsat på din enhed for at fortsætte.</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
-    <value>1. Wasabee genereret en unik token til at sende til botten på Telegram</value>
+    <value>1. Wasabee genererede en unik token til at sende til botten på Telegram</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
     <value>2. Du sender token til botten,</value>
@@ -846,7 +846,7 @@
     <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
   </data>
   <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
-    <value>Her er dit token! Kopier det for at sende det til botten.</value>
+    <value>Her er din token! Kopier den for at sende den til botten.</value>
   </data>
   <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
     <value>Gå til næste trin for at afslutte processen!</value>
@@ -859,7 +859,7 @@
     <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
   </data>
   <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
-    <value>Din Wasabee konto i nu knyttet til din Telegram konto!</value>
+    <value>Din Wasabeekonto er nu knyttet til din Telegramkonto!</value>
   </data>
   <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
     <value>Kopier dette bekræftelsestoken</value>
