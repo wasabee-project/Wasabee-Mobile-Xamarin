@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -865,7 +865,7 @@
     <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
   </data>
   <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
-    <value>Your Wasabee account in now linked to your Telegram account !</value>
+    <value>Your Wasabee account is now linked to your Telegram account !</value>
   </data>
   <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
     <value>Copy this confirmation token</value>
