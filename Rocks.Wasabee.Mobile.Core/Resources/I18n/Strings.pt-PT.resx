@@ -503,7 +503,10 @@
     <value>Vincular conta de Ingress</value>
     <comment>Text for link ingress account button</comment>
   </data>
-  
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Associar conta do Telegram</value>
+    <comment>Button to start Telegram linking process</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Esta informação vem do V e/ou rocks. Se você tiver um nome UnverifiedAgent_ certifica-te de que suas informações Rocks e V estão corretas.</value>
     <comment>Message indicating from where data came from</comment>
@@ -528,7 +531,9 @@
     <value>Perfil</value>
     <comment>Title for Profile page</comment>
   </data>
-  
+  <data name="Settings_Alert_Text_RestartAppLanguageChanged" xml:space="preserve">
+    <value>Por favor, reinicie o aplicativo para levar em conta o novo idioma</value>
+  </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Abrir as definições do sistema</value>
     <comment>Button for opening system settings for the app</comment>
@@ -539,7 +544,9 @@
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(isso ajuda os desenvolvedores a melhorar o Wasabee)</value>
   </data>
-  
+  <data name="Settings_Label_ChangeLanguage" xml:space="preserve">
+    <value>Alterar idioma da aplicação</value>
+  </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Mudar tema claro/escuro</value>
   </data>
@@ -816,22 +823,56 @@
     <value>Mudar nome da equipa</value>
     <comment>Title for changing team name popup</comment>
   </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Sua conta Wasabee ainda não está vinculada a uma conta do Telegram.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>Isto provará ao Wasabee que és o proprietário das contas de Wasabee e Ingress.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>Isso não é obrigatório, mas ajudará os operadores a convidá-lo para as suas equipas.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>Você precisa de uma conta Telegram e configurá-la no seu dispositivo para continuar.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. O token Wasabee gerou um token único para enviar para o bot no Telegram</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. Você enviou o token para o bot</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee então gera um token de confirmação e você o envia ao bot</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>O Bot está a aguardar a sua mensagem...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Iniciar: {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>Aqui está seu token! Copie-o para enviá-lo para o bot.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>Vá para o próximo passo para concluir o processo !</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Enviar o Token para o bot</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Abrir "{0}"</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>Sua conta Wasabee ainda não está vinculada a uma conta do Telegram !</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Copiar este token de confirmação</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Enviar o token de confirmação para o bot</value>
+  </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Suas OPs estão a carregar em segundo plano</value>
     <comment>Toast message</comment>
