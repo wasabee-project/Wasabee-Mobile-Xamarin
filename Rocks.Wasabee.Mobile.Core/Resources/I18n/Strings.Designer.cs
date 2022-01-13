@@ -1015,6 +1015,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please restart the application to take into account the new language.
+        /// </summary>
+        internal static string Settings_Alert_Text_RestartAppLanguageChanged {
+            get {
+                return ResourceManager.GetString("Settings_Alert_Text_RestartAppLanguageChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open app system settings.
         /// </summary>
         internal static string Settings_Button_OpenSystemSettings {
@@ -1038,6 +1047,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         internal static string Settings_Label_AnonymousAnalyticsHint {
             get {
                 return ResourceManager.GetString("Settings_Label_AnonymousAnalyticsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change application language.
+        /// </summary>
+        internal static string Settings_Label_ChangeLanguage {
+            get {
+                return ResourceManager.GetString("Settings_Label_ChangeLanguage", resourceCulture);
             }
         }
         

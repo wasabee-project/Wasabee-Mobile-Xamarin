@@ -12,6 +12,7 @@ using Rocks.Wasabee.Mobile.Core.ViewModels;
 using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;
 using Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking.SubViewModels;
 using System;
+using System.Globalization;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core
@@ -42,6 +43,20 @@ namespace Rocks.Wasabee.Mobile.Core
 
             var preferences = Mvx.IoCProvider.Resolve<IPreferences>();
             var versionTracking = Mvx.IoCProvider.Resolve<IVersionTracking>();
+
+            var cultureSetting = preferences.Get(UserSettingsKeys.CurrentCulture, string.Empty);
+            if (string.IsNullOrEmpty(cultureSetting) is false)
+            {
+                try 
+                {
+                    var culture = CultureInfo.GetCultureInfo(cultureSetting);
+                    CultureInfo.CurrentUICulture = culture;
+                }
+                catch
+                {
+                    // Nothing to do
+                }
+            }
             
             var lastVersion = preferences.Get(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
             if (Version.TryParse(versionTracking.CurrentVersion, out var currentVersion) && 

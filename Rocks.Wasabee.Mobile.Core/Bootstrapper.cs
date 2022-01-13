@@ -17,7 +17,6 @@ namespace Rocks.Wasabee.Mobile.Core
     {
         public static void SetupCrossPlugins()
         {
-            Mvx.IoCProvider.RegisterSingleton<IPreferences>(() => new PreferencesImplementation());
             Mvx.IoCProvider.RegisterSingleton<IConnectivity>(() => new ConnectivityImplementation());
             Mvx.IoCProvider.RegisterSingleton<IPermissions>(() => new PermissionsImplementation());
             Mvx.IoCProvider.RegisterSingleton<IVersionTracking>(() => new VersionTrackingImplementation());
