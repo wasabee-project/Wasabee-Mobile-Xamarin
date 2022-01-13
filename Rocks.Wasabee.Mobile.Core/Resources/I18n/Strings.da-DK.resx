@@ -531,7 +531,9 @@
     <value>Profil</value>
     <comment>Title for Profile page</comment>
   </data>
-  
+  <data name="Settings_Alert_Text_RestartAppLanguageChanged" xml:space="preserve">
+    <value>Genstart venligst programmet for at tage hensyn til det nye sprog</value>
+  </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Åbn app-systemindstillinger</value>
     <comment>Button for opening system settings for the app</comment>
@@ -542,7 +544,9 @@
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(Dette hjælper udviklerne med at forbedre Wasabee)</value>
   </data>
-  
+  <data name="Settings_Label_ChangeLanguage" xml:space="preserve">
+    <value>Skift programsprog</value>
+  </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Skift lys/mørkt tema</value>
   </data>
@@ -860,7 +864,9 @@
     <value>Åben {0}</value>
     <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
   </data>
-  
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>Din Wasabeekonto er nu knyttet til din Telegramkonto!</value>
+  </data>
   <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
     <value>Kopier dette bekræftelsestoken</value>
   </data>
