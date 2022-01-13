@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -327,10 +327,6 @@
   <data name="Global_Yes" xml:space="preserve">
     <value>Ja</value>
   </data>
-  <data name="LinkDialog_Text_Completed" xml:space="preserve">
-    <value>Abgeschlossen?: {0}</value>
-    <comment>Link text for completion state (true or false)</comment>
-  </data>
   <data name="LinkDialog_Text_Destination" xml:space="preserve">
     <value>Ziel</value>
     <comment>Text for link destination</comment>
@@ -338,6 +334,10 @@
   <data name="LinkDialog_Text_Source" xml:space="preserve">
     <value>Ursprung</value>
     <comment>Text for link origin</comment>
+  </data>
+  <data name="LinkDialog_Text_State" xml:space="preserve">
+    <value>Status: {0}</value>
+    <comment>Text for link state (complet, incomplete, unassigned...)</comment>
   </data>
   <data name="LinkDialog_Title" xml:space="preserve">
     <value>Link-Informationen</value>
@@ -503,6 +503,10 @@
     <value>Ingress-Konto verknüpfen</value>
     <comment>Text for link ingress account button</comment>
   </data>
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Telegram-Konto verknüpfen</value>
+    <comment>Button to start Telegram linking process</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Diese Informationen kommen von V und/oder .rocks. Wenn du einen UnverifiedAgent_ Namen hast, stelle bitte sicher, dass deine .Rocks und V-Informationen korrekt sind.</value>
     <comment>Message indicating from where data came from</comment>
@@ -527,6 +531,9 @@
     <value>Profil</value>
     <comment>Title for Profile page</comment>
   </data>
+  <data name="Settings_Alert_Text_RestartAppLanguageChanged" xml:space="preserve">
+    <value>Bitte starte die App neu, um die neue Sprache zu berücksichtigen</value>
+  </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Systemeinstellungen öffnen</value>
     <comment>Button for opening system settings for the app</comment>
@@ -536,6 +543,9 @@
   </data>
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(Das wird den Entwicklern helfen Wasabee zu verbessern)</value>
+  </data>
+  <data name="Settings_Label_ChangeLanguage" xml:space="preserve">
+    <value>App-Sprache ändern</value>
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Auf helles/dunkles Thema umschalten</value>
@@ -793,10 +803,6 @@
     <value>Team '{0} ' erfolgreich gelöscht</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
   </data>
-  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>Status kann nicht geändert werden, bitte versuchen Sie es erneut</value>
-    <comment>Error when location sharing state can't be changed</comment>
-  </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
     <value>Gefahrenbereich</value>
     <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
@@ -816,6 +822,56 @@
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
     <value>Teamname ändern</value>
     <comment>Title for changing team name popup</comment>
+  </data>
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Dein Wasabee-Konto ist noch nicht mit einem Telegram-Konto verbunden.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>Dies wird dient als Nachweis, dass Sie der Eigentümer des Wasabee- und des Telegram-Accounts sind.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>Dies ist nicht zwingend erforderlich, hilft aber Operatoren, dich in ihre Teams einzuladen.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>Du brauchst ein Telegram-Konto, das auf deinem Gerät eingerichtet ist, um fortzufahren.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee hat einen eindeutigen Token generiert, um diesen an den Telegram-Bot zu senden</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. Du sendest den Token an den Bot</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee erzeugt dann einen Bestätigungs-Token und sendet es an den Bot</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>Bot wartet auf deine Nachricht...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Starte {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>Hier ist dein Token! Kopiere es, um es an den Bot zu senden.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>Gehen Sie zum nächsten Schritt, um den Prozess abzuschließen!</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Token an den Bot senden</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Öffne {0}</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>Dein Wasabee-Konto ist noch nicht mit deinem Telegram-Konto verbunden!</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Bestätigungs-Token kopieren</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Bestätigungs-Token an Bot senden</value>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Ihre OPs werden im Hintergrund geladen</value>

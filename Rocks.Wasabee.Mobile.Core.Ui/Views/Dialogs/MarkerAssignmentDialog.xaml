@@ -46,7 +46,7 @@
                         <StackLayout Padding="0" Margin="0">
                             <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
 
-                            <Label Text="Assignments :"/>
+                            <Label Text="{xaml:Translate Operation_Text_AssignedTo}"/>
                             <Label Text="{Binding Assignments}"/>
 
                             <StackLayout.Triggers>

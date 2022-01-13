@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -327,10 +327,6 @@
   <data name="Global_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
-  <data name="LinkDialog_Text_Completed" xml:space="preserve">
-    <value>Completed? : {0}</value>
-    <comment>Link text for completion state (true or false)</comment>
-  </data>
   <data name="LinkDialog_Text_Destination" xml:space="preserve">
     <value>Destination</value>
     <comment>Text for link destination</comment>
@@ -338,6 +334,10 @@
   <data name="LinkDialog_Text_Source" xml:space="preserve">
     <value>Source</value>
     <comment>Text for link origin</comment>
+  </data>
+  <data name="LinkDialog_Text_State" xml:space="preserve">
+    <value>State: {0}</value>
+    <comment>Text for link state (complet, incomplete, unassigned...)</comment>
   </data>
   <data name="LinkDialog_Title" xml:space="preserve">
     <value>Link informations</value>
@@ -503,6 +503,10 @@
     <value>Link Ingress Account</value>
     <comment>Text for link ingress account button</comment>
   </data>
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Link Telegram account</value>
+    <comment>Button to start Telegram linking process</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>This information comes from V and/or .rocks. If you have an UnverifiedAgent_ name, please ensure your .Rocks and V information is correct.</value>
     <comment>Message indicating from where data came from</comment>
@@ -527,6 +531,9 @@
     <value>Profile</value>
     <comment>Title for Profile page</comment>
   </data>
+  <data name="Settings_Alert_Text_RestartAppLanguageChanged" xml:space="preserve">
+    <value>Please restart the application to take into account the new language</value>
+  </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Open app system settings</value>
     <comment>Button for opening system settings for the app</comment>
@@ -536,6 +543,9 @@
   </data>
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(this helps the developers improve Wasabee)</value>
+  </data>
+  <data name="Settings_Label_ChangeLanguage" xml:space="preserve">
+    <value>Change application language</value>
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Switch light/dark theme</value>
@@ -793,10 +803,6 @@
     <value>Successfully deleted team '{0}'</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
   </data>
-  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>State can't be changed, please try again</value>
-    <comment>Error when location sharing state can't be changed</comment>
-  </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
     <value>Danger zone</value>
     <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
@@ -816,6 +822,56 @@
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
     <value>Change team name</value>
     <comment>Title for changing team name popup</comment>
+  </data>
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Your Wasabee account isn't yet linked to any Telegram account.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>This will prove to Wasabee that you are the owner of both the Wasabee and Telegram accounts.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>This isn't mandatory, but will help Operators inviting you to their teams.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>You'll need a Telegram account ready and set up on your device to proceed.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee generated a unique token to send to the bot on Telegram</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. You send the token to the bot</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee then generates a confirmation token and you send it to the bot</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>Bot is awaiting your message...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Start {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>Here is your token ! Copy it to send it to the bot.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>Go to the next step to finish the process !</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Send the token to the bot</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Open {0}</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>Your Wasabee account is now linked to your Telegram account !</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Copy this confirmation token</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Send the confirmation token to the bot</value>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Your OPs are loading in background</value>

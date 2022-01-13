@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -327,10 +327,6 @@
   <data name="Global_Yes" xml:space="preserve">
     <value>Sí</value>
   </data>
-  <data name="LinkDialog_Text_Completed" xml:space="preserve">
-    <value>Completado: {0}</value>
-    <comment>Link text for completion state (true or false)</comment>
-  </data>
   <data name="LinkDialog_Text_Destination" xml:space="preserve">
     <value>Destino</value>
     <comment>Text for link destination</comment>
@@ -338,6 +334,10 @@
   <data name="LinkDialog_Text_Source" xml:space="preserve">
     <value>Origen</value>
     <comment>Text for link origin</comment>
+  </data>
+  <data name="LinkDialog_Text_State" xml:space="preserve">
+    <value>Estado: {0}</value>
+    <comment>Text for link state (complet, incomplete, unassigned...)</comment>
   </data>
   <data name="LinkDialog_Title" xml:space="preserve">
     <value>Información del enlace</value>
@@ -503,6 +503,10 @@
     <value>Vincular cuenta de Ingress</value>
     <comment>Text for link ingress account button</comment>
   </data>
+  <data name="Profile_Button_LinkTelegram" xml:space="preserve">
+    <value>Vincular cuenta de Telegram</value>
+    <comment>Button to start Telegram linking process</comment>
+  </data>
   <data name="Profile_Label_DataOrigin" xml:space="preserve">
     <value>Esta información proviene de V y/o .rocks. Si tiene un nombre de UnverifiedAgent_, asegúrese de que su información de .Rocks y V es correcta.</value>
     <comment>Message indicating from where data came from</comment>
@@ -527,6 +531,9 @@
     <value>Perfil</value>
     <comment>Title for Profile page</comment>
   </data>
+  <data name="Settings_Alert_Text_RestartAppLanguageChanged" xml:space="preserve">
+    <value>Por favor, reinicie la aplicación para que se aplique el idioma seleccionado</value>
+  </data>
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Abrir ajustes del sistema para la aplicación</value>
     <comment>Button for opening system settings for the app</comment>
@@ -536,6 +543,9 @@
   </data>
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(esto ayuda a los desarrolladores a mejorar Wasabee)</value>
+  </data>
+  <data name="Settings_Label_ChangeLanguage" xml:space="preserve">
+    <value>Cambiar el idioma de la aplicación</value>
   </data>
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Alternar tema claro/oscuro</value>
@@ -793,10 +803,6 @@
     <value>Se ha eliminado correctamente el equipo '{0}'</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
   </data>
-  <data name="TeamsList_Toast_Warning_CantChangeState" xml:space="preserve">
-    <value>No se puede cambiar el estado, por favor inténtalo de nuevo</value>
-    <comment>Error when location sharing state can't be changed</comment>
-  </data>
   <data name="TeamsList_Warning_DeleteTeamTitle" xml:space="preserve">
     <value>Zona peligrosa</value>
     <comment>Warning title before deleting a team. User must understand it's dangerous here</comment>
@@ -816,6 +822,56 @@
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
     <value>Cambiar nombre de equipo</value>
     <comment>Title for changing team name popup</comment>
+  </data>
+  <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
+    <value>Tu cuenta de Wasabee aún no está vinculada a ninguna cuenta de Telegram.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
+    <value>Esto servirá para probar a Wasabee que la cuenta de Wasabee y la de Ingress te pertenecen.</value>
+  </data>
+  <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
+    <value>Esto no es obligatorio, pero ayudará a los operadores a invitarte a sus equipos.</value>
+  </data>
+  <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
+    <value>Necesitarás una cuenta de Telegram lista y configurada en tu dispositivo para continuar.</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
+    <value>1. Wasabee generó un token único para enviar al bot en Telegram</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
+    <value>2. Envías el token al bot</value>
+  </data>
+  <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
+    <value>3. Wasabee entonces genera un token de confirmación y lo envías al bot</value>
+  </data>
+  <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
+    <value>El bot está esperando tu mensaje...</value>
+  </data>
+  <data name="TGL_Step2_Button_StartBot" xml:space="preserve">
+    <value>Iniciar {0}</value>
+    <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
+  </data>
+  <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
+    <value>¡Aquí está tu token! Cópialo para enviárselo al bot.</value>
+  </data>
+  <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
+    <value>¡Ve al siguiente paso para terminar el proceso!</value>
+  </data>
+  <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
+    <value>Envía el token al bot</value>
+  </data>
+  <data name="TGL_Step3_Button_OpenBot" xml:space="preserve">
+    <value>Abrir {0}</value>
+    <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
+  </data>
+  <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
+    <value>¡Tu cuenta de Wasabee está ahora vinculada a tu cuenta de Telegram!</value>
+  </data>
+  <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
+    <value>Copia este token de confirmación</value>
+  </data>
+  <data name="TGL_Step3_Label_SendConfirmationToken" xml:space="preserve">
+    <value>Envía el token de confirmación al bot</value>
   </data>
   <data name="Toasts_LoadingOpsInBackground" xml:space="preserve">
     <value>Tus operaciones están cargando en segundo plano</value>
