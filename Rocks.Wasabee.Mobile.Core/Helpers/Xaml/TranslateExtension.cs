@@ -31,7 +31,7 @@ namespace Rocks.Wasabee.Mobile.Core.Helpers.Xaml
         {
             ResourceManager resourceManager = new ResourceManager(ResourceId, typeof(TranslateExtension).GetTypeInfo().Assembly);
 
-            var result = resourceManager.GetString(key, CultureInfo.CurrentCulture);
+            var result = resourceManager.GetString(key, CultureInfo.CurrentUICulture);
             
             if (string.IsNullOrWhiteSpace(result))
                 result = $"[{key}] not found";

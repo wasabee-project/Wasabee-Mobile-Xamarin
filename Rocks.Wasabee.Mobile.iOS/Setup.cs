@@ -18,6 +18,8 @@ using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 using Rocks.Wasabee.Mobile.iOS.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.iOS.Services.Geolocation;
 using UIKit;
+using Xamarin.Essentials.Implementation;
+using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms.Platform.iOS;
 
 #nullable enable
@@ -70,6 +72,7 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+            Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
 
             SetupGeolocationTrackingMessage();
             SetupFcmServiceMessage();

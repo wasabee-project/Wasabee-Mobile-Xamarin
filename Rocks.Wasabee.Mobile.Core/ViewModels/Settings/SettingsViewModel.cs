@@ -12,7 +12,11 @@ using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -328,9 +332,57 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             }
         }
 
+        public IMvxCommand SwitchLanguageCommand => new MvxCommand(SwitchLanguageExecuted);
+        private async void SwitchLanguageExecuted()
+        {
+            var cultures = GetAvailableCultures();
+
+            var result = await _userDialogs.ActionSheetAsync(
+                Strings.Settings_Label_ChangeLanguage, 
+                Strings.Global_Cancel,
+                null, null, 
+                cultures.Select(x => x.NativeName).OrderBy(x => x).ToArray());
+
+            if (cultures.All(x => x.NativeName != result))
+                return;
+
+            var selected = cultures.First(x => x.NativeName.Equals(result));
+
+            _preferences.Set(UserSettingsKeys.CurrentCulture, selected.Name);
+            CultureInfo.CurrentUICulture = selected;
+
+            _userDialogs.Alert(Strings.Settings_Alert_Text_RestartAppLanguageChanged, null, Strings.Global_Ok);
+        }
+
         #endregion
 
         #region Private methods
+
+        private List<CultureInfo> GetAvailableCultures()
+        {
+            var result = new List<CultureInfo>();
+            var rm = new ResourceManager(typeof(Strings));
+            var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+            foreach (var culture in cultures)
+            {
+                try
+                {
+                    if (culture.Equals(CultureInfo.InvariantCulture)) //do not use "==", won't work
+                        continue;
+
+                    var rs = rm.GetResourceSet(culture, true, false);
+                    if (rs != null)
+                        result.Add(culture);
+                }
+                catch (CultureNotFoundException)
+                {
+                    // do nothing
+                }
+            }
+
+            return result;
+        }
 
         private bool QuickZip(string directoryToZip, string destinationZipFullPath)
         {

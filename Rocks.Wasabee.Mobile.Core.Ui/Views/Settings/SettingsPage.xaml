@@ -55,6 +55,7 @@
                             </ViewCell>
                             <TextCell Text="{xaml:Translate Settings_Label_RefreshFcmToken}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
                             <TextCell Text="{xaml:Translate Settings_Label_DarkMode}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
+                            <TextCell Text="{xaml:Translate Settings_Label_Language}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchLanguageCommand}"/>
                         </TableSection>
 
                         <TableSection Title="{xaml:Translate Settings_Section_Miscellaneous}" TextColor="{DynamicResource PrimaryGreen}">
