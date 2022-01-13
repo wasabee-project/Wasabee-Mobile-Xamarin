@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -525,6 +525,7 @@
     <value>Profilo</value>
     <comment>Title for Profile page</comment>
   </data>
+  
   <data name="Settings_Button_OpenSystemSettings" xml:space="preserve">
     <value>Apri impostazioni di sistema per le app</value>
     <comment>Button for opening system settings for the app</comment>
@@ -535,6 +536,7 @@
   <data name="Settings_Label_AnonymousAnalyticsHint" xml:space="preserve">
     <value>(aiuta gli sviluppatori a migliorare Wasabee)</value>
   </data>
+  
   <data name="Settings_Label_DarkMode" xml:space="preserve">
     <value>Imposta tema chiaro/scuro</value>
   </data>
