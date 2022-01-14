@@ -57,6 +57,8 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         protected override IMvxApplication CreateApp(IMvxIoCProvider iocProvider)
         {
+            Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
+
             // this force Xamarin.Forms to initialize
             var app = this.FormsApplication;
 
@@ -72,7 +74,6 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
-            Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
 
             SetupGeolocationTrackingMessage();
             SetupFcmServiceMessage();
