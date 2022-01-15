@@ -427,6 +427,19 @@
     <value>Informazioni Marker</value>
     <comment>Marker info dialog title</comment>
   </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Cambia</value>
     <comment>Text on the button to change selected OP</comment>
@@ -491,14 +504,16 @@
     <value>Nome Operazione</value>
     <comment>Label for operation name</comment>
   </data>
-  <data name="OperationDetail_Page_Title" xml:space="preserve">
+  
+  <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Operazione</value>
-    <comment>Operation detail page title</comment>
+    <comment>Title for the 3 tabbed page operation view</comment>
   </data>
   <data name="OperationsList_Page_Title" xml:space="preserve">
     <value>Le Mie Operazioni</value>
     <comment>Operations list page title</comment>
   </data>
+  
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Collega Account Ingress</value>
     <comment>Text for link ingress account button</comment>
@@ -587,6 +602,7 @@
     <value>Permessi</value>
     <comment>Title for permissions section</comment>
   </data>
+  
   <data name="Settings_Title" xml:space="preserve">
     <value>Impostazioni</value>
     <comment>Title for Settings page</comment>
@@ -763,6 +779,10 @@
     <value>✗   Annulla</value>
     <comment>Task undo button</comment>
   </data>
+  
+  
+  
+  
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Aggiungi Agente</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -794,10 +814,6 @@
   <data name="TeamsList_Page_Title" xml:space="preserve">
     <value>Squadre</value>
     <comment>Title for Teams list page</comment>
-  </data>
-  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>Stato condivisione posizione modificato per la squadra {0}</value>
-    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>Squadra '{0}' eliminata con successo</value>

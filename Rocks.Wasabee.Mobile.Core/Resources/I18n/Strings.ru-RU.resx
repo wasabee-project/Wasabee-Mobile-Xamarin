@@ -427,6 +427,58 @@
     <value>Информация о маркере</value>
     <comment>Marker info dialog title</comment>
   </data>
+  <data name="MarkerType_Capture" xml:space="preserve">
+    <value>Захватить</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_CreateLink" xml:space="preserve">
+    <value>Линковать</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Destroy" xml:space="preserve">
+    <value>Снести</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Exclude" xml:space="preserve">
+    <value>Вне рассмотрения</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Farm" xml:space="preserve">
+    <value>Фармить ключи</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GetKey" xml:space="preserve">
+    <value>Достать ключ</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GoTo" xml:space="preserve">
+    <value>Идти к цели</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_LetDecay" xml:space="preserve">
+    <value>Просадить</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_MeetAgent" xml:space="preserve">
+    <value>Встретить агента</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Other" xml:space="preserve">
+    <value>Другое</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Recharge" xml:space="preserve">
+    <value>Заряжать</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Upgrade" xml:space="preserve">
+    <value>Апнуть</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_UseVirus" xml:space="preserve">
+    <value>Флипнуть</value>
+    <comment>Marker type</comment>
+  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Изменить</value>
     <comment>Text on the button to change selected OP</comment>
@@ -492,12 +544,20 @@
     <comment>Label for operation name</comment>
   </data>
   <data name="OperationDetail_Page_Title" xml:space="preserve">
+    <value>Сведения об ОПРЦ</value>
+    <comment>Operation info page title</comment>
+  </data>
+  <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Операция</value>
-    <comment>Operation detail page title</comment>
+    <comment>Title for the 3 tabbed page operation view</comment>
   </data>
   <data name="OperationsList_Page_Title" xml:space="preserve">
     <value>Мои операции</value>
     <comment>Operations list page title</comment>
+  </data>
+  <data name="Operation_Text_AssignedTo" xml:space="preserve">
+    <value>Назначено агенту :</value>
+    <comment>Text for assignments list (there may be many assigned agents)</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Привязать Ingress-аккаунт</value>
@@ -587,6 +647,7 @@
     <value>Разрешения</value>
     <comment>Title for permissions section</comment>
   </data>
+  
   <data name="Settings_Title" xml:space="preserve">
     <value>Настройки</value>
     <comment>Title for Settings page</comment>
@@ -763,6 +824,22 @@
     <value>✗   Отменено</value>
     <comment>Task undo button</comment>
   </data>
+  <data name="TaskState_Acknowledged" xml:space="preserve">
+    <value>Принято</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Assigned" xml:space="preserve">
+    <value>Назначено</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Completed" xml:space="preserve">
+    <value>Выполнено</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Pending" xml:space="preserve">
+    <value>В процессе</value>
+    <comment>Task state</comment>
+  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Добавить агента</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -794,10 +871,6 @@
   <data name="TeamsList_Page_Title" xml:space="preserve">
     <value>Команды</value>
     <comment>Title for Teams list page</comment>
-  </data>
-  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>Настройки обмена геолокацией изменены для команды {0}</value>
-    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>Успешно удалена команда '{0}'</value>
