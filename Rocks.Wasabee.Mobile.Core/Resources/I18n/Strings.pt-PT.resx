@@ -869,7 +869,6 @@
     <value>Equipas</value>
     <comment>Title for Teams list page</comment>
   </data>
-  
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>{0} foi eliminada com sucesso</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
