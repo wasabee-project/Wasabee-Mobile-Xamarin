@@ -1051,11 +1051,20 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Operation.
+        ///   Looks up a localized string similar to Operation infos.
         /// </summary>
         internal static string OperationDetail_Page_Title {
             get {
                 return ResourceManager.GetString("OperationDetail_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation.
+        /// </summary>
+        internal static string OperationMap_Page_Title {
+            get {
+                return ResourceManager.GetString("OperationMap_Page_Title", resourceCulture);
             }
         }
         
@@ -2005,7 +2014,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your Wasabee account in now linked to your Telegram account !.
+        ///   Looks up a localized string similar to Your Wasabee account is now linked to your Telegram account !.
         /// </summary>
         internal static string TGL_Step3_Label_AccountsLinked {
             get {

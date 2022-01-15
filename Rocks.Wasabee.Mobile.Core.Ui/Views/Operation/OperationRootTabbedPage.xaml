@@ -19,7 +19,7 @@
                      BarBackgroundColor="{DynamicResource NavBarsBackgroundColor}"
                      SelectedTabColor="{DynamicResource SelectedTabColor}"
                      UnselectedTabColor="{DynamicResource UnselectedTabColor}"
-                     Title="Operation">
+                     Title="{xaml:Translate OperationMap_Page_Title}">
 
     <views:MvxTabbedPage.Resources>
 
