@@ -427,6 +427,58 @@
     <value>Информация о маркере</value>
     <comment>Marker info dialog title</comment>
   </data>
+  <data name="MarkerType_Capture" xml:space="preserve">
+    <value>Захватить</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_CreateLink" xml:space="preserve">
+    <value>Линковать</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Destroy" xml:space="preserve">
+    <value>Снести</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Exclude" xml:space="preserve">
+    <value>Вне рассмотрения</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Farm" xml:space="preserve">
+    <value>Фармить ключи</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GetKey" xml:space="preserve">
+    <value>Достать ключ</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GoTo" xml:space="preserve">
+    <value>Идти к цели</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_LetDecay" xml:space="preserve">
+    <value>Просадить</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_MeetAgent" xml:space="preserve">
+    <value>Встретить агента</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Other" xml:space="preserve">
+    <value>Другое</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Recharge" xml:space="preserve">
+    <value>Заряжать</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Upgrade" xml:space="preserve">
+    <value>Апнуть</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_UseVirus" xml:space="preserve">
+    <value>Флипнуть</value>
+    <comment>Marker type</comment>
+  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Изменить</value>
     <comment>Text on the button to change selected OP</comment>
@@ -491,13 +543,18 @@
     <value>Название операции</value>
     <comment>Label for operation name</comment>
   </data>
-  <data name="OperationDetail_Page_Title" xml:space="preserve">
+  
+  <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Операция</value>
-    <comment>Operation detail page title</comment>
+    <comment>Title for the 3 tabbed page operation view</comment>
   </data>
   <data name="OperationsList_Page_Title" xml:space="preserve">
     <value>Мои операции</value>
     <comment>Operations list page title</comment>
+  </data>
+  <data name="Operation_Text_AssignedTo" xml:space="preserve">
+    <value>Назначено агенту :</value>
+    <comment>Text for assignments list (there may be many assigned agents)</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Привязать Ingress-аккаунт</value>
@@ -762,6 +819,22 @@
   <data name="TaskDialog_Button_Undone" xml:space="preserve">
     <value>✗   Отменено</value>
     <comment>Task undo button</comment>
+  </data>
+  <data name="TaskState_Acknowledged" xml:space="preserve">
+    <value>Принято</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Assigned" xml:space="preserve">
+    <value>Назначено</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Completed" xml:space="preserve">
+    <value>Выполнено</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Pending" xml:space="preserve">
+    <value>В процессе</value>
+    <comment>Task state</comment>
   </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Добавить агента</value>
