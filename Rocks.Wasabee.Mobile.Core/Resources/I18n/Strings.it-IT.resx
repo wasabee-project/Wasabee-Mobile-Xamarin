@@ -602,6 +602,7 @@
     <value>Permessi</value>
     <comment>Title for permissions section</comment>
   </data>
+  
   <data name="Settings_Title" xml:space="preserve">
     <value>Impostazioni</value>
     <comment>Title for Settings page</comment>
@@ -814,10 +815,7 @@
     <value>Squadre</value>
     <comment>Title for Teams list page</comment>
   </data>
-  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>Stato condivisione posizione modificato per la squadra {0}</value>
-    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
-  </data>
+  
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>Squadra '{0}' eliminata con successo</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
