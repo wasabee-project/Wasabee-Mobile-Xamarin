@@ -872,7 +872,6 @@
     <value>Команды</value>
     <comment>Title for Teams list page</comment>
   </data>
-  
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>Успешно удалена команда '{0}'</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
