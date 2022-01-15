@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="settings:SettingsViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
                        x:DataType="settings:SettingsViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -55,7 +55,7 @@
                             </ViewCell>
                             <TextCell Text="{xaml:Translate Settings_Label_RefreshFcmToken}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
                             <TextCell Text="{xaml:Translate Settings_Label_DarkMode}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
-                            <TextCell Text="{xaml:Translate Settings_Label_Language}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchLanguageCommand}"/>
+                            <TextCell Text="{xaml:Translate Settings_Label_ChangeLanguage}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchLanguageCommand}"/>
                         </TableSection>
 
                         <TableSection Title="{xaml:Translate Settings_Section_Miscellaneous}" TextColor="{DynamicResource PrimaryGreen}">
