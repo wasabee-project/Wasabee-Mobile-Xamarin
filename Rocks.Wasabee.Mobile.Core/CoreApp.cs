@@ -5,6 +5,7 @@ using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -65,6 +66,15 @@ namespace Rocks.Wasabee.Mobile.Core
                 // App has updated
                 preferences.Set(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
                 preferences.Set(UserSettingsKeys.DevModeActivated, false);
+
+                // TODO remove this when not needed anymore
+                if (lastVersionParsed.Major == 0)
+                {
+                    await Mvx.IoCProvider.Resolve<OperationsDatabase>().DeleteAllData();
+                    await Mvx.IoCProvider.Resolve<MarkersDatabase>().DeleteAllData();
+                    await Mvx.IoCProvider.Resolve<LinksDatabase>().DeleteAllData();
+                    await Mvx.IoCProvider.Resolve<TeamsDatabase>().DeleteAllData();
+                }
             }
 
 #if DEBUG
