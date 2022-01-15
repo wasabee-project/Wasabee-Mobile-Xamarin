@@ -869,6 +869,10 @@
     <value>Equipas</value>
     <comment>Title for Teams list page</comment>
   </data>
+  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
+    <value>O estado de partilha de localização mudou para a equipa '{0}'</value>
+    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
+  </data>
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>{0} foi eliminada com sucesso</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
