@@ -142,11 +142,11 @@
     <comment>ACV Notice, what does linking do</comment>
   </data>
   <data name="ACV_Step1_Label_NoticeLine2" xml:space="preserve">
-    <value>Notice: This does not prove that you are an Enlightened Agent, only that you control both accounts.</value>
+    <value>Note: This does not prove that you are an Enlightened Agent, only that you control both accounts.</value>
     <comment>ACV Notice, linking doesn't get your faction</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide" xml:space="preserve">
-    <value>Step-by-step guide :</value>
+    <value>Step-by-step guide:</value>
     <comment>ACV guide</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_1" xml:space="preserve">
@@ -154,7 +154,7 @@
     <comment>ACV Guide step 1</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_2" xml:space="preserve">
-    <value>2. Log in to the Ingress Community forums and post the token in the Activity feed</value>
+    <value>2. Login to the Ingress Community forums and post the token in the Activity feed</value>
     <comment>ACV Guide step 2</comment>
   </data>
   <data name="ACV_Step1_Label_StepByStepGuide_3" xml:space="preserve">
@@ -178,11 +178,11 @@
     <comment>Label to tell user it's case sensitive</comment>
   </data>
   <data name="ACV_Step2_Label_TokenFor" xml:space="preserve">
-    <value>Token for : {0}</value>
+    <value>Token for: {0}</value>
     <comment>Showing user which in-game name is used for the token</comment>
   </data>
   <data name="ACV_Step2_Label_TokenIs" xml:space="preserve">
-    <value>Your token is</value>
+    <value>Your token is:</value>
     <comment>Showing token</comment>
   </data>
   <data name="ACV_Step3_Button_OpenCommunityForums" xml:space="preserve">
