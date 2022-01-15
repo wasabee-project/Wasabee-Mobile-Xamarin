@@ -427,6 +427,58 @@
     <value>Oplysninger om markøren</value>
     <comment>Marker info dialog title</comment>
   </data>
+  <data name="MarkerType_Capture" xml:space="preserve">
+    <value>Erobr</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_CreateLink" xml:space="preserve">
+    <value>Opret link</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Destroy" xml:space="preserve">
+    <value>Ødelæg/Skyd</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Exclude" xml:space="preserve">
+    <value>Udelukket</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Farm" xml:space="preserve">
+    <value>Høst nøgler</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GetKey" xml:space="preserve">
+    <value>Få nøgle</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GoTo" xml:space="preserve">
+    <value>Gå til</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_LetDecay" xml:space="preserve">
+    <value>Lad forfalde</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_MeetAgent" xml:space="preserve">
+    <value>Mød Agent</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Other" xml:space="preserve">
+    <value>Andet</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Recharge" xml:space="preserve">
+    <value>Genoplad</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Upgrade" xml:space="preserve">
+    <value>Opgradér</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_UseVirus" xml:space="preserve">
+    <value>Brug virus</value>
+    <comment>Marker type</comment>
+  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Skift</value>
     <comment>Text on the button to change selected OP</comment>
@@ -492,12 +544,20 @@
     <comment>Label for operation name</comment>
   </data>
   <data name="OperationDetail_Page_Title" xml:space="preserve">
+    <value>Operationsinfo</value>
+    <comment>Operation info page title</comment>
+  </data>
+  <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Operation</value>
-    <comment>Operation detail page title</comment>
+    <comment>Title for the 3 tabbed page operation view</comment>
   </data>
   <data name="OperationsList_Page_Title" xml:space="preserve">
     <value>Mine Operationer</value>
     <comment>Operations list page title</comment>
+  </data>
+  <data name="Operation_Text_AssignedTo" xml:space="preserve">
+    <value>Tildelt til:</value>
+    <comment>Text for assignments list (there may be many assigned agents)</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Link Ingresskonto</value>
@@ -587,6 +647,7 @@
     <value>Tilladelser</value>
     <comment>Title for permissions section</comment>
   </data>
+  
   <data name="Settings_Title" xml:space="preserve">
     <value>Indstillinger</value>
     <comment>Title for Settings page</comment>
@@ -763,6 +824,22 @@
     <value>✗ Ikke Fuldført</value>
     <comment>Task undo button</comment>
   </data>
+  <data name="TaskState_Acknowledged" xml:space="preserve">
+    <value>Bekræftet</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Assigned" xml:space="preserve">
+    <value>Tildelt</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Completed" xml:space="preserve">
+    <value>Fuldført</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Pending" xml:space="preserve">
+    <value>Afventer</value>
+    <comment>Task state</comment>
+  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Tilføj Agent</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -795,10 +872,7 @@
     <value>Hold</value>
     <comment>Title for Teams list page</comment>
   </data>
-  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>Placeringsdelingsstatus ændret for hold {0}</value>
-    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
-  </data>
+  
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>Slettede holdet '{0}'</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
