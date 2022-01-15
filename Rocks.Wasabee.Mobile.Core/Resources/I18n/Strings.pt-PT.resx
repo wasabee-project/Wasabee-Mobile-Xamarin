@@ -427,6 +427,58 @@
     <value>Informações de Marcadores</value>
     <comment>Marker info dialog title</comment>
   </data>
+  <data name="MarkerType_Capture" xml:space="preserve">
+    <value>Capturar</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_CreateLink" xml:space="preserve">
+    <value>Criar link</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Destroy" xml:space="preserve">
+    <value>Destruir</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Exclude" xml:space="preserve">
+    <value>Excluído</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Farm" xml:space="preserve">
+    <value>Farmar Chaves</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GetKey" xml:space="preserve">
+    <value>Retirar Chaves</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GoTo" xml:space="preserve">
+    <value>Ir para</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_LetDecay" xml:space="preserve">
+    <value>Deixar caír</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_MeetAgent" xml:space="preserve">
+    <value>Encontrar Agente</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Other" xml:space="preserve">
+    <value>Outro</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Recharge" xml:space="preserve">
+    <value>Recarregar</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Upgrade" xml:space="preserve">
+    <value>Atualizar</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_UseVirus" xml:space="preserve">
+    <value>Usar vírus</value>
+    <comment>Marker type</comment>
+  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Mudança</value>
     <comment>Text on the button to change selected OP</comment>
@@ -491,13 +543,18 @@
     <value>Nome da OP</value>
     <comment>Label for operation name</comment>
   </data>
-  <data name="OperationDetail_Page_Title" xml:space="preserve">
+  
+  <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Operação</value>
-    <comment>Operation detail page title</comment>
+    <comment>Title for the 3 tabbed page operation view</comment>
   </data>
   <data name="OperationsList_Page_Title" xml:space="preserve">
     <value>Minhas OP's</value>
     <comment>Operations list page title</comment>
+  </data>
+  <data name="Operation_Text_AssignedTo" xml:space="preserve">
+    <value>Atribuído a:</value>
+    <comment>Text for assignments list (there may be many assigned agents)</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Vincular conta de Ingress</value>
@@ -587,6 +644,7 @@
     <value>Permissões</value>
     <comment>Title for permissions section</comment>
   </data>
+  
   <data name="Settings_Title" xml:space="preserve">
     <value>Configurações</value>
     <comment>Title for Settings page</comment>
@@ -763,6 +821,22 @@
     <value>✗   Desfeito</value>
     <comment>Task undo button</comment>
   </data>
+  <data name="TaskState_Acknowledged" xml:space="preserve">
+    <value>Reconhecido</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Assigned" xml:space="preserve">
+    <value>Atribuído</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Completed" xml:space="preserve">
+    <value>Concluído</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Pending" xml:space="preserve">
+    <value>Pendente</value>
+    <comment>Task state</comment>
+  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Adicionar Agente</value>
     <comment>Button in toolbar for adding agent</comment>
@@ -795,10 +869,7 @@
     <value>Equipas</value>
     <comment>Title for Teams list page</comment>
   </data>
-  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>O estado de partilha de localização mudou para a equipa {0}</value>
-    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
-  </data>
+  
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>{0} foi eliminada com sucesso</value>
     <comment>Info message after team is deleted. Parameter is team name</comment>
