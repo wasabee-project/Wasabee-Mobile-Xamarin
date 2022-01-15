@@ -543,7 +543,10 @@
     <value>Название операции</value>
     <comment>Label for operation name</comment>
   </data>
-  
+  <data name="OperationDetail_Page_Title" xml:space="preserve">
+    <value>Сведения об ОПРЦ</value>
+    <comment>Operation info page title</comment>
+  </data>
   <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Операция</value>
     <comment>Title for the 3 tabbed page operation view</comment>
