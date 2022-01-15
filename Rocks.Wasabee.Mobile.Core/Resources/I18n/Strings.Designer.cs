@@ -1303,6 +1303,15 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Permissions and language.
+        /// </summary>
+        internal static string Settings_Section_PermissionsAndLanguage {
+            get {
+                return ResourceManager.GetString("Settings_Section_PermissionsAndLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings_Title {
@@ -1843,7 +1852,7 @@ namespace Rocks.Wasabee.Mobile.Core.Resources.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Location sharing state changed for team {0}.
+        ///   Looks up a localized string similar to Location sharing state changed for team &apos;{0}&apos;.
         /// </summary>
         internal static string TeamsList_Toast_LocationSharingStateChanged {
             get {
