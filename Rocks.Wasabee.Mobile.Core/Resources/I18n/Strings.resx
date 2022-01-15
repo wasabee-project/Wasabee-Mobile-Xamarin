@@ -876,7 +876,7 @@
     <comment>Title for Teams list page</comment>
   </data>
   <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
-    <value>Location sharing state changed for team {0}</value>
+    <value>Location sharing state changed for team '{0}'</value>
     <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
