@@ -647,6 +647,10 @@
     <value>Permissions</value>
     <comment>Title for permissions section</comment>
   </data>
+  <data name="Settings_Section_PermissionsAndLanguage" xml:space="preserve">
+    <value>Permissions and language</value>
+    <comment>Title for permissions and language section</comment>
+  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Settings</value>
     <comment>Title for Settings page</comment>

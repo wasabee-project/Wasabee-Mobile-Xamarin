@@ -20,11 +20,17 @@
                 <TableView Intent="Settings" HasUnevenRows="True">
                     <TableRoot>
 
-                        <TableSection Title="{xaml:Translate Settings_Section_Permissions}" TextColor="{DynamicResource PrimaryGreen}">
+                        <TableSection TextColor="{DynamicResource PrimaryGreen}">
+                            <TableSection.Title>
+                                <OnPlatform x:TypeArguments="x:String">
+                                    <On Platform="iOS" Value="{xaml:Translate Settings_Section_PermissionsAndLanguage}"/>
+                                    <On Platform="Android" Value="{xaml:Translate Settings_Section_Permissions}"/>
+                                </OnPlatform>
+                            </TableSection.Title>
                             <TextCell Text="{xaml:Translate Settings_Button_OpenSystemSettings}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenApplicationSettingsCommand}"/>
                         </TableSection>
 
-                        <TableSection Title="{xaml:Translate Settings_Section_Application}" TextColor="{DynamicResource PrimaryGreen}">
+                        <TableSection x:Name="AppSection" Title="{xaml:Translate Settings_Section_Application}" TextColor="{DynamicResource PrimaryGreen}">
                             <ViewCell Tapped="AnalyticsCell_OnTapped">
                                 <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
                                     <Grid.ColumnDefinitions>
@@ -54,8 +60,10 @@
                                 </StackLayout>
                             </ViewCell>
                             <TextCell Text="{xaml:Translate Settings_Label_RefreshFcmToken}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
-                            <TextCell Text="{xaml:Translate Settings_Label_DarkMode}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
-                            <TextCell Text="{xaml:Translate Settings_Label_ChangeLanguage}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchLanguageCommand}"/>
+
+                            <!-- On Android only : -->
+                            <!-- <TextCell for Dark / Light mode /> -->
+                            <!-- <TextCell for app language /> -->
                         </TableSection>
 
                         <TableSection Title="{xaml:Translate Settings_Section_Miscellaneous}" TextColor="{DynamicResource PrimaryGreen}">
