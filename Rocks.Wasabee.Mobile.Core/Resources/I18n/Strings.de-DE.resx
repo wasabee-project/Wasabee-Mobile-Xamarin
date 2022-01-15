@@ -427,6 +427,19 @@
     <value>Marker-Informationen</value>
     <comment>Marker info dialog title</comment>
   </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Wechseln</value>
     <comment>Text on the button to change selected OP</comment>
@@ -491,14 +504,16 @@
     <value>Name der Operation</value>
     <comment>Label for operation name</comment>
   </data>
-  <data name="OperationDetail_Page_Title" xml:space="preserve">
+  
+  <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Operation</value>
-    <comment>Operation detail page title</comment>
+    <comment>Title for the 3 tabbed page operation view</comment>
   </data>
   <data name="OperationsList_Page_Title" xml:space="preserve">
     <value>Meine Operatoren</value>
     <comment>Operations list page title</comment>
   </data>
+  
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Ingress-Konto verknüpfen</value>
     <comment>Text for link ingress account button</comment>
@@ -763,6 +778,10 @@
     <value>✗  Unerledigt</value>
     <comment>Task undo button</comment>
   </data>
+  
+  
+  
+  
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Agent hinzufügen</value>
     <comment>Button in toolbar for adding agent</comment>
