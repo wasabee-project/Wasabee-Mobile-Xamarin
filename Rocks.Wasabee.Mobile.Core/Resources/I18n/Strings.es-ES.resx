@@ -427,6 +427,58 @@
     <value>Información del marcador</value>
     <comment>Marker info dialog title</comment>
   </data>
+  <data name="MarkerType_Capture" xml:space="preserve">
+    <value>Capturar</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_CreateLink" xml:space="preserve">
+    <value>Crear enlace</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Destroy" xml:space="preserve">
+    <value>Destruir</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Exclude" xml:space="preserve">
+    <value>Excluido</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Farm" xml:space="preserve">
+    <value>Obtener llaves</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GetKey" xml:space="preserve">
+    <value>Obtener llave</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GoTo" xml:space="preserve">
+    <value>Ir a</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_LetDecay" xml:space="preserve">
+    <value>Dejar decaer</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_MeetAgent" xml:space="preserve">
+    <value>Reunirse con agente</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Other" xml:space="preserve">
+    <value>Otra</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Recharge" xml:space="preserve">
+    <value>Recargar</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Upgrade" xml:space="preserve">
+    <value>Mejorar</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_UseVirus" xml:space="preserve">
+    <value>Usar Virus</value>
+    <comment>Marker type</comment>
+  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Cambiar</value>
     <comment>Text on the button to change selected OP</comment>
@@ -491,13 +543,18 @@
     <value>Nombre de la operación</value>
     <comment>Label for operation name</comment>
   </data>
-  <data name="OperationDetail_Page_Title" xml:space="preserve">
+  
+  <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Operación</value>
-    <comment>Operation detail page title</comment>
+    <comment>Title for the 3 tabbed page operation view</comment>
   </data>
   <data name="OperationsList_Page_Title" xml:space="preserve">
     <value>Mis operaciones</value>
     <comment>Operations list page title</comment>
+  </data>
+  <data name="Operation_Text_AssignedTo" xml:space="preserve">
+    <value>Asignado a:</value>
+    <comment>Text for assignments list (there may be many assigned agents)</comment>
   </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Vincular cuenta de Ingress</value>
@@ -762,6 +819,22 @@
   <data name="TaskDialog_Button_Undone" xml:space="preserve">
     <value>✗ No completada</value>
     <comment>Task undo button</comment>
+  </data>
+  <data name="TaskState_Acknowledged" xml:space="preserve">
+    <value>Recibido</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Assigned" xml:space="preserve">
+    <value>Asignado</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Completed" xml:space="preserve">
+    <value>Completado</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Pending" xml:space="preserve">
+    <value>Pendiente</value>
+    <comment>Task state</comment>
   </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Añadir agente</value>
