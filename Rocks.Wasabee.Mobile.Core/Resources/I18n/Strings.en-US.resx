@@ -892,7 +892,7 @@
     <comment>Another warning before deleting team</comment>
   </data>
   <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
-    <value>You're going to delete the team '{0}'. Are you sure ?</value>
+    <value>You're going to delete the team '{0}'. Are you sure?</value>
     <comment>Warning message before deleting a team. Parameter is team name</comment>
   </data>
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
@@ -900,25 +900,25 @@
     <comment>Title for changing team name popup</comment>
   </data>
   <data name="TGL_Step1_Label_AccountNotLinked" xml:space="preserve">
-    <value>Your Wasabee account isn't yet linked to any Telegram account.</value>
+    <value>Your Wasabee account isn't linked to any Telegram account.</value>
   </data>
   <data name="TGL_Step1_Label_NoticeLine1" xml:space="preserve">
-    <value>This will prove to Wasabee that you are the owner of both the Wasabee and Telegram accounts.</value>
+    <value>This will prove to Wasabee that you own both the Wasabee and Telegram accounts.</value>
   </data>
   <data name="TGL_Step1_Label_NoticeLine2" xml:space="preserve">
-    <value>This isn't mandatory, but will help Operators inviting you to their teams.</value>
+    <value>This isn't mandatory, but will help any Operators that want to invite you to their teams.</value>
   </data>
   <data name="TGL_Step1_Label_RequireTelegramAccount" xml:space="preserve">
-    <value>You'll need a Telegram account ready and set up on your device to proceed.</value>
+    <value>You need a Telegram account set up on your device to proceed.</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_1" xml:space="preserve">
-    <value>1. Wasabee generated a unique token to send to the bot on Telegram</value>
+    <value>1. Wasabee generates a unique token for theTelegram bot</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_2" xml:space="preserve">
     <value>2. You send the token to the bot</value>
   </data>
   <data name="TGL_Step1_Label_StepByStepGuide_3" xml:space="preserve">
-    <value>3. Wasabee then generates a confirmation token and you send it to the bot</value>
+    <value>3. Wasabee then generates a confirmation token and you send that to the bot</value>
   </data>
   <data name="TGL_Step2-3_Label_WaitingMessage" xml:space="preserve">
     <value>Bot is awaiting your message...</value>
@@ -928,10 +928,10 @@
     <comment>Button to start Telegram bot. Text format is "Start @BotName"</comment>
   </data>
   <data name="TGL_Step2_Label_CopyToken" xml:space="preserve">
-    <value>Here is your token ! Copy it to send it to the bot.</value>
+    <value>Here is your token! Copy it to send it to the bot.</value>
   </data>
   <data name="TGL_Step2_Label_GoNextToFinish" xml:space="preserve">
-    <value>Go to the next step to finish the process !</value>
+    <value>Go to the next step to finish the process!</value>
   </data>
   <data name="TGL_Step2_Label_SendToken" xml:space="preserve">
     <value>Send the token to the bot</value>
@@ -941,7 +941,7 @@
     <comment>Button to re open Telegram bot. Text format is "Open @BotName"</comment>
   </data>
   <data name="TGL_Step3_Label_AccountsLinked" xml:space="preserve">
-    <value>Your Wasabee account is now linked to your Telegram account !</value>
+    <value>Your Wasabee account is now linked to your Telegram account!</value>
   </data>
   <data name="TGL_Step3_Label_CopyConfirmationToken" xml:space="preserve">
     <value>Copy this confirmation token</value>
@@ -958,7 +958,7 @@
     <comment>Toast message</comment>
   </data>
   <data name="Toast_CantStartLiveLocSharing" xml:space="preserve">
-    <value>Can't start location sharing, no permissions</value>
+    <value>Can't start location sharing, check permissions in settings</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_CoordinatesCopied" xml:space="preserve">
