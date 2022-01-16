@@ -35,9 +35,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking.SubViewModels
             _mvxToken ??= _messenger.Subscribe<MessageFor<TelegramLinkingStep3SubViewModel>>(_ => RefreshToken());
         }
 
-        public override void ViewAppearing()
+        public override void ViewAppeared()
         {
-            base.ViewAppearing();
+            base.ViewAppeared();
 
             RefreshToken();
         }

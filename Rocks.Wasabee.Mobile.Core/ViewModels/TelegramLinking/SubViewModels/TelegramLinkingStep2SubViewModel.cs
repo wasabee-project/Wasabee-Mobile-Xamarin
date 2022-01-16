@@ -31,9 +31,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking.SubViewModels
             _wasabeeApiV1Service = Mvx.IoCProvider.Resolve<WasabeeApiV1Service>();
         }
 
-        public override async void ViewAppearing()
+        public override async void ViewAppeared()
         {
-            base.ViewAppearing();
+            base.ViewAppeared();
 
             var userId = _userSettingsService.GetLoggedUserGoogleId();
             var user = await _usersDatabase.GetUserModel(userId);

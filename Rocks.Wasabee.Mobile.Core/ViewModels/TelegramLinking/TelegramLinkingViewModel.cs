@@ -111,15 +111,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
             await base.Initialize();
         }
 
-        public override void ViewAppearing()
+        public override void ViewAppeared()
         {
-            base.ViewAppearing();
+            base.ViewAppeared();
 
             if (Steps is null || Steps.IsNullOrEmpty())
                 return;
             
             foreach (var step in Steps)
-                step.ViewAppearing();
+                step.ViewAppeared();
         }
 
         #region Properties

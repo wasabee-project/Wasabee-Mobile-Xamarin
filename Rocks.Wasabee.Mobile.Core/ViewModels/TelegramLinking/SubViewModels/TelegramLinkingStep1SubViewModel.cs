@@ -11,9 +11,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking.SubViewModels
             IsDontAskAgainVisible = isDontAskAgainVisible;
         }
 
-        public override void ViewAppearing()
+        public override void ViewAppeared()
         {
-            base.ViewAppearing();
+            base.ViewAppeared();
 
             Device.StartTimer(TimeSpan.FromMilliseconds(100), () => AddProgress(1));
         }
