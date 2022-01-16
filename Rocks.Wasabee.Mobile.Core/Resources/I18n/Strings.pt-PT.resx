@@ -543,7 +543,10 @@
     <value>Nome da OP</value>
     <comment>Label for operation name</comment>
   </data>
-  
+  <data name="OperationDetail_Page_Title" xml:space="preserve">
+    <value>Informações de operação</value>
+    <comment>Operation info page title</comment>
+  </data>
   <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Operação</value>
     <comment>Title for the 3 tabbed page operation view</comment>
@@ -644,7 +647,10 @@
     <value>Permissões</value>
     <comment>Title for permissions section</comment>
   </data>
-  
+  <data name="Settings_Section_PermissionsAndLanguage" xml:space="preserve">
+    <value>Permissões e idioma</value>
+    <comment>Title for permissions and language section</comment>
+  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Configurações</value>
     <comment>Title for Settings page</comment>
