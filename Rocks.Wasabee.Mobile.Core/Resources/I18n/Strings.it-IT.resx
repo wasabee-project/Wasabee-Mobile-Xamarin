@@ -427,19 +427,58 @@
     <value>Informazioni Marker</value>
     <comment>Marker info dialog title</comment>
   </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="MarkerType_Capture" xml:space="preserve">
+    <value>Cattura</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_CreateLink" xml:space="preserve">
+    <value>Crea link</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Destroy" xml:space="preserve">
+    <value>Distruggi</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Exclude" xml:space="preserve">
+    <value>Escluso</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Farm" xml:space="preserve">
+    <value>Farma chiavi</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GetKey" xml:space="preserve">
+    <value>Ottieni chiave</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_GoTo" xml:space="preserve">
+    <value>Vai</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_LetDecay" xml:space="preserve">
+    <value>Lascia scaricare</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_MeetAgent" xml:space="preserve">
+    <value>Incontra Agente</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Other" xml:space="preserve">
+    <value>Altro</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Recharge" xml:space="preserve">
+    <value>Ricarica</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_Upgrade" xml:space="preserve">
+    <value>Fai upgrade</value>
+    <comment>Marker type</comment>
+  </data>
+  <data name="MarkerType_UseVirus" xml:space="preserve">
+    <value>Usa virus</value>
+    <comment>Marker type</comment>
+  </data>
   <data name="Menu_Button_ChangeOp" xml:space="preserve">
     <value>Cambia</value>
     <comment>Text on the button to change selected OP</comment>
@@ -504,7 +543,10 @@
     <value>Nome Operazione</value>
     <comment>Label for operation name</comment>
   </data>
-  
+  <data name="OperationDetail_Page_Title" xml:space="preserve">
+    <value>Info Operatione</value>
+    <comment>Operation info page title</comment>
+  </data>
   <data name="OperationMap_Page_Title" xml:space="preserve">
     <value>Operazione</value>
     <comment>Title for the 3 tabbed page operation view</comment>
@@ -513,7 +555,10 @@
     <value>Le Mie Operazioni</value>
     <comment>Operations list page title</comment>
   </data>
-  
+  <data name="Operation_Text_AssignedTo" xml:space="preserve">
+    <value>Assegnato a :</value>
+    <comment>Text for assignments list (there may be many assigned agents)</comment>
+  </data>
   <data name="Profile_Button_LinkIngressAccount" xml:space="preserve">
     <value>Collega Account Ingress</value>
     <comment>Text for link ingress account button</comment>
@@ -602,7 +647,10 @@
     <value>Permessi</value>
     <comment>Title for permissions section</comment>
   </data>
-  
+  <data name="Settings_Section_PermissionsAndLanguage" xml:space="preserve">
+    <value>Permessi e lingua</value>
+    <comment>Title for permissions and language section</comment>
+  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Impostazioni</value>
     <comment>Title for Settings page</comment>
@@ -779,10 +827,22 @@
     <value>✗   Annulla</value>
     <comment>Task undo button</comment>
   </data>
-  
-  
-  
-  
+  <data name="TaskState_Acknowledged" xml:space="preserve">
+    <value>Ricevuto</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Assigned" xml:space="preserve">
+    <value>Assegnato</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Completed" xml:space="preserve">
+    <value>Completato</value>
+    <comment>Task state</comment>
+  </data>
+  <data name="TaskState_Pending" xml:space="preserve">
+    <value>In attesa</value>
+    <comment>Task state</comment>
+  </data>
   <data name="TeamDetail_Button_AddAgent" xml:space="preserve">
     <value>Aggiungi Agente</value>
     <comment>Button in toolbar for adding agent</comment>
