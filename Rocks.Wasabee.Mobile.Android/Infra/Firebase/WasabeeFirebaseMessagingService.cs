@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Firebase.Messaging;
 using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
 
@@ -12,15 +13,15 @@ using Android.Util;
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
     [Service]
-    [IntentFilter(new[] {"com.google.firebase.MESSAGING_EVENT"})]
-    [IntentFilter(new[] {"com.google.firebase.INSTANCE_ID_EVENT"})]
+    [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
+    [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
     public class WasabeeFirebaseMessagingService : FirebaseMessagingService
     {
         private const string Tag = "WASABEE_FCM_SERVICE";
 
         private ICrossFirebaseMessagingService _crossFirebaseMessagingService;
         private ILocalNotificationService _localNotificationService;
-        
+
         private bool _isInitialized;
 
         public override async void OnNewToken(string token)
@@ -33,14 +34,14 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
             Log.Debug(Tag, "Token=" + token);
 #endif
         }
-        
+
         public override async void OnMessageReceived(RemoteMessage message)
         {
             if (!_isInitialized)
                 Initialize();
 
 #if DEBUG
-            Log.Debug(Tag, message.ToString());
+            Log.Debug(Tag, message.Data.ToDebugString());
 #endif
             if (message.GetNotification() != null)
             {
