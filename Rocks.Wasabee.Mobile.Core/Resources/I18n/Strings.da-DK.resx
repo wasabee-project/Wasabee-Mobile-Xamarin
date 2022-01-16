@@ -647,7 +647,10 @@
     <value>Tilladelser</value>
     <comment>Title for permissions section</comment>
   </data>
-  
+  <data name="Settings_Section_PermissionsAndLanguage" xml:space="preserve">
+    <value>Tilladelser og sprog</value>
+    <comment>Title for permissions and language section</comment>
+  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Indstillinger</value>
     <comment>Title for Settings page</comment>
@@ -871,6 +874,10 @@
   <data name="TeamsList_Page_Title" xml:space="preserve">
     <value>Hold</value>
     <comment>Title for Teams list page</comment>
+  </data>
+  <data name="TeamsList_Toast_LocationSharingStateChanged" xml:space="preserve">
+    <value>Placeringsdelingsstatus ændret for hold '{0}'</value>
+    <comment>Message when location sharing state has been changed for a team. Parameter is team name</comment>
   </data>
   <data name="TeamsList_Toast_TeamDeleted" xml:space="preserve">
     <value>Slettede holdet '{0}'</value>
