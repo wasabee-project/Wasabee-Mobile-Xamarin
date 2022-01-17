@@ -325,10 +325,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             if (MarkerAssignment != null && Marker != null)
             {
-                // Flags UpdatedId as done
-                OperationsUpdatesCache.Data[response.UpdateId] = true;
+                MarkerModel? updated;
+                if (OperationsUpdatesCache.Data[response.UpdateId] is false)
+                {
+                    // Flags UpdatedId as done
+                    OperationsUpdatesCache.Data[response.UpdateId] = true;
+                    
+                    updated = await _wasabeeApiV1Service.Operations_GetMarker(MarkerAssignment.OpId, Marker.Id);
+                }
+                else
+                    updated = await _markersDatabase.GetMarkerModel(Marker.Id);
 
-                var updated = await _wasabeeApiV1Service.Operations_GetMarker(MarkerAssignment.OpId, Marker.Id);
                 if (updated != null)
                 {
                     Marker = updated;
@@ -400,7 +407,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 return;
 
             var updateId = response.UpdateId;
-            OperationsUpdatesCache.Data.Add(updateId, false);
+            if (OperationsUpdatesCache.Data.ContainsKey(updateId) is false)
+                OperationsUpdatesCache.Data.Add(updateId, false);
         }
 
         #endregion

@@ -318,10 +318,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             if (LinkAssignment != null && Link != null)
             {
-                // Flags UpdatedId as done
-                OperationsUpdatesCache.Data[response.UpdateId] = true;
+                LinkModel? updated;
+                if (OperationsUpdatesCache.Data[response.UpdateId] is false)
+                {
+                    // Flags UpdatedId as done
+                    OperationsUpdatesCache.Data[response.UpdateId] = true;
 
-                var updated = await _wasabeeApiV1Service.Operations_GetLink(LinkAssignment.OpId, Link.Id);
+                    updated = await _wasabeeApiV1Service.Operations_GetLink(LinkAssignment.OpId, Link.Id);
+                }
+                else
+                    updated = await _linksDatabase.GetLinkModel(Link.Id);
+
                 if (updated != null)
                 {
                     Link = updated;
@@ -368,7 +375,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 return;
 
             var updateId = response.UpdateId;
-            OperationsUpdatesCache.Data.Add(updateId, false);
+            if (OperationsUpdatesCache.Data.ContainsKey(updateId) is false)
+                OperationsUpdatesCache.Data.Add(updateId, false);
         }
 
         #endregion

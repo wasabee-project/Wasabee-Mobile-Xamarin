@@ -45,7 +45,8 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Services
         public async Task<bool> Close(bool animated = true)
         {
             var count = _popupNavigationService.PopupStack.Count;
-            await _popupNavigationService.PopAsync(animated);
+            if (count > 0)
+                await _popupNavigationService.PopAsync(animated);
 
             return _popupNavigationService.PopupStack.Count < count;
         }
