@@ -611,7 +611,7 @@
     <value>Переключить на светлую\тёмную тему</value>
   </data>
   <data name="Settings_Label_HideCompletedMarkers" xml:space="preserve">
-    <value>Скрыть на карте маркеры завершенных задач</value>
+    <value>Скрывать на карте маркеры завершенных задач</value>
   </data>
   <data name="Settings_Label_RefreshFcmToken" xml:space="preserve">
     <value>Обновить FCM токен</value>
@@ -626,7 +626,7 @@
     <value>Показывать на карте агентов из любой команды</value>
   </data>
   <data name="Settings_Label_ShowDebugToasts" xml:space="preserve">
-    <value>Показать отладочные сообщения</value>
+    <value>Показывать отладочные сообщения</value>
   </data>
   <data name="Settings_Label_WasabeeWebpage" xml:space="preserve">
     <value>Веб-страница Wasabee</value>
