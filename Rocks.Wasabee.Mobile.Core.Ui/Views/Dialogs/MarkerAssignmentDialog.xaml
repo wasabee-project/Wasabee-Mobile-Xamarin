@@ -14,6 +14,7 @@
     <ContentPage.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter" />
         <converters:MarkerDataToResourceFilePathConverter x:Key="MarkerDataToResourceFilePathConverter" />
+        <converters:TaskStateToStringConverter x:Key="TaskStateToStringConverter" />
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -59,7 +60,7 @@
                         <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSelfAssignment}" />
 
                         <StackLayout IsVisible="{Binding IsSelfAssignment}">
-                            <Label Text="{Binding Marker.State, StringFormat={xaml:Translate MarkerDialog_Text_State}}"/>
+                            <Label Text="{Binding Marker.State, StringFormat={xaml:Translate MarkerDialog_Text_State}, Converter={StaticResource TaskStateToStringConverter}}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                 <Button Text="{xaml:Translate TaskDialog_Button_Ack}" TextColor="White" BackgroundColor="{DynamicResource PrimaryOrange}" CornerRadius="5"
                                         Command="{Binding AckCommand}"
