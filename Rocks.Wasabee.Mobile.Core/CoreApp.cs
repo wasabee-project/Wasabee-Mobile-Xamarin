@@ -1,4 +1,4 @@
-﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross;
@@ -68,12 +68,15 @@ namespace Rocks.Wasabee.Mobile.Core
                 preferences.Set(UserSettingsKeys.DevModeActivated, false);
 
                 // TODO remove this when not needed anymore
-                if (lastVersionParsed.Major == 0)
+                if (lastVersionParsed < new Version(0, 30, 0) || lastVersionParsed > new Version(1, 0, 1))
                 {
                     await Mvx.IoCProvider.Resolve<OperationsDatabase>().DeleteAllData();
                     await Mvx.IoCProvider.Resolve<MarkersDatabase>().DeleteAllData();
                     await Mvx.IoCProvider.Resolve<LinksDatabase>().DeleteAllData();
                     await Mvx.IoCProvider.Resolve<TeamsDatabase>().DeleteAllData();
+
+                    preferences.Remove(UserSettingsKeys.CurrentServer);
+                    preferences.Remove(UserSettingsKeys.SavedServerChoice);
                 }
             }
 

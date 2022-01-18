@@ -91,18 +91,18 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
                 };
             }
 
-            var server = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
-            if (server == WasabeeServer.US.ToString())
+            var server = _preferences.Get(UserSettingsKeys.CurrentServer, (int)WasabeeServer.Undefined);
+            if (server == (int)WasabeeServer.US)
             {
                 BotUsername = "PhDevBot";
                 BotName = "@WasabeeUS_bot";
             }
-            else if (server == WasabeeServer.EU.ToString())
+            else if (server == (int)WasabeeServer.EU)
             {
                 BotUsername = "WasabeeEU_bot";
                 BotName = $"@{BotUsername}";
             }
-            else if (server == WasabeeServer.APAC.ToString())
+            else if (server == (int)WasabeeServer.APAC)
             {
                 BotUsername = "WasabeeAP_bot";
                 BotName = $"@{BotUsername}";

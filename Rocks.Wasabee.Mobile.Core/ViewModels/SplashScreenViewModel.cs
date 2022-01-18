@@ -211,12 +211,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             await _usersDatabase.DeleteAllData();
 
-            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
-            if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
-                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, (int)WasabeeServer.Undefined);
+            if (ServersCollection.Any(x => x.Server == (WasabeeServer)savedServerChoice))
+                SelectedServerItem = ServersCollection.First(x => x.Server == (WasabeeServer)savedServerChoice);
 
             var wtoken = await _secureStorage.GetAsync(SecureStorageConstants.WasabeeToken);
-            if (!string.IsNullOrWhiteSpace(wtoken) && RememberServerChoice)
+            if (!string.IsNullOrWhiteSpace(wtoken))
             {
                 await BypassGoogleAndWasabeeLogin();
                 return;
@@ -326,7 +326,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsSelectingServer = false;
             SelectedServerItem = serverItem;
 
-            _preferences.Set(UserSettingsKeys.CurrentServer, SelectedServerItem.Server.ToString());
+            _preferences.Set(UserSettingsKeys.CurrentServer, (int)SelectedServerItem.Server);
 
             if (_isBypassingGoogleAndWasabeeLogin)
             {
@@ -501,13 +501,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             IsLoading = true;
 
-            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
-            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, (int)WasabeeServer.Undefined);
 
-            if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
-                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
-            else if (ServersCollection.Any(x => x.Server.ToString().Equals(currentServer)))
-                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(currentServer));
+            if (ServersCollection.Any(x => x.Server == (WasabeeServer)savedServerChoice))
+                SelectedServerItem = ServersCollection.First(x => x.Server == (WasabeeServer)savedServerChoice);
 
             if (SelectedServerItem.Server == WasabeeServer.Undefined)
                 ChangeServerCommand.Execute();
@@ -553,13 +550,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             _isBypassingGoogleAndWasabeeLogin = true;
 
-            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
-            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, (int)WasabeeServer.Undefined);
 
-            if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
-                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
-            else if (ServersCollection.Any(x => x.Server.ToString().Equals(currentServer)))
-                SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(currentServer));
+            if (ServersCollection.Any(x => x.Server == (WasabeeServer)savedServerChoice))
+                SelectedServerItem = ServersCollection.First(x => x.Server == (WasabeeServer)savedServerChoice);
 
             if (SelectedServerItem.Server == WasabeeServer.Undefined)
                 ChangeServerCommand.Execute();
@@ -623,7 +617,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task FinishLogin(UserModel userModel, LoginMethod loginMethod)
         {
-            if (userModel.Blacklisted || userModel.IntelFaction.Equals("RESISTANCE"))
+            if (userModel.Blacklisted || userModel.Smurf || userModel.IntelFaction.Equals("RESISTANCE"))
             {
                 ErrorMessage = Strings.SignIn_Label_ErrorMsg_Internal;
                 IsAuthInError = true;
@@ -640,7 +634,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             if (RememberServerChoice)
             {
                 _preferences.Set(UserSettingsKeys.RememberServerChoice, RememberServerChoice);
-                _preferences.Set(UserSettingsKeys.SavedServerChoice, SelectedServerItem.Server.ToString());
+                _preferences.Set(UserSettingsKeys.SavedServerChoice, (int)SelectedServerItem.Server);
             }
             else
             {
