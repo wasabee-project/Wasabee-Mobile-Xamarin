@@ -61,6 +61,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 #else
             var httpHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler();
 #endif
+            
             var appVersion = Mvx.IoCProvider.Resolve<IVersionTracking>().CurrentVersion;
             var device = Mvx.IoCProvider.Resolve<IDeviceInfo>();
             var client = new HttpClient(httpHandler)
@@ -116,7 +117,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             }
 
             var start = DateTime.Now;
-
+            
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             var end = DateTime.Now;

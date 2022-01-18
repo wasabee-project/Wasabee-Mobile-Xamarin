@@ -164,7 +164,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             HttpResponseMessage response;
 
 #if DEBUG_NETWORK_LOGS
-            var httpHandler = new HttpLoggingHandler(new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler()));
+            var httpHandler = new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler());
 #else
             var httpHandler = _httpClientFactory.CreateHandler();
 #endif
