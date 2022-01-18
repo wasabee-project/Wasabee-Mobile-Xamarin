@@ -118,7 +118,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification
         {
             SaveDontAskAgainSetting();
 
-            if (_parameter.ComingFromLogin is false && CurrentStep is AgentVerificationStep3SubViewModel { IsVerified: true })
+            if (CurrentStep is AgentVerificationStep3SubViewModel { IsVerified: true })
             {
                 Analytics.TrackEvent(AnalyticsConstants.CommunityVerified);
                 CloseCompletionSource?.SetResult(new AgentVerificationCloseResult(isSuccess: true));

@@ -162,7 +162,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
         {
             SaveDontAskAgainSetting();
 
-            if (_parameter.ComingFromLogin is false && CurrentStep is AgentVerificationStep3SubViewModel { IsVerified: true })
+            if (CurrentStep is AgentVerificationStep3SubViewModel { IsVerified: true })
             {
                 Analytics.TrackEvent(AnalyticsConstants.TelegramLinked);
                 CloseCompletionSource?.SetResult(new TelegramLinkingCloseResult(isSuccess: true));
