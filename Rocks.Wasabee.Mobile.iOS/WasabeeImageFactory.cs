@@ -10,7 +10,8 @@ using UIKit;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.GoogleMaps.iOS.Factories;
 
-namespace Rocks.Wasabee.Mobile.iOS {
+namespace Rocks.Wasabee.Mobile.iOS
+{
     public class WasabeeImageFactory : IImageFactory
     {
         private static readonly Dictionary<string, UIImage> ImagesCache = new Dictionary<string, UIImage>();
@@ -34,34 +35,34 @@ namespace Rocks.Wasabee.Mobile.iOS {
                 var descriptors = descriptor.Id.Split('|');
                 fileName += descriptors[0] switch
                 {
-                    "DestroyPortalAlert" => "destroy",
-                    "UseVirusPortalAlert" => "virus",
-                    "CapturePortalMarker" => "capture",
-                    "FarmPortalMarker" => "farm",
-                    "LetDecayPortalAlert" => "decay",
-                    "MeetAgentPortalMarker" => "meetagent",
-                    "OtherPortalAlert" => "other",
-                    "RechargePortalAlert" => "recharge",
-                    "UpgradePortalAlert" => "upgrade",
-                    "CreateLinkAlert" => "link",
-                    "ExcludeMarker" => "exclude",
-                    "GetKeyPortalMarker" => "key",
-                    "GotoPortalMarker" => "goto",
+                    "DestroyPortal" => "destroy",
+                    "UseVirus" => "virus",
+                    "CapturePortal" => "capture",
+                    "FarmPortal" => "farm",
+                    "LetDecay" => "decay",
+                    "MeetAgent" => "meetagent",
+                    "Other" => "other",
+                    "RechargePortal" => "recharge",
+                    "UpgradePortal" => "upgrade",
+                    "CreateLink" => "link",
+                    "Exclude" => "exclude",
+                    "GetKey" => "key",
+                    "GoToPortal" => "goto",
                     _ => throw new ArgumentOutOfRangeException(descriptors[0])
-                } + $"/{descriptors[1]}.png";
+                } + $"/{descriptors[1].ToLowerInvariant()}.png";
 
                 return CreateMarker(fileName);
             }
 
-            var pinColor = descriptor.Id.StartsWith("pin_") ? 
-                descriptor.Id.Substring(4) : 
+            var pinColor = descriptor.Id.StartsWith("pin_") ?
+                descriptor.Id.Substring(4) :
                 "#DD3D45"; // default goes to RED
 
             return CreatePin(pinColor);
         }
-        
-        private static UIImage CreatePin(string color) => CreateImageFromWasabeePinSvg(color, 50, 60);
-        private static UIImage CreateMarker(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 35, 60);
+
+        private static UIImage CreatePin(string color) => CreateImageFromWasabeePinSvg(color, 41, 50);
+        private static UIImage CreateMarker(string bundleFilePath) => CreateImageFromBundleName(bundleFilePath, 37, 64);
         private static UIImage CreateImageFromBundleName(string bundleFilePath, int width, int height)
         {
             if (string.IsNullOrWhiteSpace(bundleFilePath))
@@ -90,7 +91,7 @@ namespace Rocks.Wasabee.Mobile.iOS {
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(pin.RawData)))
                 picture = new SkiaSharp.Extended.Svg.SKSvg().Load(stream);
 
-            var image = SKImage.FromPicture(picture, new SKSizeI((int) picture.CullRect.Size.Width, (int) picture.CullRect.Size.Height)).ToUIImage();
+            var image = SKImage.FromPicture(picture, new SKSizeI((int)picture.CullRect.Size.Width, (int)picture.CullRect.Size.Height)).ToUIImage();
             var resizedImage = ResizeImage(image, width, height);
             if (resizedImage is null)
                 return Google.Maps.Marker.MarkerImage(UIColor.Red);
@@ -111,8 +112,8 @@ namespace Rocks.Wasabee.Mobile.iOS {
             if (maxResizeFactor > 1)
                 return sourceImage;
 
-            var width = (float) (maxResizeFactor * sourceSize.Width);
-            var height = (float) (maxResizeFactor * sourceSize.Height);
+            var width = (float)(maxResizeFactor * sourceSize.Width);
+            var height = (float)(maxResizeFactor * sourceSize.Height);
 
             UIGraphics.BeginImageContext(new SizeF(width, height));
 

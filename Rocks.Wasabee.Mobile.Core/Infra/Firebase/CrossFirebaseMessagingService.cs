@@ -5,9 +5,9 @@ using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Firebase.Payloads;
 using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
-using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,32 +20,37 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
     public class CrossFirebaseMessagingService : ICrossFirebaseMessagingService
     {
         private readonly IMvxMessenger _mvxMessenger;
-        private readonly ILoginProvider _loginProvider;
+        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly IBackgroundDataUpdaterService _backgroundDataUpdaterService;
         private readonly ISecureStorage _secureStorage;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IFirebaseService _firebaseService;
+        private readonly IPreferences _preferences;
         private readonly ILocalNotificationService _localNotificationService;
         private readonly OperationsDatabase _operationsDatabase;
-        
+        private readonly AgentsDatabase _agentsDatabase;
+
         private MvxSubscriptionToken? _mvxToken;
 
         private string _fcmToken = string.Empty;
         private bool _isInitialized;
 
-        public CrossFirebaseMessagingService(IMvxMessenger mvxMessenger, ILoginProvider loginProvider,
+        public CrossFirebaseMessagingService(IMvxMessenger mvxMessenger, WasabeeApiV1Service wasabeeApiV1Service,
             IBackgroundDataUpdaterService backgroundDataUpdaterService, ISecureStorage secureStorage,
-            IUserSettingsService userSettingsService, IFirebaseService firebaseService,
-            ILocalNotificationService localNotificationService, OperationsDatabase operationsDatabase)
+            IUserSettingsService userSettingsService, IFirebaseService firebaseService, IPreferences preferences,
+            ILocalNotificationService localNotificationService, OperationsDatabase operationsDatabase,
+            AgentsDatabase agentsDatabase)
         {
             _mvxMessenger = mvxMessenger;
-            _loginProvider = loginProvider;
+            _wasabeeApiV1Service = wasabeeApiV1Service;
             _backgroundDataUpdaterService = backgroundDataUpdaterService;
             _secureStorage = secureStorage;
             _userSettingsService = userSettingsService;
             _firebaseService = firebaseService;
+            _preferences = preferences;
             _localNotificationService = localNotificationService;
             _operationsDatabase = operationsDatabase;
+            _agentsDatabase = agentsDatabase;
         }
 
         public void Initialize()
@@ -57,7 +62,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
 
             _mvxToken ??= _mvxMessenger.Subscribe<UserLoggedInMessage>(async msg => await SendRegistrationToServer(_firebaseService.GetFcmToken()));
         }
-        
+
         public async Task<bool> SendRegistrationToServer(string registrationToken)
         {
             if (!_isInitialized)
@@ -66,10 +71,14 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
             if (string.IsNullOrWhiteSpace(registrationToken))
                 return false;
 
+            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, (int)WasabeeServer.Undefined);
+            if (currentServer.Equals((int)WasabeeServer.Undefined))
+                return false;
+
             _fcmToken = registrationToken;
-            
+
             await _secureStorage.SetAsync(SecureStorageConstants.FcmToken, _fcmToken);
-            return await _loginProvider.SendFirebaseTokenAsync(_fcmToken);
+            return await _wasabeeApiV1Service.User_UpdateFirebaseToken(_fcmToken);
         }
 
         public async Task ProcessMessageData(IDictionary<string, string> data)
@@ -80,7 +89,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
             var cmd = data.ContainsKey("cmd") ? data.First(x => x.Key.Equals("cmd")).Value : string.Empty;
             var msg = data.ContainsKey("msg") ? data.First(x => x.Key.Equals("msg")).Value : string.Empty;
 
-            if (string.IsNullOrEmpty(cmd) || string.IsNullOrEmpty(msg))
+            if (string.IsNullOrEmpty(cmd))
                 return;
 
             var messageBody = $"{cmd} : {msg}";
@@ -91,6 +100,18 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
 
             var opId = data.FirstOrDefault(x => x.Key.Equals("opID")).Value;
             var updateId = data.FirstOrDefault(x => x.Key.Equals("updateID")).Value;
+
+            if (cmd.Contains("Map Change"))
+            {
+                if (!string.IsNullOrWhiteSpace(opId) && !string.IsNullOrWhiteSpace(updateId))
+                {
+                    if (CheckIfUpdateIdShouldBeProcessedOrNot(updateId))
+                        await _backgroundDataUpdaterService.UpdateOperationAndNotify(opId).ConfigureAwait(false);
+                }
+            }
+
+            if (string.IsNullOrEmpty(msg))
+                return;
 
             if (cmd.Contains("Agent Location Change"))
             {
@@ -115,7 +136,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
                     if (marker != null)
                     {
                         var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
-                        if (marker.AssignedTo.Equals(loggedUserGid))
+                        if (marker.Assignments.Contains(loggedUserGid))
                             _localNotificationService.Send($"{op!.Name} : Marker {msg}");
                     }
                 }
@@ -138,24 +159,37 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
                     if (link != null)
                     {
                         var loggedUserGid = _userSettingsService.GetLoggedUserGoogleId();
-                        if (link.AssignedTo.Equals(loggedUserGid))
+                        if (link.Assignments.Contains(loggedUserGid))
                             _localNotificationService.Send($"{op!.Name} : Link {msg}");
                     }
-                }
-            }
-            else if (cmd.Contains("Map Change"))
-            {
-                if (!string.IsNullOrWhiteSpace(opId) && !string.IsNullOrWhiteSpace(updateId))
-                {
-                    if (CheckIfUpdateIdShouldBeProcessedOrNot(updateId))
-                        await _backgroundDataUpdaterService.UpdateOperationAndNotify(opId).ConfigureAwait(false);
                 }
             }
             else if (cmd.Equals("Target"))
             {
                 var targetPayload = JsonConvert.DeserializeObject<TargetPayload>(msg);
+                if (targetPayload is null)
+                    return;
+
                 _localNotificationService.Send($"Target from {targetPayload.Sender}: {targetPayload.Name}");
                 _mvxMessenger.Publish(new TargetReceivedMessage(this, targetPayload));
+            }
+            else if (cmd.Equals("Generic Message"))
+            {
+                var msgPayload = JsonConvert.DeserializeObject<GenericMessagePayload>(msg);
+                if (msgPayload is null)
+                    return;
+
+                var localAgent = await _agentsDatabase.GetAgent(msgPayload.Sender);
+                var senderName = localAgent?.Name ?? null;
+                if (localAgent is null)
+                {
+                    var sender = await _wasabeeApiV1Service.Agents_GetAgent(msgPayload.Sender);
+                    if (sender is not null)
+                        senderName = sender.Name;
+                }
+
+                _localNotificationService.Send($"{senderName ?? "Unknownt"}: {msgPayload.Message}");
+                _mvxMessenger.Publish(new AnnouncementReceivedMessage(this, msgPayload));
             }
         }
 

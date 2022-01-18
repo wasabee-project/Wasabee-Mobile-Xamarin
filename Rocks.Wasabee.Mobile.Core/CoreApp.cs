@@ -1,15 +1,19 @@
-﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
+using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels;
+using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;
+using Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking.SubViewModels;
 using System;
+using System.Globalization;
 using Xamarin.Essentials.Interfaces;
 
 namespace Rocks.Wasabee.Mobile.Core
@@ -23,6 +27,12 @@ namespace Rocks.Wasabee.Mobile.Core
             CreatableTypes()
                 .EndingWith("ViewModel")
                 .Except(typeof(BaseViewModel))
+                .Except(typeof(AgentVerificationStep1SubViewModel))
+                .Except(typeof(AgentVerificationStep2SubViewModel))
+                .Except(typeof(AgentVerificationStep3SubViewModel))
+                .Except(typeof(TelegramLinkingStep1SubViewModel))
+                .Except(typeof(TelegramLinkingStep2SubViewModel))
+                .Except(typeof(TelegramLinkingStep3SubViewModel))
                 .AsTypes()
                 .RegisterAsDynamic();
 
@@ -34,6 +44,20 @@ namespace Rocks.Wasabee.Mobile.Core
 
             var preferences = Mvx.IoCProvider.Resolve<IPreferences>();
             var versionTracking = Mvx.IoCProvider.Resolve<IVersionTracking>();
+
+            var cultureSetting = preferences.Get(UserSettingsKeys.CurrentCulture, string.Empty);
+            if (string.IsNullOrEmpty(cultureSetting) is false)
+            {
+                try 
+                {
+                    var culture = CultureInfo.GetCultureInfo(cultureSetting);
+                    CultureInfo.CurrentUICulture = culture;
+                }
+                catch
+                {
+                    // Nothing to do
+                }
+            }
             
             var lastVersion = preferences.Get(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
             if (Version.TryParse(versionTracking.CurrentVersion, out var currentVersion) && 
@@ -42,6 +66,18 @@ namespace Rocks.Wasabee.Mobile.Core
                 // App has updated
                 preferences.Set(UserSettingsKeys.LastLaunchedVersion, versionTracking.CurrentVersion);
                 preferences.Set(UserSettingsKeys.DevModeActivated, false);
+
+                // TODO remove this when not needed anymore
+                if (lastVersionParsed < new Version(0, 30, 0) || lastVersionParsed > new Version(1, 0, 1))
+                {
+                    await Mvx.IoCProvider.Resolve<OperationsDatabase>().DeleteAllData();
+                    await Mvx.IoCProvider.Resolve<MarkersDatabase>().DeleteAllData();
+                    await Mvx.IoCProvider.Resolve<LinksDatabase>().DeleteAllData();
+                    await Mvx.IoCProvider.Resolve<TeamsDatabase>().DeleteAllData();
+
+                    preferences.Remove(UserSettingsKeys.CurrentServer);
+                    preferences.Remove(UserSettingsKeys.SavedServerChoice);
+                }
             }
 
 #if DEBUG

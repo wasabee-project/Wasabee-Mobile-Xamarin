@@ -20,14 +20,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{B004C9B5-B935-4601-9788-30BB8FFEC718}"
 	ProjectSection(SolutionItems) = preProject
 		_Builds\AndroidManifestUpdater.ps1 = _Builds\AndroidManifestUpdater.ps1
-		azure-pipeline.prod.android.yml = azure-pipeline.prod.android.yml
 		_Builds\azure-pipeline.dev.android.yml = _Builds\azure-pipeline.dev.android.yml
+		azure-pipeline.prod.android.yml = azure-pipeline.prod.android.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iOS", "iOS", "{ED35CF01-3FF3-4083-902E-51000970DC3B}"
 	ProjectSection(SolutionItems) = preProject
-		azure-pipelines.prod.ios.yml = azure-pipelines.prod.ios.yml
 		_Builds\azure-pipelines.dev.ios.yml = _Builds\azure-pipelines.dev.ios.yml
+		azure-pipelines.prod.ios.yml = azure-pipelines.prod.ios.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3_Libs", "3_Libs", "{050EA8F5-3C00-4CC9-947F-C76DC33E032F}"
@@ -80,7 +80,8 @@ Global
 		{BEB5F06C-77B0-401F-B4AA-F30975917806}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{BEB5F06C-77B0-401F-B4AA-F30975917806}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{BEB5F06C-77B0-401F-B4AA-F30975917806}.Release|iPhoneSimulator.Deploy.0 = Release|Any CPU
-		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}.Debug Network Logs|Any CPU.ActiveCfg = Debug Network Logs|iPhoneSimulator
+		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}.Debug Network Logs|Any CPU.ActiveCfg = Debug Network Logs|iPhone
+		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}.Debug Network Logs|Any CPU.Build.0 = Debug Network Logs|iPhone
 		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}.Debug Network Logs|iPhone.ActiveCfg = Debug Network Logs|iPhone
 		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}.Debug Network Logs|iPhone.Build.0 = Debug Network Logs|iPhone
 		{CB85CD56-D378-43D5-BCBE-412EF8F0C3EA}.Debug Network Logs|iPhoneSimulator.ActiveCfg = Debug Network Logs|iPhoneSimulator

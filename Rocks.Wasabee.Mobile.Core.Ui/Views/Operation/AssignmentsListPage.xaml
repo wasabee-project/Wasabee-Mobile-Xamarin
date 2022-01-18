@@ -4,8 +4,9 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.AssignmentsListPage"
-                       Title="Assignments"
+                       Title="{xaml:Translate Assignments_Page_Title}"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
     
     <ContentPage.Content>

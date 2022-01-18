@@ -17,7 +17,6 @@ namespace Rocks.Wasabee.Mobile.Core
     {
         public static void SetupCrossPlugins()
         {
-            Mvx.IoCProvider.RegisterSingleton<IPreferences>(() => new PreferencesImplementation());
             Mvx.IoCProvider.RegisterSingleton<IConnectivity>(() => new ConnectivityImplementation());
             Mvx.IoCProvider.RegisterSingleton<IPermissions>(() => new PermissionsImplementation());
             Mvx.IoCProvider.RegisterSingleton<IVersionTracking>(() => new VersionTrackingImplementation());
@@ -28,6 +27,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.RegisterSingleton<IMap>(() => new MapImplementation());
             Mvx.IoCProvider.RegisterSingleton<ILauncher>(() => new LauncherImplementation());
             Mvx.IoCProvider.RegisterSingleton<IDeviceInfo>(() => new DeviceInfoImplementation());
+            Mvx.IoCProvider.RegisterSingleton<IBrowser>(() => new BrowserImplementation());
 
             Mvx.IoCProvider.RegisterSingleton<Plugin.Permissions.Abstractions.IPermissions>(Plugin.Permissions.CrossPermissions.Current);
         }
@@ -57,7 +57,7 @@ namespace Rocks.Wasabee.Mobile.Core
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new LinksDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new OperationsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
 
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new TeamAgentsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new AgentsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton(() => new TeamsDatabase(Mvx.IoCProvider.Resolve<IFileSystem>(), Mvx.IoCProvider.Resolve<ILoggingService>()));
         }
 

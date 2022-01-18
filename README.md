@@ -6,12 +6,21 @@ Not affiliated with Niantic.
 
 > Tags : Wasabee, Ingress, Xamarin, Xamarin.Forms, Android, iOS, Mobile Application
 
+[![Crowdin](https://badges.crowdin.net/wasabee-mobile/localized.svg)](https://crowdin.com/project/wasabee-mobile)
+
 ---
 ## Build status
 | Build Server | Platform | Status |
 |--------------|----------|--------|
 | Azure DevOps | Android  | [![Build Status](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_apis/build/status/%5BPROD%5D%20Android?branchName=master)](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_build/latest?definitionId=1&branchName=master) |
 | Azure DevOps | iOS  | [![Build Status](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_apis/build/status/%5BPROD%5D%20iOS?branchName=master)](https://dev.azure.com/Wasabee-Project/Wasabee-Mobile-Xamarin/_build/latest?definitionId=3&branchName=master)|
+
+---
+## Project Setup
+1. Install Visual Studio 2019
+2. Clone the repo
+3. Make a copy of the file 'ApiKeys.example.cs' named 'ApiKeys.cs' and fill in your keys
+4. Build and enjoy!
 
 ---
 ## FAQ

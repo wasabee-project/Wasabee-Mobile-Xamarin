@@ -10,6 +10,7 @@ using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Security;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
@@ -47,6 +48,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private MvxSubscriptionToken? _token;
         private MvxSubscriptionToken? _tokenDebug;
         private MvxSubscriptionToken? _tokenOps;
+        private MvxSubscriptionToken? _tokenStopGeolocationFromNotification;
 
         public MenuViewModel(IMvxNavigationService navigationService, IAuthentificationService authentificationService,
             IPreferences preferences, IVersionTracking versionTracking, IUserSettingsService userSettingsService,
@@ -81,7 +83,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             if (!string.IsNullOrWhiteSpace(selectedOpId))
             {
                 var op = await _operationsDatabase.GetOperationModel(selectedOpId);
-                SelectedOpName = op == null ? "ERROR loading OP" : op.Name;
+                SelectedOpName = op == null ? Strings.Menu_Label_ErrorLoadingOp : op.Name;
             }
 
             Server = _appSettings.Server switch
@@ -89,11 +91,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 WasabeeServer.US => "America",
                 WasabeeServer.EU => "Europe",
                 WasabeeServer.APAC => "Asia/Pacific",
+                WasabeeServer.Custom => "Custom",
                 WasabeeServer.Undefined => string.Empty,
                 _ => throw new ArgumentOutOfRangeException(nameof(Server))
             };
         }
-        
+
         public override void ViewAppeared()
         {
             base.ViewAppeared();
@@ -105,12 +108,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 if (MenuItems.Any(x => x.ViewModelType == typeof(LogsViewModel)))
                     return;
 
-                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = "Live FCM Logs", ViewModelType = typeof(LogsViewModel) });
+                MenuItems.Add(new MenuItem() { Icon = "mdi-record", Title = Strings.Menu_Item_LiveFcmLogs, ViewModelType = typeof(LogsViewModel) });
                 RaisePropertyChanged(() => MenuItems);
 
                 _preferences.Set(UserSettingsKeys.DevModeActivated, true);
             });
-            
+            _tokenStopGeolocationFromNotification ??= _messenger.Subscribe<LiveGeolocationTrackingMessage>(msg =>
+            {
+                if (msg.Sender != this && msg.Action == Action.Stop)
+                    ToggleLiveLocationSharingCommand.Execute(false);
+            });
+
             if (_preferences.Get(UserSettingsKeys.LiveLocationSharingEnabled, false))
             {
                 SetProperty(ref _isLiveLocationSharingEnabled, true, nameof(IsLiveLocationSharingEnabled));
@@ -135,6 +143,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _tokenDebug = null;
             _tokenOps?.Dispose();
             _tokenOps = null;
+            _tokenStopGeolocationFromNotification?.Dispose();
+            _tokenStopGeolocationFromNotification = null;
         }
 
         #region Properties
@@ -186,10 +196,10 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 if (teams.Any(x => x.State.Equals("On")) is false)
                 {
                     var result = await _userDialogs.ConfirmAsync(
-                        "None of your teams has been set to share your location. Go to Teams list and enable at least one team.",
+                        Strings.Dialog_Warning_NoTeamSharingEnabled,
                         string.Empty,
-                        "See Teams",
-                        "Cancel");
+                        Strings.Dialog_Warning_GoToTeamsList,
+                        Strings.Global_Cancel);
 
                     if (result)
                     {
@@ -274,6 +284,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsLiveLocationSharingEnabled = false;
 
             await _authentificationService.LogoutAsync();
+
+            await _navigationService.Close(this);
             await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>());
 
             IsBusy = false;
@@ -286,7 +298,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (IsBusy) return;
             IsBusy = true;
-            
+
             await _navigationService.Navigate(Mvx.IoCProvider.Resolve<SplashScreenViewModel>(), new SplashScreenNavigationParameter(doDataRefreshOnly: true));
 
             IsBusy = false;
@@ -299,13 +311,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
             if (!HasLocalOps)
             {
-                await _userDialogs.AlertAsync("No OP's available");
+                await _userDialogs.AlertAsync(Strings.Dialog_Warning_NoOpsAvailable);
                 return;
             }
 
             var opNames = AvailableOpsCollection.Select(x => x.Name).Except(new[] { SelectedOpName }).ToArray();
-            var result = await _userDialogs.ActionSheetAsync("Available OP's :", "Cancel", null, null, opNames);
-            if (string.IsNullOrWhiteSpace(result) || result.Equals("Cancel"))
+            var result = await _userDialogs.ActionSheetAsync(Strings.Dialogs_Title_AvailableOpsList, Strings.Global_Cancel, null, null, opNames);
+            if (string.IsNullOrWhiteSpace(result) || result.Equals(Strings.Global_Cancel))
                 return;
 
             var selectedOp = AvailableOpsCollection.FirstOrDefault(x => x.Name.Equals(result));
@@ -325,11 +337,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         {
             MenuItems = new MvxObservableCollection<MenuItem>()
             {
-                new MenuItem() { Icon = "mdi-account", Title = "Profile", ViewModelType = typeof(ProfileViewModel) },
-                new MenuItem() { Icon = "mdi-account-group", Title = "Teams", ViewModelType = typeof(TeamsListViewModel) },
-                new MenuItem() { Icon = "mdi-map", Title = "Operation Map", ViewModelType = typeof(OperationRootTabbedViewModel) },
-                new MenuItem() { Icon = "mdi-widgets", Title = "My Operations", ViewModelType = typeof(OperationsListViewModel) },
-                new MenuItem() { Icon = "mdi-cogs", Title = "Settings", ViewModelType = typeof(SettingsViewModel) }
+                new MenuItem() { Icon = "mdi-account", Title = Strings.Menu_Item_Profile, ViewModelType = typeof(ProfileViewModel) },
+                new MenuItem() { Icon = "mdi-account-group", Title = Strings.Menu_Item_Teams, ViewModelType = typeof(TeamsListViewModel) },
+                new MenuItem() { Icon = "mdi-map", Title = Strings.Menu_Item_OperationMap, ViewModelType = typeof(OperationRootTabbedViewModel) },
+                new MenuItem() { Icon = "mdi-widgets", Title = Strings.Menu_Item_OperationsList, ViewModelType = typeof(OperationsListViewModel) },
+                new MenuItem() { Icon = "mdi-cogs", Title = Strings.Menu_Item_Settings, ViewModelType = typeof(SettingsViewModel) }
             };
 
             if (_preferences.Get(UserSettingsKeys.DevModeActivated, false))
@@ -339,21 +351,21 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task<bool> CheckAndAskForLocationPermissions()
         {
             LoggingService.Trace("MenuViewModel - Checking location permissions");
-            
+
             var statusLocationAlways = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();
 
             LoggingService.Trace($"Permissions Status : LocationAlways={statusLocationAlways}");
 
             if (statusLocationAlways == PermissionStatus.Granted)
                 return true;
-            
+
             var requestPermission = true;
             var showRationale = Permissions.ShouldShowRationale<Permissions.LocationAlways>();
             if (showRationale)
                 requestPermission = await _userDialogs.ConfirmAsync(
-                  "To use the live location sharing, please set the permission to 'Allow all the time'.",
-                  "Permissions required",
-                  "Ok", "Cancel");
+                  Strings.Dialogs_Warning_SetLocationPermissionsAllTheTime,
+                  Strings.Dialog_Warning_PermissionsRequired,
+                  Strings.Global_Ok, Strings.Global_Cancel);
 
             if (!requestPermission)
                 return false;
@@ -367,7 +379,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             {
                 LoggingService.Trace("User didn't granted geolocation permissions");
 
-                _userDialogs.Alert("Geolocation permission is required !");
+                _userDialogs.Alert(Strings.Dialogs_Warning_LocationPermissionRequired);
                 return false;
             }
 

@@ -59,5 +59,18 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>CFBundleLocalizations</key>
+    <array>
+      <string>da</string>
+      <string>de</string>
+      <string>en</string>
+      <string>es</string>
+      <string>fr</string>
+      <string>it</string>
+      <string>pt</string>
+      <string>ru</string>
+    </array>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
 </dict>
 </plist>

@@ -18,6 +18,8 @@ using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 using Rocks.Wasabee.Mobile.iOS.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.iOS.Services.Geolocation;
 using UIKit;
+using Xamarin.Essentials.Implementation;
+using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms.Platform.iOS;
 
 #nullable enable
@@ -55,6 +57,8 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         protected override IMvxApplication CreateApp(IMvxIoCProvider iocProvider)
         {
+            Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
+
             // this force Xamarin.Forms to initialize
             var app = this.FormsApplication;
 

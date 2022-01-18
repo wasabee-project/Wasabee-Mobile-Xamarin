@@ -1,9 +1,12 @@
-﻿using Rocks.Wasabee.Mobile.Core.Infra.Logger;
+﻿using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Helpers;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using SQLiteNetExtensions.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
 
@@ -27,7 +30,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         public async Task<LinkModel?> GetLinkModel(string linkId)
         {
             LoggingService.Trace("Querying LinksDatabase.GetLinkModel");
-            
+
             if (string.IsNullOrEmpty(linkId))
                 return null;
 
@@ -85,48 +88,62 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
         {
             [PrimaryKey, Unique]
             public string Id { get; set; }
+            
+            public string Assignments { get; set; }
+            public string DependsOn { get; set; }
+            public int Zone { get; set; }
+            public int DeltaMinutes { get; set; }
+            public TaskState State { get; set; }
+            public string Comment { get; set; }
+            public int Order { get; set; }
+
             public string FromPortalId { get; set; }
             public string ToPortalId { get; set; }
-            public string Description { get; set; }
-            public string AssignedTo { get; set; }
-            public int ThrowOrderPos { get; set; }
-            public bool Completed { get; set; }
             public string Color { get; set; }
-            public int Zone { get; set; }
+            public int MusCaptured { get; set; }
 
             [ForeignKey(typeof(OperationsDatabase.OperationDatabaseModel))]
             public string OpId { get; set; }
 
-
             public static LinkModel ToLinkModel(LinkDatabaseModel linkDatabaseModel)
             {
-                return new LinkModel
+                return new LinkModel()
                 {
                     Id = linkDatabaseModel.Id,
+                    Assignments = string.IsNullOrEmpty(linkDatabaseModel.Assignments) ? new List<string>() : 
+                        JsonConvert.DeserializeObject<List<string>>(linkDatabaseModel.Assignments),
+                    DependsOn = string.IsNullOrEmpty(linkDatabaseModel.DependsOn) ? new List<string>() : 
+                        JsonConvert.DeserializeObject<List<string>>(linkDatabaseModel.DependsOn),
+                    Zone = linkDatabaseModel.Zone,
+                    DeltaMinutes = linkDatabaseModel.DeltaMinutes,
+                    State = linkDatabaseModel.State,
+                    Comment = linkDatabaseModel.Comment,
+                    Order = linkDatabaseModel.Order,
                     FromPortalId = linkDatabaseModel.FromPortalId,
                     ToPortalId = linkDatabaseModel.ToPortalId,
-                    Description = linkDatabaseModel.Description,
-                    AssignedTo = linkDatabaseModel.AssignedTo,
-                    ThrowOrderPos = linkDatabaseModel.ThrowOrderPos,
-                    Completed = linkDatabaseModel.Completed,
                     Color = linkDatabaseModel.Color,
-                    Zone = linkDatabaseModel.Zone
+                    MusCaptured = linkDatabaseModel.MusCaptured
                 };
             }
 
             public static LinkDatabaseModel ToLinkDatabaseModel(LinkModel linkModel)
             {
-                return new LinkDatabaseModel
+                return new LinkDatabaseModel()
                 {
                     Id = linkModel.Id,
+                    Assignments = linkModel.Assignments.IsNullOrEmpty() ? string.Empty : 
+                        JsonConvert.SerializeObject(linkModel.Assignments),
+                    DependsOn = linkModel.DependsOn.IsNullOrEmpty() ? string.Empty : 
+                        JsonConvert.SerializeObject(linkModel.DependsOn),
+                    Zone = linkModel.Zone,
+                    DeltaMinutes = linkModel.DeltaMinutes,
+                    State = linkModel.State,
+                    Comment = linkModel.Comment,
+                    Order = linkModel.Order,
                     FromPortalId = linkModel.FromPortalId,
                     ToPortalId = linkModel.ToPortalId,
-                    Description = linkModel.Description,
-                    AssignedTo = linkModel.AssignedTo,
-                    ThrowOrderPos = linkModel.ThrowOrderPos,
-                    Completed = linkModel.Completed,
                     Color = linkModel.Color,
-                    Zone = linkModel.Zone
+                    MusCaptured = linkModel.MusCaptured
                 };
             }
         }

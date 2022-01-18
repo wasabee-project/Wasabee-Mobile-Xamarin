@@ -3,16 +3,19 @@ using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -27,11 +30,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IClipboard _clipboard;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly MarkersDatabase _markersDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly IUserSettingsService _userSettingsService;
 
         public MarkerAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IMvxMessenger messenger,
             IUserDialogs userDialogs, IMap map, IClipboard clipboard, WasabeeApiV1Service wasabeeApiV1Service,
-            MarkersDatabase markersDatabase, IUserSettingsService userSettingsService) : base(dialogNavigationService)
+            MarkersDatabase markersDatabase, AgentsDatabase agentsDatabase, IUserSettingsService userSettingsService) : base(dialogNavigationService)
         {
             _messenger = messenger;
             _userDialogs = userDialogs;
@@ -39,6 +43,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             _clipboard = clipboard;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _markersDatabase = markersDatabase;
+            _agentsDatabase = agentsDatabase;
             _userSettingsService = userSettingsService;
         }
 
@@ -46,8 +51,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             MarkerAssignment = parameter;
             Marker = MarkerAssignment.Marker;
-            
-            IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker?.AssignedTo);
+
+            UpdateAssignments();
             UpdateButtonsState();
         }
 
@@ -55,7 +60,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             UpdateButtonsState();
 
-            Goal = GetGoalFromMarkerType(Marker?.Type);
+            if (Marker is not null)
+                Goal = GetGoalFromMarkerType(Marker.Type);
 
             return base.Initialize();
         }
@@ -67,13 +73,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public bool AcknowledgedEnabled { get; set; }
         public bool CompletedEnabled { get; set; }
         public bool IncompleteEnabled { get; set; }
-        public bool ClaimEnabled{ get; set; }
+        public bool ClaimEnabled { get; set; }
         public bool RejectEnabled { get; set; }
 
         public string Goal { get; set; } = string.Empty;
 
         public MarkerAssignmentData? MarkerAssignment { get; set; }
         public MarkerModel? Marker { get; set; }
+
+        public string Assignments { get; set; } = string.Empty;
 
         #endregion
 
@@ -120,7 +128,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.CompleteCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Complete(MarkerAssignment.OpId, Marker.Id);
@@ -153,7 +161,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.IncompleteCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Incomplete(MarkerAssignment.OpId, Marker.Id);
@@ -183,7 +191,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.ClaimCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Claim(MarkerAssignment.OpId, Marker.Id);
@@ -213,13 +221,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 LoggingService.Trace("Executing MarkerAssignmentDialogViewModel.RejectCommand");
 
                 IsBusy = true;
-                
+
                 try
                 {
                     var response = await _wasabeeApiV1Service.Operation_Marker_Reject(MarkerAssignment.OpId, Marker.Id);
                     if (response != null)
                     {
-                        _userDialogs.Toast("Assignment rejected");
+                        _userDialogs.Toast(Strings.Toast_RejectedAssignment);
 
                         StoreResponseUpdateId(response);
                         await UpdateMarkerAndNotify(response);
@@ -246,7 +254,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             if (Marker != null)
                 Mvx.IoCProvider.Resolve<IMvxMessenger>().Publish(new ShowMarkerOnMapMessage(this, Marker));
-            
+
             IsBusy = false;
             await CloseCommand.ExecuteAsync();
         }
@@ -266,22 +274,22 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             {
                 if (MarkerAssignment.Portal == null)
                     return;
-                        
+
                 var culture = CultureInfo.GetCultureInfo("en-US");
                 string coordinates = $"{MarkerAssignment.Portal.Lat},{MarkerAssignment.Portal.Lng}";
 
                 double.TryParse(MarkerAssignment.Portal.Lat, NumberStyles.Float, culture, out var lat);
                 double.TryParse(MarkerAssignment.Portal.Lng, NumberStyles.Float, culture, out var lng);
-                        
+
                 Location location = new Location(lat, lng);
 
                 if (string.IsNullOrEmpty(coordinates) is false)
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
-                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                        _userDialogs.Toast(Strings.Toast_CoordinatesCopied);
                 }
-                
+
                 await _map.OpenAsync(location);
             }
             catch (Exception e)
@@ -297,24 +305,42 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         #endregion
 
         #region Private methods
-        
+
+        private async void UpdateAssignments()
+        {
+            if (Marker!.Assignments.IsNullOrEmpty())
+                return;
+            
+            IsSelfAssignment = Marker.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
+
+            var assignedAgents = await _agentsDatabase.GetAgents(Marker!.Assignments);
+            Assignments = string.Join(", ", assignedAgents.Select(x => x.Name).OrderBy(x => x));
+        }
+
         /// <summary>
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
         /// <returns></returns>
-        private async Task UpdateMarkerAndNotify(WasabeeApiResponse response)
+        private async Task UpdateMarkerAndNotify(WasabeeOpUpdateApiResponse response)
         {
             if (MarkerAssignment != null && Marker != null)
             {
-                // Flags UpdatedId as done
-                OperationsUpdatesCache.Data[response.UpdateId] = true;
+                MarkerModel? updated;
+                if (OperationsUpdatesCache.Data[response.UpdateId] is false)
+                {
+                    // Flags UpdatedId as done
+                    OperationsUpdatesCache.Data[response.UpdateId] = true;
+                    
+                    updated = await _wasabeeApiV1Service.Operations_GetMarker(MarkerAssignment.OpId, Marker.Id);
+                }
+                else
+                    updated = await _markersDatabase.GetMarkerModel(Marker.Id);
 
-                var updated = await _wasabeeApiV1Service.Operations_GetMarker(MarkerAssignment.OpId, Marker.Id);
                 if (updated != null)
                 {
                     Marker = updated;
-                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Marker.AssignedTo);
-                    
+
+                    UpdateAssignments();
                     UpdateButtonsState();
 
                     await _markersDatabase.SaveMarkerModel(Marker, MarkerAssignment.OpId);
@@ -334,24 +360,24 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             if (Marker == null)
                 return;
 
-            switch (Marker.State.ToLower())
+            switch (Marker.State)
             {
-                case "pending":
-                case "completed":
+                case TaskState.Pending:
+                case TaskState.Completed:
                     AcknowledgedEnabled = false;
                     CompletedEnabled = false;
                     IncompleteEnabled = true;
                     RejectEnabled = false;
                     ClaimEnabled = false;
                     break;
-                case "assigned":
+                case TaskState.Assigned:
                     AcknowledgedEnabled = true;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
                     RejectEnabled = true;
                     ClaimEnabled = false;
                     break;
-                case "acknowledged":
+                case TaskState.Acknowledged:
                     AcknowledgedEnabled = false;
                     CompletedEnabled = true;
                     IncompleteEnabled = false;
@@ -370,49 +396,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             }
         }
 
-        private string GetGoalFromMarkerType(string? markerType)
+        private string GetGoalFromMarkerType(MarkerType markerType)
         {
-            if (markerType == null)
-                return string.Empty;
-
-            switch (markerType)
-            {
-                case "CapturePortalMarker":
-                    return "Capture";
-                case "LetDecayPortalAlert":
-                    return "Let Decay";
-                case "DestroyPortalAlert":
-                    return "Destroy";
-                case "FarmPortalMarker":
-                    return "Farm";
-                case "GotoPortalMarker":
-                    return "Go to";
-                case "GetKeyPortalMarker":
-                    return "Get key";
-                case "CreateLinkAlert":
-                    return "Create Link";
-                case "MeetAgentPortalMarker":
-                    return "Meet Agent";
-                case "OtherPortalAlert":
-                    return "Other";
-                case "RechargePortalAlert":
-                    return "Recharge";
-                case "UpgradePortalAlert":
-                    return "Upgrade";
-                case "UseVirusPortalAlert":
-                    return "Use virus";
-            }
-
-            return string.Empty;
+            return markerType.ToFriendlyString();
         }
 
-        private static void StoreResponseUpdateId(WasabeeApiResponse response)
+        private static void StoreResponseUpdateId(WasabeeOpUpdateApiResponse response)
         {
-            if (response.HasUpdateId())
-            {
-                var updateId = response.UpdateId;
+            if (string.IsNullOrWhiteSpace(response.UpdateId))
+                return;
+
+            var updateId = response.UpdateId;
+            if (OperationsUpdatesCache.Data.ContainsKey(updateId) is false)
                 OperationsUpdatesCache.Data.Add(updateId, false);
-            }
         }
 
         #endregion

@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep2SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:subViewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:system="clr-namespace:System;assembly=netstandard"
+                       xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep2View"
+                       x:DataType="subViewModels:AgentVerificationStep2SubViewModel">
+    
+    <ContentView.Resources>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+
+        <Keyboard x:Key="NoCapitalizationKeyboard"
+                  x:FactoryMethod="Create">
+            <x:Arguments>
+                <KeyboardFlags>None</KeyboardFlags>
+            </x:Arguments>
+        </Keyboard>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+      <Frame Padding="0" Margin="10,0" HasShadow="False" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+          
+          <ScrollView>
+              <Grid RowDefinitions="Auto, *, Auto">
+                  <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand" Padding="10">
+                      <Label HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineHeight="2">
+                          <Label.FormattedText>
+                              <FormattedString>
+                                  <Span Text="Agent Community Verification" FontSize="22" FontAttributes="Bold"/>
+                                  <Span Text="{x:Static system:Environment.NewLine}"/>
+                                  <Span Text="🐝     🐝     🐝" FontSize="Large"/>
+                              </FormattedString>
+                          </Label.FormattedText>
+                      </Label>
+                  </StackLayout>
+
+                  <StackLayout Grid.Row="1" Padding="10" VerticalOptions="Center">
+
+                      <StackLayout Spacing="15" 
+                                   IsVisible="{Binding IsTokenReady, Converter={StaticResource BoolNegateConverter}}">
+
+                          <controls:FloatingLabelEntry x:Name="AgentNameEntry"
+                                                       Title="In-game name"
+                                                       IsTextPredictionEnabled="False"
+                                                       Text="{Binding Parent.AgentName}"
+                                                       TextColor="{DynamicResource PrimaryTextColor}"
+                                                       TitleColor="{DynamicResource PrimaryTextColor}"
+                                                       BorderColor="{DynamicResource PrimaryTextColor}"
+                                                       Keyboard="{StaticResource NoCapitalizationKeyboard}"/>
+
+                          <Label Text="{xaml:Translate ACV_Step2_Label_CaseSensitive}" HorizontalOptions="Center"/>
+
+                          <Button Text="{xaml:Translate ACV_Step2_Button_GetToken}" Style="{DynamicResource WasabeeStyleMainActionButton}" 
+                                  HorizontalOptions="Center"
+                                  Command="{Binding GetTokenCommand}"
+                                  IsVisible="{Binding IsBusy, Converter={StaticResource BoolNegateConverter}}"/>
+
+                          <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="True"/>
+                      </StackLayout>
+
+                      <StackLayout IsVisible="{Binding IsTokenReady}" Spacing="40">
+                          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                              <Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"
+                                     Text="{Binding Parent.AgentName, StringFormat={xaml:Translate ACV_Step2_Label_TokenFor}}" />
+
+                              <iconize:IconButton Text="mdi-reload" Style="{DynamicResource WasabeeStyleMainActionButton}" 
+                                                  HorizontalOptions="End" VerticalOptions="Center"
+                                                  WidthRequest="40" HeightRequest="40"
+                                                  Command="{Binding ResetCommand}"/>
+                          </StackLayout>
+
+                          <Grid Margin="0,30,0,0" ColumnDefinitions="*,Auto">
+                              
+                              <Frame CornerRadius="4" BorderColor="{DynamicResource PrimaryTextColor}"
+                                     Margin="0" Padding="5" BackgroundColor="Transparent" HasShadow="False">
+
+                                  <controls:BorderlessEditor HeightRequest="100" Margin="0" FontSize="Small"
+                                                             BackgroundColor="Transparent"
+                                                             Text="{Binding Token}"/>
+                              </Frame>
+
+                              <Label Text="{xaml:Translate ACV_Step2_Label_TokenIs}" FontSize="14" TranslationY="-20"/>
+
+                              <StackLayout Grid.Column="1" VerticalOptions="Center" >
+                                  
+                                  <iconize:IconButton Text="mdi-content-copy" WidthRequest="40" HeightRequest="40"
+                                                      Style="{DynamicResource WasabeeStyleMainActionButton}"
+                                                      HorizontalOptions="Center"
+                                                      Command="{Binding CopyTokenCommand}"/>
+                              </StackLayout>
+                          </Grid>
+                      </StackLayout>
+
+                  </StackLayout>
+
+                  <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto">
+                      <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
+                              Text="{xaml:Translate ACV_Button_Back}"
+                              HorizontalOptions="Start"
+                              Command="{Binding Parent.BackStepCommand}"/>
+                      <Button Grid.Column="2" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                              Text="{xaml:Translate ACV_Button_Next}"
+                              HorizontalOptions="End"
+                              Command="{Binding Parent.NextStepCommand}"
+                              IsVisible="{Binding IsNextStepButtonVisible}"/>
+                  </Grid>
+              </Grid>
+          </ScrollView>
+      </Frame>
+  </ContentView.Content>
+</views:BaseContentView>

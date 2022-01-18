@@ -9,8 +9,9 @@
                        xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:mapElements="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Operation.MapElements;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Operation.MapPage"
-                       Title="Map"
+                       Title="{xaml:Translate Map_Page_Title}"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Resources>
@@ -84,19 +85,19 @@
                     </Grid.RowDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" Color="{Binding IsLayerLinksActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerLinksActivated}"/>
-                    <Label Grid.Row="0" Grid.Column="1" Text="Links" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="{xaml:Translate Map_Text_Layers-Links}" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="1" Grid.Column="0" Color="{Binding IsLayerAnchorsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAnchorsActivated}"/>
-                    <Label Grid.Row="1" Grid.Column="1" Text="Anchors" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="{xaml:Translate Map_Text_Layers-Anchors}" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="2" Grid.Column="0" Color="{Binding IsLayerMarkersActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerMarkersActivated}"/>
-                    <Label Grid.Row="2" Grid.Column="1" Text="Markers" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="{xaml:Translate Map_Text_Layers-Markers}" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="3" Grid.Column="0" Color="{Binding IsLayerAgentsActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerAgentsActivated}"/>
-                    <Label Grid.Row="3" Grid.Column="1" Text="Agents" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="{xaml:Translate Map_Text_Layers-Agents}" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
 
                     <CheckBox Grid.Row="4" Grid.Column="0" Color="{Binding IsLayerZonesActivated, Converter={StaticResource BoolToColorConverter}}" IsChecked="{Binding IsLayerZonesActivated}"/>
-                    <Label Grid.Row="4" Grid.Column="1" Text="Zones" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="4" Grid.Column="1" Text="{xaml:Translate Map_Text_Layers-Zones}" TextColor="{DynamicResource PrimaryTextColor}" VerticalTextAlignment="Center"/>
                 </Grid>
             </pancake:PancakeView>
 
@@ -106,7 +107,7 @@
                                  RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=Map, Property=Width, Factor=1, Constant=-180}">
 
                 <StackLayout Padding="0" Margin="0" Spacing="5">
-                    <Label Text="CLICK TO SHOW" FontAttributes="Bold" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12" Padding="10,10,10,0"/>
+                    <Label Text="{xaml:Translate Map_Label_AgentsList-ClickToShow}" FontAttributes="Bold" TextColor="{DynamicResource PrimaryTextColor}" FontSize="12" Padding="10,10,10,0"/>
                     <BoxView HeightRequest="1" HorizontalOptions="FillAndExpand" BackgroundColor="{DynamicResource PrimaryTextColor}"/>
 
                     <ListView BackgroundColor="Transparent"
@@ -142,10 +143,15 @@
                                 <Label Text="{Binding SelectedWasabeePin.Portal.Name}" FontSize="18" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
                             </StackLayout>
                         
-                            <StackLayout IsVisible="{Binding SelectedWasabeePin.AssignedTo, Converter={StaticResource StringToBoolNegateConverter}}"
-                                         Orientation="Horizontal" Margin="2, 0, 0, 0">
+                            <StackLayout Orientation="Horizontal" Margin="2, 0, 0, 0">
                                 <iconize:IconLabel Text="mdi-account-arrow-right" TextColor="{DynamicResource PrimaryTextColor}" FontSize="24"/>
-                                <Label Text="{Binding SelectedWasabeePin.AssignedTo}" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
+                                <Label Text="{Binding SelectedWasabeePin.Assignments}" TextColor="{DynamicResource PrimaryTextColor}" VerticalOptions="CenterAndExpand"/>
+
+                                <StackLayout.Triggers>
+                                    <DataTrigger TargetType="StackLayout" Binding="{Binding SelectedWasabeePin.Assignments.Length}" Value="0">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                </StackLayout.Triggers>
                             </StackLayout>
 
                             <pancake:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel2}" IsVisible="{Binding SelectedWasabeePin.HasComment}" Padding="5" Margin="5, 5, 0, 0"
@@ -174,7 +180,7 @@
                             </pancake:PancakeView>
 
                             <StackLayout HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsMarkerDetailAvailable}">
-                                <Button Text="ⓘ   Infos" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5" HeightRequest="40" Padding="0"
+                                <Button Text="{xaml:Translate Map_Button_Infos}" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5" HeightRequest="40" Padding="0"
                                         Command="{Binding ShowMarkerDetailCommand}"
                                         CommandParameter="{Binding SelectedWasabeePin}"/>
                             </StackLayout>

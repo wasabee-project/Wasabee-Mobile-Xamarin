@@ -6,9 +6,10 @@
                        xmlns:viewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Teams;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Teams.TeamsListPage"
                        x:Name="Page"
-                       Title="Teams"
+                       Title="{xaml:Translate TeamsList_Page_Title}"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Resources>
@@ -34,7 +35,7 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:Team">
-                            <SwipeView>
+                            <SwipeView BackgroundColor="Transparent">
 
                                 <SwipeView.LeftItems>
                                     <SwipeItemView Command="{Binding ViewModel.EditTeamNameCommand, Source={x:Reference Page}}"
@@ -102,6 +103,7 @@
 
                                             <iconize:IconButton Grid.Column="2"
                                                                 Text="mdi-chevron-right"
+                                                                TextColor="{DynamicResource PrimaryTextColor}"
                                                                 Command="{Binding ViewModel.ShowTeamDetailCommand, Source={x:Reference Page}}"
                                                                 CommandParameter="{Binding .}"
                                                                 BackgroundColor="Transparent"

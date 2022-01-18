@@ -129,6 +129,9 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             _token ??= messenger.Subscribe<LiveGeolocationTrackingMessage>(async msg =>
             {
+                if (msg.Sender is LiveLocationSharingActionReceiver)
+                    return;
+
                 if (msg.Action == Action.Start)
                     await GeolocationHelper.StartLocationService();
                 else

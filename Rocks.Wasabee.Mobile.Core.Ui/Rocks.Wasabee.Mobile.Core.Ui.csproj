@@ -12,6 +12,7 @@
     <None Remove="Greenlightened.MapStyle.json" />
     <None Remove="Intel.MapStyle.json" />
     <None Remove="RedIntel.MapStyle.json" />
+    <None Remove="Resources\SVGs\telegram_logo.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,7 @@
     <EmbeddedResource Include="Resources\MapStyles\RedIntel.json" />
     <EmbeddedResource Include="Resources\MapStyles\Intel.json" />
     <EmbeddedResource Include="Resources\MapStyles\Greenlightened.json" />
+    <EmbeddedResource Include="Resources\SVGs\telegram_logo.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,12 +39,16 @@
     <PackageReference Include="MvvmCross.Plugin.Visibility" Version="8.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.14" />
+    <PackageReference Include="SkiaSharp.Extended" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.3" />
     <PackageReference Include="Xam.Plugin.Iconize" Version="3.5.0.129" />
     <PackageReference Include="Xam.Plugin.Iconize.MaterialDesignIcons" Version="3.5.0.129" />
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.7.0" />
     <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.11.982" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />  
+    <PackageReference Include="Xamarin.Forms.CircularProgressBar" Version="1.0.7" />  
     <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.759" />  
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
@@ -73,6 +79,24 @@
     <Compile Update="Themes\DarkTheme.xaml.cs">
       <DependentUpon>DarkTheme.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\TelegramLinking\TelegramLinkingPage.xaml.cs">
+      <DependentUpon>TelegramLinkingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TelegramLinking\SubViews\TelegramLinkingStep1View.xaml.cs">
+      <DependentUpon>TelegramLinkingStep1View.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TelegramLinking\SubViews\TelegramLinkingStep2View.xaml.cs">
+      <DependentUpon>TelegramLinkingStep2View.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TelegramLinking\SubViews\TelegramLinkingStep3View.xaml.cs">
+      <DependentUpon>TelegramLinkingStep3View.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\AgentVerification\SubViews\AgentVerificationStep3View.xaml.cs">
+      <DependentUpon>AgentVerificationStep3View.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\AgentVerification\SubViews\AgentVerificationStep2View.xaml.cs">
+      <DependentUpon>AgentVerificationStep2View.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
@@ -85,7 +109,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Controls\FloatingLabelEntry.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Themes\BaseStyle.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AgentVerification\AgentVerificationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AgentVerification\SubViews\AgentVerificationStep1View.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Dialogs\LinkAssignmentDialog.xaml">

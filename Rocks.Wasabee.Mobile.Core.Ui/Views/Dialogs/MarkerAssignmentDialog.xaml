@@ -8,11 +8,13 @@
                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
                       xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.MarkerAssignmentDialog">
 
     <ContentPage.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter" />
         <converters:MarkerDataToResourceFilePathConverter x:Key="MarkerDataToResourceFilePathConverter" />
+        <converters:TaskStateToStringConverter x:Key="TaskStateToStringConverter" />
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -20,7 +22,7 @@
             <pancakeView:PancakeView x:Name="Popup" CornerRadius="5" BackgroundColor="{DynamicResource PrimaryGreen}" Margin="0, 15">
                 <StackLayout Padding="0" Margin="0">
 
-                    <Label Text="Marker informations" TextColor="White" FontSize="Large" FontAttributes="Bold" Margin="8, 8, 0, 4" />
+                    <Label Text="{xaml:Translate MarkerDialog_Title}" TextColor="White" FontSize="Large" FontAttributes="Bold" Margin="8, 8, 0, 4" />
 
                     <StackLayout BackgroundColor="{DynamicResource DialogsBackgroundColor}" Padding="10, 5, 10, 10">
                         <StackLayout Orientation="Horizontal" Spacing="10">
@@ -42,24 +44,37 @@
                             </StackLayout>
                         </StackLayout>
 
+                        <StackLayout Padding="0" Margin="0">
+                            <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" />
+
+                            <Label Text="{xaml:Translate Operation_Text_AssignedTo}"/>
+                            <Label Text="{Binding Assignments}"/>
+
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding Assignments.Length}" Value="0">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
+                        </StackLayout>
+
                         <BoxView HeightRequest="1" BackgroundColor="LightGray" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSelfAssignment}" />
 
                         <StackLayout IsVisible="{Binding IsSelfAssignment}">
-                            <Label Text="{Binding Marker.State, StringFormat='State : {0}'}"/>
+                            <Label Text="{Binding Marker.State, StringFormat={xaml:Translate MarkerDialog_Text_State}, Converter={StaticResource TaskStateToStringConverter}}"/>
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                <Button Text="👍🏻   Ack" TextColor="White" BackgroundColor="{DynamicResource PrimaryOrange}" CornerRadius="5"
-                                    Command="{Binding AckCommand}"
-                                    IsVisible="{Binding AcknowledgedEnabled}"/>
-                                <Button Text="✓   Done" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
-                                    Command="{Binding CompleteCommand}"
-                                    IsVisible="{Binding CompletedEnabled}"/>
-                                <Button Text="✗   Undone" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
-                                    Command="{Binding IncompleteCommand}"
-                                    IsVisible="{Binding IncompleteEnabled}"/>
+                                <Button Text="{xaml:Translate TaskDialog_Button_Ack}" TextColor="White" BackgroundColor="{DynamicResource PrimaryOrange}" CornerRadius="5"
+                                        Command="{Binding AckCommand}"
+                                        IsVisible="{Binding AcknowledgedEnabled}"/>
+                                <Button Text="{xaml:Translate TaskDialog_Button_Done}" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
+                                        Command="{Binding CompleteCommand}"
+                                        IsVisible="{Binding CompletedEnabled}"/>
+                                <Button Text="{xaml:Translate TaskDialog_Button_Undone}" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
+                                        Command="{Binding IncompleteCommand}"
+                                        IsVisible="{Binding IncompleteEnabled}"/>
                             </StackLayout>
 
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                <Button Text="⚠   Reject" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
+                                <Button Text="{xaml:Translate TaskDialog_Button_Reject}" TextColor="White" BackgroundColor="{DynamicResource PrimaryRed}" CornerRadius="5"
                                         Command="{Binding RejectCommand}"
                                         IsVisible="{Binding RejectEnabled}"/>
                             </StackLayout>
@@ -68,7 +83,7 @@
                         <StackLayout IsVisible="{Binding IsSelfAssignment, Converter={StaticResource BoolNegateConverter}}"
                                      Orientation="Horizontal" HorizontalOptions="Center">
                             
-                            <Button Text="Claim" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
+                            <Button Text="{xaml:Translate TaskDialog_Button_Claim}" TextColor="White" BackgroundColor="{DynamicResource PrimaryGreen}" CornerRadius="5"
                                     Command="{Binding ClaimCommand}"/>
                         </StackLayout>
                     </StackLayout>

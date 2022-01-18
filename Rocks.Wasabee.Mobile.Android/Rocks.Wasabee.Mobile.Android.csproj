@@ -70,7 +70,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Network Logs|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug Network Logs\</OutputPath>
-    <DefineConstants>DEBUG;__ANDROID__</DefineConstants>
+    <DefineConstants>DEBUG;__ANDROID__;DEBUG_NETWORK_LOGS</DefineConstants>
     <DebugType>portable</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -87,6 +87,7 @@
     <Reference Include="System.Drawing.Common">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v1.0\Facades\System.Drawing.Common.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors" />
     <Reference Include="System.Xml.Linq" />
@@ -192,7 +193,7 @@
     <PackageReference Include="Xamarin.Firebase.Messaging">
       <Version>121.1.0</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     <PackageReference Include="Xamarin.Forms.PancakeView">
       <Version>2.3.0.759</Version>
@@ -227,6 +228,8 @@
     <Compile Include="Infra\HttpClientFactory\Factory.cs" />
     <Compile Include="Infra\LocalNotification\LocalNotificationService.cs" />
     <Compile Include="MainApplication.cs" />
+    <Compile Include="Renderers\BorderlessEditorRenderer.cs" />
+    <Compile Include="Renderers\BorderlessEntryRenderer.cs" />
     <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
     <Compile Include="Services\Geolocation\LiveGeolocationService.cs" />
     <Compile Include="WasabeeBitmapConfig.cs" />

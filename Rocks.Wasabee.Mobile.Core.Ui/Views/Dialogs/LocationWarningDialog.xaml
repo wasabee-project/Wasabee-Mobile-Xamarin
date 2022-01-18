@@ -8,6 +8,8 @@
                       xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:behaviors="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Behaviors;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                      xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
+                      xmlns:system="clr-namespace:System;assembly=netstandard"
                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Dialogs.LocationWarningDialog">
 
     <ContentPage.Resources>
@@ -27,31 +29,33 @@
 
                 <StackLayout Grid.Row="0" Orientation="Horizontal" BackgroundColor="{DynamicResource PrimaryOrange}" Padding="10" Margin="0" Spacing="15">
                     <iconize:IconLabel Text="mdi-alert-octagram-outline" TextColor="White" FontSize="28" VerticalTextAlignment="Center"/>
-                    <Label Text="Attention please" TextColor="White" FontSize="Large" FontAttributes="Bold"/>
+                    <Label Text="{xaml:Translate LocationDialog_Title}" TextColor="White" FontSize="Large" FontAttributes="Bold"/>
                 </StackLayout>
 
                 <ScrollView Grid.Row="1" Padding="10,10,10,0">
                     <StackLayout>
 
-                        <Label Text="Why do I see this message ?" FontAttributes="Bold"/>
-                        <Label TextType="Html">
-                            <Label.Text>
-                                <![CDATA[
-                                You're going to enable the Live Location Sharing feature. This means that your real position is going to be send on a regular basis to the Wasabee server.
-                                <br>
-                                All the teams to which you enabled location sharing will be able to see your position when the feature is enabled.
-                                To configure which team can see you or not, you must go to the Teams menu.
-                                <br>
-                                <br>
-                                Also, while the feature is enabled, your location will be sent to Wasabee Server even if you're not using the app, aka. when the app is in background or closed.
-                                <br>
-                                ]]>
-                            </Label.Text>
+                        <Label Text="{xaml:Translate LocationDialog_Text_Question}" FontAttributes="Bold"/>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{xaml:Translate LocationDialog_Text_BigText-Line1}"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{xaml:Translate LocationDialog_Text_BigText-Line2}"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{xaml:Translate LocationDialog_Text_BigText-Line3}"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{xaml:Translate LocationDialog_Text_BigText-Line4}"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
                         </Label>
-                        <Label Text="Data storage" FontAttributes="Bold" />
-                        <Label Text="Only your last known location (the last location sent by the app) is stored on the servers. No location history is made and we can't retrace your route." />
-                        <Label Text="Read more about Wasabee Server's privacy policy :" FontAttributes="Bold"/>
-                        <controls:LinkLabel x:Name="PrivacyPolicyLink" Text="Click here">
+                        <Label Text="{xaml:Translate LocationDialog_Text_DataStorage}" FontAttributes="Bold" />
+                        <Label Text="{xaml:Translate LocationDialog_Text_DataStorage-Details}" />
+                        <Label Text="{xaml:Translate LocationDialog_Text_ReadMore}" FontAttributes="Bold"/>
+                        <controls:LinkLabel x:Name="PrivacyPolicyLink" Text="{xaml:Translate LocationDialog_Text_ReadMore-ClickHere}">
                             <controls:LinkLabel.Behaviors>
                                 <behaviors:EventToCommandBehavior EventName="Clicked" Command="{Binding OpenPrivacyPolicyCommand}" />
                             </controls:LinkLabel.Behaviors>
@@ -60,7 +64,7 @@
                 </ScrollView>
 
                 <StackLayout Grid.Row="2" Orientation="Horizontal" Padding="0" Margin="0">
-                    <Label Text="Never show again" HorizontalTextAlignment="End" VerticalTextAlignment="Center" HorizontalOptions="FillAndExpand"/>
+                    <Label Text="{xaml:Translate Global_NeverShowAgain}" HorizontalTextAlignment="End" VerticalTextAlignment="Center" HorizontalOptions="FillAndExpand"/>
                     <Switch OnColor="{DynamicResource PrimaryGreenDark}" Scale="1.2" Margin="10"
                             ThumbColor="{Binding NeverShowAgain, Converter={StaticResource BoolToColorConverter}}"
                             IsToggled="{Binding NeverShowAgain}"/>
@@ -72,8 +76,12 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleLocationWarningCancelButton}" Command="{Binding DenyCommand}" HorizontalOptions="Start" WidthRequest="100" />
-                    <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleLocationWarningNextButton}" Command="{Binding AcceptCommand}" HorizontalOptions="End" WidthRequest="100" />
+                    <Button Grid.Column="0" Style="{DynamicResource WasabeeStyleLocationWarningCancelButton}" 
+                            HorizontalOptions="Start"
+                            Command="{Binding DenyCommand}" />
+                    <Button Grid.Column="1" Style="{DynamicResource WasabeeStyleLocationWarningNextButton}" 
+                            HorizontalOptions="End"
+                            Command="{Binding AcceptCommand}" />
                 </Grid>
             </Grid>
 

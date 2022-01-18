@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Models.JsonConverters;
 using System;
 using System.Collections.Generic;
 
@@ -49,6 +50,9 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         [JsonProperty("modified")]
         public string Modified { get; set; }
 
+        [JsonProperty("lasteditid")]
+        public string LastEditId { get; set; }
+
         [JsonIgnore]
         public bool IsHiddenLocally { get; set; } = false;
 
@@ -77,34 +81,32 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
         public string Hardness { get; set; }
     }
 
-    public class LinkModel : BaseModel
+    public class LinkModel : TaskModel
     {
-        [JsonProperty("ID")]
-        public string Id { get; set; }
-
         [JsonProperty("fromPortalId")]
         public string FromPortalId { get; set; }
 
         [JsonProperty("toPortalId")]
         public string ToPortalId { get; set; }
 
-        [JsonProperty("description")]
-        public string Description { get; set; }
-
-        [JsonProperty("assignedTo")]
-        public string AssignedTo { get; set; }
-
-        [JsonProperty("throwOrderPos")]
-        public int ThrowOrderPos { get; set; }
-
-        [JsonProperty("completed")]
-        public bool Completed { get; set; }
-
         [JsonProperty("color")]
         public string Color { get; set; }
 
-        [JsonProperty("zone")]
-        public int Zone { get; set; }
+        [JsonProperty("mu")]
+        public int MusCaptured { get; set; }
+
+        [JsonProperty("changed")]
+        public bool Changed { get; set; }
+    }
+
+    public class MarkerModel : TaskModel
+    {
+        [JsonProperty("portalId")]
+        public string PortalId { get; set; }
+
+        [JsonProperty("type")]
+        [JsonConverter(typeof(MarkerTypeConverter))]
+        public MarkerType Type { get; set; }
     }
 
     public class BlockerModel : BaseModel
@@ -129,39 +131,6 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
 
         [JsonProperty("completed")]
         public bool Completed { get; set; }
-    }
-
-    public class MarkerModel : BaseModel
-    {
-        [JsonProperty("ID")]
-        public string Id { get; set; }
-
-        [JsonProperty("portalId")]
-        public string PortalId { get; set; }
-
-        [JsonProperty("type")]
-        public string Type { get; set; }
-
-        [JsonProperty("comment")]
-        public string Comment { get; set; }
-
-        [JsonProperty("assignedTo")]
-        public string AssignedTo { get; set; }
-
-        [JsonProperty("assignedTeam")]
-        public string AssignedTeam { get; set; }
-
-        [JsonProperty("completedID")]
-        public string CompletedId { get; set; }
-
-        [JsonProperty("state")]
-        public string State { get; set; }
-
-        [JsonProperty("order")]
-        public int Order { get; set; }
-
-        [JsonProperty("zone")]
-        public int Zone { get; set; }
     }
 
     public class TeamModel : BaseModel
@@ -213,12 +182,29 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Operations
     {
         [JsonProperty("position")]
         public int Position { get; set; }
-        
+
         [JsonProperty("lat")]
         public string Lat { get; set; }
-        
+
         [JsonProperty("lng")]
         public string Lng { get; set; }
+    }
+
+    public enum MarkerType
+    {
+        DestroyPortal,
+        UseVirus,
+        CapturePortal,
+        FarmPortal,
+        LetDecay,
+        MeetAgent,
+        Other,
+        RechargePortal,
+        UpgradePortal,
+        CreateLink,
+        Exclude,
+        GetKey,
+        GoToPortal
     }
 #nullable enable
 }

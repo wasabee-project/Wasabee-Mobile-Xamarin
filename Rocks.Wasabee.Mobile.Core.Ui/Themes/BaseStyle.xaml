@@ -2,6 +2,7 @@
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                    xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                     x:Class="Rocks.Wasabee.Mobile.Core.Ui.Themes.BaseStyle">
 
     <!-- COLORS -->
@@ -45,20 +46,33 @@
         <Setter Property="TextColor" Value="{StaticResource PrimaryBlue}" />
     </Style>
 
+    <!--CheckBoxes-->
+    <Style TargetType="CheckBox">
+        <Setter Property="Color" Value="{StaticResource PrimaryGreen}"/>
+    </Style>
+    
     <!--Boutons-->
-    <!--Valider/Accepter-->
-    <Style TargetType="Button" x:Key="WasabeeStyleValidateButton">
-        <Setter Property="Text" Value="✓   Validate"/>
+    <Style TargetType="Button" x:Key="WasabeeStyleMainActionButton">
         <Setter Property="TextColor" Value="White"/>
         <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
+    <Style TargetType="Button" x:Key="WasabeeStyleSecondaryActionButton">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryOrange}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+
+    <!--Valider/Accepter-->
+    <Style TargetType="Button" x:Key="WasabeeStyleValidateButton" BasedOn="{StaticResource WasabeeStyleMainActionButton}">
+        <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Validate}"/>
+    </Style>
     <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningNextButton" BasedOn="{StaticResource WasabeeStyleValidateButton}">
-        <Setter Property="Text" Value="✓   Next"/>
+        <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Next}"/>
     </Style>
     <!--Annuler-->
     <Style TargetType="Button" x:Key="WasabeeStyleCancelButton" >
-        <Setter Property="Text" Value="Cancel"/>
+        <Setter Property="Text" Value="{xaml:Translate Global_Cancel}"/>
         <Setter Property="TextColor" Value="{StaticResource PrimaryGreen}"/>
         <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="BorderColor" Value="{StaticResource PrimaryGreen}"/>
@@ -67,7 +81,7 @@
     </Style>
     <!--Refuser-->
     <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningCancelButton" >
-        <Setter Property="Text" Value="✗   Cancel"/>
+        <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Cancel}"/>
         <Setter Property="TextColor" Value="White"/>
         <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}"/>
         <Setter Property="CornerRadius" Value="5"/>

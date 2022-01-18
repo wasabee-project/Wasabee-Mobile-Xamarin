@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+             x:Class="Rocks.Wasabee.Mobile.Core.Ui.Controls.FloatingLabelEntry"
+             x:Name="This">
+  <ContentView.Content>
+      <Grid>
+          <Frame CornerRadius="4" BorderColor="{Binding BorderColor, Source={x:Reference This}}" Margin="0" Padding="0" BackgroundColor="Transparent" 
+                 HasShadow="False" InputTransparent="True" CascadeInputTransparent="False">
+
+              <controls:BorderlessEntry x:Name="EntryField" x:FieldModifier="public"
+                                        Completed="Handle_Completed" 
+                                        HeightRequest="46"
+                                        Margin="3,0"
+                                        Text="{Binding Text, Source={x:Reference This}}" 
+                                        ReturnType="{Binding ReturnType, Source={x:Reference This}}"
+                                        IsPassword="{Binding IsPassword, Source={x:Reference This}}"
+                                        Keyboard="{Binding Keyboard, Source={x:Reference This}}"
+                                        HorizontalTextAlignment="{Binding HorizontalTextAlignment, Source={x:Reference This}}"
+                                        TextColor="{Binding TextColor, Source={x:Reference This}}"
+                                        IsTextPredictionEnabled="{Binding IsTextPredictionEnabled, Source={x:Reference This}}"
+                                        Unfocused="Handle_Unfocused" 
+                                        Focused="Handle_Focused" />
+          </Frame>
+
+          <Label x:Name="LabelTitle" 
+                 Text="{Binding Title, Source={x:Reference This}}" VerticalOptions="Center"
+                 TextColor="{Binding TitleColor, Source={x:Reference This}}">
+              <Label.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="Handle_Tapped" />
+              </Label.GestureRecognizers>
+          </Label>
+      </Grid>
+  </ContentView.Content>
+</ContentView>

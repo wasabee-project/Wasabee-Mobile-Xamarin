@@ -2,16 +2,19 @@ using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
+using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Cache;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Models;
 using Rocks.Wasabee.Mobile.Core.Models.Operations;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Operation;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -27,10 +30,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private readonly IMvxMessenger _messenger;
         private readonly LinksDatabase _linksDatabase;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly AgentsDatabase _agentsDatabase;
         private readonly IUserSettingsService _userSettingsService;
 
-        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs, IClipboard clipboard,
-            IMap map, IMvxMessenger messenger, LinksDatabase linksDatabase, WasabeeApiV1Service wasabeeApiV1Service, IUserSettingsService userSettingsService) : base(dialogNavigationService)
+        public LinkAssignmentDialogViewModel(IDialogNavigationService dialogNavigationService, IUserDialogs userDialogs, 
+            IClipboard clipboard, IMap map, IMvxMessenger messenger, LinksDatabase linksDatabase, 
+            WasabeeApiV1Service wasabeeApiV1Service, AgentsDatabase agentsDatabase,
+            IUserSettingsService userSettingsService) : base(dialogNavigationService)
         {
             _userDialogs = userDialogs;
             _clipboard = clipboard;
@@ -38,6 +44,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             _messenger = messenger;
             _linksDatabase = linksDatabase;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+            _agentsDatabase = agentsDatabase;
             _userSettingsService = userSettingsService;
         }
 
@@ -45,19 +52,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         {
             LinkAssignment = parameter;
             Link = LinkAssignment.Link;
-            
-            IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link?.AssignedTo);
+
+            UpdateAssignments();
             UpdateButtonsState();
         }
 
         #region Properties
-        
+
         public bool IsSelfAssignment { get; set; }
-        
         public bool CompletedEnabled { get; set; }
         public bool IncompleteEnabled { get; set; }
-        public bool ClaimEnabled{ get; set; }
+        public bool ClaimEnabled { get; set; }
         public bool RejectEnabled { get; set; }
+        public string Assignments { get; set; } = string.Empty;
 
         public LinkAssignmentData? LinkAssignment { get; set; }
         public LinkModel? Link { get; set; }
@@ -70,19 +77,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         private async void ShowOnMapExecuted(string fromOrToPortal)
         {
             if (IsBusy) return;
-            
+
             switch (fromOrToPortal)
             {
                 case "From":
                     if (LinkAssignment?.FromPortal != null)
                         _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.FromPortal));
-                    
+
                     await CloseCommand.ExecuteAsync();
                     break;
                 case "To":
                     if (LinkAssignment?.ToPortal != null)
                         _messenger.Publish(new ShowPortalOnMapMessage(this, LinkAssignment.ToPortal));
-                    
+
                     await CloseCommand.ExecuteAsync();
                     break;
             }
@@ -110,37 +117,36 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                     case "From":
                         if (LinkAssignment.FromPortal == null)
                             return;
-                        
+
                         coordinates = $"{LinkAssignment.FromPortal.Lat},{LinkAssignment.FromPortal.Lng}";
 
                         double.TryParse(LinkAssignment.FromPortal.Lat, NumberStyles.Float, culture, out var fromLat);
                         double.TryParse(LinkAssignment.FromPortal.Lng, NumberStyles.Float, culture, out var fromLng);
-                        
+
                         location = new Location(fromLat, fromLng);
                         break;
                     case "To":
                         if (LinkAssignment.ToPortal == null)
                             return;
-                        
+
                         coordinates = $"{LinkAssignment.ToPortal.Lat},{LinkAssignment.ToPortal.Lng}";
 
                         double.TryParse(LinkAssignment.ToPortal.Lat, NumberStyles.Float, culture, out var toLat);
                         double.TryParse(LinkAssignment.ToPortal.Lng, NumberStyles.Float, culture, out var toLng);
-                        
+
                         location = new Location(toLat, toLng);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(fromOrToPortal), fromOrToPortal,
-                            "Incorrect value");
+                        throw new ArgumentOutOfRangeException(nameof(fromOrToPortal), fromOrToPortal);
                 }
 
                 if (string.IsNullOrEmpty(coordinates) is false)
                 {
                     await _clipboard.SetTextAsync(coordinates);
                     if (_clipboard.HasText)
-                        _userDialogs.Toast("Coordinates copied to clipboartd.");
+                        _userDialogs.Toast(Strings.Toast_CoordinatesCopied);
                 }
-                
+
                 await _map.OpenAsync(location);
             }
             catch (Exception e)
@@ -173,7 +179,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 {
                     StoreResponseUpdateId(response);
                     await UpdateLinkAndNotify(response);
-                    
+
                     IsBusy = false;
                     await CloseCommand.ExecuteAsync();
                 }
@@ -270,11 +276,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 var response = await _wasabeeApiV1Service.Operation_Link_Reject(LinkAssignment.OpId, LinkAssignment.Link.Id);
                 if (response != null)
                 {
-                    _userDialogs.Toast("Assignment rejected");
+                    _userDialogs.Toast(Strings.Toast_RejectedAssignment);
 
                     StoreResponseUpdateId(response);
                     await UpdateLinkAndNotify(response);
-                    
+
                     IsBusy = false;
                     await CloseCommand.ExecuteAsync();
                 }
@@ -292,24 +298,42 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         #endregion
 
         #region Private methods
-        
+
+        private async void UpdateAssignments()
+        {
+            if (Link!.Assignments.IsNullOrEmpty())
+                return;
+            
+            IsSelfAssignment = Link.Assignments.Contains(_userSettingsService.GetLoggedUserGoogleId());
+
+            var assignedAgents = await _agentsDatabase.GetAgents(Link!.Assignments);
+            Assignments = string.Join(", ", assignedAgents.Select(x => x.Name).OrderBy(x => x));
+        }
+
         /// <summary>
         /// Local data updates to ensure Operation is always up-to-date, even if FCM is not working.
         /// </summary>
         /// <returns></returns>
-        private async Task UpdateLinkAndNotify(WasabeeApiResponse response)
+        private async Task UpdateLinkAndNotify(WasabeeOpUpdateApiResponse response)
         {
             if (LinkAssignment != null && Link != null)
             {
-                // Flags UpdatedId as done
-                OperationsUpdatesCache.Data[response.UpdateId] = true;
+                LinkModel? updated;
+                if (OperationsUpdatesCache.Data[response.UpdateId] is false)
+                {
+                    // Flags UpdatedId as done
+                    OperationsUpdatesCache.Data[response.UpdateId] = true;
 
-                var updated = await _wasabeeApiV1Service.Operations_GetLink(LinkAssignment.OpId, Link.Id);
+                    updated = await _wasabeeApiV1Service.Operations_GetLink(LinkAssignment.OpId, Link.Id);
+                }
+                else
+                    updated = await _linksDatabase.GetLinkModel(Link.Id);
+
                 if (updated != null)
                 {
                     Link = updated;
-                    IsSelfAssignment = _userSettingsService.GetLoggedUserGoogleId().Equals(Link.AssignedTo);
-
+                    
+                    UpdateAssignments();
                     UpdateButtonsState();
 
                     await _linksDatabase.SaveLinkModel(Link, LinkAssignment.OpId);
@@ -331,9 +355,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
 
             if (IsSelfAssignment)
             {
-                CompletedEnabled = !Link.Completed;
-                IncompleteEnabled = Link.Completed;
-                RejectEnabled = !Link.Completed;
+                CompletedEnabled = Link.State is not TaskState.Completed;
+                IncompleteEnabled = Link.State is TaskState.Completed;
+                RejectEnabled = Link.State is not TaskState.Completed;
                 ClaimEnabled = false;
             }
             else
@@ -344,14 +368,15 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 ClaimEnabled = true;
             }
         }
-        
-        private static void StoreResponseUpdateId(WasabeeApiResponse response)
+
+        private static void StoreResponseUpdateId(WasabeeOpUpdateApiResponse response)
         {
-            if (response.HasUpdateId())
-            {
-                var updateId = response.UpdateId;
+            if (string.IsNullOrWhiteSpace(response.UpdateId))
+                return;
+
+            var updateId = response.UpdateId;
+            if (OperationsUpdatesCache.Data.ContainsKey(updateId) is false)
                 OperationsUpdatesCache.Data.Add(updateId, false);
-            }
         }
 
         #endregion

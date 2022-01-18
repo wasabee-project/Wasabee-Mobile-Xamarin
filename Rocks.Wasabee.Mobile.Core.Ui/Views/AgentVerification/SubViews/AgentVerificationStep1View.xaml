@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseContentView x:TypeArguments="subViewModels:AgentVerificationStep1SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:subViewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:system="clr-namespace:System;assembly=netstandard"
+                       xmlns:controls="clr-namespace:Xamarin.Forms.Controls;assembly=CircularProgressBar"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews.AgentVerificationStep1View"
+                       x:DataType="subViewModels:AgentVerificationStep1SubViewModel">
+    
+    <ContentView.Resources>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+    </ContentView.Resources>
+    
+    <ContentView.Content>
+        <Frame Padding="0" Margin="10,0" HasShadow="False" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+            <ScrollView>
+                <Grid RowDefinitions="*, Auto">
+                    <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand" Padding="10">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineHeight="1.25">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_Welcome}" FontSize="Large"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="Agent Community Verification" FontSize="22" FontAttributes="Bold"/>
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Label Text="🐝     🐝     🐝" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" />
+
+                        <Label Margin="0,20,0,0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_AccountNotVerified}" />
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_FastProcess}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Label Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide}" FontSize="Medium" Margin="0,20,0,0"/>
+                        <Label Margin="15,0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide_1}" />
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide_2}" />
+                                    <Span Text="{x:Static system:Environment.NewLine}"/>
+                                    <Span Text="{xaml:Translate ACV_Step1_Label_StepByStepGuide_3}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Text="{xaml:Translate ACV_Step1_Label_NoticeLine1}"/>
+                        <Label Text="{xaml:Translate ACV_Step1_Label_NoticeLine2}"/>
+                    </StackLayout>
+
+                    <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto, *" RowSpacing="0">
+                        <StackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Spacing="0"
+                                     IsVisible="{Binding IsDontAskAgainVisible}">
+                            <StackLayout Orientation="Horizontal" Spacing="0">
+                                <CheckBox VerticalOptions="Center"
+                                          IsChecked="{Binding IsDontAskAgainChecked}"/>
+                                <Label Text="{xaml:Translate Global_NeverAskAgain}" VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="DontAskAgainLabel_OnTapped" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </StackLayout>
+                        </StackLayout>
+                      
+                        <Button Grid.Column="0" Grid.Row="1" Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
+                                Text="{xaml:Translate ACV_Button_Later}"
+                                Command="{Binding Parent.ExitCommand}"/>
+
+                        <controls:CircularProgressBar Grid.Column="2" Grid.Row="1"
+                                                      WidthRequest="20" HeightRequest="20" Margin="0,0,20,0"
+                                                      HorizontalOptions="Center" VerticalOptions="Center"
+                                                      Stroke="4"
+                                                      Color="{DynamicResource PrimaryGreen}"
+                                                      Progress="{Binding Progress}"
+                                                      IsVisible="{Binding IsNextStepEnabled, Converter={StaticResource BoolNegateConverter}}"/>
+
+                        <Button Grid.Column="2" Grid.Row="1" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                                Text="{xaml:Translate ACV_Button_Next}"
+                                Command="{Binding Parent.NextStepCommand}"
+                                IsVisible="{Binding IsNextStepEnabled}"/>
+                    </Grid>
+                </Grid>
+            </ScrollView>
+        </Frame>
+    </ContentView.Content>
+</views:BaseContentView>

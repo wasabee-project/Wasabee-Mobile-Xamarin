@@ -259,6 +259,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
             public List<LinksDatabase.LinkDatabaseModel> Links { get; set; }
 
             public string Modified { get; set; }
+            public string LastEditId { get; set; }
 
             public string Comment { get; set; }
 
@@ -281,6 +282,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                         Blockers = operationDatabaseModel.Blockers ?? new List<BlockerModel>(),
                         TeamList = operationDatabaseModel.TeamList ?? new List<TeamModel>(),
                         Modified = operationDatabaseModel.Modified,
+                        LastEditId = operationDatabaseModel.LastEditId,
                         Comment = operationDatabaseModel.Comment,
                         KeysOnHand = operationDatabaseModel.KeysOnHand ?? new List<KeysOnHandModel>(),
                         Zones = operationDatabaseModel.Zones ?? new List<ZoneModel>(),
@@ -310,6 +312,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Databases
                     Blockers = operationModel.Blockers ?? new List<BlockerModel>(),
                     TeamList = operationModel.TeamList ?? new List<TeamModel>(),
                     Modified = operationModel.Modified,
+                    LastEditId = operationModel.LastEditId,
                     Comment = operationModel.Comment,
                     KeysOnHand = operationModel.KeysOnHand ?? new List<KeysOnHandModel>(),
                     Zones = operationModel.Zones ?? new List<ZoneModel>(),

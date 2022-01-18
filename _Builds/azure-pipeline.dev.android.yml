@@ -13,7 +13,7 @@ variables:
 - name: outputDirectory
   value: '$(build.binariesDirectory)/$(buildConfiguration)'
 
-name: DEV-$(MajorVersion).$(MinorVersion).$(Rev:rr)
+name: $(MajorVersion).$(MinorVersion).$(Rev:rr)
 
 steps:
 

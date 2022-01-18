@@ -2,6 +2,7 @@
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Firebase.Payloads;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using System;
 using System.Globalization;
@@ -33,7 +34,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
             _clipboard = clipboard;
             _map = map;
         }
-        
+
         public void Prepare(TargetWarningDialogNavigationParameter parameter)
         {
             Payload = parameter.Payload;
@@ -46,7 +47,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
         public TargetPayload? Payload { get; private set; }
 
         public string TargetGoal { get; set; } = string.Empty;
-        
+
         #endregion
 
         #region Commands
@@ -63,13 +64,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 var culture = CultureInfo.GetCultureInfo("en-US");
                 double.TryParse(Payload.Latitude, NumberStyles.Float, culture, out var lat);
                 double.TryParse(Payload.Longitude, NumberStyles.Float, culture, out var lng);
-                        
+
                 var location = new Location(lat, lng);
                 var coordinates = $"{Payload.Latitude},{Payload.Longitude}";
-                
+
                 await _clipboard.SetTextAsync(coordinates);
                 if (_clipboard.HasText)
-                    _userDialogs.Toast("Coordinates copied to clipboartd.");
+                    _userDialogs.Toast(Strings.Toast_CoordinatesCopied);
 
                 await _map.OpenAsync(location);
             }
@@ -110,7 +111,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Dialogs
                 "ExcludeMarker" => "Exclude Marker",
                 "GetKeyPortalMarker" => "Get Key",
                 "GotoPortalMarker" => "Go to portal",
-                "anchor"  => "OP Anchor",
+                "anchor" => "OP Anchor",
                 _ => "Unknown"
             };
         }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseContentView x:TypeArguments="subViewModels:TelegramLinkingStep3SubViewModel" xmlns="http://xamarin.com/schemas/2014/forms" 
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:subViewModels="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking.SubViewModels;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
+                       xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+                       x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.TelegramLinking.SubViews.TelegramLinkingStep3View"
+                       x:DataType="subViewModels:TelegramLinkingStep3SubViewModel">
+
+    <ContentView.Resources>
+        <converters:BoolNegateConverter x:Key="BoolNegateConverter"/>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <Frame Padding="0" Margin="10,0" HasShadow="False" CornerRadius="10" BackgroundColor="{DynamicResource BackgroundColorLevel1}">
+          
+            <ScrollView>
+                <Grid RowDefinitions="Auto, *, Auto">
+                    <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand" Padding="10">
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Spacing="20" Padding="-10,20,0,0">
+                            
+                            <Image HeightRequest="50"
+                                   VerticalOptions="Start"
+                                   Source="wasabee.png" />
+
+                            <Label HorizontalOptions="Center" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                                   Margin="0,-15,0,0"
+                                   FontSize="50" FontAttributes="Bold"
+                                   Text="⇔" />
+
+                            <controls:SvgIcon Resource="Rocks.Wasabee.Mobile.Core.Ui.Resources.SVGs.telegram_logo.svg"
+                                              Margin="0,5,0,0"
+                                              VerticalOptions="Start"
+                                              WidthRequest="50"
+                                              HeightRequest="50"/>
+                        </StackLayout>
+                    </StackLayout>
+
+                    <StackLayout Grid.Row="1" Padding="10" VerticalOptions="Center" 
+                                 IsVisible="{Binding IsSubStep1Visible}">
+
+                        <Label Text="{xaml:Translate TGL_Step3_Label_CopyConfirmationToken}"/>
+                        <Grid Margin="0,30,0,0" ColumnDefinitions="*,Auto">
+                            <Frame CornerRadius="4" BorderColor="{DynamicResource PrimaryTextColor}"
+                                   Margin="0" Padding="5" BackgroundColor="Transparent" HasShadow="False">
+
+                                <controls:BorderlessEditor HeightRequest="40" Margin="0" FontSize="Small"
+                                                           BackgroundColor="Transparent"
+                                                           Text="{Binding AuthToken}"/>
+                            </Frame>
+
+                            <StackLayout Grid.Column="1" VerticalOptions="Center" >
+                                <iconize:IconButton Text="mdi-content-copy" WidthRequest="40" HeightRequest="40"
+                                                    Style="{DynamicResource WasabeeStyleMainActionButton}"
+                                                    HorizontalOptions="Center"
+                                                    Command="{Binding CopyTokenCommand}"/>
+                            </StackLayout>
+                        </Grid>
+
+                    </StackLayout>
+
+                    <StackLayout Grid.Row="1" Padding="10" 
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 IsVisible="{Binding IsSubStep2Visible}">
+
+                        <StackLayout IsVisible="{Binding IsBusy, Converter={StaticResource BoolNegateConverter}}"
+                                     HorizontalOptions="Center" VerticalOptions="Center" Padding="10">
+                            <Label Text="{xaml:Translate TGL_Step3_Label_SendConfirmationToken}" HorizontalTextAlignment="Center"/>
+                            <Button Text="{Binding Parent.BotName, StringFormat={xaml:Translate TGL_Step3_Button_OpenBot}}"
+                                    CornerRadius="5"
+                                    TextColor="White"
+                                    Command="{Binding ReopenBotCommand}">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#2AABEE"
+                                                      Offset="0.0" />
+                                        <GradientStop Color="#229ED9"
+                                                      Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </StackLayout>
+
+                        <StackLayout Spacing="20" IsVisible="{Binding IsBusy}" HorizontalOptions="Center">
+                            <ActivityIndicator IsRunning="True" WidthRequest="50" HeightRequest="50" Scale="1.25"/>
+                            <Label Text="{xaml:Translate TGL_Step2-3_Label_WaitingMessage}"/>
+                        </StackLayout>
+
+                    </StackLayout>
+
+                    <StackLayout Grid.Row="1" Padding="10" VerticalOptions="Center" HorizontalOptions="Center" Spacing="20"
+                                 IsVisible="{Binding IsSubStep3Visible}">
+                        <Label Text="{xaml:Translate ACV_Step3_Label_Verified_WellDone}" 
+                               HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="22"/>
+                        <Label Text="{xaml:Translate TGL_Step3_Label_AccountsLinked}"/>
+                    </StackLayout>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto">
+                        <Button Grid.Column="2" Style="{DynamicResource WasabeeStyleMainActionButton}"
+                                Text="{xaml:Translate Global_Exit}"
+                                HorizontalOptions="End"
+                                IsVisible="{Binding IsExitButtonVisible}"
+                                Command="{Binding Parent.ExitCommand}"/>
+                    </Grid>
+                </Grid>
+            </ScrollView>
+        </Frame>
+    </ContentView.Content>
+</views:BaseContentView>

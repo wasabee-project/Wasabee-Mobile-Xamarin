@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvx:MvxContentPage x:TypeArguments="agentVerification:AgentVerificationViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:agentVerification="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;assembly=Rocks.Wasabee.Mobile.Core"
+                    xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+                    xmlns:subViews="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.SubViews;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                    xmlns:dataTemplate="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                    ios:Page.UseSafeArea="true"
+                    x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.AgentVerification.AgentVerificationPage"
+                    x:DataType="agentVerification:AgentVerificationViewModel">
+
+    <ContentPage.Resources>
+
+        <DataTemplate x:Key="AgentVerificationStep1">
+            <subViews:AgentVerificationStep1View/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AgentVerificationStep2">
+            <subViews:AgentVerificationStep2View/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AgentVerificationStep3">
+            <subViews:AgentVerificationStep3View/>
+        </DataTemplate>
+
+        <dataTemplate:AgentVerificationTemplateSelector x:Key="AgentVerificationTemplateSelector"
+                                                        Step1Template="{StaticResource AgentVerificationStep1}"
+                                                        Step2Template="{StaticResource AgentVerificationStep2}"
+                                                        Step3Template="{StaticResource AgentVerificationStep3}" />
+
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>              
+                <RowDefinition Height="*" />
+                <RowDefinition Height="40" /> 
+            </Grid.RowDefinitions>
+
+            <CarouselView Grid.Row="0"
+                          Margin="10,15,10,0"
+                          VerticalOptions="Center"
+                          IndicatorView="CarouselIndicatorView"
+                          IsBounceEnabled="False"
+                          IsSwipeEnabled="False"
+                          Loop="False"
+                          ItemsSource="{Binding Steps}"
+                          ItemTemplate="{StaticResource AgentVerificationTemplateSelector}"
+                          CurrentItem="{Binding CurrentStep}"/>
+            
+            <IndicatorView x:Name="CarouselIndicatorView"
+                           Grid.Row="1"
+                           IndicatorsShape="Circle"
+                           SelectedIndicatorColor="{DynamicResource PrimaryTextColor}"
+                           IndicatorColor="Green"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Margin="0,0,0,5"
+                           InputTransparent="True" />                   
+        </Grid>
+    </ContentPage.Content>
+</mvx:MvxContentPage>

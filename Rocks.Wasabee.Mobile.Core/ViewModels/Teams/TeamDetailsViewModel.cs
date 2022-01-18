@@ -1,17 +1,19 @@
 ﻿using Acr.UserDialogs;
+using Microsoft.AppCenter.Analytics;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Models.Agent;
 using Rocks.Wasabee.Mobile.Core.Models.Teams;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.ViewModels.Profile;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AppCenter.Analytics;
-using MvvmCross;
 
 namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
 {
@@ -113,8 +115,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             IsRefreshing = false;
         }
 
-        public IMvxAsyncCommand<TeamAgentModel> ShowAgentCommand => new MvxAsyncCommand<TeamAgentModel>(ShowAgentExecuted);
-        private async Task ShowAgentExecuted(TeamAgentModel agent)
+        public IMvxAsyncCommand<AgentModel> ShowAgentCommand => new MvxAsyncCommand<AgentModel>(ShowAgentExecuted);
+        private async Task ShowAgentExecuted(AgentModel agent)
         {
             LoggingService.Trace("Executing TeamDetailsViewModel.ShowAgentCommand");
 
@@ -130,8 +132,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             IsBusy = false;
         }
 
-        public IMvxAsyncCommand<TeamAgentModel> RemoveAgentCommand => new MvxAsyncCommand<TeamAgentModel>(RemoveAgentExecuted);
-        private async Task RemoveAgentExecuted(TeamAgentModel agent)
+        public IMvxAsyncCommand<AgentModel> RemoveAgentCommand => new MvxAsyncCommand<AgentModel>(RemoveAgentExecuted);
+        private async Task RemoveAgentExecuted(AgentModel agent)
         {
             LoggingService.Trace("Executing TeamDetailsViewModel.RemoveAgentCommand");
 
@@ -140,13 +142,17 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             if (IsBusy)
                 return;
 
-            if (await _userDialogs.ConfirmAsync($"Remove '{agent.Name}' from the team ?", string.Empty, "Yes", "Cancel"))
+            if (await _userDialogs.ConfirmAsync(
+                string.Format(Strings.TeamDetail_Warning_RemoveAgent, agent.Name), 
+                string.Empty, 
+                Strings.Global_Yes,
+                Strings.Global_Cancel))
             {
                 var result = await _wasabeeApiV1Service.Teams_RemoveAgentFromTeam(Team.Id, agent.Id);
                 if (result)
                     RefreshCommand.Execute();
                 else
-                    _userDialogs.Toast("Error removing agent");
+                    _userDialogs.Toast(Strings.Global_ErrorOccuredPleaseRetry);
             }
         }
 
@@ -163,18 +169,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             if (qrCodeData.StartsWith("wasabee:"))
             {
                 var userId = qrCodeData.Substring(8, qrCodeData.Length - 8);
-                var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(userId)) ?? null;
-                if (user != null)
-                {
-                    _userDialogs.Toast($"{user.Name} is already in the team !");
-                    return;
-                }
-
-                var result = await _wasabeeApiV1Service.Teams_AddAgentToTeam(Team.Id, userId);
-                if (result)
-                    RefreshCommand.Execute();
-                else
-                    _userDialogs.Toast("Agent not found");
+                await AddAgentByNameOrIdToTeam(userId);
             }
         }
 
@@ -188,19 +183,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
             {
                 InputType = InputType.Name,
-                OkText = "Add",
-                CancelText = "Cancel",
-                Title = "Agent name",
+                OkText = Strings.Global_Add,
+                CancelText = Strings.Global_Cancel,
+                Title = Strings.TeamDetail_Prompt_AddAgentTitle,
             });
 
             if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
-            {
-                var result = await _wasabeeApiV1Service.Teams_AddAgentToTeam(Team.Id, promptResult.Text);
-                if (result)
-                    RefreshCommand.Execute();
-                else
-                    _userDialogs.Toast("Agent not found or already in team");
-            }
+                await AddAgentByNameOrIdToTeam(promptResult.Text);
         }
 
         public IMvxCommand EditTeamNameCommand => new MvxCommand(EditTeamNameExecuted);
@@ -211,9 +200,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
             var promptResult = await _userDialogs.PromptAsync(new PromptConfig()
             {
                 InputType = InputType.Name,
-                OkText = "Ok",
-                CancelText = "Cancel",
-                Title = "Change team name",
+                OkText = Strings.Global_Ok,
+                CancelText = Strings.Global_Cancel,
+                Title = Strings.Teams_Prompt_ChangeTeamNameTitle
             });
 
             if (promptResult.Ok && !string.IsNullOrWhiteSpace(promptResult.Text))
@@ -225,8 +214,28 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Teams
                     _messenger.Publish(new MessageFor<TeamsListViewModel>(this));
                 }
                 else
-                    _userDialogs.Toast("Rename failed");
+                    _userDialogs.Toast(Strings.Global_ErrorOccuredPleaseRetry);
             }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private async Task AddAgentByNameOrIdToTeam(string nameOrId)
+        {
+            var user = Team.Agents.FirstOrDefault(x => x.Id.Equals(nameOrId) || x.Name.Equals(nameOrId)) ?? null;
+            if (user != null)
+            {
+                _userDialogs.Toast(string.Format(Strings.TeamDetail_Warning_AgentAlreadyInTeam, nameOrId));
+                return;
+            }
+
+            var result = await _wasabeeApiV1Service.Teams_AddAgentToTeam(Team.Id, nameOrId);
+            if (result)
+                RefreshCommand.Execute();
+            else
+                _userDialogs.Toast(Strings.TeamDetail_Warning_AgentNotFound);
         }
 
         #endregion

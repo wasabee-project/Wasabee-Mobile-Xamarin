@@ -8,10 +8,15 @@ using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Resources.I18n;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
@@ -56,13 +61,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             Version = _versionTracking.CurrentVersion;
 
             var analyticsSetting = _preferences.Get(UserSettingsKeys.AnalyticsEnabled, false);
-            SetProperty(ref _isAnonymousAnalyticsEnabled, analyticsSetting);
+            SetProperty(ref _isAnonymousAnalyticsEnabled, analyticsSetting, nameof(IsAnonymousAnalyticsEnabled));
 
             var showAgentsFromAnyTeamSetting = _preferences.Get(UserSettingsKeys.ShowAgentsFromAnyTeam, false);
-            SetProperty(ref _showAgentsFromAnyTeam, showAgentsFromAnyTeamSetting);
+            SetProperty(ref _showAgentsFromAnyTeam, showAgentsFromAnyTeamSetting, nameof(ShowAgentsFromAnyTeam));
 
             var showDebugToastsSetting = _preferences.Get(UserSettingsKeys.ShowDebugToasts, false);
-            SetProperty(ref _showDebugToasts, showDebugToastsSetting);
+            SetProperty(ref _showDebugToasts, showDebugToastsSetting, nameof(ShowDebugToasts));
 
             var hideCompletedMarkersSetting = _preferences.Get(UserSettingsKeys.HideCompletedMarkers, false);
             SetProperty(ref _isHideCompletedMarkersEnabled, hideCompletedMarkersSetting);
@@ -127,7 +132,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             if (IsBusy) return;
             IsBusy = true;
 
-            await Launcher.OpenAsync("https://cdn2.wasabee.rocks");
+            await Launcher.OpenAsync("https://wasabee.rocks");
 
             IsBusy = false;
         }
@@ -147,7 +152,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                 statusStorage = await _permissions.RequestAsync<Permissions.StorageWrite>();
                 if (statusStorage != PermissionStatus.Granted)
                 {
-                    _userDialogs.Alert("Storage permissions are required !");
+                    _userDialogs.Alert(Strings.Settings_Warning_StoragePermissionsNeeded);
                     IsBusy = false;
                     return;
                 }
@@ -161,7 +166,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                 statusStorage = await _permissions.RequestAsync<Permissions.StorageRead>();
                 if (statusStorage != PermissionStatus.Granted)
                 {
-                    _userDialogs.Alert("Storage permissions are required !");
+                    _userDialogs.Alert(Strings.Settings_Warning_StoragePermissionsNeeded);
                     IsBusy = false;
                     return;
                 }
@@ -177,7 +182,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
                 if (string.IsNullOrWhiteSpace(zip))
                 {
-                    _userDialogs.Alert("Can't find any log files");
+                    _userDialogs.Alert(Strings.Settings_Warning_NoLogs);
                     return;
                 }
 
@@ -188,7 +193,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     if (report != null)
                     {
                         Crashes.TrackError(new Exception(report.StackTrace), null, ErrorAttachmentLog.AttachmentWithBinary(File.ReadAllBytes(zip), "WasabeeLogs.zip", "application/zip"));
-                        _userDialogs.Toast("Data is beeing sent automatically");
+                        _userDialogs.Toast(Strings.Settings_Toast_LogsAutomaticallySent);
 
                         hasSent = true;
                     }
@@ -196,7 +201,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
                 if (!hasSent)
                 {
-                    await _userDialogs.AlertAsync("Please send the file to @fisher01 on Telegram");
+                    await _userDialogs.AlertAsync(Strings.Settings_Warning_SendFileOverTelegram);
                     await Share.RequestAsync(new ShareFileRequest(zip, new ShareFile(zip)));
                 }
             }
@@ -262,7 +267,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                 token = _firebaseService.GetFcmToken();
 
             var result = await _crossFirebaseMessagingService.SendRegistrationToServer(token);
-            _userDialogs.Toast(result ? "Token upated" : "Error refreshing token");
+            _userDialogs.Toast(result ? Strings.Settings_Toast_FcmtokenUpdated : Strings.Global_ErrorOccuredPleaseRetry);
 
             LoggingService.Trace($"Result for SettingsViewModel.RefreshFcmTokenCommand : {result}");
 
@@ -327,9 +332,57 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
             }
         }
 
+        public IMvxCommand SwitchLanguageCommand => new MvxCommand(SwitchLanguageExecuted);
+        private async void SwitchLanguageExecuted()
+        {
+            var cultures = GetAvailableCultures();
+
+            var result = await _userDialogs.ActionSheetAsync(
+                Strings.Settings_Label_ChangeLanguage, 
+                Strings.Global_Cancel,
+                null, null, 
+                cultures.Select(x => x.NativeName).OrderBy(x => x).ToArray());
+
+            if (cultures.All(x => x.NativeName != result))
+                return;
+
+            var selected = cultures.First(x => x.NativeName.Equals(result));
+
+            _preferences.Set(UserSettingsKeys.CurrentCulture, selected.Name);
+            CultureInfo.CurrentUICulture = selected;
+
+            _userDialogs.Alert(Strings.Settings_Alert_Text_RestartAppLanguageChanged, null, Strings.Global_Ok);
+        }
+
         #endregion
 
         #region Private methods
+
+        private List<CultureInfo> GetAvailableCultures()
+        {
+            var result = new List<CultureInfo>();
+            var rm = new ResourceManager(typeof(Strings));
+            var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+            foreach (var culture in cultures)
+            {
+                try
+                {
+                    if (culture.Equals(CultureInfo.InvariantCulture)) //do not use "==", won't work
+                        continue;
+
+                    var rs = rm.GetResourceSet(culture, true, false);
+                    if (rs != null)
+                        result.Add(culture);
+                }
+                catch (CultureNotFoundException)
+                {
+                    // do nothing
+                }
+            }
+
+            return result;
+        }
 
         private bool QuickZip(string directoryToZip, string destinationZipFullPath)
         {
@@ -365,8 +418,11 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
                     _ => throw new Exception("Could not show log: Platform undefined.")
                 };
 
-                var result = await _userDialogs.ConfirmAsync("Include local DB copy ? This will include ALL your teams and OPS related data, please take care !", "#OpSec Warning !",
-                    "Ok, include it !", "Don't include !");
+                var result = await _userDialogs.ConfirmAsync(
+                    Strings.Settings_Warning_SendLogsWithDatabase,
+                    Strings.Settings_Warning_SendLogsWithDatabase_Title,
+                    Strings.Settings_Warning_SendLogs_WithDb,
+                    Strings.Settings_Warning_SendLogs_NoDb);
 
                 //Delete old zipfiles (housekeeping)
                 var logFolder = Path.Combine(folder, "logs");

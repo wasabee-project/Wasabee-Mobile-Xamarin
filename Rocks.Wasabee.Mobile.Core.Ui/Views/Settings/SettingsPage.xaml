@@ -1,12 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="settings:SettingsViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
                        x:DataType="settings:SettingsViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Views;assembly=Rocks.Wasabee.Mobile.Core.Ui"
                        xmlns:settings="clr-namespace:Rocks.Wasabee.Mobile.Core.ViewModels.Settings;assembly=Rocks.Wasabee.Mobile.Core"
                        xmlns:converters="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Helpers.Converters;assembly=Rocks.Wasabee.Mobile.Core.Ui"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Mobile.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Mobile.Core"
                        x:Class="Rocks.Wasabee.Mobile.Core.Ui.Views.Settings.SettingsPage"
-                       Title="Settings"
+                       Title="{xaml:Translate Settings_Title}"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Resources>
@@ -19,11 +20,17 @@
                 <TableView Intent="Settings" HasUnevenRows="True">
                     <TableRoot>
 
-                        <TableSection Title="Permissions" TextColor="{DynamicResource PrimaryGreen}">
-                            <TextCell Text="Open app system settings" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenApplicationSettingsCommand}"/>
+                        <TableSection TextColor="{DynamicResource PrimaryGreen}">
+                            <TableSection.Title>
+                                <OnPlatform x:TypeArguments="x:String">
+                                    <On Platform="iOS" Value="{xaml:Translate Settings_Section_PermissionsAndLanguage}"/>
+                                    <On Platform="Android" Value="{xaml:Translate Settings_Section_Permissions}"/>
+                                </OnPlatform>
+                            </TableSection.Title>
+                            <TextCell Text="{xaml:Translate Settings_Button_OpenSystemSettings}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenApplicationSettingsCommand}"/>
                         </TableSection>
 
-                        <TableSection Title="Application" TextColor="{DynamicResource PrimaryGreen}">
+                        <TableSection x:Name="AppSection" Title="{xaml:Translate Settings_Section_Application}" TextColor="{DynamicResource PrimaryGreen}">
                             <ViewCell Tapped="AnalyticsCell_OnTapped">
                                 <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
                                     <Grid.ColumnDefinitions>
@@ -35,22 +42,31 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <Label Grid.Row="0" Grid.Column="0" Text="Enable Anonymous Analytics" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
+                                    <Label Grid.Row="0" Grid.Column="0" Text="{xaml:Translate Settings_Label_AnonymousAnalytics}" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
                                     <Switch Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" OnColor="{DynamicResource PrimaryGreenDark}"
                                             ThumbColor="{Binding IsAnonymousAnalyticsEnabled, Converter={StaticResource BoolToColorConverter}}"
                                             IsToggled="{Binding IsAnonymousAnalyticsEnabled}"
-                                            HorizontalOptions="EndAndExpand" Margin="0, 0, 10, 0"/>
+                                            HorizontalOptions="EndAndExpand" VerticalOptions="Center"
+                                            Margin="0, 0, 10, 0"/>
 
-                                    <Label Grid.Row="1" Grid.Column="0" Text="(this helps the developers improve Wasabee)" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Text="{xaml:Translate Settings_Label_AnonymousAnalyticsHint}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
 
                                 </Grid>
                             </ViewCell>
-                            <TextCell Text="Send logs" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SendLogsCommand}" Detail="No personnal or Wasabee related data are sent." DetailColor="{DynamicResource SecondaryTextColor}"/>
-                            <TextCell Text="Refresh FCM token" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
-                            <TextCell Text="Switch light/dark theme" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding SwitchThemeCommand}"/>
+                            <ViewCell Tapped="SendLogsCell_OnTapped">
+                                <StackLayout Margin="0" Padding="0" Spacing="0">
+                                    <Label Text="{xaml:Translate Settings_Label_SendLogs}" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Small" Padding="15, 10, 0, 0" LineBreakMode="WordWrap"/>
+                                    <Label Text="{xaml:Translate Settings_Label_SendLogsHint}" TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 0, 0, 10" LineBreakMode="WordWrap"/>
+                                </StackLayout>
+                            </ViewCell>
+                            <TextCell Text="{xaml:Translate Settings_Label_RefreshFcmToken}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding RefreshFcmTokenCommand}"/>
+
+                            <!-- On Android only : -->
+                            <!-- <TextCell for Dark / Light mode /> -->
+                            <!-- <TextCell for app language /> -->
                         </TableSection>
 
-                        <TableSection Title="Misc." TextColor="{DynamicResource PrimaryGreen}">
+                        <TableSection Title="{xaml:Translate Settings_Section_Miscellaneous}" TextColor="{DynamicResource PrimaryGreen}">
                             <ViewCell Tapped="AgentsOnMapCell_OnTapped">
                                 <Grid RowSpacing="0" ColumnSpacing="0" Margin="0" Padding="0">
                                     <Grid.ColumnDefinitions>
@@ -58,7 +74,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="Show Agents from any team on Map" TextColor="{DynamicResource PrimaryTextColor}"
+                                    <Label Grid.Column="0" Text="{xaml:Translate Settings_Label_ShowAgentsFromAnyTeam}" TextColor="{DynamicResource PrimaryTextColor}"
                                            FontSize="Small" Padding="15,0,0,0" LineBreakMode="WordWrap" VerticalOptions="Center"/>
                                     <Switch Grid.Column="1" OnColor="{DynamicResource PrimaryGreenDark}"
                                             ThumbColor="{Binding ShowAgentsFromAnyTeam, Converter={StaticResource BoolToColorConverter}}"
@@ -73,7 +89,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="Hide completed markers on Map" TextColor="{DynamicResource PrimaryTextColor}"
+                                    <Label Grid.Column="0" Text="{xaml:Translate Settings_Label_HideCompletedMarkers}" TextColor="{DynamicResource PrimaryTextColor}"
                                            FontSize="Small" Padding="15,0,0,0" LineBreakMode="WordWrap" VerticalOptions="Center"/>
                                     <Switch Grid.Column="1" OnColor="{DynamicResource PrimaryGreenDark}"
                                             ThumbColor="{Binding IsHideCompletedMarkersEnabled, Converter={StaticResource BoolToColorConverter}}"
@@ -88,7 +104,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="Show debug toasts" TextColor="{DynamicResource PrimaryTextColor}"
+                                    <Label Grid.Column="0" Text="{xaml:Translate Settings_Label_ShowDebugToasts}" TextColor="{DynamicResource PrimaryTextColor}"
                                            FontSize="Small" Padding="15,0,0,0" LineBreakMode="WordWrap" VerticalOptions="Center"/>
                                     <Switch Grid.Column="1" OnColor="{DynamicResource PrimaryGreenDark}"
                                             ThumbColor="{Binding ShowDebugToasts, Converter={StaticResource BoolToColorConverter}}"
@@ -98,20 +114,9 @@
                             </ViewCell>
                         </TableSection>
                         
-                        <TableSection Title="About" TextColor="{DynamicResource PrimaryGreen}">
-                            <ViewCell>
-                                <Label TextColor="{DynamicResource SecondaryTextColor}" FontSize="Small" Padding="15, 10" TextType="Html">
-                                    <Label.Text>
-                                        <![CDATA[
-                                        Wasabee mobile application is still under huge development process. Bugs and crashes are possible.
-                                        <br>
-                                        If you're a C# / Xamarin.Forms developer and interested in helping us, reach us through Telegram (@fisher01).
-                                        ]]>
-                                    </Label.Text>
-                                </Label>
-                            </ViewCell>
-                            <TextCell Text="Wasabee Webpage" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeWebpageCommand}" />
-                            <TextCell Text="Version" TextColor="{DynamicResource PrimaryTextColor}" Detail="{Binding Version}" DetailColor="{DynamicResource SecondaryTextColor}" Command="{Binding VersionTappedCommand}"/>
+                        <TableSection Title="{xaml:Translate Settings_Section_About}" TextColor="{DynamicResource PrimaryGreen}">
+                            <TextCell Text="{xaml:Translate Settings_Label_WasabeeWebpage}" TextColor="{DynamicResource PrimaryTextColor}" Command="{Binding OpenWasabeeWebpageCommand}" />
+                            <TextCell Text="{xaml:Translate Global_Version}" TextColor="{DynamicResource PrimaryTextColor}" Detail="{Binding Version}" DetailColor="{DynamicResource SecondaryTextColor}" Command="{Binding VersionTappedCommand}"/>
                         </TableSection>
                     </TableRoot>
                 </TableView>

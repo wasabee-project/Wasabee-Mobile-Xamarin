@@ -1,12 +1,12 @@
 using MvvmCross;
-using Newtonsoft.Json;
 using Polly;
 using Refit;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using System;
-using System.Net;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
@@ -15,7 +15,6 @@ using Xamarin.Essentials.Interfaces;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http.Headers;
 #endif
 
 namespace Rocks.Wasabee.Mobile.Core.Services
@@ -46,23 +45,21 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
         protected static HttpClient CreateHttpClient(string url)
         {
+            var wtoken = Mvx.IoCProvider.Resolve<ISecureStorage>().GetAsync(SecureStorageConstants.WasabeeToken).Result;
             if (_httpClient != null && !_reinstanciateHttpClient)
-                return _httpClient;
+            {
+                var jwt = new JwtSecurityToken(wtoken);
+                if (DateTime.UtcNow - jwt.IssuedAt <= TimeSpan.FromHours(12))
+                    return _httpClient;
+            }
 
             _reinstanciateHttpClient = false;
 
-            var wasabeeRawCookie = Mvx.IoCProvider.Resolve<ISecureStorage>().GetAsync(SecureStorageConstants.WasabeeCookie).Result;
-            var cookie = JsonConvert.DeserializeObject<Cookie>(wasabeeRawCookie);
-
-            var cookieContainer = new CookieContainer();
-            cookieContainer.Add(new Uri(url), cookie);
-
-            var httpClientHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler(cookieContainer);
-
 #if DEBUG_NETWORK_LOGS
+            var httpClientHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler();
             var httpHandler = new HttpLoggingHandler(httpClientHandler);
 #else
-            var httpHandler = httpClientHandler;
+            var httpHandler = Mvx.IoCProvider.Resolve<IFactory>().CreateHandler();
 #endif
             
             var appVersion = Mvx.IoCProvider.Resolve<IVersionTracking>().CurrentVersion;
@@ -71,12 +68,13 @@ namespace Rocks.Wasabee.Mobile.Core.Services
             {
                 Timeout = TimeSpan.FromSeconds(5),
                 BaseAddress = new Uri(url),
-                DefaultRequestHeaders =
-                {
-                    { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" },
-                    { "Connection", "keep-alive" }
-                }
+                DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{appVersion} ({device.Platform} {device.VersionString})" } }
             };
+            
+            if (string.IsNullOrWhiteSpace(wtoken) is false)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", wtoken);
+            else
+                throw new Exception("Can't retrieve JWT");
 
             _httpClient = client;
             return _httpClient;
@@ -86,7 +84,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 #if DEBUG_NETWORK_LOGS
     public class HttpLoggingHandler : DelegatingHandler
     {
-        public HttpLoggingHandler(HttpMessageHandler innerHandler = null) : base(innerHandler ?? new HttpClientHandler())
+        public HttpLoggingHandler(HttpMessageHandler innerHandler) : base(innerHandler)
         {
         }
 
@@ -98,7 +96,7 @@ namespace Rocks.Wasabee.Mobile.Core.Services
 
             Debug.WriteLine($"{msg}========Start==========");
             Debug.WriteLine($"{msg} {req.Method} {req.RequestUri.PathAndQuery} {req.RequestUri.Scheme}/{req.Version}");
-            Debug.WriteLine($"{msg} Host: {req.RequestUri.Scheme}://{req.RequestUri.Host}");
+            Debug.WriteLine($"{msg} Host: {req.RequestUri.Scheme}://{req.RequestUri.Host}:{req.RequestUri.Port}");
 
             foreach (var header in req.Headers)
                 Debug.WriteLine($"{msg} {header.Key}: {string.Join(", ", header.Value)}");
