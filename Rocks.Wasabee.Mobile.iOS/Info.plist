@@ -33,15 +33,15 @@
 	<key>CFBundleName</key>
 	<string>rocks.wasabee.mobile.touch</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Can we use your location at all times?</string>
+	<string>Wasabee needs to access your location at all time when you enable the Live Location sharing.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Can we use your location when your application is being used?</string>
+	<string>Wasabee needs to access your location to show your location on the map.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Can we use your location at all times?</string>
+	<string>Wasabee needs to access your location at all time when you enable the Live Location sharing.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Can we use your camera ?</string>
+	<string>We need to access your camera to scan the QRCode.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>We don't access your Calendar events, but we use a SDK that can help us implement features for this. This sentance is required by Apple.</string>
+	<string>We DO NOT access your Calendar events, but we use a SDK that can help us implement features for this. This sentance is required by Apple. This should actually never be displayed in app.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>iconize-materialdesignicons.ttf</string>
