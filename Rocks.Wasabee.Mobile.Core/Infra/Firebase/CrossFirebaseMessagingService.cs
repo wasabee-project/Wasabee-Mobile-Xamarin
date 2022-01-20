@@ -71,9 +71,16 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
             if (string.IsNullOrWhiteSpace(registrationToken))
                 return false;
 
-            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, (int)WasabeeServer.Undefined);
-            if (currentServer.Equals((int)WasabeeServer.Undefined))
+            try
+            {
+                var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, (int)WasabeeServer.Undefined);
+                if (currentServer.Equals((int)WasabeeServer.Undefined))
+                    return false;
+            }
+            catch
+            {
                 return false;
+            }
 
             _fcmToken = registrationToken;
 
