@@ -25,6 +25,7 @@
 
         <converters:StringToBoolNegateConverter x:Key="StringToBoolNegateConverter"/>
         <converters:MarkerDataToResourceFilePathConverter x:Key="MarkerDataToResourceFilePathConverter"/>
+        <converters:TaskStateToStringConverter x:Key="TaskStateToStringConverter" />
 
         <ResourceDictionary>
             <DataTemplate x:Key="LinkTemplate">
@@ -117,7 +118,7 @@
 
                         <StackLayout Grid.Column="2" Grid.Row="0" Spacing="0" Margin="10, 0, 0, 0" Padding="0">
                             <Label Text="{Binding PortalName}" FontSize="16" LineBreakMode="TailTruncation" />
-                            <Label Text="{Binding Marker.State}" FontSize="14" />
+                            <Label Text="{Binding Marker.State, Converter={StaticResource TaskStateToStringConverter}}" FontSize="14" />
 
                             <pancakeView:PancakeView BackgroundColor="{DynamicResource BackgroundColorLevel1}" IsVisible="{Binding Marker.Comment, Converter={StaticResource StringToBoolNegateConverter}}"
                                                      Padding="5" Margin="0, 5, 0, 0"
