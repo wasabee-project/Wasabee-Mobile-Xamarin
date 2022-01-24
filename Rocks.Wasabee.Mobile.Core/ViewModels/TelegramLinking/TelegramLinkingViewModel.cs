@@ -90,19 +90,19 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
                     new TelegramLinkingStep3SubViewModel(this)
                 };
             }
-
-            var server = _preferences.Get(UserSettingsKeys.CurrentServer, (int)WasabeeServer.Undefined);
-            if (server == (int)WasabeeServer.US)
+            
+            var server = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
+            if (server == WasabeeServer.US.ToString())
             {
                 BotUsername = "PhDevBot";
                 BotName = "@WasabeeUS_bot";
             }
-            else if (server == (int)WasabeeServer.EU)
+            else if (server == WasabeeServer.EU.ToString())
             {
                 BotUsername = "WasabeeEU_bot";
                 BotName = $"@{BotUsername}";
             }
-            else if (server == (int)WasabeeServer.APAC)
+            else if (server == WasabeeServer.APAC.ToString())
             {
                 BotUsername = "WasabeeAP_bot";
                 BotName = $"@{BotUsername}";
