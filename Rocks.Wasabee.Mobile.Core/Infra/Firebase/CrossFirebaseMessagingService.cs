@@ -7,7 +7,6 @@ using Rocks.Wasabee.Mobile.Core.Infra.Firebase.Payloads;
 using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
-using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -71,16 +70,9 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase
             if (string.IsNullOrWhiteSpace(registrationToken))
                 return false;
 
-            try
-            {
-                var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, (int)WasabeeServer.Undefined);
-                if (currentServer.Equals((int)WasabeeServer.Undefined))
-                    return false;
-            }
-            catch
-            {
+            var currentServer = _preferences.Get(UserSettingsKeys.CurrentServer, string.Empty);
+            if (string.IsNullOrEmpty(currentServer))
                 return false;
-            }
 
             _fcmToken = registrationToken;
 
