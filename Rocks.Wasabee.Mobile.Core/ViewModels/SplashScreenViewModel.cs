@@ -691,13 +691,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
                             if (shouldGoToTelegramLinking && result is not null)
                                 await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
-                                    new TelegramLinkingNavigationParameter(comingFromLogin: true));
+                                    new TelegramLinkingNavigationParameter(userModel));
                         }
                         else
                         {
                             if (shouldGoToTelegramLinking)
                                 await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
-                                    new TelegramLinkingNavigationParameter(comingFromLogin: true));
+                                    new TelegramLinkingNavigationParameter(userModel));
                         }
                     });
 

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Rocks.Wasabee.Mobile.Core.Helpers;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
-using Rocks.Wasabee.Mobile.Core.Services;
+using Rocks.Wasabee.Mobile.Core.Models.Users;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
 using Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification;
@@ -19,10 +19,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
 {
     public class TelegramLinkingNavigationParameter
     {
+        public UserModel User { get; }
         public bool ComingFromLogin { get; }
 
-        public TelegramLinkingNavigationParameter(bool comingFromLogin = true)
+        public TelegramLinkingNavigationParameter(UserModel user, bool comingFromLogin = true)
         {
+            User = user;
             ComingFromLogin = comingFromLogin;
         }
     }
@@ -42,19 +44,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
         private readonly IMvxNavigationService _navigationService;
         private readonly IPreferences _preferences;
         private readonly IUserSettingsService _userSettingsService;
-        private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly UsersDatabase _usersDatabase;
 
-        private TelegramLinkingNavigationParameter _parameter = new();
+        private TelegramLinkingNavigationParameter? _parameter;
 
-        public TelegramLinkingViewModel(IMvxNavigationService navigationService,
-            IPreferences preferences, IUserSettingsService userSettingsService,
-            WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase)
+        public TelegramLinkingViewModel(IMvxNavigationService navigationService, IPreferences preferences,
+            IUserSettingsService userSettingsService, UsersDatabase usersDatabase)
         {
             _navigationService = navigationService;
             _preferences = preferences;
             _userSettingsService = userSettingsService;
-            _wasabeeApiV1Service = wasabeeApiV1Service;
             _usersDatabase = usersDatabase;
         }
 
@@ -63,17 +62,13 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
             _parameter = parameter;
         }
 
-        public override async Task Initialize()
+        public override Task Initialize()
         {
             Analytics.TrackEvent(GetType().Name);
             LoggingService.Trace("Navigated to TelegramLinkingViewModel");
 
-            var user = await _wasabeeApiV1Service.User_GetUserInformations();
-            if (user?.Telegram is not null && string.IsNullOrEmpty(user.Telegram.AuthToken) is false)
+            if (_parameter?.User.Telegram is not null && string.IsNullOrEmpty(_parameter.User.Telegram.AuthToken) is false)
             {
-                // Ensure local data is up-to-date
-                await _usersDatabase.SaveUserModel(user);
-
                 // Skip step 2 because token was already sent
                 Steps = new MvxObservableCollection<BaseViewModel>()
                 {
@@ -85,7 +80,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
             {
                 Steps = new MvxObservableCollection<BaseViewModel>()
                 {
-                    new TelegramLinkingStep1SubViewModel(this, _parameter.ComingFromLogin),
+                    new TelegramLinkingStep1SubViewModel(this, _parameter?.ComingFromLogin ?? true),
                     new TelegramLinkingStep2SubViewModel(this),
                     new TelegramLinkingStep3SubViewModel(this)
                 };
@@ -108,7 +103,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.TelegramLinking
                 BotName = $"@{BotUsername}";
             }
 
-            await base.Initialize();
+            return base.Initialize();
         }
 
         public override void ViewAppeared()
