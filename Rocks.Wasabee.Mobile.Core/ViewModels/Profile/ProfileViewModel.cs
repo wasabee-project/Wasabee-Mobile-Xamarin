@@ -260,7 +260,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Profile
             }
 
             var navigationResult = await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
-                new TelegramLinkingNavigationParameter(comingFromLogin: false));
+                new TelegramLinkingNavigationParameter(User, comingFromLogin: false));
 
             if (navigationResult is { IsSuccess: true })
             {
