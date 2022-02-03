@@ -55,7 +55,8 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
     [Service(DirectBootAware = false, Enabled = true, Exported = false, ForegroundServiceType = ForegroundService.TypeLocation)]
     public class LiveGeolocationService : Service
     {
-        private static readonly int MinimalUpdateTimespan = 60; // in seconds
+        private static readonly int MinimalForcedUpdateTimespan = 60; // in seconds
+        private static readonly TimeSpan MinimalUpdateTimespan = TimeSpan.FromSeconds(5);
 
         private static CultureInfo Culture => CultureInfo.GetCultureInfo("en-US");
         private const string ChannelId = "Wasabee Live Location Sharing";
@@ -67,7 +68,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
         private IPreferences? _preferences;
 
         
-        private Timer _forceSendTimer = new Timer(MinimalUpdateTimespan * 1000) { AutoReset = true };
+        private Timer _forceSendTimer = new Timer(MinimalForcedUpdateTimespan * 1000) { AutoReset = true };
 
         private bool _isRunning;
         private DateTime _lastUpdateTime;
@@ -138,7 +139,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
                         }
 
                         // Ensure it updates at least every 60 seconds
-                        if (DateTime.Now - _lastUpdateTime < TimeSpan.FromSeconds(MinimalUpdateTimespan))
+                        if (DateTime.Now - _lastUpdateTime < TimeSpan.FromSeconds(MinimalForcedUpdateTimespan))
                             return;
 
                         var lastKnownLocation = await Geolocator.GetLastKnownLocationAsync();
@@ -204,6 +205,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 
         private async Task UpdateLocation(Position position)
         {
+            if (DateTime.Now - _lastUpdateTime < MinimalUpdateTimespan)
+                return;
+
             var result = await _wasabeeApiV1Service!.User_UpdateLocation(position.Latitude.ToString(Culture), position.Longitude.ToString(Culture));
             if (result)
             {
