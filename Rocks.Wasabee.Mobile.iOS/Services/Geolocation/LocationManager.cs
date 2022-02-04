@@ -19,7 +19,8 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
 {
     public class LocationManager
     {
-        private static readonly int MinimalUpdateTimespan = 60; // in seconds
+        private static readonly int MinimalForcedUpdateTimespan = 60; // in seconds
+        private static readonly TimeSpan MinimalUpdateTimespan = TimeSpan.FromSeconds(5);
 
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly ILoggingService _loggingService;
@@ -27,7 +28,7 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
         private readonly IPermissions _permissions;
         private readonly IUserDialogs _userDialogs;
 
-        private readonly Timer _forceSendTimer = new Timer(MinimalUpdateTimespan * 1000) { AutoReset = true };
+        private readonly Timer _forceSendTimer = new Timer(MinimalForcedUpdateTimespan * 1000) { AutoReset = true };
 
         private bool _isRunning;
         private DateTime _lastUpdateTime;
@@ -106,7 +107,7 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
                         }
 
                         // Ensure it updates at least every 60 seconds
-                        if (DateTime.Now - _lastUpdateTime < TimeSpan.FromSeconds(MinimalUpdateTimespan))
+                        if (DateTime.Now - _lastUpdateTime < TimeSpan.FromSeconds(MinimalForcedUpdateTimespan))
                             return;
 
                         var lastKnownLocation = await Geolocator.GetLastKnownLocationAsync();
@@ -202,6 +203,9 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.Geolocation
 
         private async Task UpdateLocation(Position position)
         {
+            if (DateTime.Now - _lastUpdateTime < MinimalUpdateTimespan)
+                return;
+
             _loggingService.Trace("Executing LocationManager.UpdateLocation");
             var result = await _wasabeeApiV1Service!.User_UpdateLocation(position.Latitude.ToString(Culture), position.Longitude.ToString(Culture));
             if (result)
