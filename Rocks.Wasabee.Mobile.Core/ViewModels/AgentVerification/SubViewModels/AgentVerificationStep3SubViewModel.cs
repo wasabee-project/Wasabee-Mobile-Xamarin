@@ -46,7 +46,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.AgentVerification.SubViewModels
         public IMvxCommand RefreshStatusCommand => new MvxCommand(RefreshStatusExecuted);
         private async void RefreshStatusExecuted()
         {
-            if (IsBusy)
+            if (IsBusy || HasOpenedCommunity is false)
                 return;
 
             if (string.IsNullOrWhiteSpace(Parent.AgentName))

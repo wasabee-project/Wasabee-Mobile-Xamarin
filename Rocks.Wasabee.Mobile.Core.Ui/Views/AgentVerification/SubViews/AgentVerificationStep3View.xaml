@@ -50,13 +50,14 @@
                           </Button>
                       </StackLayout>
                       
-                      <StackLayout Spacing="15" IsVisible="{Binding HasOpenedCommunity}">
+                      <StackLayout Spacing="15">
                           <Label Text="{xaml:Translate ACV_Step3_Label_AfterPostExplanation}" />
 
                           <Button Text="{xaml:Translate ACV_Step3_Button_VerifyMe}"
                                   HorizontalOptions="Center"
                                   Style="{DynamicResource WasabeeStyleMainActionButton}"
-                                  Command="{Binding RefreshStatusCommand}"/>
+                                  Command="{Binding RefreshStatusCommand}"
+                                  IsEnabled="{Binding HasOpenedCommunity}"/>
 
                           <ActivityIndicator IsRunning="True"
                                              IsVisible="{Binding IsBusy}"/>
