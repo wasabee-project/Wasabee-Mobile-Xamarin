@@ -767,10 +767,7 @@
     <value>Debes estar conectado a Internet a través de Wi-Fi o red móvil para usar esta aplicación</value>
     <comment>Error message when no internet connection</comment>
   </data>
-  <data name="SignIn_Label_NoTeamsOrOperation" xml:space="preserve">
-    <value>Noo tienes ningún equipo u operación asignados. ¡Ponte en contacto con tu Operador antes de usar Wasabee Mobile!</value>
-    <comment>Text for when user don't have any teams or ops and can't use app</comment>
-  </data>
+  
   <data name="SignIn_Label_PleaseWait" xml:space="preserve">
     <value>Por favor, espere...</value>
     <comment>Wait message</comment>
