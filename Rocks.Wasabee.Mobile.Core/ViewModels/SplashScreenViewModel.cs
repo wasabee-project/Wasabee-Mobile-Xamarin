@@ -369,16 +369,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private async Task ChangeAccount()
         {
             LoggingService.Trace("Executing SplashScreenViewModel.ChangeAccountCommand");
-
+            
             IsLoading = false;
             HasNoTeamOrOpsAssigned = false;
             IsLoginVisible = true;
-            SelectedServerItem = ServerItem.Undefined;
 
             _preferences.Remove(UserSettingsKeys.RememberServerChoice);
             _preferences.Remove(UserSettingsKeys.SavedServerChoice);
-
-            await ConnectUserCommand.ExecuteAsync();
+            
+            _secureStorage.Remove(SecureStorageConstants.GoogleToken);
+            _secureStorage.Remove(SecureStorageConstants.WasabeeToken);
         }
 
         public IMvxCommand RememberChoiceCommand => new MvxCommand(() =>
