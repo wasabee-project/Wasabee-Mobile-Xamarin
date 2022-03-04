@@ -38,7 +38,7 @@ namespace Rocks.Wasabee.Mobile.Core.Models.Users
     public class TelegramModel : BaseModel
     {
         [JsonProperty("ID")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

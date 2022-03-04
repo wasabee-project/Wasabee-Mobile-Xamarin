@@ -234,7 +234,7 @@
     <comment>Warning popup when Wasabee failed verification process in ACV</comment>
   </data>
   <data name="Dialogs_Warning_InGameNameAlreadyVerified" xml:space="preserve">
-    <value>It seems that this Ingress name has already been verified.</value>
+    <value>This Ingress name has already been verified.</value>
     <comment>Warning popup when user tries to verify an already verified in-game name</comment>
   </data>
   <data name="Dialogs_Warning_InGameNameRequired" xml:space="preserve">
@@ -368,7 +368,7 @@
     <comment>Section text</comment>
   </data>
   <data name="LocationDialog_Text_Question" xml:space="preserve">
-    <value>Why do I see this message ?</value>
+    <value>Why am I seeing this message ?</value>
     <comment>Text</comment>
   </data>
   <data name="LocationDialog_Text_ReadMore" xml:space="preserve">
@@ -896,7 +896,7 @@
     <comment>Another warning before deleting team</comment>
   </data>
   <data name="TeamsList_Warning_TeamWillDelete" xml:space="preserve">
-    <value>You're going to delete the team '{0}'. Are you sure?</value>
+    <value>You're deleting team '{0}'. Are you sure?</value>
     <comment>Warning message before deleting a team. Parameter is team name</comment>
   </data>
   <data name="Teams_Prompt_ChangeTeamNameTitle" xml:space="preserve">
