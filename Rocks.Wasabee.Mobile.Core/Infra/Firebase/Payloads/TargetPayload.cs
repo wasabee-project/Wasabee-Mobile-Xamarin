@@ -12,7 +12,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Firebase.Payloads
         [JsonProperty("Lat")]
         public string Latitude { get; set; } = string.Empty;
 
-        [JsonProperty("Lon")]
+        [JsonProperty("Lng")]
         public string Longitude { get; set; } = string.Empty;
 
         public string Type { get; set; } = string.Empty;
