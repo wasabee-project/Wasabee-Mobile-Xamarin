@@ -88,7 +88,7 @@ steps:
     packageApp: true
     signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
     signingProvisioningProfileID: '$(APPLE_PROV_PROFILE_UUID)'
-    mdtoolFile: '$(msbuildproxy)'
+    #mdtoolFile: '$(msbuildproxy)'
 
 # Copy .ipa to Artifacts
 - task: CopyFiles@2
