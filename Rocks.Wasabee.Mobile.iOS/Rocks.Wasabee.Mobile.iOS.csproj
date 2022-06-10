@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -127,8 +127,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Renderers\PageRenderer.cs" />
-    <Compile Include="Services\Geolocation\GeolocationHelper.cs" />
-    <Compile Include="Services\Geolocation\LocationManager.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="WasabeeImageFactory.cs" />
     <None Include="Entitlements.prod.plist" />
@@ -570,5 +568,8 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Geolocation\" />
   </ItemGroup>
 </Project>
