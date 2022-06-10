@@ -16,7 +16,7 @@ using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 using Rocks.Wasabee.Mobile.iOS.Infra.LocalNotification;
-using Rocks.Wasabee.Mobile.iOS.Services.Geolocation;
+//using Rocks.Wasabee.Mobile.iOS.Services.Geolocation;
 using UIKit;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
@@ -28,7 +28,7 @@ namespace Rocks.Wasabee.Mobile.iOS
     public class Setup : MvxFormsIosSetup<CoreApp, App>
     {
         private ILoggingService? _loggingService;
-        private LocationManager? _locationManager;
+        //private LocationManager? _locationManager;
 
         private MvxSubscriptionToken? _tokenLocation;
         private MvxSubscriptionToken? _tokenFcm;
@@ -75,13 +75,13 @@ namespace Rocks.Wasabee.Mobile.iOS
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
 
-            SetupGeolocationTrackingMessage();
+            //SetupGeolocationTrackingMessage();
             SetupFcmServiceMessage();
 
             return new CoreApp();
         }
 
-        private void SetupGeolocationTrackingMessage()
+        /*private void SetupGeolocationTrackingMessage()
         {
             _tokenLocation ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<LiveGeolocationTrackingMessage>(async msg =>
             {
@@ -105,7 +105,7 @@ namespace Rocks.Wasabee.Mobile.iOS
                     _locationManager.StopLocationUpdates();
                 }
             });
-        }
+        }*/
 
         private void SetupFcmServiceMessage()
         {

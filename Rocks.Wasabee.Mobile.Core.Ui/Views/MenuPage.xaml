@@ -66,6 +66,12 @@
                 </StackLayout>
 
                 <StackLayout Orientation="Horizontal" Margin="10" HorizontalOptions="Center">
+                    <StackLayout.IsVisible>
+                        <OnPlatform x:TypeArguments="x:Boolean">
+                            <On Platform="iOS" Value="false"/>
+                        </OnPlatform>
+                    </StackLayout.IsVisible>
+                    
                     <Label Text="{xaml:Translate Menu_Label_LocationSharing}" VerticalTextAlignment="Center" Style="{DynamicResource WasabeeStyleInfoDivers}"/>
                     <Switch OnColor="{DynamicResource PrimaryGreenDark}" Margin="10, 0"
                             ThumbColor="{Binding IsLiveLocationSharingEnabled, Converter={StaticResource BoolToColorConverter}}"
