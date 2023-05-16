@@ -707,6 +707,10 @@
   <data name="SignIn_Button_Validate" xml:space="preserve">
     <value>✓   Validate</value>
   </data>
+  <data name="SignIn_Button_WithApple" xml:space="preserve">
+    <value>Sign in with Apple</value>
+    <comment>Text for the "Sign In with Apple" button</comment>
+  </data>
   <data name="SignIn_Button_WithGoogle" xml:space="preserve">
     <value>Sign in with Google</value>
     <comment>Text for the "Sign In with Google" button</comment>

@@ -142,6 +142,9 @@
     <Compile Include="Renderers\CustomButtonRenderer.cs" />
     <Compile Include="Infra\Logger\LoggingService.cs" />
     <Compile Include="Services\AppleSignIn\AppleSignInService.cs" />
+    <BundleResource Include="Resources\apple-black%401x.png" />
+    <BundleResource Include="Resources\apple-black%402x.png" />
+    <BundleResource Include="Resources\apple-black%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">

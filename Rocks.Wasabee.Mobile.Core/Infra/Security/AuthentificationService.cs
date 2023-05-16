@@ -1,4 +1,5 @@
 ﻿using MvvmCross;
+using Rocks.Wasabee.Mobile.Core.Apple.Models;
 using Rocks.Wasabee.Mobile.Core.Infra.Databases;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Models.AuthTokens.Google;
@@ -61,6 +62,13 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _loggingService.Trace("Executing AuthentificationService.RefreshGoogleTokenAsync");
 
             return await _loginProvider.RefreshGoogleTokenAsync(refreshToken);
+        }
+
+        public async Task SendAppleAccountData(AppleAccount appleAccount)
+        {
+            _loggingService.Trace("Executing AuthentificationService.SendAppleAccountdata");
+
+            await _loginProvider.SendAppleAccountdata(appleAccount);
         }
 
         private async Task ClearTokens()

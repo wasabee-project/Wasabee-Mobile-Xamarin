@@ -22,7 +22,7 @@
     <ContentPage.Content>
         <RelativeLayout>
 
-            <iconize:IconButton RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-80}"
+            <iconize:IconButton RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-50}"
                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Y, Factor=0, Constant=10}"
                                 Text="mdi-cogs" BackgroundColor="Transparent" FontSize="24"
                                 TextColor="{DynamicResource PrimaryTextColor}"
@@ -117,9 +117,9 @@
                         <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="2"
                                HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
                                BackgroundColor="White" HeightRequest="50" WidthRequest="50">
-                            <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Image Source="apple-black.png" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Frame>
-                        <Label Text="{xaml:Translate SignIn_Button_Apple}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
+                        <Label Text="{xaml:Translate SignIn_Button_WithApple}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
                                VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" 
                                FontSize="18" TextColor="White" FontAttributes="Bold" />
 
@@ -149,7 +149,7 @@
                         <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="2"
                                HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
                                BackgroundColor="White" HeightRequest="50" WidthRequest="50">
-                            <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Image Source="wasabee.png" HeightRequest="30" WidthRequest="30" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
                         <Label Text="{xaml:Translate SignIn_Button_OneTimeToken}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
                                VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" 

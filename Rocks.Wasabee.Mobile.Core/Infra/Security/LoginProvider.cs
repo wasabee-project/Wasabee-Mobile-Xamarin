@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Rocks.Wasabee.Mobile.Core.Apple.Models;
 using Rocks.Wasabee.Mobile.Core.Infra.Constants;
 using Rocks.Wasabee.Mobile.Core.Infra.HttpClientFactory;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
@@ -246,6 +247,41 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Security
             _secureStorage.Remove(SecureStorageConstants.GoogleToken);
 
             return Task.CompletedTask;
+        }
+
+        public async Task SendAppleAccountdata(AppleAccount appleAccount)
+        {
+            _loggingService.Trace("Executing LoginProvider.SendAppleAccountdata");
+
+            HttpResponseMessage responsePost;
+            HttpResponseMessage response;
+
+#if DEBUG_NETWORK_LOGS
+            var httpHandler = new HttpLoggingHandler(Mvx.IoCProvider.Resolve<IFactory>().CreateHandler());
+#else
+            var httpHandler = _httpClientFactory.CreateHandler();
+#endif
+
+            using var client = new HttpClient(httpHandler)
+            {
+                Timeout = TimeSpan.FromSeconds(5),
+                DefaultRequestHeaders = { { "User-Agent", $"WasabeeMobile/{_versionTracking.CurrentVersion} ({_deviceInfo.Platform} {_deviceInfo.VersionString})" } }
+            };
+
+            try
+            {
+                // Testing purpose
+                var postContent = new StringContent(JsonConvert.SerializeObject(appleAccount), Encoding.UTF8, "application/json");
+                responsePost = await client.PostAsync($"{_appSettings.WasabeeBaseUrl}/apple", postContent).ConfigureAwait(false);
+                response = await client.GetAsync($"{_appSettings.WasabeeBaseUrl}/apple?data={postContent}").ConfigureAwait(false);
+
+                responsePost.EnsureSuccessStatusCode();
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                _loggingService.Error(e, "Error Executing LoginProvider.SendAppleAccountdata");
+            }
         }
     }
 }

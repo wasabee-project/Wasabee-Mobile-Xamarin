@@ -267,6 +267,8 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             IsLoading = true;
 
             var account = await _appleSignInService.SignInAsync();
+            if (account != null)
+                await _authentificationService.SendAppleAccountData(account);
 
             IsLoading = false;
         }

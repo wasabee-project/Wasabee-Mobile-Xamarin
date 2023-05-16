@@ -12,21 +12,8 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.AppleSignIn
     {
 		AuthManager authManager;
 
-        bool Is13 => UIDevice.CurrentDevice.CheckSystemVersion(13, 0);
-        WebAppleSignInService webSignInService;
-
-        public AppleSignInService()
-        {
-            if (!Is13)
-                webSignInService = new WebAppleSignInService();
-        }
-
         public async Task<AppleAccount> SignInAsync()
         {
-            // Fallback to web for older iOS versions
-            if (!Is13)
-                return await webSignInService.SignInAsync();
-
             AppleAccount appleAccount = default;
 
 			var provider = new ASAuthorizationAppleIdProvider();
@@ -42,19 +29,26 @@ namespace Rocks.Wasabee.Mobile.iOS.Services.AppleSignIn
 
 			controller.PerformRequests();
 
-			var creds = await authManager.Credentials;
+			try
+			{
+                var creds = await authManager.Credentials;
 
-			if (creds == null)
-				return null;
+                if (creds == null)
+                    return null;
 
-			appleAccount = new AppleAccount();
-			appleAccount.IdToken = JwtToken.Decode(new NSString(creds.IdentityToken, NSStringEncoding.UTF8).ToString());
-			appleAccount.Email = creds.Email;
-			appleAccount.UserId = creds.User;
-			appleAccount.Name = NSPersonNameComponentsFormatter.GetLocalizedString(creds.FullName, NSPersonNameComponentsFormatterStyle.Default, NSPersonNameComponentsFormatterOptions.Phonetic);
-			appleAccount.RealUserStatus = creds.RealUserStatus.ToString();
+                appleAccount = new AppleAccount();
+                appleAccount.IdToken = JwtToken.Decode(new NSString(creds.IdentityToken, NSStringEncoding.UTF8).ToString());
+                appleAccount.Email = creds.Email;
+                appleAccount.UserId = creds.User;
+                appleAccount.Name = NSPersonNameComponentsFormatter.GetLocalizedString(creds.FullName, NSPersonNameComponentsFormatterStyle.Default, NSPersonNameComponentsFormatterOptions.Phonetic);
+                appleAccount.RealUserStatus = creds.RealUserStatus.ToString();
 
-            return appleAccount;
+                return appleAccount;
+            }
+			catch (Exception)
+			{
+				return appleAccount;
+			}
         }
 
         public bool Callback(string url) => true;
