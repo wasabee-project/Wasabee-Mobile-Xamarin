@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 pool:
-  vmImage: 'macOS-11'
+  vmImage: 'macOS-latest'
 
 variables:
 - group: VersionNumbersDev
