@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <views:BaseContentPage x:TypeArguments="viewModels:SplashScreenViewModel"
                        xmlns="http://xamarin.com/schemas/2014/forms" 
                        x:DataType="viewModels:SplashScreenViewModel"
@@ -94,6 +94,38 @@
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ConnectUserCommand}" />
                         </Grid.GestureRecognizers>    
+                    </Grid>
+                </Frame>
+
+                <Frame CornerRadius="2"
+                       HorizontalOptions="FillAndExpand" 
+                       VerticalOptions="EndAndExpand"
+                       BackgroundColor="#121212" 
+                       Margin="10"
+                       Padding="1"
+                       HasShadow="false"
+                       IsVisible="{OnPlatform iOS=True, Android=False}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+
+                        <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="2"
+                               HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                               BackgroundColor="White" HeightRequest="50" WidthRequest="50">
+                            <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label Text="{xaml:Translate SignIn_Button_Apple}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
+                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" 
+                               FontSize="18" TextColor="White" FontAttributes="Bold" />
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AppleSignInCommand}" />
+                        </Grid.GestureRecognizers>
                     </Grid>
                 </Frame>
 

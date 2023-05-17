@@ -80,4 +80,12 @@
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Apple\" />
+    <None Remove="Apple\Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Apple\" />
+    <Folder Include="Apple\Models\" />
+  </ItemGroup>
 </Project>

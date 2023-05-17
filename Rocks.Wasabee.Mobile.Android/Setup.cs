@@ -20,6 +20,7 @@ using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.Droid.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Droid.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.Droid.Infra.Logger;
+using Rocks.Wasabee.Mobile.Droid.Services.AppleSignIn;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 
@@ -66,6 +67,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
+            Mvx.IoCProvider.RegisterType<IAppleSignInService, AppleSignInService>();
 
             var pluginManager = Mvx.IoCProvider.Resolve<IMvxPluginManager>();
             this.LoadPlugins(pluginManager);

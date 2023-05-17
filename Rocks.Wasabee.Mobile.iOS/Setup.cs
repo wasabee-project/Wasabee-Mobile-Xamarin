@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Microsoft.Extensions.Logging;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
@@ -18,6 +18,7 @@ using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 using Rocks.Wasabee.Mobile.iOS.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.iOS.Infra.Logger;
+using Rocks.Wasabee.Mobile.iOS.Services.AppleSignIn;
 //using Rocks.Wasabee.Mobile.iOS.Services.Geolocation;
 using UIKit;
 using Xamarin.Essentials.Implementation;
@@ -71,6 +72,7 @@ namespace Rocks.Wasabee.Mobile.iOS
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
+            Mvx.IoCProvider.RegisterType<IAppleSignInService, AppleSignInService>();
 
             Mvx.IoCProvider.RegisterSingleton(PopupNavigation.Instance);
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();

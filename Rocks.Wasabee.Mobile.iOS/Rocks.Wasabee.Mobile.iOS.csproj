@@ -31,6 +31,7 @@
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <CodesignEntitlements>Entitlements.dev.plist</CodesignEntitlements>
     <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignProvision>Automatique</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -96,8 +97,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <CodesignProvision>
-    </CodesignProvision>
+    <CodesignProvision>Automatique</CodesignProvision>
     <MtouchDebug>true</MtouchDebug>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Network Logs|iPhone'">
@@ -111,8 +111,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodesignEntitlements>Entitlements.dev.plist</CodesignEntitlements>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <CodesignProvision>
-    </CodesignProvision>
+    <CodesignProvision>Automatique</CodesignProvision>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
   </PropertyGroup>
@@ -142,6 +141,7 @@
     <Compile Include="Renderers\BorderlessEditorRenderer.cs" />
     <Compile Include="Renderers\CustomButtonRenderer.cs" />
     <Compile Include="Infra\Logger\LoggingService.cs" />
+    <Compile Include="Services\AppleSignIn\AppleSignInService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
@@ -572,5 +572,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\Geolocation\" />
+    <Folder Include="Services\AppleSignIn\" />
   </ItemGroup>
 </Project>

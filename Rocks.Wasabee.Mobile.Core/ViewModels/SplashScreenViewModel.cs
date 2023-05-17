@@ -53,6 +53,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         private readonly IAppSettings _appSettings;
         private readonly IUserSettingsService _userSettingsService;
         private readonly IUserDialogs _userDialogs;
+        private readonly IAppleSignInService _appleSignInService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly UsersDatabase _usersDatabase;
         private readonly OperationsDatabase _operationsDatabase;
@@ -72,8 +73,9 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
         public SplashScreenViewModel(IConnectivity connectivity, IPreferences preferences, IVersionTracking versionTracking,
             IAuthentificationService authentificationService, IMvxNavigationService navigationService, IMvxMessenger messenger,
             ISecureStorage secureStorage, IAppSettings appSettings, IUserSettingsService userSettingsService, IUserDialogs userDialogs,
-            WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase, OperationsDatabase operationsDatabase, LinksDatabase linksDatabase,
-            MarkersDatabase markersDatabase, TeamsDatabase teamsDatabase, AgentsDatabase agentsDatabase)
+            IAppleSignInService appleSignInService, WasabeeApiV1Service wasabeeApiV1Service, UsersDatabase usersDatabase,
+            OperationsDatabase operationsDatabase, LinksDatabase linksDatabase, MarkersDatabase markersDatabase,
+            TeamsDatabase teamsDatabase, AgentsDatabase agentsDatabase)
         {
             _connectivity = connectivity;
             _preferences = preferences;
@@ -85,6 +87,7 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
             _appSettings = appSettings;
             _userSettingsService = userSettingsService;
             _userDialogs = userDialogs;
+            _appleSignInService = appleSignInService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _usersDatabase = usersDatabase;
             _operationsDatabase = operationsDatabase;
@@ -241,6 +244,29 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 IsAuthInError = true;
                 IsLoginVisible = true;
             }
+
+            IsLoading = false;
+        }
+
+        public IMvxAsyncCommand AppleSignInCommand => new MvxAsyncCommand(AppleSignIn);
+        private async Task AppleSignIn()
+        {
+            LoggingService.Trace("Executing SplashScreenViewModel.AppleSignInCommand()");
+
+            if (!IsConnected)
+            {
+                IsLoading = false;
+                IsLoginVisible = true;
+                IsSelectingServer = false;
+
+                return;
+            }
+
+            if (IsLoading) return;
+
+            IsLoading = true;
+
+            var account = await _appleSignInService.SignInAsync();
 
             IsLoading = false;
         }
