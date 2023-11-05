@@ -63,7 +63,6 @@
     <MandroidI18n />
     <DefineConstants>__ANDROID__;PROD</DefineConstants>
     <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
-    <AndroidHttpClientHandlerType>System.Net.Http.HttpClientHandler</AndroidHttpClientHandlerType>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
   </PropertyGroup>
