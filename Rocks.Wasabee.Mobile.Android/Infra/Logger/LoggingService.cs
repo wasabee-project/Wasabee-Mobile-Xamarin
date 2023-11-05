@@ -1,15 +1,15 @@
-﻿using Microsoft.AppCenter.Crashes;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AppCenter.Crashes;
 using NLog;
 using NLog.Config;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Settings.User;
-using System;
-using System.Collections.Generic;
 using Xamarin.Essentials.Interfaces;
-using Device = Xamarin.Forms.Device;
 
-namespace Rocks.Wasabee.Mobile.Core.Infra.Logger
+namespace Rocks.Wasabee.Mobile.Droid.Infra.Logger
 {
-    internal class LoggingService : ILoggingService
+    public class LoggingService : ILoggingService
     {
         private readonly IPreferences _preferences;
 
@@ -26,14 +26,7 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Logger
                 if (_logFactory != null)
                     return _logFactory;
 
-                var configName = Device.RuntimePlatform switch
-                {
-                    Device.iOS => "NLog.config",
-                    Device.Android => "Assets/NLog.config",
-                    _ => throw new Exception("Could not initialize Logger: Unknonw Platform")
-                };
-
-                _logFactory = new LogFactory();
+                _logFactory = new LogFactory() /*{ Configuration = new XmlLoggingConfiguration("Assets/NLog.config") }*/;
 
                 return _logFactory;
             }
@@ -143,3 +136,4 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Logger
         #endregion
     }
 }
+

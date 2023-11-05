@@ -34,7 +34,7 @@ namespace Rocks.Wasabee.Mobile.Core
 
         public static void SetupCrossConcerns()
         {
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
+
         }
 
         public static void SetupEnvironment()
