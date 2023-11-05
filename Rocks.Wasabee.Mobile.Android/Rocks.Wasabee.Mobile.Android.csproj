@@ -245,7 +245,6 @@
     <Compile Include="Setup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\NLog.config" />
     <ProguardConfiguration Include="proguard.cfg" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
@@ -551,6 +550,9 @@
     <AndroidResource Include="Resources\drawable\warning.png" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\NLog.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

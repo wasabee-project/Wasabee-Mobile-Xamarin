@@ -29,11 +29,11 @@ namespace Rocks.Wasabee.Mobile.Core.Infra.Logger
                 var configName = Device.RuntimePlatform switch
                 {
                     Device.iOS => "NLog.config",
-                    Device.Android => "assets/NLog.config",
+                    Device.Android => "Assets/NLog.config",
                     _ => throw new Exception("Could not initialize Logger: Unknonw Platform")
                 };
 
-                _logFactory = new LogFactory(new XmlLoggingConfiguration(configName));
+                _logFactory = new LogFactory();
 
                 return _logFactory;
             }
