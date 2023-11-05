@@ -12,7 +12,7 @@ using Android.Util;
 #pragma warning disable CS0618 // Type or member is obsolete
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
-    [Service]
+    [Service(Exported = false)]
     [IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
     [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
     public class WasabeeFirebaseMessagingService : FirebaseMessagingService
