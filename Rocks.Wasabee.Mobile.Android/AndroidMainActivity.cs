@@ -30,6 +30,7 @@ namespace Rocks.Wasabee.Mobile.Droid
 {
     [Activity(
         Theme = "@style/MainTheme",
+        Exported = false,
         ResizeableActivity = true,
         WindowSoftInputMode = SoftInput.AdjustPan,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode)]

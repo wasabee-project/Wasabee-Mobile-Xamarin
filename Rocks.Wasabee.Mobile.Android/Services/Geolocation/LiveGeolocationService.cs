@@ -22,7 +22,7 @@ using Xamarin.Forms.Platform.Android;
 
 namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 {
-    [BroadcastReceiver]
+    [BroadcastReceiver(Exported = false)]
     [IntentFilter(new [] { "WASABEE_STOP_GEOLOCATION" })]
     public class LiveLocationSharingActionReceiver : BroadcastReceiver
     {

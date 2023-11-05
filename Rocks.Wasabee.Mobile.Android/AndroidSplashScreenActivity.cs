@@ -26,6 +26,7 @@ namespace Rocks.Wasabee.Mobile.Droid
         RoundIcon = "@mipmap/ic_launcher_round",
         ResizeableActivity = true,
         MainLauncher = true,
+        Exported = true,
         WindowSoftInputMode = SoftInput.AdjustPan,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode)]
     public class AndroidSplashScreenActivity : MvxFormsSplashScreenActivity<Setup, CoreApp, App>

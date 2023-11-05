@@ -17,6 +17,7 @@ using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Droid.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Droid.Infra.LocalNotification;
+using Rocks.Wasabee.Mobile.Droid.Infra.Logger;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
@@ -64,6 +65,8 @@ namespace Rocks.Wasabee.Mobile.Droid
             Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
 
             AndroidEnvironment.UnhandledExceptionRaiser += UnhandledExceptionHandler;
 
