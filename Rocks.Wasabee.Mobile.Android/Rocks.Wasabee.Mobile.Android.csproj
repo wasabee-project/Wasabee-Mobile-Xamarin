@@ -219,6 +219,9 @@
     <PackageReference Include="Xamarin.AndroidX.Core">
       <Version>1.9.0.2</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.Iid">
+      <Version>121.1.0.12</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ApiKeys.cs">
