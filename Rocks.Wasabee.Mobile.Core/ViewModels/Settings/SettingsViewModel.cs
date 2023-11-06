@@ -264,8 +264,16 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels.Settings
 
             var token = await _secureStorage.GetAsync(SecureStorageConstants.FcmToken);
             if (string.IsNullOrWhiteSpace(token))
-                token = _firebaseService.GetFcmToken();
+                token = await _firebaseService.GetFcmToken();
 
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                _userDialogs.Toast(Strings.Global_ErrorOccuredPleaseRetry);
+                IsBusy = false;
+
+                return;
+            }
+            
             var result = await _crossFirebaseMessagingService.SendRegistrationToServer(token);
             _userDialogs.Toast(result ? Strings.Settings_Toast_FcmtokenUpdated : Strings.Global_ErrorOccuredPleaseRetry);
 

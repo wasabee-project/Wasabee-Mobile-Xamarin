@@ -1,18 +1,36 @@
-﻿using Firebase.Iid;
+﻿using System;
+using System.Threading.Tasks;
+using Android.Gms.Extensions;
+using Firebase.Messaging;
+using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 
-#pragma warning disable CS0618 // Type or member is obsolete
 namespace Rocks.Wasabee.Mobile.Droid.Infra.Firebase
 {
     public class FirebaseService : IFirebaseService
     {
-        public string GetFcmToken()
-        {
-            if (FirebaseInstanceId.Instance.Token != null)
-                return FirebaseInstanceId.Instance.Token;
+        private readonly ILoggingService _loggingService;
 
-            return string.Empty;
+        public FirebaseService(ILoggingService loggingService)
+        {
+            _loggingService = loggingService;
+        }
+
+        public async Task<string> GetFcmToken()
+        {
+            try
+            {
+                var token = await FirebaseMessaging.Instance.GetToken();
+                if (token != null)
+                    return token.ToString();
+
+                return string.Empty;
+            }
+            catch (Exception e)
+            {
+                _loggingService.Error(e, "Error retrieving FirebaseMessaging Token");
+                return string.Empty;
+            }
         }
     }
 }
-#pragma warning restore CS0618

@@ -1,7 +1,9 @@
-﻿namespace Rocks.Wasabee.Mobile.Core.Services
+﻿using System.Threading.Tasks;
+
+namespace Rocks.Wasabee.Mobile.Core.Services
 {
     public interface IFirebaseService
     {
-        string GetFcmToken();
+        Task<string> GetFcmToken();
     }
 }
