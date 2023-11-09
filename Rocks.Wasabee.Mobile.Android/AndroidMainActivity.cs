@@ -14,9 +14,7 @@ using MvvmCross.Plugin.Messenger;
 using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Messages;
-using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Ui;
-using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.Core.Ui.Themes;
 using Rocks.Wasabee.Mobile.Droid.Services.Geolocation;
 using System;
@@ -67,8 +65,8 @@ namespace Rocks.Wasabee.Mobile.Droid
             
             CreateNotificationChannels();
 
+            // Must have called Xamarin.Forms.Init() before using .Instance
             Mvx.IoCProvider.RegisterSingleton(PopupNavigation.Instance);
-            Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
 
             base.OnCreate(bundle);
 

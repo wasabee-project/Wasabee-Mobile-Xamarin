@@ -58,7 +58,8 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         protected override IMvxApplication CreateApp(IMvxIoCProvider iocProvider)
         {
-            Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
+            // Must have been registered prior to everything in app creation process
+            Mvx.IoCProvider.RegisterSingleton<IPreferences>(() => new PreferencesImplementation());
 
             // this force Xamarin.Forms to initialize
             var app = this.FormsApplication;
