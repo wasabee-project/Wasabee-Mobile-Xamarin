@@ -93,7 +93,7 @@ namespace Rocks.Wasabee.Mobile.Core
             }
 
             Analytics.TrackEvent(AnalyticsConstants.AppStart);
-            NLog.LogManager.EnableLogging();
+            NLog.LogManager.ResumeLogging();
 
             RegisterAppStart<SplashScreenViewModel>();
         }

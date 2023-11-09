@@ -16,6 +16,7 @@ using Rocks.Wasabee.Mobile.Core.Ui;
 using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 using Rocks.Wasabee.Mobile.iOS.Infra.LocalNotification;
+using Rocks.Wasabee.Mobile.iOS.Infra.Logger;
 //using Rocks.Wasabee.Mobile.iOS.Services.Geolocation;
 using UIKit;
 using Xamarin.Essentials.Implementation;
@@ -57,7 +58,8 @@ namespace Rocks.Wasabee.Mobile.iOS
 
         protected override IMvxApplication CreateApp(IMvxIoCProvider iocProvider)
         {
-            Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
+            // Must have been registered prior to everything in app creation process
+            Mvx.IoCProvider.RegisterSingleton<IPreferences>(() => new PreferencesImplementation());
 
             // this force Xamarin.Forms to initialize
             var app = this.FormsApplication;
@@ -74,6 +76,8 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
 
             //SetupGeolocationTrackingMessage();
             SetupFcmServiceMessage();

@@ -22,7 +22,7 @@ using Xamarin.Forms.Platform.Android;
 
 namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
 {
-    [BroadcastReceiver]
+    [BroadcastReceiver(Exported = false)]
     [IntentFilter(new [] { "WASABEE_STOP_GEOLOCATION" })]
     public class LiveLocationSharingActionReceiver : BroadcastReceiver
     {
@@ -248,9 +248,9 @@ namespace Rocks.Wasabee.Mobile.Droid.Services.Geolocation
             var actionIntent1 = new Intent();
             actionIntent1.SetAction("WASABEE_STOP_GEOLOCATION");
             actionIntent1.PutExtra("WasabeeNotification", true);
-            var pIntent1 = PendingIntent.GetBroadcast(this, 1331, actionIntent1, PendingIntentFlags.CancelCurrent);
+            var pIntent1 = PendingIntent.GetBroadcast(this, 1331, actionIntent1, PendingIntentFlags.CancelCurrent | PendingIntentFlags.Immutable);
 
-            var pendingIntent = PendingIntent.GetActivity(this, 0, newIntent, PendingIntentFlags.UpdateCurrent);
+            var pendingIntent = PendingIntent.GetActivity(this, 0, newIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
             var notification = builder.SetContentIntent(pendingIntent)
                 .SetSmallIcon(Resource.Drawable.wasabee)
                 .SetAutoCancel(false)

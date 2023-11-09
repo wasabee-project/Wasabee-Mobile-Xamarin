@@ -15,43 +15,45 @@ using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Ui;
+using Rocks.Wasabee.Mobile.Core.Ui.Services;
 using Rocks.Wasabee.Mobile.Droid.Infra.Firebase;
 using Rocks.Wasabee.Mobile.Droid.Infra.LocalNotification;
+using Rocks.Wasabee.Mobile.Droid.Infra.Logger;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
 
 namespace Rocks.Wasabee.Mobile.Droid
 {
     public class Setup : MvxFormsAndroidSetup<CoreApp, App>
     {
-        private Application _formsApplication;
-        public override Application FormsApplication
+        private Xamarin.Forms.Application _formsApplication;
+        public override Xamarin.Forms.Application FormsApplication
         {
             get
             {
-                if (!Forms.IsInitialized)
+                if (!Xamarin.Forms.Forms.IsInitialized)
                 {
                     var activity = Mvx.IoCProvider.Resolve<IMvxAndroidCurrentTopActivity>()?.Activity ?? ApplicationContext;
                     var asmb = activity.GetType().Assembly;
-                    
-                    Forms.SetFlags("SwipeView_Experimental");
-                    Forms.Init(activity, null, ExecutableAssembly ?? asmb);
+
+                    Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
+                    Xamarin.Forms.Forms.Init(activity, null, ExecutableAssembly ?? asmb);
                 }
-                if (_formsApplication == null)
-                {
-                    _formsApplication = CreateFormsApplication();
-                }
-                if (Application.Current != _formsApplication)
-                {
-                    Application.Current = _formsApplication;
-                }
+
+                _formsApplication ??= CreateFormsApplication();
+
+                if (Xamarin.Forms.Application.Current != _formsApplication)
+                    Xamarin.Forms.Application.Current = _formsApplication;
+
                 return _formsApplication;
             }
         }
 
         protected override IMvxApplication CreateApp(IMvxIoCProvider iocProvider)
         {
+            // Must have been registered prior to everything in app creation process
+            Mvx.IoCProvider.RegisterSingleton<IPreferences>(() => new PreferencesImplementation());
+
             SetupAppSettings();
             
             UserDialogs.Init(() => CrossCurrentActivity.Current.Activity);
@@ -60,10 +62,13 @@ namespace Rocks.Wasabee.Mobile.Droid
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
             Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
+
+            Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
-            Mvx.IoCProvider.RegisterType<IPreferences, PreferencesImplementation>();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
 
             AndroidEnvironment.UnhandledExceptionRaiser += UnhandledExceptionHandler;
 
