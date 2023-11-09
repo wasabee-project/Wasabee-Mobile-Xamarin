@@ -6,6 +6,7 @@ using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.IoC;
 using MvvmCross.Platforms.Android;
 using MvvmCross.Platforms.Android.Presenters;
+using MvvmCross.Plugin;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Plugin.CurrentActivity;
@@ -66,7 +67,8 @@ namespace Rocks.Wasabee.Mobile.Droid
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
 
-            Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+            var pluginManager = Mvx.IoCProvider.Resolve<IMvxPluginManager>();
+            this.LoadPlugins(pluginManager);
 
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
 

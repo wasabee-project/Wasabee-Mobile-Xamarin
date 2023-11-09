@@ -22,6 +22,13 @@ namespace Rocks.Wasabee.Mobile.Core.Ui.Views
             _toggleMenuToken = Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<MessageFrom<MenuViewModel>>(_ => ToggleMenu());
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            ViewModel.ViewAppeared();
+        }
+
         private void Logout_Clicked(object sender, EventArgs e)
         {
             ToggleMenu();
