@@ -51,12 +51,12 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
 
         private async Task ShowMenuViewModel()
         {
-            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<MenuViewModel>());
+            await _navigationService.Navigate<MenuViewModel>();
         }
 
         private async Task ShowOperationRootTabbedViewModel()
         {
-            await _navigationService.Navigate(Mvx.IoCProvider.Resolve<OperationRootTabbedViewModel>());
+            await _navigationService.Navigate<OperationRootTabbedViewModel>();
         }
 
         private async void TargetReceived(TargetPayload payload)

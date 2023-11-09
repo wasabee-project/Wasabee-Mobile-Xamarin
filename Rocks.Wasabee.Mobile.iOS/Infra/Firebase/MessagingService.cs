@@ -42,7 +42,6 @@ namespace Rocks.Wasabee.Mobile.iOS.Infra.Firebase
                 return;
             try
             {
-
                 // Use Firebase library to configure APIs
                 FirebaseApp.Configure();
 
