@@ -95,11 +95,6 @@ namespace Rocks.Wasabee.Mobile.Core.ViewModels
                 WasabeeServer.Undefined => string.Empty,
                 _ => throw new ArgumentOutOfRangeException(nameof(Server))
             };
-        }
-
-        public override void ViewAppeared()
-        {
-            base.ViewAppeared();
 
             _token ??= _messenger.Subscribe<NewOpAvailableMessage>(msg => RefreshAvailableOpsCommand.Execute());
             _tokenOps ??= _messenger.Subscribe<MessageFrom<OperationsListViewModel>>(msg => RefreshAvailableOpsCommand.Execute());

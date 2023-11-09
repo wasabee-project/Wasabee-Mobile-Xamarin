@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
 using MvvmCross.IoC;
+using MvvmCross.Plugin;
 using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using Rg.Plugins.Popup.Services;
@@ -75,7 +76,8 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
             Mvx.IoCProvider.RegisterType<ILocalNotificationService, LocalNotificationService>();
 
-            Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+            var pluginManager = Mvx.IoCProvider.Resolve<IMvxPluginManager>();
+            this.LoadPlugins(pluginManager);
 
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
 
