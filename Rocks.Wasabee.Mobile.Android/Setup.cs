@@ -1,4 +1,4 @@
-﻿using Acr.UserDialogs;
+using Acr.UserDialogs;
 using Android.Runtime;
 using Microsoft.Extensions.Logging;
 using MvvmCross;

@@ -46,7 +46,7 @@
     <PackageReference Include="Xam.Plugin.Iconize.MaterialDesignIcons" Version="3.5.0.129" />
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.8.0" />
     <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.11.982" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2612" />  
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2622" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.8.0" />  
     <PackageReference Include="Xamarin.Forms.CircularProgressBar" Version="1.0.8" />  
     <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.759" />  
