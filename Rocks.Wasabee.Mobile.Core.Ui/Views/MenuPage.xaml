@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage x:TypeArguments="viewModels:MenuViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
                        x:DataType="viewModels:MenuViewModel"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -69,6 +69,7 @@
                     <StackLayout.IsVisible>
                         <OnPlatform x:TypeArguments="x:Boolean">
                             <On Platform="iOS" Value="false"/>
+                            <On Platform="Android" Value="true"/>
                         </OnPlatform>
                     </StackLayout.IsVisible>
                     

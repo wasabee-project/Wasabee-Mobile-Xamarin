@@ -18,7 +18,7 @@ namespace Rocks.Wasabee.Mobile.Droid.Infra.LocalNotification
             intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop);
             intent.SetPackage(null);
 
-            var pendingIntent = PendingIntent.GetActivity(Context, 0, intent, PendingIntentFlags.OneShot);
+            var pendingIntent = PendingIntent.GetActivity(Context, 0, intent, PendingIntentFlags.OneShot | PendingIntentFlags.Immutable);
             var notificationBuilder = new NotificationCompat.Builder(Context, "Wasabee_Notifications")
                 .SetSmallIcon(Resource.Drawable.wasabee)
                 .SetContentTitle("Wasabee")
