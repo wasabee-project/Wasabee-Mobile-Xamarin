@@ -30,7 +30,6 @@ namespace Rocks.Wasabee.Mobile.Droid
         Theme = "@style/MainTheme",
         Exported = false,
         ResizeableActivity = true,
-        Exported = false,
         WindowSoftInputMode = SoftInput.AdjustPan,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode)]
     public class AndroidMainActivity : MvxFormsAppCompatActivity<Setup, CoreApp, App>
