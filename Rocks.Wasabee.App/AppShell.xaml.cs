@@ -1,4 +1,4 @@
-﻿namespace Rocks.Wasabee.App;
+﻿namespace Rocks.Wasabee.App.Views;
 
 public partial class AppShell : Shell
 {

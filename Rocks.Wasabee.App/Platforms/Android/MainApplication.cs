@@ -3,7 +3,11 @@ using Android.Runtime;
 
 namespace Rocks.Wasabee.App;
 
-[Application]
+#if DEBUG
+[Application(Debuggable = true, UsesCleartextTraffic = true)]
+#else
+	[Application(Debuggable = false)]
+#endif
 public class MainApplication : MauiApplication
 {
 	public MainApplication(IntPtr handle, JniHandleOwnership ownership)
