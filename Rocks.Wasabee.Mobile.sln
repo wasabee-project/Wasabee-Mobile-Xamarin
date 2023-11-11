@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Forms.GoogleMaps.iO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Forms.GoogleMaps.Android", "Xamarin.Forms.GoogleMaps\Xamarin.Forms.GoogleMaps\Xamarin.Forms.GoogleMaps.Android\Xamarin.Forms.GoogleMaps.Android.csproj", "{B97F5836-66A0-4601-859D-7C71ACB060AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocks.Wasabee.Maui.Core", "Rocks.Wasabee.Maui.Core\Rocks.Wasabee.Maui.Core.csproj", "{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Network Logs|Any CPU = Debug Network Logs|Any CPU
@@ -220,6 +222,24 @@ Global
 		{B97F5836-66A0-4601-859D-7C71ACB060AC}.Release|iPhone.Build.0 = Release|Any CPU
 		{B97F5836-66A0-4601-859D-7C71ACB060AC}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{B97F5836-66A0-4601-859D-7C71ACB060AC}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug Network Logs|Any CPU.ActiveCfg = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug Network Logs|Any CPU.Build.0 = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug Network Logs|iPhone.ActiveCfg = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug Network Logs|iPhone.Build.0 = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug Network Logs|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug Network Logs|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Release|iPhone.Build.0 = Release|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -236,6 +256,7 @@ Global
 		{CE46C001-5484-4EAE-8AC9-B9642A7AA332} = {A0C5FE97-08DD-4C95-BD04-7C1CCB5C3633}
 		{71D6FDBA-410F-4B72-89E1-DF7FC2386511} = {00CCA132-55DF-4514-A297-AB1866859C75}
 		{B97F5836-66A0-4601-859D-7C71ACB060AC} = {00CCA132-55DF-4514-A297-AB1866859C75}
+		{83CC4C6C-A55D-4C6B-B03E-6A9031192DE4} = {8F49D342-6961-4B96-A7A7-31433A8AA80B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61C77F91-C306-472D-A022-F91696CC55EA}
