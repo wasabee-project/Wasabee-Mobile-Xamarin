@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
 
 namespace Rocks.Wasabee.Maui.Core.ViewModels;
 
@@ -23,21 +22,4 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 
         return true;
     }
-}
-
-public class MainPageViewModel : ViewModelBase
-{
-	public MainPageViewModel()
-	{
-        Hello = "Hellowwww";
-	}
-
-    private string _hello = "";
-    public string Hello
-    {
-        get => _hello;
-        set => SetProperty(ref _hello, value);
-    }
-
-    public ICommand ChangeText => new Command(() => Hello = "Hello World!");
 }

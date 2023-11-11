@@ -2,10 +2,7 @@
 
 namespace Rocks.Wasabee.App.Views;
 
-public interface IPage
-{
-
-}
+public interface IPage { }
 
 public abstract class ContentPageBase<TViewModel> : ContentPage, IPage where TViewModel : ViewModelBase
 {
