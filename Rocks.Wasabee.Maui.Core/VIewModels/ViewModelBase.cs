@@ -12,7 +12,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
+    protected internal bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
     {
         if (EqualityComparer<T>.Default.Equals(field, value))
             return false;
@@ -22,4 +22,8 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 
         return true;
     }
+
+    public virtual void Initialize(object navigationData, Page? uiRef = null) { }
+
+    public virtual void OnAppearing() { }
 }

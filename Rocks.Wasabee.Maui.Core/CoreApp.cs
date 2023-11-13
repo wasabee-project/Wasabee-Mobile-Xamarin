@@ -25,9 +25,9 @@ public static class CoreApp
 
         // Transient objects lifetime services are created each time they are requested.
         // This lifetime works best for lightweight, stateless services.
-        foreach (var type in currentAssembly.DefinedTypes.Where(e => e.IsSubclassOf(typeof(ViewModelBase))))
+        foreach (var type in currentAssembly.DefinedTypes.Where(e => e.IsAbstract is false && e.IsSubclassOf(typeof(ViewModelBase))))
         {
-            builder.Services.AddSingleton(type.AsType());
+            builder.Services.AddTransient(type.AsType());
         }
 
         return builder;
