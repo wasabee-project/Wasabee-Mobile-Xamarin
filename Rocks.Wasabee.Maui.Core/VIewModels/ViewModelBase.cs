@@ -23,7 +23,12 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         return true;
     }
 
-    public virtual void Initialize(object navigationData, Page? uiRef = null) { }
+    public virtual void Initialize() { }
 
     public virtual void OnAppearing() { }
+}
+
+public abstract class ParameterizableViewModel<TParameter> : ViewModelBase where TParameter : class
+{
+    public virtual void Initialize(TParameter parameter) { }
 }

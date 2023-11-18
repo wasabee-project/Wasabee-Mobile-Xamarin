@@ -21,11 +21,15 @@
 	  <None Remove="Platforms\Android\" />
 	  <None Remove="Platforms\iOS\" />
 	  <None Remove="VIewModels\" />
+	  <None Remove="Configuration\" />
+	  <None Remove="VIewModels\Login\" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Platforms\Android\" />
 	  <Folder Include="Platforms\iOS\" />
 	  <Folder Include="VIewModels\" />
+	  <Folder Include="Configuration\" />
+	  <Folder Include="VIewModels\Login\" />
 	</ItemGroup>
 </Project>

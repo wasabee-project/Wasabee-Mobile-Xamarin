@@ -4,5 +4,8 @@ namespace Rocks.Wasabee.Maui.Core;
 
 public interface INavigator
 {
-    Task Navigate<TViewModel>(object? parameter = null, bool isRootPage = false, bool isPopupPage = false, bool isSubscribeOnAppear = false, bool isFetchUI = false) where TViewModel : ViewModelBase;
+    void NavigateToRoot<TViewModel>() where TViewModel : ViewModelBase;
+
+    Task Navigate<TViewModel>(bool isAnimated = true) where TViewModel : ViewModelBase;
+    Task Navigate<TViewModel, TParameter>(TParameter parameter, bool isAnimated = true) where TViewModel : ParameterizableViewModel<TParameter> where TParameter : class;
 }

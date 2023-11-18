@@ -13,10 +13,13 @@ public class Navigator : INavigator
 	public Navigator(IServiceProvider serviceProvider)
 	{
         _serviceProvider = serviceProvider;
-	}
+    }
 
-    public async Task Navigate<TViewModel>(object? parameter = null, bool isRootPage = false, bool isPopupPage = false, bool isSubscribeOnAppear = false, bool isFetchUI = false) where TViewModel : ViewModelBase
+    public void NavigateToRoot<TViewModel>() where TViewModel : ViewModelBase
     {
+        if (Application.Current is null)
+            throw new Exception($"Application.Current is null");
+
         var viewModelType = typeof(TViewModel);
         var pageType = GetPageTypeForViewModel(viewModelType);
 
@@ -26,35 +29,19 @@ public class Navigator : INavigator
         try
         {
             var viewModel = _serviceProvider.GetService(viewModelType) as ViewModelBase;
-            var page = _serviceProvider.GetService(pageType) as ContentPageBase<TViewModel>;
+            var page = _serviceProvider.GetService(pageType) as ContentPage;
 
             if (viewModel == null)
                 throw new Exception($"{viewModelType} not registered in IServiceProvider");
             if (page == null)
                 throw new Exception($"{pageType} not registered in IServiceProvider");
 
-            if (isRootPage)
-                Application.Current.MainPage = new AppShell();
+            page.BindingContext = viewModel;
 
-            var appShell = Application.Current.MainPage as AppShell;
-            if (appShell != null)
-                await appShell.Navigation.PushAsync(page, true);
-            else
-            {
-                Application.Current.MainPage = new AppShell();
-                await appShell.Navigation.PushAsync(page, true);
-            }
+            Application.Current.MainPage = new NavigationPage(page);
 
-            if (!isFetchUI)
-                viewModel.Initialize(parameter);
-            else
-                viewModel.Initialize(parameter, page);
-
-            if (isSubscribeOnAppear)
-            {
-                page.Appearing -= new EventHandler(OnAppearing);
-                page.Appearing += new EventHandler(OnAppearing);
-            }
+            page.Appearing -= new EventHandler(OnAppearing);
+            page.Appearing += new EventHandler(OnAppearing);
         }
         catch (Exception ex)
         {
@@ -62,10 +49,90 @@ public class Navigator : INavigator
         }
     }
 
-    private void OnAppearing(object sender, EventArgs e)
+    public async Task Navigate<TViewModel>(bool isAnimated = true) where TViewModel : ViewModelBase
     {
-        var viewModel = ((Page)sender).BindingContext as ViewModelBase;
-        viewModel.OnAppearing();
+        if (Application.Current is null)
+            throw new Exception($"Application.Current is null");
+
+        var viewModelType = typeof(TViewModel);
+        var pageType = GetPageTypeForViewModel(viewModelType);
+
+        if (pageType == null)
+            throw new Exception($"Cannot locate page type for {viewModelType}");
+
+        try
+        {
+            var viewModel = _serviceProvider.GetService(viewModelType) as ViewModelBase;
+            var page = _serviceProvider.GetService(pageType) as ContentPage;
+
+            if (viewModel == null)
+                throw new Exception($"{viewModelType} not registered in IServiceProvider");
+            if (page == null)
+                throw new Exception($"{pageType} not registered in IServiceProvider");
+
+            page.BindingContext = viewModel;
+
+            if (Application.Current.MainPage is AppShell appShell)
+                await appShell.Navigation.PushAsync(page, isAnimated);
+            else if (Application.Current.MainPage is NavigationPage navigationPage)
+                await navigationPage.PushAsync(page, isAnimated);
+
+            page.Appearing -= new EventHandler(OnAppearing);
+            page.Appearing += new EventHandler(OnAppearing);
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+    public async Task Navigate<TViewModel, TParameter>(TParameter parameter, bool isAnimated = true)
+        where TViewModel : ParameterizableViewModel<TParameter>
+        where TParameter : class
+    {
+        if (Application.Current is null)
+            throw new Exception($"Application.Current is null");
+
+        var viewModelType = typeof(TViewModel);
+        var pageType = GetPageTypeForViewModel(viewModelType);
+
+        if (pageType == null)
+            throw new Exception($"Cannot locate page type for {viewModelType}");
+
+        try
+        {
+            var viewModel = _serviceProvider.GetService(viewModelType) as ParameterizableViewModel<TParameter>;
+            var page = _serviceProvider.GetService(pageType) as ContentPage;
+
+            if (viewModel == null)
+                throw new Exception($"{viewModelType} not registered in IServiceProvider");
+            if (page == null)
+                throw new Exception($"{pageType} not registered in IServiceProvider");
+
+            page.BindingContext = viewModel;
+
+            if (Application.Current.MainPage is AppShell appShell)
+                await appShell.Navigation.PushAsync(page, isAnimated);
+            else if (Application.Current.MainPage is NavigationPage navigationPage)
+                await navigationPage.PushAsync(page, isAnimated);
+            
+            viewModel.Initialize(parameter);
+
+            page.Appearing -= new EventHandler(OnAppearing);
+            page.Appearing += new EventHandler(OnAppearing);
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+    private void OnAppearing(object? sender, EventArgs e)
+    {
+        if (sender is Page page && page.BindingContext is ViewModelBase viewModelBase)
+        {
+            viewModelBase.OnAppearing();
+        }
     }
 
     private static Type? GetPageTypeForViewModel(Type viewModelType)

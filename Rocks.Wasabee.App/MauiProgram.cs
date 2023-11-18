@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Rocks.Wasabee.App.Views;
 using Rocks.Wasabee.Maui.Core;
+using Rocks.Wasabee.Maui.Core.Configuration;
 
 namespace Rocks.Wasabee.App;
 
@@ -11,7 +12,11 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<WasabeeApp>()
+			.RegisterCrossConcerns()
+            .RegisterViewModels()
+            .RegisterServices()
+            .RegisterViews()
+            .UseMauiApp<WasabeeApp>()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -22,26 +27,28 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
+        return builder.Build();
+    }
+
+    public static MauiAppBuilder RegisterCrossConcerns(this MauiAppBuilder builder)
+    {
+        builder.Services.AddSingleton<WasabeeApp>();
         builder.Services.AddSingleton<INavigator, Navigator>();
 
-		builder
-			.RegisterViewModels()
-			.RegisterViews();
+        return builder;
+    }
 
-        return builder.Build();
-	}
+    public static MauiAppBuilder RegisterViews(this MauiAppBuilder builder)
+    {
+        var currentAssembly = Assembly.GetExecutingAssembly();
 
-	public static MauiAppBuilder RegisterViews(this MauiAppBuilder builder)
-	{
-		var currentAssembly = Assembly.GetExecutingAssembly();
+        // Transient objects lifetime services are created each time they are requested.
+        // This lifetime works best for lightweight, stateless services.
+        foreach (var type in currentAssembly.DefinedTypes.Where(e => e.IsSubclassOf(typeof(ContentPage))))
+        {
+            builder.Services.AddTransient(type.AsType());
+        }
 
-		// Transient objects lifetime services are created each time they are requested.
-		// This lifetime works best for lightweight, stateless services.
-		foreach (var type in currentAssembly.DefinedTypes.Where(e => e.IsAbstract is false && e.GetInterface(nameof(IPage)) is not null))
-		{
-			builder.Services.AddTransient(type.AsType());
-		}
-
-		return builder;
+        return builder;
     }
 }
