@@ -1,3 +1,4 @@
+using Firebase.CloudMessaging;
 using Foundation;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
@@ -85,7 +86,7 @@ namespace Rocks.Wasabee.Mobile.iOS
             // TODO: Handle data of notification
 
             // With swizzling disabled you must let Messaging know about the message, for Analytics
-            //Messaging.SharedInstance.AppDidReceiveMessage (userInfo);
+            Messaging.SharedInstance.AppDidReceiveMessage(userInfo);
 
             // TODO Handle message
 
