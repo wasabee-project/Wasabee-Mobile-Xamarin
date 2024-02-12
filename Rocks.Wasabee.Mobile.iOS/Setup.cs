@@ -10,7 +10,7 @@ using Rg.Plugins.Popup.Services;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Infra.LocalNotification;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
-//using Rocks.Wasabee.Mobile.Core.Messages;
+using Rocks.Wasabee.Mobile.Core.Messages;
 using Rocks.Wasabee.Mobile.Core.Services;
 using Rocks.Wasabee.Mobile.Core.Settings.Application;
 using Rocks.Wasabee.Mobile.Core.Ui;
@@ -70,8 +70,7 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.RegisterType<Core.Infra.HttpClientFactory.IFactory, iOS.Infra.HttpClientFactory.Factory>();
 
             Mvx.IoCProvider.RegisterSingleton(UserDialogs.Instance);
-            //Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
-            Mvx.IoCProvider.RegisterType<IFirebaseService, DummyFirebaseService>();
+            Mvx.IoCProvider.RegisterType<IFirebaseService, FirebaseService>();
 
             Mvx.IoCProvider.RegisterSingleton(PopupNavigation.Instance);
             Mvx.IoCProvider.RegisterType<IDialogNavigationService, DialogNavigationService>();
@@ -83,7 +82,7 @@ namespace Rocks.Wasabee.Mobile.iOS
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ILoggingService, LoggingService>();
 
             //SetupGeolocationTrackingMessage();
-            //SetupFcmServiceMessage();
+            SetupFcmServiceMessage();
 
             return new CoreApp();
         }
@@ -114,13 +113,13 @@ namespace Rocks.Wasabee.Mobile.iOS
             });
         }*/
 
-        /*private void SetupFcmServiceMessage()
+        private void SetupFcmServiceMessage()
         {
             _tokenFcm ??= Mvx.IoCProvider.Resolve<IMvxMessenger>().Subscribe<UserLoggedInMessage>(msg =>
             {
                 MessagingService.Instance.Initialize();
             });
-        }*/
+        }
 
         private static void SetupAppSettings()
         {

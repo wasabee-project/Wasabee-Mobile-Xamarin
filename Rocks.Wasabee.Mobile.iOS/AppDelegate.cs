@@ -1,9 +1,11 @@
+using Firebase.CloudMessaging;
 using Foundation;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Ios.Core;
 using Rocks.Wasabee.Mobile.Core;
 using Rocks.Wasabee.Mobile.Core.Infra.Logger;
 using Rocks.Wasabee.Mobile.Core.Ui;
+using Rocks.Wasabee.Mobile.iOS.Infra.Firebase;
 using System;
 using System.Threading.Tasks;
 using UIKit;
@@ -77,14 +79,14 @@ namespace Rocks.Wasabee.Mobile.iOS
             return base.OpenUrl(app, url, options);
         }
 
-        /*public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
+        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
         {
             // If you are receiving a notification message while your app is in the background,
             // this callback will not be fired till the user taps on the notification launching the application.
             // TODO: Handle data of notification
 
             // With swizzling disabled you must let Messaging know about the message, for Analytics
-            //Messaging.SharedInstance.AppDidReceiveMessage (userInfo);
+            Messaging.SharedInstance.AppDidReceiveMessage(userInfo);
 
             // TODO Handle message
 
@@ -95,6 +97,6 @@ namespace Rocks.Wasabee.Mobile.iOS
             completionHandler(UIBackgroundFetchResult.NewData);
         }
 
-        void LogInformation(string methodName, object information) => Console.WriteLine($"\nMethod name: {methodName}\nInformation: {information}");*/
+        void LogInformation(string methodName, object information) => Console.WriteLine($"\nMethod name: {methodName}\nInformation: {information}");
     }
 }
