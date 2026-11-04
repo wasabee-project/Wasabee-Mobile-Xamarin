@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:xaml="clr-namespace:Rocks.Wasabee.Maui.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Maui.Core"
+                    x:Class="Rocks.Wasabee.Maui.Themes.BaseStyle">
+
+    <!-- xmlns:controls="clr-namespace:Rocks.Wasabee.Mobile.Core.Ui.Controls;assembly=Rocks.Wasabee.Mobile.Core.Ui" -->
+
+    <!-- COLORS -->
+    <Color x:Key="PrimaryBlue">#3788D8</Color>
+    <Color x:Key="PrimaryOrange">#F59100</Color>
+    <Color x:Key="PrimaryOrangeDark">#EE7F01</Color>
+
+    <Color x:Key="LightGray">#F0F0F0</Color>
+    <Color x:Key="BackgroundGray">#F5F5F5</Color>
+    <Color x:Key="PrimaryGray">#9E9E9E</Color>
+    <Color x:Key="DarkGray">#4E5B59</Color>
+    <Color x:Key="GoogleSignInGray">#757575</Color>
+
+    <Color x:Key="PortalCommentColor">#0078A8</Color>
+
+    <!-- Main colors palette : https://coolors.co/24752c-3ba345-f6f9f1-d6300a-090c02 -->
+    <Color x:Key="PrimaryGreen">#3BA345</Color>
+    <Color x:Key="PrimaryGreenDark">#24752C</Color>
+    <Color x:Key="PrimaryWhite">#F6F9F1</Color>
+    <Color x:Key="AccentColor">#D6300A</Color>
+    <Color x:Key="PrimaryBlack">#090C02</Color>
+    
+    <!--Labels-->
+    
+    <Style x:Key="WasabeeStyleMenuTitre" TargetType="Label">
+        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="TextColor" Value="White"/>
+    </Style>
+    
+    <Style x:Key="WasabeeStyleInfoDivers" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource LightGray}" />
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="LineBreakMode" Value="WordWrap"/>
+    </Style>
+    
+    <Style x:Key="WasabeeStyleAlertText" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryOrange}" />
+    </Style>
+
+    <!--<Style TargetType="controls:LinkLabel">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryBlue}" />
+    </Style>-->
+
+    <!--CheckBoxes-->
+    <Style TargetType="CheckBox">
+        <Setter Property="Color" Value="{StaticResource PrimaryGreen}"/>
+    </Style>
+    
+    <!--Boutons-->
+    <Style TargetType="Button" x:Key="WasabeeStyleMainActionButton">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryGreen}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+    <Style TargetType="Button" x:Key="WasabeeStyleSecondaryActionButton">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor"  Value="{StaticResource PrimaryOrange}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+
+    <!--Valider/Accepter-->
+    <Style TargetType="Button" x:Key="WasabeeStyleValidateButton" BasedOn="{StaticResource WasabeeStyleMainActionButton}">
+        <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Validate}"/>
+    </Style>
+    <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningNextButton" BasedOn="{StaticResource WasabeeStyleValidateButton}">
+        <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Next}"/>
+    </Style>
+    <!--Annuler-->
+    <Style TargetType="Button" x:Key="WasabeeStyleCancelButton" >
+        <Setter Property="Text" Value="{xaml:Translate Global_Cancel}"/>
+        <Setter Property="TextColor" Value="{StaticResource PrimaryGreen}"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="BorderColor" Value="{StaticResource PrimaryGreen}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+    <!--Refuser-->
+    <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningCancelButton" >
+        <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Cancel}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+    <!--Connexion-->
+    <Style TargetType="Button" x:Key="GoogleSignInStyleButton">
+        <Setter Property="Text" Value="Google"/>
+        <Setter Property="TextColor" Value="{StaticResource GoogleSignInGray}"/>
+        <Setter Property="ImageSource" Value="g_logo.png"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="BorderColor" Value="{StaticResource LightGray}"/>
+        <Setter Property="BackgroundColor" Value="White"/>
+    </Style>
+
+
+    <!--MenuList-->
+    <Style TargetType="StackLayout" x:Key="WasabeeMasterDetailMenuStyle">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+</ResourceDictionary>

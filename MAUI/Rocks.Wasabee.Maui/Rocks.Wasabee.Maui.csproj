@@ -1,0 +1,123 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+		<SingleProject>true</SingleProject>
+		<OutputType>Exe</OutputType>
+		<RootNamespace>Rocks.Wasabee.Maui</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<!-- Enable XAML source generation for faster build times and improved performance.
+		     This generates C# code from XAML at compile time instead of runtime inflation.
+		     To disable, remove this line.
+		     For individual files, you can override by setting Inflator metadata:
+		       <MauiXaml Update="MyPage.xaml" Inflator="Default" /> (reverts to defaults: Runtime for Debug, XamlC for Release)
+		       <MauiXaml Update="MyPage.xaml" Inflator="Runtime" /> (force runtime inflation) -->
+		<MauiXamlInflator>SourceGen</MauiXamlInflator>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">13.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.120" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.14" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="16.4.0" />
+		<PackageReference Include="Refit.Reflection" Version="16.4.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Rocks.Wasabee.Core\Rocks.Wasabee.Core.csproj" />
+		<ProjectReference Include="..\Rocks.Wasabee.Maui.Core\Rocks.Wasabee.Maui.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+
+		<!-- Splash Screen 
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />-->
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'net10.0-android'">
+			<Choose>
+				<When Condition="'$(Configuration)' == 'Debug'">
+					<ItemGroup>
+						<GoogleServicesJson Include="Platforms\Android\google-services.json" />
+					</ItemGroup>
+
+					<PropertyGroup>
+						<ApplicationId>rocks.wasabee.mobile.dev</ApplicationId>
+						<ApplicationTitle>WasbDev</ApplicationTitle>
+					</PropertyGroup>
+				</When>
+				<When Condition="'$(Configuration)' == 'Release'">
+					<PropertyGroup>
+						<ApplicationId>rocks.wasabee.mobile.droid</ApplicationId>
+						<ApplicationTitle>Wasabee</ApplicationTitle>
+					</PropertyGroup>
+				</When>
+			</Choose>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net10.0-ios'">
+			<Choose>
+				<When Condition="'$(Configuration)' == 'Debug'">
+					<PropertyGroup>
+						<ApplicationId>rocks.wasabee.mobile.dev</ApplicationId>
+						<ApplicationTitle>WasbDev</ApplicationTitle>
+					</PropertyGroup>
+				</When>
+				<When Condition="'$(Configuration)' == 'Release'">
+					<PropertyGroup>
+						<ApplicationId>rocks.wasabee.mobile.touch</ApplicationId>
+						<ApplicationTitle>Wasabee</ApplicationTitle>
+					</PropertyGroup>
+				</When>
+			</Choose>
+		</When>
+	</Choose>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Themes\BaseStyle.xaml.cs">
+		  <DependentUpon>BaseStyle.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Themes\LightTheme.xaml.cs">
+		  <DependentUpon>LightTheme.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Themes\DarkTheme.xaml.cs">
+		  <DependentUpon>DarkTheme.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Themes\BaseStyle.xaml" />
+		<EmbeddedResource Include="Resources\Themes\DarkTheme.xaml" />
+		<EmbeddedResource Include="Resources\Themes\LightTheme.xaml" />
+
+		<EmbeddedResource Update="Resources\Themes\BaseStyle.xaml">
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Themes\LightTheme.xaml">
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Themes\DarkTheme.xaml">
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
+</Project>
