@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Rocks.Wasabee.Core.Adapters;
 using Rocks.Wasabee.Core.Infra.Constants;
+using Rocks.Wasabee.Core.Infra.Databases;
 using Rocks.Wasabee.Core.Infra.Security;
 using Rocks.Wasabee.Core.Models;
 using Rocks.Wasabee.Core.Models.AuthTokens.Google;
@@ -25,8 +26,13 @@ namespace Rocks.Wasabee.Core.ViewModels
         private readonly IAuthentificationService _authentificationService;
         private readonly ISecureStorageAdapter _secureStorage;
         private readonly IPreferencesAdapter _preferences;
+        private readonly IToastAdapter _toast;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
+        private readonly UsersDatabase _usersDatabase;
+        private readonly AgentsDatabase _agentsDatabase;
+        private readonly TeamsDatabase _teamsDatabase;
+        private readonly OperationsDatabase _operationsDatabase;
 
         private bool _isBypassingGoogleAndWasabeeLogin = false;
         private bool _isUsingOneTimeToken = false;
@@ -36,15 +42,25 @@ namespace Rocks.Wasabee.Core.ViewModels
             IAuthentificationService authentificationService,
             ISecureStorageAdapter secureStorage,
             IPreferencesAdapter preferences,
+            IToastAdapter toast,
             IUserSettingsService userSettingsService,
-            WasabeeApiV1Service wasabeeApiV1Service)
+            WasabeeApiV1Service wasabeeApiV1Service,
+            UsersDatabase usersDatabase,
+            AgentsDatabase agentsDatabase,
+            TeamsDatabase teamsDatabase,
+            OperationsDatabase operationsDatabase)
         {
             _appSettings = appSettings;
             _authentificationService = authentificationService;
             _secureStorage = secureStorage;
             _preferences = preferences;
+            _toast = toast;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
+            _usersDatabase = usersDatabase;
+            _agentsDatabase = agentsDatabase;
+            _teamsDatabase = teamsDatabase;
+            _operationsDatabase = operationsDatabase;
         }
 
         #region Properties
@@ -112,7 +128,7 @@ namespace Rocks.Wasabee.Core.ViewModels
             IsLoading = true;
             LoadingStepLabel = Strings.SignIn_Label_LoadingStep_LoggingIn;
 
-            //await _usersDatabase.DeleteAllData();
+            await _usersDatabase.DeleteAllData();
 
             var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
             if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
@@ -209,7 +225,7 @@ namespace Rocks.Wasabee.Core.ViewModels
                 var wasabeeUserModel = await _authentificationService.WasabeeOneTimeTokenLoginAsync(OneTimeToken);
                 if (wasabeeUserModel != null)
                 {
-                    //await _usersDatabase.SaveUserModel(wasabeeUserModel);
+                    await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
                     _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
                     _userSettingsService.SaveIngressName(wasabeeUserModel.Name);
@@ -317,7 +333,7 @@ namespace Rocks.Wasabee.Core.ViewModels
                 var wasabeeUserModel = await _authentificationService.WasabeeLoginAsync(token);
                 if (wasabeeUserModel != null)
                 {
-                    //await _usersDatabase.SaveUserModel(wasabeeUserModel);
+                    await _usersDatabase.SaveUserModel(wasabeeUserModel);
 
                     _userSettingsService.SaveLoggedUserGoogleId(wasabeeUserModel.GoogleId);
                     _userSettingsService.SaveIngressName(wasabeeUserModel.Name);
@@ -376,7 +392,7 @@ namespace Rocks.Wasabee.Core.ViewModels
                     var userModel = await _wasabeeApiV1Service.User_GetUserInformations();
                     if (userModel != null)
                     {
-                        //await _usersDatabase.SaveUserModel(userModel);
+                        await _usersDatabase.SaveUserModel(userModel);
                         await FinishLogin(userModel, LoginMethod.Bypass);
                     }
                     else
@@ -441,7 +457,7 @@ namespace Rocks.Wasabee.Core.ViewModels
             }
 
             LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_WelcomeAgent, userModel.Name);
-            await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime * 2));
+            await Task.Delay(TimeSpan.FromMilliseconds(MessageDisplayTime * 4));
 
             try
             {
@@ -453,20 +469,20 @@ namespace Rocks.Wasabee.Core.ViewModels
                 }
                 else
                 {
-                    await PullDataFromServer(userModel).ContinueWith(async task =>
+                    await PullDataFromServer(userModel).ContinueWith(_ =>
                     {
-                        var shouldGoToTelegramLinking = false;
-                        if (SelectedServerItem.Server is not WasabeeServer.Undefined)
-                            if (userModel.Telegram is null || userModel.Telegram.Verified is false)
-                                shouldGoToTelegramLinking = true;
+                        //var shouldGoToTelegramLinking = false;
+                        //if (SelectedServerItem.Server is not WasabeeServer.Undefined)
+                        //    if (userModel.Telegram is null || userModel.Telegram.Verified is false)
+                        //        shouldGoToTelegramLinking = true;
 
                         //await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
 
-                        if (shouldGoToTelegramLinking)
-                        {
-                            //    await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
-                            //        new TelegramLinkingNavigationParameter(userModel));
-                        }
+                        //if (shouldGoToTelegramLinking)
+                        //{
+                        //    await _navigationService.Navigate<TelegramLinkingViewModel, TelegramLinkingNavigationParameter, TelegramLinkingCloseResult>(
+                        //        new TelegramLinkingNavigationParameter(userModel));
+                        //}
                     });
 
                 }
@@ -485,8 +501,8 @@ namespace Rocks.Wasabee.Core.ViewModels
             LoadingStepLabel = Strings.SignIn_Label_LoadingStep_LoadingData + "\r\n" +
                                Strings.SignIn_Label_PleaseWait;
 
-            //await _teamsDatabase.DeleteAllData();
-            //await _agentsDatabase.DeleteAllData();
+            await _teamsDatabase.DeleteAllData();
+            await _agentsDatabase.DeleteAllData();
 
             if (userModel.Teams != null && userModel.Teams.Any())
             {
@@ -495,14 +511,14 @@ namespace Rocks.Wasabee.Core.ViewModels
                 if (teamIds.Count == 1)
                 {
                     var team = await _wasabeeApiV1Service.Teams_GetTeam(teamIds.First());
-                    //if (team != null)
-                    //    await _teamsDatabase.SaveTeamModel(team);
+                    if (team != null)
+                        await _teamsDatabase.SaveTeamModel(team);
                 }
                 else
                 {
                     var teams = await _wasabeeApiV1Service.Teams_GetTeams(new GetTeamsQuery(teamIds));
-                    //if (teams.Any())
-                    //    await _teamsDatabase.SaveTeamsModels(teams);
+                    if (teams.Any())
+                        await _teamsDatabase.SaveTeamsModels(teams);
                 }
             }
 
@@ -524,7 +540,7 @@ namespace Rocks.Wasabee.Core.ViewModels
                 var op = await _wasabeeApiV1Service.Operations_GetOperation(selectedOp);
                 if (op != null)
                 {
-                    //await _operationsDatabase.SaveOperationModel(op);
+                    await _operationsDatabase.SaveOperationModel(op);
                 }
                 else
                 {
@@ -533,23 +549,30 @@ namespace Rocks.Wasabee.Core.ViewModels
                     selectedOp = string.Empty;
                 }
 
-                var opsToLoad = opsIds.Except(new[] { selectedOp }).ToList();
+                var allOps = opsIds.Except([selectedOp]).ToList();
+                var upToDateOps = new List<string>();
+                foreach (var id in allOps)
+                {
+                    var localOp = await _operationsDatabase.GetOperationModel(id);
+                    var userModelOp = userModel.Ops.FirstOrDefault(x => x.Id.Equals(id));
+                    if (userModelOp == null || localOp == null)
+                        continue;
+
+                    if (localOp.Modified.Equals(userModelOp.Modified) || localOp.LastEditId.Equals(userModelOp.LastEditId))
+                    {
+                        upToDateOps.Add(id);
+                    }
+                }
+
+                var opsToLoad = allOps.Except(upToDateOps).ToList();
                 if (opsToLoad.Any())
                 {
                     _ = Task.Factory.StartNew(async () =>
                     {
-                        //_userDialogs.Toast(Strings.Toasts_LoadingOpsInBackground);
+                        _toast.Show(Strings.Toasts_LoadingOpsInBackground);
 
                         foreach (var id in opsToLoad)
                         {
-                            //var localOp = await _operationsDatabase.GetOperationModel(id);
-                            //var userModelOp = userModel.Ops.FirstOrDefault(x => x.Id.Equals(id));
-                            //if (userModelOp != null && localOp != null)
-                            //{
-                            //    if (localOp.Modified.Equals(userModelOp.Modified) || localOp.LastEditId.Equals(userModelOp.LastEditId))
-                            //        continue;
-                            //}
-
                             op = await _wasabeeApiV1Service.Operations_GetOperation(id);
                             if (op != null)
                             {
@@ -560,13 +583,17 @@ namespace Rocks.Wasabee.Core.ViewModels
                                     _preferences.Set(UserSettingsKeys.SelectedOp, selectedOp);
                                 }
 
-                                //await _operationsDatabase.SaveOperationModel(op);
+                                await _operationsDatabase.SaveOperationModel(op);
                                 //_messenger.Publish(new NewOpAvailableMessage(this));
                             }
                         }
 
-                        //_userDialogs.Toast(Strings.Toasts_LoadingOpsSuccess);
+                        _toast.Show(Strings.Toasts_LoadingOpsSuccess);
                     }).ConfigureAwait(false);
+                }
+                else
+                {
+                    _toast.Show(Strings.Toasts_LoadingOpsSuccess);
                 }
             }
         }

@@ -20,7 +20,7 @@ namespace Rocks.Wasabee.Core.Models.Agent
         public int Level { get; set; }
 
         [JsonPropertyName("pic")]
-        public string ProfileImage { get; set; }
+        public string Pic { get; set; }
 
         [JsonPropertyName("blacklisted")]
         public bool Blacklisted { get; set; }

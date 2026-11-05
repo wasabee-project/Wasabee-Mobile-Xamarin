@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
 using Refit;
 using Rocks.Wasabee.Core.Adapters;
+using Rocks.Wasabee.Core.Infra.Databases;
 using Rocks.Wasabee.Core.Infra.Security;
 using Rocks.Wasabee.Core.Services;
 using Rocks.Wasabee.Core.Settings.Application;
@@ -43,6 +44,7 @@ namespace Rocks.Wasabee.Maui
                 .RegisterAdapters()
                 .RegisterProviders()
                 .RegisterServices()
+                .RegisterDatabases()
                 .RegisterViewModels();
 
 #if DEBUG
@@ -80,7 +82,7 @@ namespace Rocks.Wasabee.Maui
         private static MauiAppBuilder ConfigureWasabeeRefitHttpClient(this MauiAppBuilder builder)
         {
             builder.Services.AddTransient<WasabeeTokenHandler>();
-            builder.Services.AddRefitClient<IWasabeeApiV1>()
+            builder.Services.AddRefitClient<IWasabeeApiV1>(new RefitSettings { ContentSerializer = new SystemTextJsonContentSerializer() })
                 .ConfigureHttpClient((_, client) =>
                 {
                     // Required by Refit to start, the actual request URI will be set by the WasabeeTokenHandler based on the selected server.
@@ -95,6 +97,8 @@ namespace Rocks.Wasabee.Maui
         {
             builder.Services.AddSingleton<ISecureStorageAdapter, SecureStorageAdapter>();
             builder.Services.AddSingleton<IPreferencesAdapter, PreferencesAdapter>();
+            builder.Services.AddSingleton<IFileSystemAdapter, FileSystemAdapter>();
+            builder.Services.AddSingleton<IToastAdapter, ToastAdapter>();
 
             return builder;
         }
@@ -112,6 +116,20 @@ namespace Rocks.Wasabee.Maui
         private static MauiAppBuilder RegisterProviders(this MauiAppBuilder builder)
         {
             builder.Services.AddSingleton<ILoginProvider, LoginProvider>();
+
+            return builder;
+        }
+
+        private static MauiAppBuilder RegisterDatabases(this MauiAppBuilder builder)
+        {
+            builder.Services.AddSingleton<UsersDatabase>();
+
+            builder.Services.AddSingleton<MarkersDatabase>();
+            builder.Services.AddSingleton<LinksDatabase>();
+            builder.Services.AddSingleton<OperationsDatabase>();
+
+            builder.Services.AddSingleton<AgentsDatabase>();
+            builder.Services.AddSingleton<TeamsDatabase>();
 
             return builder;
         }

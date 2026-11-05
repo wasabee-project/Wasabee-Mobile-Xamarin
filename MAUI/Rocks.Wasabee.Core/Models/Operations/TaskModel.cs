@@ -9,10 +9,10 @@ namespace Rocks.Wasabee.Core.Models.Operations
         public string Id { get; set; }
 
         [JsonPropertyName("assignments")]
-        public List<string> Assignments { get; set; } = new();
+        public List<string>? Assignments { get; set; }
 
         [JsonPropertyName("dependsOn")]
-        public List<string> DependsOn { get; set; } = new();
+        public List<string>? DependsOn { get; set; }
 
         [JsonPropertyName("zone")]
         public int Zone { get; set; }

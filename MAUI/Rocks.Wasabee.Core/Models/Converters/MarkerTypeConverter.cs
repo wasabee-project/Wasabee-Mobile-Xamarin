@@ -35,10 +35,5 @@ namespace Rocks.Wasabee.Core.Models.Converters
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(string);
-        }
     }
 }

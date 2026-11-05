@@ -18,28 +18,28 @@ namespace Rocks.Wasabee.Core.Models.Operations
         public string Color { get; set; }
 
         [JsonPropertyName("opportals")]
-        public List<PortalModel> Portals { get; set; }
+        public List<PortalModel>? Portals { get; set; }
 
         [JsonPropertyName("anchors")]
-        public List<string> Anchors { get; set; }
+        public List<string>? Anchors { get; set; }
 
         [JsonPropertyName("links")]
-        public List<LinkModel> Links { get; set; }
+        public List<LinkModel>? Links { get; set; }
 
         [JsonPropertyName("blockers")]
-        public List<BlockerModel> Blockers { get; set; }
+        public List<BlockerModel>? Blockers { get; set; }
 
         [JsonPropertyName("markers")]
-        public List<MarkerModel> Markers { get; set; }
+        public List<MarkerModel>? Markers { get; set; }
 
         [JsonPropertyName("teamlist")]
-        public List<TeamModel> TeamList { get; set; }
+        public List<TeamModel>? TeamList { get; set; }
 
         [JsonPropertyName("keysonhand")]
-        public List<KeysOnHandModel> KeysOnHand { get; set; }
+        public List<KeysOnHandModel>? KeysOnHand { get; set; }
 
         [JsonPropertyName("zones")]
-        public List<ZoneModel> Zones { get; set; }
+        public List<ZoneModel>? Zones { get; set; }
 
         [JsonPropertyName("comment")]
         public string Comment { get; set; }
@@ -91,9 +91,6 @@ namespace Rocks.Wasabee.Core.Models.Operations
 
         [JsonPropertyName("mu")]
         public int MusCaptured { get; set; }
-
-        [JsonPropertyName("changed")]
-        public bool Changed { get; set; }
     }
 
     public class MarkerModel : TaskModel
@@ -172,7 +169,7 @@ namespace Rocks.Wasabee.Core.Models.Operations
         public string Color { get; set; }
 
         [JsonPropertyName("points")]
-        public List<ZonePointModel> Points { get; set; }
+        public List<ZonePointModel>? Points { get; set; }
     }
 
     public class ZonePointModel : BaseModel
@@ -181,10 +178,10 @@ namespace Rocks.Wasabee.Core.Models.Operations
         public int Position { get; set; }
 
         [JsonPropertyName("lat")]
-        public string Lat { get; set; }
+        public double Lat { get; set; }
 
         [JsonPropertyName("lng")]
-        public string Lng { get; set; }
+        public double Lng { get; set; }
     }
 
     public enum MarkerType
