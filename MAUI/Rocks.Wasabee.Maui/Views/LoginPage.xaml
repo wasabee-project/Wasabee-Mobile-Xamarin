@@ -14,216 +14,248 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <VerticalStackLayout Padding="20"
-                             VerticalOptions="Center"
-                             Spacing="50">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <!--<iconize:IconButton RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-80}"
-                                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Y, Factor=0, Constant=10}"
-                                Text="mdi-cogs" BackgroundColor="Transparent" FontSize="24"
-                                TextColor="{DynamicResource PrimaryTextColor}"
-                                IsVisible="{Binding IsSettingButtonVisible}"
-                                Command="{Binding ShowSettingCommand}"/>-->
+            <VerticalStackLayout Grid.Row="0" 
+                                 Padding="0,100,0,0" 
+                                 Spacing="50">
 
-            <Image HeightRequest="50"
-                   Source="wasabee.png" />
+                <Image HeightRequest="50"
+                       Source="wasabee.png" />
 
-            <Label x:Name="TitleLabel"
-                   Text="Wasabee"
-                   HorizontalTextAlignment="Center"
-                   FontSize="30" />
+                <Label x:Name="TitleLabel"
+                       Text="Wasabee"
+                       HorizontalTextAlignment="Center"
+                       FontSize="35" />
 
-            <!-- Loader and login step -->
-            <VerticalStackLayout IsVisible="{Binding IsLoading}">
-                <ActivityIndicator Color="{DynamicResource PrimaryGreen}"
-                                   IsRunning="True"
-                                   HeightRequest="80"/>
-                <Label HorizontalTextAlignment="Center"
-                       HorizontalOptions="FillAndExpand"
-                       VerticalOptions="CenterAndExpand"
-                       Text="{Binding LoadingStepLabel}"/>
             </VerticalStackLayout>
 
+            <VerticalStackLayout Grid.Row="1" 
+                                 VerticalOptions="Center"
+                                 Padding="20,0">
 
-            <!-- Login buttons -->
-            <VerticalStackLayout IsVisible="{Binding IsLoginVisible}"
-                                 VerticalOptions="Center">
+                <!-- Loader and login step -->
+                <VerticalStackLayout IsVisible="{Binding IsLoading}">
+                    <ActivityIndicator Color="{DynamicResource PrimaryGreen}"
+                                           IsRunning="True"
+                                           HeightRequest="80"/>
+                    <Label HorizontalTextAlignment="Center"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                           Text="{Binding LoadingStepLabel}"/>
+                </VerticalStackLayout>
 
-                <Frame CornerRadius="2"
-                       HorizontalOptions="FillAndExpand" 
-                       VerticalOptions="EndAndExpand"
-                       BackgroundColor="#4285F4" 
-                       Margin="10"
-                       Padding="1"
-                       HasShadow="false"
-                       IsVisible="{Binding IsGButtonVisible}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                        </Grid.RowDefinitions>
 
-                        <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="2"
-                               HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
-                               BackgroundColor="White" HeightRequest="50" WidthRequest="50">
-                            <Image Source="g_logo.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
-                        </Frame>
-                        <Label Text="{xaml:Translate SignIn_Button_WithGoogle}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
-                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
-                               FontSize="18" TextColor="White" FontAttributes="Bold" />
+                <!-- Login buttons -->
+                <Grid IsVisible="{Binding IsLoginVisible}">
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ConnectUserCommand}" />
-                        </Grid.GestureRecognizers>
-                    </Grid>
-                </Frame>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="45" />
+                        <RowDefinition Height="65" />
+                    </Grid.RowDefinitions>
 
-                <Frame CornerRadius="2"
-                       HorizontalOptions="FillAndExpand" 
-                       VerticalOptions="EndAndExpand"
-                       BackgroundColor="#3BA345" 
-                       Margin="10"
-                       Padding="1"
-                       HasShadow="false"
-                       IsVisible="{Binding IsOTTButtonVisible}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                        </Grid.RowDefinitions>
+                    <Border Grid.Row="0"
+                            BackgroundColor="{DynamicResource GoogleSignInBlue}"
+                            StrokeShape="RoundRectangle 2"
+                            IsVisible="{Binding IsGButtonVisible}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
 
-                        <Frame Grid.Column="0" Grid.Row="0" Margin="0" Padding="0" CornerRadius="2"
-                               HasShadow="false" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
-                               BackgroundColor="White" HeightRequest="50" WidthRequest="50">
-                            <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
-                        </Frame>
-                        <Label Text="{xaml:Translate SignIn_Button_OneTimeToken}" Grid.Column="1" Grid.Row="0" Margin="20, 5, 20, 5"
-                               VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" 
-                               FontSize="18" TextColor="White" FontAttributes="Bold" />
+                            <Border Grid.Column="0" Grid.Row="0" Margin="0" Padding="0"
+                                    StrokeShape="RoundRectangle 2"
+                                    BackgroundColor="White" HeightRequest="50" WidthRequest="50">
+                                <Image Source="g_logo.png" HeightRequest="24" WidthRequest="24" />
+                            </Border>
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding UseOneTimeTokenCommand}" />
-                        </Grid.GestureRecognizers>
-                    </Grid>
-                </Frame>
+                            <Label Text="{xaml:Translate SignIn_Button_WithGoogle}" Grid.Column="1" Grid.Row="0" Margin="30, 5"
+                                   VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                   FontSize="18" TextColor="White" FontAttributes="Bold" />
 
-                <Label HorizontalTextAlignment="Center"
-                       IsVisible="{Binding IsAuthInError}"
-                       Text="{Binding ErrorMessage}"
-                       Margin="0, 20, 0, 0"
-                       TextColor="{DynamicResource AccentColor}" />
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ConnectUserCommand}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Border>
 
-                <!--<Label HorizontalTextAlignment="Center"
-                       IsVisible="{Binding IsConnected, Converter={StaticResource BoolNegateConverter}}"
-                       Text="{xaml:Translate SignIn_Label_NoInternet}"
-                       Margin="0, 20, 0, 0"
-                       TextColor="{DynamicResource AccentColor}" />-->
-            </VerticalStackLayout>
+                    <Border Grid.Row="1"
+                            BackgroundColor="{DynamicResource PrimaryGreen}"
+                            StrokeShape="RoundRectangle 2"
+                            IsVisible="{Binding IsOTTButtonVisible}"
+                            Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
 
-            <!-- One Time Token input -->
-            <VerticalStackLayout IsVisible="{Binding IsEnteringToken}">
-                <Label HorizontalTextAlignment="Center"
-                       HorizontalOptions="FillAndExpand"
-                       VerticalOptions="CenterAndExpand"
-                       Text="{xaml:Translate SignIn_Label_EnterToken}"
-                       FontSize="Large"/>
+                            <Border Grid.Column="0" Grid.Row="0" Margin="0" Padding="0"
+                                    StrokeShape="RoundRectangle 2"
+                                    BackgroundColor="White" HeightRequest="50" WidthRequest="50">
+                                <Image Source="wasabee.png" HeightRequest="24" WidthRequest="24" />
+                            </Border>
 
-                <Entry Text="{Binding OneTimeToken}"/>
-                <Button Style="{DynamicResource WasabeeStyleValidateButton}"
-                        Command="{Binding ValidateOneTimeTokenCommand}"/>
-            </VerticalStackLayout>
+                            <Label Text="{xaml:Translate SignIn_Button_OneTimeToken}" Grid.Column="1" Grid.Row="0" Margin="30, 5"
+                                   VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                                   FontSize="18" TextColor="White" FontAttributes="Bold" />
 
-            <!-- Server selection -->
-            <VerticalStackLayout IsVisible="{Binding IsSelectingServer}">
-                <Label HorizontalTextAlignment="Center"
-                       HorizontalOptions="FillAndExpand"
-                       VerticalOptions="CenterAndExpand"
-                       Text="{Binding LoadingStepLabel}"
-                       FontSize="Large"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding UseOneTimeTokenCommand}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Border>
 
-                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                    <CheckBox Color="{DynamicResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
-                    <Label Text="{xaml:Translate SignIn_Label_RememberServerChoice}" VerticalOptions="CenterAndExpand" FontSize="Small">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding RememberChoiceCommand}"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </StackLayout>
+                    <Label Grid.Row="2"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="{Binding IsAuthInError}"
+                           Text="{Binding ErrorMessage}"
+                           Margin="0, 20, 0, 0"
+                           TextColor="{DynamicResource AccentColor}" />
 
-                <ListView x:Name="ServerListView" ItemsSource="{Binding ServersCollection}" SelectionMode="None" ItemTapped="ServerListView_OnItemTapped"
-                          SeparatorVisibility="None" RowHeight="70" VerticalScrollBarVisibility="Never">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell x:DataType="models:ServerItem">
-                                <Frame BackgroundColor="{DynamicResource BackgroundColorLevel1}" CornerRadius="2" Margin="0" Padding="0"
-                                       HorizontalOptions="CenterAndExpand" 
-                                       VerticalOptions="CenterAndExpand"
-                                       HasShadow="True">
+                    <Label Grid.Row="3"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="{Binding IsConnected, Converter={StaticResource BoolNegateConverter}}"
+                           Text="{xaml:Translate SignIn_Label_NoInternet}"
+                           Margin="0, 20, 0, 0"
+                           TextColor="{DynamicResource AccentColor}" />
+
+                </Grid>
+
+                <!-- One Time Token input -->
+                <VerticalStackLayout IsVisible="{Binding IsEnteringToken}" Spacing="10">
+                    <Label HorizontalTextAlignment="Center"
+                           Text="{xaml:Translate SignIn_Label_EnterToken}"
+                           FontSize="18" />
+
+                    <Border StrokeShape="RoundRectangle 5"
+                            Stroke="{DynamicResource PrimaryGreen}"
+                            Padding="10,0">
+                        <Entry Style="{DynamicResource WasabeeStyleEntryText}"
+                               Text="{Binding OneTimeToken}"
+                               FontSize="18"
+                               FontFamily="SpaceMonoRegular"/>
+                    </Border>
+
+                    <HorizontalStackLayout Spacing="40" HorizontalOptions="Center">
+                        <Button Style="{DynamicResource WasabeeStyleSecondaryActionButton}"
+                                Command="{Binding CancelOneTimeTokenCommand}"
+                                Text="{xaml:Translate SignIn_Button_Cancel}"
+                                FontSize="18"/>
+
+                        <Button Style="{DynamicResource WasabeeStyleMainActionButton}"
+                                Command="{Binding ValidateOneTimeTokenCommand}"
+                                Text="{xaml:Translate SignIn_Button_Validate}"
+                                FontSize="18"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Server selection -->
+                <VerticalStackLayout IsVisible="{Binding IsSelectingServer}"
+                                     Spacing="20">
+
+                    <Label HorizontalTextAlignment="Center"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                           Text="{Binding LoadingStepLabel}"
+                           FontSize="Large"/>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                        <CheckBox Color="{DynamicResource PrimaryGreen}" IsChecked="{Binding RememberServerChoice}"/>
+                        <Label Text="{xaml:Translate SignIn_Label_RememberServerChoice}" VerticalOptions="CenterAndExpand" FontSize="Small">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RememberChoiceCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </StackLayout>
+
+                    <CollectionView x:Name="ServerListView" ItemsSource="{Binding ServersCollection}" 
+                                    SelectionMode="Single" 
+                                    VerticalScrollBarVisibility="Never"
+                                    SelectionChanged="ServerListView_OnSelectionChanged">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ServerItem">
+                                <Border BackgroundColor="{DynamicResource BackgroundColorLevel1}" Margin="0,2" Padding="0"
+                                        HorizontalOptions="CenterAndExpand" 
+                                        VerticalOptions="CenterAndExpand"
+                                        StrokeShape="RoundRectangle 10">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="70" />
-                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="60" />
+                                            <ColumnDefinition Width="150" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="60" />
+                                            <RowDefinition Height="62" />
                                         </Grid.RowDefinitions>
 
-                                        <Frame Margin="0" Padding="0" Grid.Column="0" Grid.Row="0" HasShadow="false" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="Transparent">
-                                            <Image Source="{Binding Image}" HeightRequest="30" Margin="10, 0, 0, 0"/>
-                                        </Frame>
-                                        <Label  Text="{Binding Name}" Grid.Column="1" Grid.Row="0" 
-                                                VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" FontSize="18" />
+                                        <Image Grid.Column="1" Grid.Row="0"
+                                               Source="{Binding Image}" />
+
+                                        <Label Grid.Column="2" Grid.Row="0"
+                                               Text="{Binding Name}" FontSize="18"
+                                               HorizontalTextAlignment="Center"
+                                               VerticalTextAlignment="Center" />
                                     </Grid>
-                                </Frame>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- No team or OPS assigned section -->
+                <VerticalStackLayout IsVisible="{Binding HasNoTeamOrOpsAssigned}">
+
+                    <Label HorizontalTextAlignment="Center"
+                           Margin="0, 20, 0, 0"
+                           TextColor="{DynamicResource AccentColor}"
+                           FontSize="Medium"
+                           Text="{xaml:Translate SignIn_Label_Warning}"/>
+
+                    <Label HorizontalTextAlignment="Center"
+                           Margin="0, 20, 0, 0"
+                           TextColor="{DynamicResource AccentColor}"
+                           FontSize="Medium"
+                           Text="{xaml:Translate SignIn_Label_NoTeamsOrOperation}"/>
+
+                    <Button Margin="0, 30, 0, 0" Text="{xaml:Translate SignIn_Button_ChangeAccount}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
+                    <Button Text="{xaml:Translate SignIn_Button_ChangeServer}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
+                    <Button Text="{xaml:Translate SignIn_Button_Retry}" Style="{DynamicResource WasabeeStyleValidateButton}" Command="{Binding RetryTeamLoadingCommand}" />
+
+                </VerticalStackLayout>
+
             </VerticalStackLayout>
 
-            <!-- No team or OPS assigned section -->
-            <VerticalStackLayout IsVisible="{Binding HasNoTeamOrOpsAssigned}">
-
-                <Label HorizontalTextAlignment="Center"
-                       Margin="0, 20, 0, 0"
-                       TextColor="{DynamicResource AccentColor}"
-                       FontSize="Medium"
-                       Text="{xaml:Translate SignIn_Label_Warning}"/>
-
-                <Label HorizontalTextAlignment="Center"
-                       Margin="0, 20, 0, 0"
-                       TextColor="{DynamicResource AccentColor}"
-                       FontSize="Medium"
-                       Text="{xaml:Translate SignIn_Label_NoTeamsOrOperation}"/>
-
-                <Button Margin="0, 30, 0, 0" Text="{xaml:Translate SignIn_Button_ChangeAccount}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeAccountCommand}" />
-                <Button Text="{xaml:Translate SignIn_Button_ChangeServer}" Style="{DynamicResource WasabeeStyleCancelButton}" Command="{Binding ChangeServerCommand}" />
-                <Button Text="{xaml:Translate SignIn_Button_Retry}" Style="{DynamicResource WasabeeStyleValidateButton}" Command="{Binding RetryTeamLoadingCommand}" />
-
-            </VerticalStackLayout>
-
-
-            <!-- Version number -->
-            <!--<StackLayout HeightRequest="40"
-                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-40}"
-                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
-                         BackgroundColor="{Binding AppEnvironnement, Converter={StaticResource EnvironnementToColorConverter}}">
+            <!-- Version number {Binding AppEnvironnement, Converter={StaticResource EnvironnementToColorConverter}} -->
+            <StackLayout Grid.Row="2" HeightRequest="40"
+                         BackgroundColor="{DynamicResource PrimaryGreenDark}">
                 <Label HorizontalTextAlignment="Center"
                        VerticalTextAlignment="Center"
                        VerticalOptions="CenterAndExpand"
-                       Text="{Binding DisplayVersion, Mode=OneWay}"
+                       Text="2.0.0"
                        TextColor="White">
+                    <!-- {Binding DisplayVersion, Mode=OneWay} -->
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding VersionTappedCommand}" />
                     </Label.GestureRecognizers>
                 </Label>
-            </StackLayout>-->
-        </VerticalStackLayout>
+            </StackLayout>
+
+        </Grid>
+
     </ContentPage.Content>
 </ContentPage>

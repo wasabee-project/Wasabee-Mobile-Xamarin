@@ -1,4 +1,4 @@
-﻿using Rocks.Wasabee.Core.Adapters;
+using Rocks.Wasabee.Core.Adapters;
 using Rocks.Wasabee.Core.Infra.Constants;
 using Rocks.Wasabee.Core.Infra.Security;
 using Rocks.Wasabee.Core.Models.AuthTokens.Google;
@@ -36,11 +36,9 @@ namespace Rocks.Wasabee.Maui.Core.Services
 
             try
             {
-#if !WINDOWS
                 authenticatorResult = await WebAuthenticator.AuthenticateAsync(
                     new Uri(_appSettings.GoogleAuthUrl),
                     new Uri(_appSettings.RedirectUrl));
-#endif
             }
             catch (TaskCanceledException)
             {

@@ -36,5 +36,4 @@
 	  <Folder Include="Platforms\Android\" />
 	  <Folder Include="Platforms\iOS\" />
 	</ItemGroup>
-
 </Project>

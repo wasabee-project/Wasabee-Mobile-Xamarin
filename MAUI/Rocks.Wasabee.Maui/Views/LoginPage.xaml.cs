@@ -21,9 +21,15 @@ namespace Rocks.Wasabee.Maui.Views
             BindingContext = _viewModel;
         }
 
-        private void ServerListView_OnItemTapped(object sender, ItemTappedEventArgs e)
+        private void ServerListView_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            _viewModel.ChooseServerCommand.ExecuteAsync(e.Item as ServerItem);
+            var cv = sender as CollectionView;
+            if (cv?.SelectedItem == null)
+                return;
+
+            _viewModel.ChooseServerCommand.ExecuteAsync(e.CurrentSelection.First() as ServerItem);
+
+            cv.SelectedItem = null;
         }
     }
 }

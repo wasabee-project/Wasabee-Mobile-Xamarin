@@ -16,6 +16,7 @@
     <Color x:Key="PrimaryGray">#9E9E9E</Color>
     <Color x:Key="DarkGray">#4E5B59</Color>
     <Color x:Key="GoogleSignInGray">#757575</Color>
+    <Color x:Key="GoogleSignInBlue">#4285F4</Color>
 
     <Color x:Key="PortalCommentColor">#0078A8</Color>
 
@@ -68,7 +69,7 @@
     <Style TargetType="Button" x:Key="WasabeeStyleValidateButton" BasedOn="{StaticResource WasabeeStyleMainActionButton}">
         <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Validate}"/>
     </Style>
-    <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningNextButton" BasedOn="{StaticResource WasabeeStyleValidateButton}">
+    <Style TargetType="Button" x:Key="WasabeeStyleLocationWarningNextButton" BasedOn="{StaticResource WasabeeStyleMainActionButton}">
         <Setter Property="Text" Value="{xaml:Translate SignIn_Button_Next}"/>
     </Style>
     <!--Annuler-->
@@ -87,21 +88,9 @@
         <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
-    <!--Connexion-->
-    <Style TargetType="Button" x:Key="GoogleSignInStyleButton">
-        <Setter Property="Text" Value="Google"/>
-        <Setter Property="TextColor" Value="{StaticResource GoogleSignInGray}"/>
-        <Setter Property="ImageSource" Value="g_logo.png"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="BorderWidth" Value="1"/>
-        <Setter Property="BorderColor" Value="{StaticResource LightGray}"/>
-        <Setter Property="BackgroundColor" Value="White"/>
-    </Style>
 
-
-    <!--MenuList-->
-    <Style TargetType="StackLayout" x:Key="WasabeeMasterDetailMenuStyle">
-        <Setter Property="BackgroundColor" Value="Transparent"/>
+    <!--Champ de texte-->
+    <Style TargetType="Entry" x:Key="WasabeeStyleEntryText">
     </Style>
 
 </ResourceDictionary>

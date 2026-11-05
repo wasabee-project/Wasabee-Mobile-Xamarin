@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Handlers;
 using Refit;
-using Rocks.Wasabee.Core;
 using Rocks.Wasabee.Core.Adapters;
 using Rocks.Wasabee.Core.Infra.Security;
 using Rocks.Wasabee.Core.Services;
@@ -12,12 +12,20 @@ using Rocks.Wasabee.Maui.Core.Adapters;
 using Rocks.Wasabee.Maui.Core.Services;
 using Rocsk.Wasabee.Maui.Core.Services;
 
+
+#if ANDROID
+using Microsoft.Maui.Platform;
+using Android.Content.Res;
+#endif
+
+#if IOS
+using UIKit;
+#endif
+
 namespace Rocks.Wasabee.Maui
 {
     public static class MauiProgram
     {
-        public static CoreApp CoreApp;
-
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -28,6 +36,7 @@ namespace Rocks.Wasabee.Maui
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("SpaceMono-Regular.ttf", "SpaceMonoRegular");
                 })
                 .SetupAppSettings()
                 .ConfigureWasabeeRefitHttpClient()
@@ -39,11 +48,26 @@ namespace Rocks.Wasabee.Maui
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
+            EntryHandler.Mapper.AppendToMapping("EntryCustomizations", (handler, _) =>
+            {
+#if ANDROID
+                handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
 
-            var mauiApp = builder.Build();
-            CoreApp = new CoreApp(mauiApp.Services);
+                if (Application.Current?.Resources.TryGetValue("PrimaryGreenDark", out var colorObj) is true && colorObj is Color xamlColor)
+                {
+                    handler.PlatformView.TextCursorDrawable.SetTint(xamlColor.ToPlatform());
+                    handler.PlatformView.SetHighlightColor(xamlColor.WithAlpha(0.3f).ToPlatform());
 
-            return mauiApp;
+                    handler.PlatformView.TextSelectHandle?.SetTint(xamlColor.ToPlatform());
+                    handler.PlatformView.TextSelectHandleLeft?.SetTint(xamlColor.ToPlatform());
+                    handler.PlatformView.TextSelectHandleRight?.SetTint(xamlColor.ToPlatform());
+                }
+#elif IOS
+                handler.PlatformView.BorderStyle = UITextBorderStyle.None;
+#endif
+            });
+
+            return builder.Build();
         }
 
         private static MauiAppBuilder SetupAppSettings(this MauiAppBuilder builder)

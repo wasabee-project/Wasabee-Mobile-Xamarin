@@ -73,24 +73,16 @@ namespace Rocks.Wasabee.Core.ViewModels
             set
             {
                 if (SetProperty(ref _selectedServerItem, value))
-                {
-                    if (SelectedServerItem.Server != WasabeeServer.Undefined)
-                        _appSettings.Server = SelectedServerItem.Server;
-                }
+                    _appSettings.Server = SelectedServerItem.Server;
             }
         }
 
-        private ObservableCollection<ServerItem> _serversCollection = new ObservableCollection<ServerItem>()
-        {
+        public ObservableCollection<ServerItem> ServersCollection { get; } =
+        [
             new("America", WasabeeServer.US, "flag_us.png"),
             new("Europe", WasabeeServer.EU, "flag_eu.png"),
             new("Asia/Pacific", WasabeeServer.APAC, "flag_apac.png")
-        };
-        public ObservableCollection<ServerItem> ServersCollection
-        {
-            get => _serversCollection;
-            private set => SetProperty(ref _serversCollection, value);
-        }
+        ];
 
         #endregion
 
@@ -175,6 +167,21 @@ namespace Rocks.Wasabee.Core.ViewModels
                 LoadingStepLabel = Strings.SignIn_Label_LoadingStep_SelectServerToken;
                 IsSelectingServer = true;
             }
+        }
+
+        [RelayCommand]
+        private void CancelOneTimeToken()
+        {
+            IsLoading = false;
+            IsLoginVisible = true;
+            IsEnteringToken = false;
+            IsSelectingServer = false;
+            IsAuthInError = false;
+
+            SelectedServerItem = ServerItem.Undefined;
+
+            OneTimeToken = string.Empty;
+            LoadingStepLabel = string.Empty;
         }
 
         [RelayCommand]
@@ -265,7 +272,7 @@ namespace Rocks.Wasabee.Core.ViewModels
         }
 
         [RelayCommand]
-        private async Task ChangeAccount()
+        private void ChangeAccount()
         {
             IsLoading = false;
             HasNoTeamOrOpsAssigned = false;
@@ -296,7 +303,7 @@ namespace Rocks.Wasabee.Core.ViewModels
 
             IsLoading = true;
 
-            var savedServerChoice = _serversCollection.First(); _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
+            var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
 
             if (ServersCollection.Any(x => x.Server.ToString().Equals(savedServerChoice)))
                 SelectedServerItem = ServersCollection.First(x => x.Server.ToString().Equals(savedServerChoice));
@@ -386,7 +393,7 @@ namespace Rocks.Wasabee.Core.ViewModels
 
                         await ConnectWasabee();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         ErrorMessage = Strings.SignIn_Label_ErrorMsg_WasabeeFail;
                         IsAuthInError = true;
@@ -400,7 +407,7 @@ namespace Rocks.Wasabee.Core.ViewModels
                         _isBypassingGoogleAndWasabeeLogin = false;
                         _secureStorage.Remove(SecureStorageConstants.WasabeeToken);
 
-                        await ChangeAccountCommand.ExecuteAsync(null);
+                        ChangeAccountCommand.Execute(null);
                     }
                 }
             }
