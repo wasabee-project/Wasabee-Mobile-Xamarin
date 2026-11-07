@@ -12,11 +12,13 @@ using Rocks.Wasabee.Core.ViewModels;
 using Rocks.Wasabee.Maui.Core.Adapters;
 using Rocks.Wasabee.Maui.Core.Services;
 using Rocsk.Wasabee.Maui.Core.Services;
-
+using Rocks.Wasabee.Maui.Views;
 
 #if ANDROID
+using Microsoft.Maui.Maps.Handlers;
 using Microsoft.Maui.Platform;
 using Android.Content.Res;
+using Android.Gms.Maps.Model;
 #endif
 
 #if IOS
@@ -39,6 +41,7 @@ namespace Rocks.Wasabee.Maui
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("SpaceMono-Regular.ttf", "SpaceMonoRegular");
                 })
+                .UseMauiMaps()
                 .SetupAppSettings()
                 .ConfigureWasabeeRefitHttpClient()
                 .RegisterAdapters()
@@ -69,76 +72,93 @@ namespace Rocks.Wasabee.Maui
 #endif
             });
 
+#if ANDROID
+            MapElementHandler.Mapper.AppendToMapping("ForceNativeGeodesic", (handler, view) =>
+            {
+                if (handler.PlatformView is PolylineOptions polylineOptions)
+                {
+                    polylineOptions.Geodesic(true);
+                }
+            });
+#endif
+
             return builder.Build();
         }
 
-        private static MauiAppBuilder SetupAppSettings(this MauiAppBuilder builder)
+        extension(MauiAppBuilder builder)
         {
-            builder.Services.AddSingleton<IAppSettings, DevAppSettings>();
+            private MauiAppBuilder SetupAppSettings()
+            {
+                builder.Services.AddSingleton<IAppSettings, DevAppSettings>();
 
-            return builder;
-        }
+                return builder;
+            }
 
-        private static MauiAppBuilder ConfigureWasabeeRefitHttpClient(this MauiAppBuilder builder)
-        {
-            builder.Services.AddTransient<WasabeeTokenHandler>();
-            builder.Services.AddRefitClient<IWasabeeApiV1>(new RefitSettings { ContentSerializer = new SystemTextJsonContentSerializer() })
-                .ConfigureHttpClient((_, client) =>
-                {
-                    // Required by Refit to start, the actual request URI will be set by the WasabeeTokenHandler based on the selected server.
-                    client.BaseAddress = new Uri("https://wasabee.local");
-                })
-                .AddHttpMessageHandler<WasabeeTokenHandler>();
+            private MauiAppBuilder ConfigureWasabeeRefitHttpClient()
+            {
+                builder.Services.AddSingleton<WasabeeTokenHandler>();
+                builder.Services.AddRefitClient<IWasabeeApiV1>(new RefitSettings { ContentSerializer = new SystemTextJsonContentSerializer() })
+                    .ConfigureHttpClient((_, client) =>
+                    {
+                        // Required by Refit to start, the actual request URI will be set by the WasabeeTokenHandler based on the selected server.
+                        client.BaseAddress = new Uri("https://wasabee.local");
+                    })
+                    .AddHttpMessageHandler<WasabeeTokenHandler>();
 
-            return builder;
-        }
+                return builder;
+            }
 
-        private static MauiAppBuilder RegisterAdapters(this MauiAppBuilder builder)
-        {
-            builder.Services.AddSingleton<ISecureStorageAdapter, SecureStorageAdapter>();
-            builder.Services.AddSingleton<IPreferencesAdapter, PreferencesAdapter>();
-            builder.Services.AddSingleton<IFileSystemAdapter, FileSystemAdapter>();
-            builder.Services.AddSingleton<IToastAdapter, ToastAdapter>();
+            private MauiAppBuilder RegisterAdapters()
+            {
+                builder.Services.AddSingleton<ISecureStorageAdapter, SecureStorageAdapter>();
+                builder.Services.AddSingleton<IPreferencesAdapter, PreferencesAdapter>();
+                builder.Services.AddSingleton<IFileSystemAdapter, FileSystemAdapter>();
+                builder.Services.AddSingleton<IToastAdapter, ToastAdapter>();
+                builder.Services.AddSingleton<IMessengerAdapter, MessengerAdapter>();
 
-            return builder;
-        }
+                builder.Services.AddSingleton<INavigationService, NavigationAdapter>();
 
-        private static MauiAppBuilder RegisterServices(this MauiAppBuilder builder)
-        {
-            builder.Services.AddSingleton<WasabeeApiV1Service>();
+                return builder;
+            }
 
-            builder.Services.AddSingleton<IAuthentificationService, AuthentificationService>();
-            builder.Services.AddSingleton<IUserSettingsService, UserSettingsService>();
+            private MauiAppBuilder RegisterServices()
+            {
+                builder.Services.AddSingleton<WasabeeApiV1Service>();
 
-            return builder;
-        }
+                builder.Services.AddSingleton<IAuthentificationService, AuthentificationService>();
+                builder.Services.AddSingleton<IUserSettingsService, UserSettingsService>();
 
-        private static MauiAppBuilder RegisterProviders(this MauiAppBuilder builder)
-        {
-            builder.Services.AddSingleton<ILoginProvider, LoginProvider>();
+                return builder;
+            }
 
-            return builder;
-        }
+            private MauiAppBuilder RegisterProviders()
+            {
+                builder.Services.AddSingleton<ILoginProvider, LoginProvider>();
 
-        private static MauiAppBuilder RegisterDatabases(this MauiAppBuilder builder)
-        {
-            builder.Services.AddSingleton<UsersDatabase>();
+                return builder;
+            }
 
-            builder.Services.AddSingleton<MarkersDatabase>();
-            builder.Services.AddSingleton<LinksDatabase>();
-            builder.Services.AddSingleton<OperationsDatabase>();
+            private MauiAppBuilder RegisterDatabases()
+            {
+                builder.Services.AddSingleton<UsersDatabase>();
 
-            builder.Services.AddSingleton<AgentsDatabase>();
-            builder.Services.AddSingleton<TeamsDatabase>();
+                builder.Services.AddSingleton<MarkersDatabase>();
+                builder.Services.AddSingleton<LinksDatabase>();
+                builder.Services.AddSingleton<OperationsDatabase>();
 
-            return builder;
-        }
+                builder.Services.AddSingleton<AgentsDatabase>();
+                builder.Services.AddSingleton<TeamsDatabase>();
 
-        private static MauiAppBuilder RegisterViewModels(this MauiAppBuilder builder)
-        {
-            builder.Services.AddSingleton<LoginPageViewModel>();
+                return builder;
+            }
 
-            return builder;
+            private MauiAppBuilder RegisterViewModels()
+            {
+                builder.Services.AddTransient<LoginPage, LoginPageViewModel>();
+                builder.Services.AddTransient<OperationMapPage, OperationMapViewModel>();
+
+                return builder;
+            }
         }
     }
 }

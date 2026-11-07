@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.OS;
 
 namespace Rocks.Wasabee.Maui.Platforms.Android
 {
@@ -9,13 +8,13 @@ namespace Rocks.Wasabee.Maui.Platforms.Android
     [IntentFilter(new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
         DataScheme = "com.googleusercontent.apps.269534461245-ltpks4ofjh9epvida0ct965829i4cfsi")]
-    public class WebAuthenticationCallbackActivity : Activity
+    public class WebAuthenticationCallbackActivity : WebAuthenticatorCallbackActivity
     {
         // WORKAROUND:
         // Use the non-MAUI Activity and start the internal WebAuthenticatorIntermediateActivity activity
         // instead of derivng from WebAuthenticatorCallbackActivity directly.
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        /*protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
@@ -30,6 +29,6 @@ namespace Rocks.Wasabee.Maui.Platforms.Android
 
             // finish this activity
             Finish();
-        }
+        }*/
     }
 }

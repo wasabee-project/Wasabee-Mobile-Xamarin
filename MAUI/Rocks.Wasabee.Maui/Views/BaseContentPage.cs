@@ -2,16 +2,21 @@ using Rocks.Wasabee.Core.ViewModels;
 
 namespace Rocks.Wasabee.Maui.Views
 {
-    public abstract partial class BaseContentPage<TViewModel> : ContentPage where TViewModel : BaseViewModel
+    public abstract class BaseContentPage : ContentPage
     {
-        protected override void OnHandlerChanged()
-        {
-            base.OnHandlerChanged();
+        protected BaseContentPage() { }
+    }
 
-            if (Handler != null && BindingContext is not TViewModel)
-            {
-                BindingContext = Handler!.MauiContext?.Services.GetRequiredService<TViewModel>();
-            }
+    public abstract class BaseContentPage<TViewModel> : BaseContentPage where TViewModel : BaseViewModel
+    {
+        protected TViewModel ViewModel { get; }
+
+        protected BaseContentPage(TViewModel viewModel)
+        {
+            ViewModel = viewModel;
+            BindingContext = viewModel;
+
+            Shell.SetNavBarIsVisible(this, false);
         }
     }
 }

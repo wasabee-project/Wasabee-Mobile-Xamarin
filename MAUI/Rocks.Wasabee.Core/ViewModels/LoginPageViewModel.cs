@@ -4,6 +4,7 @@ using Rocks.Wasabee.Core.Adapters;
 using Rocks.Wasabee.Core.Infra.Constants;
 using Rocks.Wasabee.Core.Infra.Databases;
 using Rocks.Wasabee.Core.Infra.Security;
+using Rocks.Wasabee.Core.Messages;
 using Rocks.Wasabee.Core.Models;
 using Rocks.Wasabee.Core.Models.AuthTokens.Google;
 using Rocks.Wasabee.Core.Models.Users;
@@ -24,9 +25,11 @@ namespace Rocks.Wasabee.Core.ViewModels
 
         private readonly IAppSettings _appSettings;
         private readonly IAuthentificationService _authentificationService;
+        private readonly INavigationService _navigationService;
         private readonly ISecureStorageAdapter _secureStorage;
         private readonly IPreferencesAdapter _preferences;
         private readonly IToastAdapter _toast;
+        private readonly IMessengerAdapter _messenger;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly UsersDatabase _usersDatabase;
@@ -40,9 +43,11 @@ namespace Rocks.Wasabee.Core.ViewModels
         public LoginPageViewModel(
             IAppSettings appSettings,
             IAuthentificationService authentificationService,
+            INavigationService navigationService,
             ISecureStorageAdapter secureStorage,
             IPreferencesAdapter preferences,
             IToastAdapter toast,
+            IMessengerAdapter messenger,
             IUserSettingsService userSettingsService,
             WasabeeApiV1Service wasabeeApiV1Service,
             UsersDatabase usersDatabase,
@@ -52,9 +57,11 @@ namespace Rocks.Wasabee.Core.ViewModels
         {
             _appSettings = appSettings;
             _authentificationService = authentificationService;
+            _navigationService = navigationService;
             _secureStorage = secureStorage;
             _preferences = preferences;
             _toast = toast;
+            _messenger = messenger;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _usersDatabase = usersDatabase;
@@ -69,7 +76,7 @@ namespace Rocks.Wasabee.Core.ViewModels
         [ObservableProperty] public partial bool IsConnected { get; set; } = true;
         [ObservableProperty] public partial bool IsLoginVisible { get; set; } = true;
         [ObservableProperty] public partial bool IsGButtonVisible { get; set; } = true;
-        [ObservableProperty] public partial bool IsOTTButtonVisible { get; set; } = true;
+        [ObservableProperty] public partial bool IsOttButtonVisible { get; set; } = true;
         [ObservableProperty] public partial bool IsEnteringToken { get; set; }
         [ObservableProperty] public partial bool IsAuthInError { get; set; }
         [ObservableProperty] public partial bool IsSelectingServer { get; set; }
@@ -437,12 +444,12 @@ namespace Rocks.Wasabee.Core.ViewModels
                 IsAuthInError = true;
                 IsLoginVisible = true;
                 IsGButtonVisible = false;
-                IsOTTButtonVisible = false;
+                IsOttButtonVisible = false;
                 IsLoading = false;
                 return;
             }
 
-            //_messenger.Publish(new UserLoggedInMessage(this));
+            _messenger.Send(new UserLoggedInMessage(this));
             _preferences.Set(UserSettingsKeys.LastLoginMethod, (int)loginMethod);
 
             if (RememberServerChoice)
@@ -469,14 +476,14 @@ namespace Rocks.Wasabee.Core.ViewModels
                 }
                 else
                 {
-                    await PullDataFromServer(userModel).ContinueWith(_ =>
+                    await PullDataFromServer(userModel).ContinueWith(async _ =>
                     {
                         //var shouldGoToTelegramLinking = false;
                         //if (SelectedServerItem.Server is not WasabeeServer.Undefined)
                         //    if (userModel.Telegram is null || userModel.Telegram.Verified is false)
                         //        shouldGoToTelegramLinking = true;
 
-                        //await _navigationService.Navigate(Mvx.IoCProvider.Resolve<RootViewModel>());
+                        await _navigationService.NavigateToRootAsync<OperationMapViewModel>();
 
                         //if (shouldGoToTelegramLinking)
                         //{
@@ -584,7 +591,7 @@ namespace Rocks.Wasabee.Core.ViewModels
                                 }
 
                                 await _operationsDatabase.SaveOperationModel(op);
-                                //_messenger.Publish(new NewOpAvailableMessage(this));
+                                _messenger.Send(new NewOpAvailableMessage(this));
                             }
                         }
 

@@ -6,6 +6,7 @@ using System.Resources;
 namespace Rocks.Wasabee.Maui.Core.Helpers.Xaml
 {
     [ContentProperty("Text")]
+    [RequireService([typeof(IServiceProvider)])]
     public class TranslateExtension : IMarkupExtension
     {
         const string ResourceId = "Rocks.Wasabee.Core.Resources.I18n.Strings";

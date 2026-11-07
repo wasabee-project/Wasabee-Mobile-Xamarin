@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:Rocks.Wasabee.Core.ViewModels;assembly=Rocks.Wasabee.Core"
-             xmlns:xaml="clr-namespace:Rocks.Wasabee.Maui.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Maui.Core"
-             xmlns:models="clr-namespace:Rocks.Wasabee.Core.Models;assembly=Rocks.Wasabee.Core"
-             xmlns:converters="clr-namespace:Rocks.Wasabee.Maui.Core.Helpers.Converters;assembly=Rocks.Wasabee.Maui.Core"
-             x:Class="Rocks.Wasabee.Maui.Views.LoginPage"
-             x:DataType="viewModels:LoginPageViewModel"
-             Title="">
+<views:BaseContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Core.ViewModels;assembly=Rocks.Wasabee.Core"
+                       xmlns:xaml="clr-namespace:Rocks.Wasabee.Maui.Core.Helpers.Xaml;assembly=Rocks.Wasabee.Maui.Core"
+                       xmlns:models="clr-namespace:Rocks.Wasabee.Core.Models;assembly=Rocks.Wasabee.Core"
+                       xmlns:converters="clr-namespace:Rocks.Wasabee.Maui.Core.Helpers.Converters;assembly=Rocks.Wasabee.Maui.Core"
+                       xmlns:views="clr-namespace:Rocks.Wasabee.Maui.Views"
+                       x:Class="Rocks.Wasabee.Maui.Views.LoginPage"
+                       x:DataType="viewModels:LoginPageViewModel"
+                       x:TypeArguments="viewModels:LoginPageViewModel"
+                       BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Resources>
         <converters:BoolNegateConverter x:Key="BoolNegateConverter" />
@@ -93,7 +95,7 @@
                     <Border Grid.Row="1"
                             BackgroundColor="{DynamicResource PrimaryGreen}"
                             StrokeShape="RoundRectangle 2"
-                            IsVisible="{Binding IsOTTButtonVisible}"
+                            IsVisible="{Binding IsOttButtonVisible}"
                             Margin="0,10,0,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -248,14 +250,15 @@
                        VerticalOptions="CenterAndExpand"
                        Text="2.0.0"
                        TextColor="White">
-                    <!-- {Binding DisplayVersion, Mode=OneWay} -->
-                    <Label.GestureRecognizers>
+                    <!-- Text="{Binding DisplayVersion, Mode=OneWay}" -->
+
+                    <!--<Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding VersionTappedCommand}" />
-                    </Label.GestureRecognizers>
+                    </Label.GestureRecognizers> -->
                 </Label>
             </StackLayout>
 
         </Grid>
 
     </ContentPage.Content>
-</ContentPage>
+</views:BaseContentPage>
