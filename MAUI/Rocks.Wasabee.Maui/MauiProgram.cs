@@ -13,8 +13,12 @@ using Rocks.Wasabee.Maui.Core.Adapters;
 using Rocks.Wasabee.Maui.Core.Services;
 using Rocsk.Wasabee.Maui.Core.Services;
 using Rocks.Wasabee.Maui.Views;
+using Rocks.Wasabee.Core.ViewModels.Operation;
+using Maui.GoogleMaps.Android;
+
 
 #if ANDROID
+using Maui.GoogleMaps.Hosting;
 using Microsoft.Maui.Maps.Handlers;
 using Microsoft.Maui.Platform;
 using Android.Content.Res;
@@ -41,7 +45,9 @@ namespace Rocks.Wasabee.Maui
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("SpaceMono-Regular.ttf", "SpaceMonoRegular");
                 })
-                .UseMauiMaps()
+#if ANDROID
+                .UseGoogleMaps(new PlatformConfig() { BitmapDescriptorFactory = new WasabeeBitmapConfig() })
+#endif
                 .SetupAppSettings()
                 .ConfigureWasabeeRefitHttpClient()
                 .RegisterAdapters()

@@ -1,3 +1,6 @@
 [submodule "Xamarin.Forms.GoogleMaps"]
 	path = Xamarin.Forms.GoogleMaps
 	url = https://github.com/SebastienForay/Xamarin.Forms.GoogleMaps.git
+[submodule "Maui.GoogleMaps"]
+	path = Maui.GoogleMaps
+	url = https://github.com/SebastienForay/Maui.GoogleMaps

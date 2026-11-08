@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Maui.GoogleMaps\lib\Maui.GoogleMaps\Maui.GoogleMaps.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<Compile Update="Resources\I18n\Strings.Designer.cs">
 	  <DesignTime>True</DesignTime>
 	  <AutoGen>True</AutoGen>

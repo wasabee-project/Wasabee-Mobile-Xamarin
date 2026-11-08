@@ -9,7 +9,15 @@ namespace Rocks.Wasabee.Maui.Views
 
     public abstract class BaseContentPage<TViewModel> : BaseContentPage where TViewModel : BaseViewModel
     {
-        protected TViewModel ViewModel { get; }
+        protected TViewModel ViewModel
+        {
+            get;
+            private init
+            {
+                field = value;
+                OnViewModelSet();
+            }
+        }
 
         protected BaseContentPage(TViewModel viewModel)
         {
@@ -18,5 +26,14 @@ namespace Rocks.Wasabee.Maui.Views
 
             Shell.SetNavBarIsVisible(this, false);
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            ViewModel.OnAppearing();
+        }
+
+        protected virtual void OnViewModelSet() { }
     }
 }

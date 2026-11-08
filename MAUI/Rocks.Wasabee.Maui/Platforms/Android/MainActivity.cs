@@ -5,7 +5,6 @@ using Android.Views;
 namespace Rocks.Wasabee.Maui
 {
     [Activity(
-        //Theme = "@style/Maui.SplashTheme", 
         Theme = "@style/Theme.Splash",
         ResizeableActivity = true,
         MainLauncher = true,

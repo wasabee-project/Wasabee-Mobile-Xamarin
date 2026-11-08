@@ -13,6 +13,7 @@ using Rocks.Wasabee.Core.Resources.I18n;
 using Rocks.Wasabee.Core.Services;
 using Rocks.Wasabee.Core.Settings.Application;
 using Rocks.Wasabee.Core.Settings.User;
+using Rocks.Wasabee.Core.ViewModels.Operation;
 using System.Collections.ObjectModel;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;

@@ -970,7 +970,7 @@
     <comment>Toast message</comment>
   </data>
   <data name="Toast_LiveLocPositionUpdated" xml:space="preserve">
-    <value>Position mise à jour</value>
+    <value>WasabeePosition mise à jour</value>
     <comment>Toast message</comment>
   </data>
   <data name="Toast_LiveLocSharingStarted" xml:space="preserve">

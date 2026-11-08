@@ -246,7 +246,7 @@
     <comment>Warning message for when geolocation permission is needed and not granted</comment>
   </data>
   <data name="Dialogs_Warning_PermissionWhenInUse" xml:space="preserve">
-    <value>Um Ihre Position auf der Karte anzuzeigen, setzen Sie bitte die Berechtigung auf 'Wenn in Benutzung'.</value>
+    <value>Um Ihre WasabeePosition auf der Karte anzuzeigen, setzen Sie bitte die Berechtigung auf 'Wenn in Benutzung'.</value>
   </data>
   <data name="Dialogs_Warning_SetLocationPermissionsAllTheTime" xml:space="preserve">
     <value>Um die Live-Standortfreigabe zu verwenden, setzen Sie bitte die Erlaubnis "Jederzeit zulassen".</value>
@@ -344,11 +344,11 @@
     <comment>Title for link info popup</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line1" xml:space="preserve">
-    <value>Sie werden die Live-Standortfreigabe aktivieren. Das bedeutet, dass Ihre tatsächliche Position regelmäßig an den Wasabee-Server gesendet wird.</value>
+    <value>Sie werden die Live-Standortfreigabe aktivieren. Das bedeutet, dass Ihre tatsächliche WasabeePosition regelmäßig an den Wasabee-Server gesendet wird.</value>
     <comment>Big text line 1</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line2" xml:space="preserve">
-    <value>Alle Teams, mit denen Sie Standortfreigabe aktiviert haben, werden Ihre Position sehen können, wenn die Funktion aktiviert ist.</value>
+    <value>Alle Teams, mit denen Sie Standortfreigabe aktiviert haben, werden Ihre WasabeePosition sehen können, wenn die Funktion aktiviert ist.</value>
     <comment>Big text line 2</comment>
   </data>
   <data name="LocationDialog_Text_BigText-Line3" xml:space="preserve">

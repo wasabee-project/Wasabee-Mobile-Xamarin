@@ -1,11 +1,12 @@
 <Solution>
   <Folder Name="/1_Application/">
-    <Project Path="./Rocks.Wasabee.Maui/Rocks.Wasabee.Maui.csproj">
+    <Project Path="Rocks.Wasabee.Maui/Rocks.Wasabee.Maui.csproj">
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
   <Folder Name="/2_Core/">
-    <Project Path="./Rocks.Wasabee.Core/Rocks.Wasabee.Core.csproj" />
-    <Project Path="./Rocks.Wasabee.Maui.Core/Rocks.Wasabee.Maui.Core.csproj" />
+    <Project Path="Rocks.Wasabee.Core/Rocks.Wasabee.Core.csproj" />
+    <Project Path="Rocks.Wasabee.Maui.Core/Rocks.Wasabee.Maui.Core.csproj" />
   </Folder>
+  <Project Path="../Maui.GoogleMaps/lib/Maui.GoogleMaps/Maui.GoogleMaps.csproj" />
 </Solution>

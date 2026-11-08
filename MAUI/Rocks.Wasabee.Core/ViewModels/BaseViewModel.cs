@@ -9,7 +9,7 @@ namespace Rocks.Wasabee.Core.ViewModels
 
         [ObservableProperty]
         public partial bool IsBusy { get; set; } = false;
+
+        public virtual void OnAppearing() { }
     }
 }
-
-

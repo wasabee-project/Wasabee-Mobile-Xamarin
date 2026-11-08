@@ -2,18 +2,15 @@
 <views:BaseContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:views="clr-namespace:Rocks.Wasabee.Maui.Views"
-                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Core.ViewModels;assembly=Rocks.Wasabee.Core"
-                       xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+                       xmlns:viewModels="clr-namespace:Rocks.Wasabee.Core.ViewModels.Operation;assembly=Rocks.Wasabee.Core"
+                       xmlns:googleMaps="clr-namespace:Maui.GoogleMaps;assembly=Maui.GoogleMaps"
                        x:Class="Rocks.Wasabee.Maui.Views.OperationMapPage"
                        x:TypeArguments="viewModels:OperationMapViewModel"
+                       x:DataType="viewModels:OperationMapViewModel"
                        BackgroundColor="{DynamicResource BackgroundColorLevel0}">
 
     <ContentPage.Content>
-        <StackLayout>
-
-            <maps:Map MapType="Street" x:Name="Map" />
-
-        </StackLayout>
+        <googleMaps:Map MapType="Street" x:Name="Map" />
     </ContentPage.Content>
     
 </views:BaseContentPage>

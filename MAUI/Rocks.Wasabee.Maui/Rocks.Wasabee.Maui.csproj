@@ -32,10 +32,14 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.120" />
 		<PackageReference Include="Refit.HttpClientFactory" Version="16.4.0" />
 		<PackageReference Include="Refit.Reflection" Version="16.4.0" />
+		<PackageReference Include="SkiaSharp" Version="4.155.0" />
+		<PackageReference Include="SkiaSharp.Views" Version="4.155.0" />
+		<PackageReference Include="Svg.Skia" Version="5.2.3" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Rocks.Wasabee.Core\Rocks.Wasabee.Core.csproj" />
 		<ProjectReference Include="..\Rocks.Wasabee.Maui.Core\Rocks.Wasabee.Maui.Core.csproj" />
+		<ProjectReference Include="..\..\Maui.GoogleMaps\lib\Maui.GoogleMaps\Maui.GoogleMaps.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -94,6 +98,122 @@
 			</Choose>
 		</When>
 	</Choose>
+
+	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_capture_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_capture_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_capture_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_capture_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_decay_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_decay_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_decay_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_decay_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_destroy_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_destroy_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_destroy_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_destroy_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_exclude_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_exclude_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_exclude_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_exclude_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_farm_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_farm_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_farm_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_farm_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_goto_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_goto_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_goto_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_goto_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_key_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_key_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_key_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_key_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_link_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_link_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_link_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_link_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_other_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_other_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_other_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_other_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_recharge_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_recharge_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_recharge_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_recharge_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_virus_acknowledged.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_virus_assigned.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_virus_completed.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_markers_virus_pending.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_player_marker.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_player_marker_gray.svg" />
+	  <None Remove="Platforms\Android\Resources\drawable\wasabee_player_marker_self.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_capture_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_capture_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_capture_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_capture_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_decay_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_decay_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_decay_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_decay_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_destroy_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_destroy_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_destroy_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_destroy_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_exclude_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_exclude_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_exclude_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_exclude_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_farm_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_farm_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_farm_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_farm_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_goto_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_goto_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_goto_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_goto_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_key_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_key_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_key_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_key_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_link_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_link_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_link_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_link_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_meetagent_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_other_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_other_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_other_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_other_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_recharge_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_recharge_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_recharge_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_recharge_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_upgrade_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_virus_acknowledged.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_virus_assigned.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_virus_completed.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_markers_virus_pending.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_player_marker.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_player_marker_gray.svg" />
+	  <AndroidResource Include="Platforms\Android\Resources\drawable\wasabee_player_marker_self.svg" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <Compile Update="Resources\Themes\BaseStyle.xaml.cs">
