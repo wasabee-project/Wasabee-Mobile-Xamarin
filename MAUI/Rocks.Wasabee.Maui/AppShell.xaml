@@ -5,11 +5,10 @@
        xmlns:views="clr-namespace:Rocks.Wasabee.Maui.Views"
        FlyoutBehavior="Disabled">
 
-    <ShellContent Title="Map" ContentTemplate="{DataTemplate views:OperationMapPage}" Route="OperationMapPage" />
-
+    <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" Route="LoginPage" />
 
     <TabBar Route="Root">
-        <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" Route="LoginPage" />
+        <ShellContent Title="Map" ContentTemplate="{DataTemplate views:OperationMapPage}" Route="OperationMapPage" />
     </TabBar>
 
 </Shell>

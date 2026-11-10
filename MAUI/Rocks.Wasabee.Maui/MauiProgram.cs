@@ -14,10 +14,10 @@ using Rocks.Wasabee.Maui.Core.Services;
 using Rocsk.Wasabee.Maui.Core.Services;
 using Rocks.Wasabee.Maui.Views;
 using Rocks.Wasabee.Core.ViewModels.Operation;
-using Maui.GoogleMaps.Android;
 
 
 #if ANDROID
+using Maui.GoogleMaps.Android;
 using Maui.GoogleMaps.Hosting;
 using Microsoft.Maui.Maps.Handlers;
 using Microsoft.Maui.Platform;
@@ -78,16 +78,6 @@ namespace Rocks.Wasabee.Maui
 #endif
             });
 
-#if ANDROID
-            MapElementHandler.Mapper.AppendToMapping("ForceNativeGeodesic", (handler, view) =>
-            {
-                if (handler.PlatformView is PolylineOptions polylineOptions)
-                {
-                    polylineOptions.Geodesic(true);
-                }
-            });
-#endif
-
             return builder.Build();
         }
 
@@ -120,6 +110,7 @@ namespace Rocks.Wasabee.Maui
                 builder.Services.AddSingleton<IPreferencesAdapter, PreferencesAdapter>();
                 builder.Services.AddSingleton<IFileSystemAdapter, FileSystemAdapter>();
                 builder.Services.AddSingleton<IToastAdapter, ToastAdapter>();
+                builder.Services.AddSingleton<IConnectivityAdapter, ConnectivityAdapter>();
                 builder.Services.AddSingleton<IMessengerAdapter, MessengerAdapter>();
 
                 builder.Services.AddSingleton<INavigationService, NavigationAdapter>();

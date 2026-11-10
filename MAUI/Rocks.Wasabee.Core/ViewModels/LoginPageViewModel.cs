@@ -31,6 +31,7 @@ namespace Rocks.Wasabee.Core.ViewModels
         private readonly IPreferencesAdapter _preferences;
         private readonly IToastAdapter _toast;
         private readonly IMessengerAdapter _messenger;
+        private readonly IConnectivityAdapter _connectivity;
         private readonly IUserSettingsService _userSettingsService;
         private readonly WasabeeApiV1Service _wasabeeApiV1Service;
         private readonly UsersDatabase _usersDatabase;
@@ -38,8 +39,9 @@ namespace Rocks.Wasabee.Core.ViewModels
         private readonly TeamsDatabase _teamsDatabase;
         private readonly OperationsDatabase _operationsDatabase;
 
-        private bool _isBypassingGoogleAndWasabeeLogin = false;
-        private bool _isUsingOneTimeToken = false;
+        private bool _isBypassingGoogleAndWasabeeLogin;
+        private bool _isUsingOneTimeToken;
+        private bool _firstTime = true;
 
         public LoginPageViewModel(
             IAppSettings appSettings,
@@ -49,6 +51,7 @@ namespace Rocks.Wasabee.Core.ViewModels
             IPreferencesAdapter preferences,
             IToastAdapter toast,
             IMessengerAdapter messenger,
+            IConnectivityAdapter connectivity,
             IUserSettingsService userSettingsService,
             WasabeeApiV1Service wasabeeApiV1Service,
             UsersDatabase usersDatabase,
@@ -63,12 +66,24 @@ namespace Rocks.Wasabee.Core.ViewModels
             _preferences = preferences;
             _toast = toast;
             _messenger = messenger;
+            _connectivity = connectivity;
             _userSettingsService = userSettingsService;
             _wasabeeApiV1Service = wasabeeApiV1Service;
             _usersDatabase = usersDatabase;
             _agentsDatabase = agentsDatabase;
             _teamsDatabase = teamsDatabase;
             _operationsDatabase = operationsDatabase;
+        }
+
+        public override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (!_firstTime)
+                return;
+
+            _firstTime = false;
+            Initialize();
         }
 
         #region Properties
@@ -83,23 +98,21 @@ namespace Rocks.Wasabee.Core.ViewModels
         [ObservableProperty] public partial bool IsSelectingServer { get; set; }
         [ObservableProperty] public partial bool RememberServerChoice { get; set; }
         [ObservableProperty] public partial bool HasNoTeamOrOpsAssigned { get; set; }
-        [ObservableProperty] public partial bool IsSettingButtonVisible { get; set; }
         [ObservableProperty] public partial string LoadingStepLabel { get; set; } = string.Empty;
-        [ObservableProperty] public partial string AppEnvironnement { get; set; } = string.Empty;
-        [ObservableProperty] public partial string DisplayVersion { get; set; } = string.Empty;
+        //[ObservableProperty] public partial string AppEnvironnement { get; set; } = string.Empty;
+        //[ObservableProperty] public partial string DisplayVersion { get; set; } = string.Empty;
         [ObservableProperty] public partial string ErrorMessage { get; set; } = string.Empty;
         [ObservableProperty] public partial string OneTimeToken { get; set; } = string.Empty;
 
-        private ServerItem _selectedServerItem = ServerItem.Undefined;
         public ServerItem SelectedServerItem
         {
-            get => _selectedServerItem;
+            get;
             set
             {
-                if (SetProperty(ref _selectedServerItem, value))
+                if (SetProperty(ref field, value))
                     _appSettings.Server = SelectedServerItem.Server;
             }
-        }
+        } = ServerItem.Undefined;
 
         public ObservableCollection<ServerItem> ServersCollection { get; } =
         [
@@ -313,6 +326,53 @@ namespace Rocks.Wasabee.Core.ViewModels
 
         #region Private methods
 
+        private void Initialize()
+        {
+            LoadingStepLabel = Strings.SignIn_Label_LoadingStep_AppLoading;
+            _connectivity.ConnectivityChanged += ConnectivityOnConnectivityChanged;
+
+            RememberServerChoice = _preferences.Get(UserSettingsKeys.RememberServerChoice, false);
+        }
+
+        private void ConnectivityOnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
+        {
+            _ = StartAutoLoginAsync();
+        }
+
+        private async Task StartAutoLoginAsync()
+        {
+            IsConnected = _connectivity.IsConnected;
+
+            //if (_parameter != null && _parameter.DoDataRefreshOnly)
+            //{
+            //    await BypassGoogleAndWasabeeLogin();
+
+            //    return;
+            //}
+
+            if (!IsConnected || IsSelectingServer)
+                return;
+
+            var lastLoginMethod = (LoginMethod)_preferences.Get(UserSettingsKeys.LastLoginMethod, (int)LoginMethod.Unknown);
+            switch (lastLoginMethod)
+            {
+                // will get a refreshed auth token from Google
+                case LoginMethod.Google:
+                    ConnectUserCommand.Execute(null);
+                    break;
+                // will use previous Cookie to bypass auth process
+                case LoginMethod.OneTimeToken:
+                case LoginMethod.Bypass:
+                    await BypassGoogleAndWasabeeLogin();
+                    break;
+                // user will choose login method
+                case LoginMethod.Unknown:
+                default:
+                    IsLoginVisible = true;
+                    break;
+            }
+        }
+
         private async Task ConnectWasabee()
         {
             var token = await GetGoogleToken();
@@ -326,6 +386,7 @@ namespace Rocks.Wasabee.Core.ViewModels
             }
 
             IsLoading = true;
+            IsLoginVisible = false;
 
             var savedServerChoice = _preferences.Get(UserSettingsKeys.SavedServerChoice, string.Empty);
 
@@ -383,6 +444,7 @@ namespace Rocks.Wasabee.Core.ViewModels
             else
             {
                 IsLoading = true;
+                IsLoginVisible = false;
                 LoadingStepLabel = string.Format(Strings.SignIn_Label_LoadingStep_ContactingServer, SelectedServerItem.Name);
 
                 await Task.Delay(MessageDisplayTime);
@@ -390,8 +452,8 @@ namespace Rocks.Wasabee.Core.ViewModels
                 try
                 {
                     var jwt = new JwtSecurityToken(wtoken);
-                    var span = DateTime.UtcNow - jwt.IssuedAt;
-                    if (span >= TimeSpan.FromHours(24))
+                    var validToWithDelay = jwt.ValidTo - TimeSpan.FromHours(24);
+                    if (DateTime.UtcNow >= validToWithDelay)
                     {
                         var refreshedToken = await _wasabeeApiV1Service.User_RefreshWasabeeToken();
                         await _secureStorage.SetAsync(SecureStorageConstants.WasabeeToken, refreshedToken);
@@ -423,6 +485,7 @@ namespace Rocks.Wasabee.Core.ViewModels
                         IsAuthInError = true;
                         IsLoading = false;
 
+                        IsLoginVisible = true;
                         RememberServerChoice = false;
                         SelectedServerItem = ServerItem.Undefined;
 
